@@ -11,6 +11,8 @@
 
                   <div class="panel-body">
 
+                    @include('partials.messages')
+
                     {!! Form::open(['route' => 'empresas.store', 'method' => 'POST']) !!}
 
 
