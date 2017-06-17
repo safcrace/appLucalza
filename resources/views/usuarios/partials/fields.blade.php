@@ -74,10 +74,10 @@
             {!! Form::label('activo', 'Estatus') !!}
       </div>
       <div class="col-md-1">
-          {!! Form::radio('activo', 0); !!}  Activo
+          {!! Form::radio('activo', 1); !!}  Activo
       </div>
       <div class="col-md-2">
-          {!! Form::radio('activo', 1); !!}  Inactivo
+          {!! Form::radio('activo', 0); !!}  Inactivo
       </div>
     </div>
 

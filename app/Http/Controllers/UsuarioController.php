@@ -105,7 +105,9 @@ class UsuarioController extends Controller
      */
     public function edit($id)
     {
-        //
+        $usuario = User::findOrFail($id);
+
+        return view('usuarios.edit', compact('usuario'));
     }
 
     /**
@@ -117,7 +119,18 @@ class UsuarioController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $usuario = User::findOrFail($id);
+        //$moneda->fill($request->all());    bcrypt($request->PASSSAP)
+
+        if ($request->anulado === null) {
+            $request->anulado = 0;
+        }
+
+        User::where('ID', $id)
+                ->update(['nombre' => $request->nombre, 'email' => $request->email, 'usuario' => $request->usuario, 'tel_codpais' => $request->tel_codpais,
+                          'telefono' => $request->telefono, 'activo' => $request->activo, 'anulado' => $request->anulado]);
+
+        return Redirect::to('empresas');
     }
 
     /**

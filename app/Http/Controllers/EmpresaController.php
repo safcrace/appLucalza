@@ -96,13 +96,12 @@ class EmpresaController extends Controller
     {
         $empresa = Empresa::findOrFail($id);
         //$moneda->fill($request->all());
-        //$moneda->ID = $request->ID;
 
         Empresa::where('ID', $empresa->ID)
           ->update(['CLAVE' => $request->CLAVE, 'DESCRIPCION' => $request->DESCRIPCION, 'ANULADO' => $request->ANULADO, 'LICENSESERVER' => $request->LICENSESERVER,
                     'USERSAP' => $request->USERSAP, 'PASSSAP' => bcrypt($request->PASSSAP), 'DBSAP' => $request->DBSAP, 'USERSQL' => $request->USERSQL,
                     'PASSSQL' => bcrypt($request->ANULADO), 'SERVIDORSQL' => $request->SERVIDORSQL, 'SAPDBTYPE' => $request->SAPDBTYPE,]);
-        //dd('se supone que ya grabo');
+
         return Redirect::to('empresas');
     }
 
