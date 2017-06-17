@@ -143,4 +143,18 @@ class UsuarioController extends Controller
     {
         //
     }
+
+    /**
+     * Anule the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function anular($id)
+    {
+        User::where('ID', $id)
+                ->update(['ANULADO' => 1]);
+
+        return Redirect::to('empresas');
+    }
 }

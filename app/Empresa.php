@@ -17,4 +17,8 @@ class Empresa extends Model
     public function users(){
         return $this->belongsToMany(User::class,  'cat_usuarioempresa');
     }
+
+    public function rutas(){
+        return $this->belongsToMany(Ruta::class,  'cat_ruta');
+    }
 }
