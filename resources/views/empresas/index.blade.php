@@ -41,7 +41,7 @@
                                      <a href="{{ route('indexUsuario', $empresa->ID) }}"><button type="button" class="btn btn-primary btn-sm">Usuarios</button></a>
                                      <a href="{{ route('indexRuta', $empresa->ID) }}"><button type="button" class="btn btn-primary btn-sm">Rutas</button></a>
                                      <button type="button" class="btn btn-primary btn-sm">Tipo de Gasto</button>
-                                     <button type="button" class="btn btn-primary btn-sm">Proveedores</button>
+                                     <a href="{{ route('indexProveedor', $empresa->ID) }}"><button type="button" class="btn btn-primary btn-sm">Proveedores</button></a>
                                    </td>
                                </tr>
                            @endforeach

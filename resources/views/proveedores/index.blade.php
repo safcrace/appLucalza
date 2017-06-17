@@ -6,12 +6,12 @@
       <div class="row">
           <div class="col-md-12 ">
               <div class="panel panel-default">
-                  <div class="panel-heading">Control de Rutas</div>
+                  <div class="panel-heading">Control de Proveedores</div>
 
 
                     <div class="panel-body text-right">
                       <button type="button" class="btn btn-default" style="border-color: white"><a href="{{ route('empresas.index') }}"><span class="glyphicon glyphicon-remove-sign" aria-hidden="true" style="font-size:32px; color: black"></span></a>
-                      <button type="button" class="btn btn-default" style="border-color: white"><a href="{{ route('createRuta', $empresa_id) }}"><span class="glyphicon glyphicon-plus-sign" aria-hidden="true" style="font-size:32px; color: black"></span></a>
+                      <button type="button" class="btn btn-default" style="border-color: white"><a href="{{ route('createProveedor', $empresa_id) }}"><span class="glyphicon glyphicon-plus-sign" aria-hidden="true" style="font-size:32px; color: black"></span></a>
                     </div>
 
 
@@ -19,22 +19,22 @@
 
                      <table class="table table-bordered table-striped ">
                        <thead>
-                         <th class="text-center">Código</th>
-                         <th class="text-center">Ruta</th>
+                         <th class="text-center">Identificador Tributario</th>
+                         <th class="text-center">Proveedor</th>
                          <th class="text-center">Editar</th>
                          <th class="text-center">Anular</th>
                        </thead>
                        <tbody>
 
-                           @foreach ($rutas as $ruta)
+                           @foreach ($proveedores as $proveedor)
                                <tr>
-                                   <td>{{ $ruta->CLAVE}}</td>
-                                   <td>{{ $ruta->DESCRIPCION}}</td>
+                                   <td>{{ $proveedor->IDENTIFICADOR_TRIBUTARIO}}</td>
+                                   <td>{{ $proveedor->NOMBRE}}</td>
                                    <td class="text-center">
-                                     <a href="{{ route('rutas.edit', $ruta->ID) }}"><span class="glyphicon glyphicon-edit" aria-hidden="true" style="font-size:20px; color: black"></span></a>
+                                     <a href="{{ route('proveedores.edit', $proveedor->ID) }}"><span class="glyphicon glyphicon-edit" aria-hidden="true" style="font-size:20px; color: black"></span></a>
                                    </td>
                                    <td class="text-center">
-                                     <a href="{{ route('anularRuta', $ruta->ID) }}"><span class="glyphicon glyphicon-ban-circle" aria-hidden="true" style="font-size:20px; color: black"></span></a>
+                                     <a href="{{ route('anularProveedor', $proveedor->ID) }}"><span class="glyphicon glyphicon-ban-circle" aria-hidden="true" style="font-size:20px; color: black"></span></a>
                                    </td>
                                </tr>
                            @endforeach
@@ -46,7 +46,7 @@
                       </table>
 
                       <div class="text-center">
-                        {!!$rutas->render()!!}
+                        {!!$proveedores->render()!!}
                       </div>
                   </div>
                   </div>

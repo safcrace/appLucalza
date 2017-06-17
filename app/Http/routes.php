@@ -68,4 +68,4 @@ Route::resource('rutas', 'RutaController');
 Route::get('proveedor/anular/{id}', ['uses' => 'ProveedorController@anular', 'as' => 'anularProveedor']);
 Route::get('empresa/{id}/create/proveedor',  ['uses' => 'ProveedorController@empresaCreateProveedor', 'as' => 'createProveedor']);
 Route::get('empresa/proveedor/{id}', ['uses' => 'ProveedorController@indexProveedor', 'as' => 'indexProveedor']);
-Route::resource('proveedor', 'ProveedorController');
+Route::resource('proveedores', 'ProveedorController');
