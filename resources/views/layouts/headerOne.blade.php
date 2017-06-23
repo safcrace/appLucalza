@@ -35,14 +35,14 @@
                       <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><span class="glyphicon glyphicon-cog" aria-hidden="true" style="font-size:32px;"></span> <span class="caret"></span></a>
                       <ul class="dropdown-menu">
                         <li><a href="{{ route('monedas.index') }}">Monedas</a></li>
-                        <li><a href="{{ route('empresas.index') }}">Empresas</a></li>                        
+                        <li><a href="{{ route('empresas.index') }}">Empresas</a></li>
                         <li role="separator" class="divider"></li>
                         <li class="dropdown-header">Nav header</li>
                         <li><a href="#">Separated link</a></li>
                         <li><a href="#">One more separated link</a></li>
                       </ul>
                     </li>
-                    <li class=""><a href="#"><span class="glyphicon glyphicon-usd" aria-hidden="true" style="font-size:32px;"></span></a></li>
+                    <li class=""><a href="{{ route('presupuestos.index') }}"><span class="glyphicon glyphicon-usd" aria-hidden="true" style="font-size:32px;"></span></a></li>
                     <li class=""><a href="#"><span class="glyphicon glyphicon-list-alt" aria-hidden="true" style="font-size:32px;"></span></a></li>
                     <li class=""><a href="#"><span class="glyphicon glyphicon-floppy-saved" aria-hidden="true" style="font-size:32px;"></span></a></li>
                     <li class=""><a href="#"><span class="glyphicon glyphicon-share" aria-hidden="true" style="font-size:32px;"></span></a></li>
