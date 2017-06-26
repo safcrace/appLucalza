@@ -11,7 +11,7 @@
             </button>
 
             <!-- Branding Image -->
-            <a class="navbar-brand" href="{{ url('/home') }}">
+            <a class="navbar-brand" href="{{ route ('home') }}">
                 {{-- config('app.name', 'Lucalza') --}}
                 <img src="{{ asset('images/logoLucalza.png') }}" alt="" width="175" style="position:relative; top:-70px; left: -200px; ">
             </a>
@@ -27,29 +27,29 @@
             <ul class="nav navbar-nav navbar-right">
                 <!-- Authentication Links -->
                 @if (Auth::guest())
-                    <li><a href="{{ route('login') }}">Login</a></li>
-                    <li><a href="{{ route('register') }}">Register</a></li>
+                    <li><a href="{{ route('login') }}">{{ trans('validation.attributes.login') }}</a></li>
+                    {{--<li><a href="{{ route('register') }}">Register</a></li>--}}
                 @else
 
                     <li class="dropdown">
-                      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><span class="glyphicon glyphicon-cog" aria-hidden="true" style="font-size:32px;"></span> <span class="caret"></span></a>
+                      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" data-toggle="tooltip" data-placement="top" title="Cátalogos"><span class="glyphicon glyphicon-cog" aria-hidden="true" style="font-size:32px;"></span> <span class="caret"></span></a>
                       <ul class="dropdown-menu">
                         <li><a href="{{ route('monedas.index') }}">Monedas</a></li>
                         <li><a href="{{ route('empresas.index') }}">Empresas</a></li>
                         <li role="separator" class="divider"></li>
                         <li class="dropdown-header">Nav header</li>
-                        <li><a href="#">Separated link</a></li>
-                        <li><a href="#">One more separated link</a></li>
+                        {{--<li><a href="#">Separated link</a></li>
+                        <li><a href="#">One more separated link</a></li> --}}
                       </ul>
                     </li>
-                    <li class=""><a href="{{ route('presupuestos.index') }}"><span class="glyphicon glyphicon-usd" aria-hidden="true" style="font-size:32px;"></span></a></li>
-                    <li class=""><a href="#"><span class="glyphicon glyphicon-list-alt" aria-hidden="true" style="font-size:32px;"></span></a></li>
-                    <li class=""><a href="#"><span class="glyphicon glyphicon-floppy-saved" aria-hidden="true" style="font-size:32px;"></span></a></li>
-                    <li class=""><a href="#"><span class="glyphicon glyphicon-share" aria-hidden="true" style="font-size:32px;"></span></a></li>
+                    <li class=""><a href="{{ route('presupuestos.index') }}" data-toggle="tooltip" data-placement="top" title="Presupuestos"><span class="glyphicon glyphicon-usd" aria-hidden="true" style="font-size:32px;"></span></a></li>
+                    <li class=""><a href="{{ route('liquidaciones.index') }}" data-toggle="tooltip" data-placement="top" title="Liquidaciones"><span class="glyphicon glyphicon-list-alt" aria-hidden="true" style="font-size:32px;"></span></a></li>
+                    <li class=""><a href="#" data-toggle="tooltip" data-placement="top" title="Revisión Supervisor"><span class="glyphicon glyphicon-floppy-saved" aria-hidden="true" style="font-size:32px;"></span></a></li>
+                    <li class=""><a href="#" data-toggle="tooltip" data-placement="top" title="Revisión Cotabilidad"><span class="glyphicon glyphicon-share" aria-hidden="true" style="font-size:32px;"></span></a></li>
                     {{--<li class=""><a href="#"><img src="{{ asset('images/abogado.png') }}" alt=""> Sender</a></li>
                     <li class=""><a href="#"><img src="{{ asset('images/admon.png') }}" alt=""></a></li>--}}
                     <li class="">
-                      <a href="{{ route('logout') }}"><span class="glyphicon glyphicon-off" aria-hidden="true" style="font-size:32px;"></span></a>
+                      <a href="{{ route('logout') }}" data-toggle="tooltip" data-placement="top" title="Cerrar Sesión"><span class="glyphicon glyphicon-off" aria-hidden="true" style="font-size:32px;"></span></a>
                     </li>
                     {{--<li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">

@@ -11,7 +11,7 @@
 |
 */
 
-Route::get('/home', [
+Route::get('/', [
     'uses' => 'HomeController@index',
     'as'   => 'home'
 ]);
@@ -88,3 +88,11 @@ Route::resource('presupuestos', 'PresupuestoController');
 // Detalle Presupuestos routes
 Route::get('presupuesto/{id}/create/detalle',  ['uses' => 'DetallePresupuestoController@presupuestoCreateDetalle', 'as' => 'createDetalle']);
 Route::resource('detallePresupuestos', 'DetallePresupuestoController');
+
+// Liquidacion routes
+//Route::get('presupuesto/create/{id}', ['uses' => 'PresupuestoController@presupuestoCreate', 'as' => 'presupuestoCreate']);
+Route::resource('liquidaciones', 'LiquidacionController');
+
+// Detalle Presupuestos routes
+Route::get('liquidacion/{id}/create/factura',  ['uses' => 'FacturaController@liquidacionCreateFactura', 'as' => 'createFactura']);
+Route::resource('facturas', 'FacturaController');

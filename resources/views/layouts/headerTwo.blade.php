@@ -11,7 +11,7 @@
             </button>
 
             <!-- Branding Image -->
-            <a class="navbar-brand" href="{{ url('/home') }}">
+            <a class="navbar-brand" href="{{ route('home') }}">
                 {{-- config('app.name', 'Lucalza') --}}
                 <img src="{{ asset('images/logoLucalza.png') }}" alt="" width="175" style="position:relative; top:-70px; left: -200px; ">
             </a>
@@ -30,14 +30,10 @@
                     <li><a href="{{ route('login') }}">Login</a></li>
                     <li><a href="{{ route('register') }}">Register</a></li>
                 @else
-                    <li style="position:relative; top: 30px; left: 120px: ">{{ Auth::user()->name }}</li>
+                    <li style="position:relative; top: 30px; left: 120px: ">{{ Auth::user()->nombre }}</li>
                     <li class=""><a href="{{ route('home') }}" data-toggle="tooltip" data-placement="top" title="Inicio"><img src="{{ asset('images/ayuda.png') }}" alt=""></a></li>
                     <li class="">
-                      <a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();" data-toggle="tooltip" data-placement="bottom" title="Salir">
-                        <img src="{{ asset('images/cerrarSesion.png') }}" alt=""></a>
-                      <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-                          {{ csrf_field() }}
-                      </form>
+                      <a href="{{ route('logout') }}" data-toggle="tooltip" data-placement="top" title="Cerrar Sesión"><span class="glyphicon glyphicon-off" aria-hidden="true" style="font-size:32px;"></span></a>
                     </li>
                     {{--<li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">

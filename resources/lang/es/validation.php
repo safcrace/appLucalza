@@ -118,7 +118,7 @@ return [
         'email'                 => 'correo electrónico',
         'first_name'            => 'nombre',
         'last_name'             => 'apellido',
-        'password'              => 'contraseña',
+        'password'              => 'Contraseña',
         'password_confirmation' => 'confirmación de la contraseña',
         'city'                  => 'ciudad',
         'country'               => 'país',
@@ -144,6 +144,7 @@ return [
         'message'               => 'mensaje',
         'CLAVE'                 => 'código',
         'email'                 => 'Correo Electrónico',
+        'login'                 => 'Inicio de Sesión',
     ],
 
 ];
