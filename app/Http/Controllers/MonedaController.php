@@ -21,7 +21,7 @@ class MonedaController extends Controller
     {
         $monedas = Moneda::select('*')
                             ->where('cat_moneda.ANULADO', '=', 0)
-                            ->paginate(3);
+                            ->paginate(10);
 
         return view('monedas.index', compact('monedas'));
     }

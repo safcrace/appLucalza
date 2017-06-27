@@ -51,13 +51,13 @@
       </div>
       <div class="panel-body">
         <div class="row form-group text-center">
-                {!! Form::label('CUENTA_CONTABLE_EXENTO', 'Cuenta Contable') !!} &nbsp; &nbsp; <span class="glyphicon glyphicon-save-file" aria-hidden="true"></span>
+                {!! Form::label('CUENTA_CONTABLE_EXENTO', 'Cuenta Contable') !!} &nbsp; &nbsp; <span class="glyphicon glyphicon-import" aria-hidden="true"></span>
         </div>
         <div class="row form-group text-center">
                 {!! Form::text('CUENTA_CONTABLE_EXENTO', null, ['class' => 'form-control', 'placeholder' => 'Cuenta Contable']); !!}
         </div>
         <div class="row form-group text-center">
-                {!! Form::label('CODIGO_IMPUESTO_EXENTO', 'Código Impuesto') !!} &nbsp; &nbsp; <span class="glyphicon glyphicon-save-file" aria-hidden="true"></span>
+                {!! Form::label('CODIGO_IMPUESTO_EXENTO', 'Código Impuesto') !!} &nbsp; &nbsp; <span class="glyphicon glyphicon-import" aria-hidden="true"></span>
         </div>
         <div class="row form-group text-center">
                 {!! Form::text('CODIGO_IMPUESTO_EXENTO', null, ['class' => 'form-control', 'placeholder' => 'Código Impuesto']); !!}
@@ -95,13 +95,13 @@
       </div>
       <div class="panel-body">
         <div class="row form-group text-center">
-                {!! Form::label('CUENTA_CONTABLE_REMANENTE', 'Cuenta Contable') !!} &nbsp; &nbsp; <span class="glyphicon glyphicon-cloud-download" aria-hidden="true"></span>
+                {!! Form::label('CUENTA_CONTABLE_REMANENTE', 'Cuenta Contable') !!} &nbsp; &nbsp; <span class="glyphicon glyphicon-import" aria-hidden="true"></span>
         </div>
         <div class="row form-group text-center">
                 {!! Form::text('CUENTA_CONTABLE_REMANENTE', null, ['class' => 'form-control', 'placeholder' => 'Cuenta Contable']); !!}
         </div>
         <div class="row form-group text-center">
-                {!! Form::label('CODIGO_IMPUESTO_REMANENTE', 'Código Impuesto') !!} &nbsp; &nbsp; <span class="glyphicon glyphicon-cloud-download" aria-hidden="true"></span>
+                {!! Form::label('CODIGO_IMPUESTO_REMANENTE', 'Código Impuesto') !!} &nbsp; &nbsp; <span class="glyphicon glyphicon-import" aria-hidden="true"></span>
         </div>
         <div class="row form-group text-center">
                 {!! Form::text('CODIGO_IMPUESTO_REMANENTE', null, ['class' => 'form-control', 'placeholder' => 'Código Impuesto']); !!}

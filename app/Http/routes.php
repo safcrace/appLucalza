@@ -93,6 +93,10 @@ Route::resource('detallePresupuestos', 'DetallePresupuestoController');
 //Route::get('presupuesto/create/{id}', ['uses' => 'PresupuestoController@presupuestoCreate', 'as' => 'presupuestoCreate']);
 Route::resource('liquidaciones', 'LiquidacionController');
 
-// Detalle Presupuestos routes
+// Facturas routes
 Route::get('liquidacion/{id}/create/factura',  ['uses' => 'FacturaController@liquidacionCreateFactura', 'as' => 'createFactura']);
 Route::resource('facturas', 'FacturaController');
+
+//Supervisor routes
+Route::get('supervisor', ['uses' => 'SupervisorController@index', 'as' => 'supervisor']);
+Route::get('supervisor/show/{id}', ['uses' => 'SupervisorController@show', 'as' => 'showLiquidacion']);
