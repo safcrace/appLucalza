@@ -7,7 +7,7 @@
       <div class="row">
           <div class="col-md-12 ">
               <div class="panel panel-default">
-                  <div class="panel-heading">Ingreso de Empresas</div>
+                  <div class="panel-heading panel-title">Ingreso de Empresas</div>
 
                   <div class="panel-body">
 

@@ -37,7 +37,8 @@
         {!! Form::text('FECHA', $liquidacion->FECHA, ['class' => 'form-control', 'disabled' => 'true']); !!}
   </div>
   <div class="col-md-2">
-        {!! Form::text('TOTAL', 'Q.1500.00', ['class' => 'form-control', 'disabled' => 'true']); !!}
+
+        {!! Form::text('TOTAL', 'Q.' . App\Factura::where('LIQUIDACION_ID', '=', $liquidacion->ID)->sum('TOTAL'), ['class' => 'form-control', 'disabled' => 'true']); !!}
   </div>
   <div class="col-md-1 col-md-offset-1">
       <button type="button" class="btn btn-primary">Aprobar</button>

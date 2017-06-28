@@ -6,7 +6,7 @@
       <div class="row">
           <div class="col-md-12 ">
               <div class="panel panel-default">
-                  <div class="panel-heading">Control de Presupuesto</div>
+                  <div class="panel-heading panel-title">Control de Presupuesto</div>
 
 
                     <div class="panel-body text-right">
@@ -17,30 +17,23 @@
 
                   <div class="panel-body">
 
-                     <table class="table table-bordered table-striped ">
+                     <table class="table table-bordered table-striped table-hover">
                        <thead>
                          <th class="text-center">Código</th>
                          <th class="text-center">Usuario</th>
                          <th class="text-center">Ruta</th>
-                         <th class="text-center">Editar</th>
                          <th class="text-center">Anular</th>
                        </thead>
                        <tbody>
 
                            @foreach ($presupuestos as $presupuesto)
                                <tr>
-                                   <td>{{ $presupuesto->ID }}</td>
-                                   <td>{{ $presupuesto->USUARIO }}</td>
-                                   <td>{{ $presupuesto->RUTA }}</td>
-                                   <td class="text-center">
-                                     <a href="{{ route('presupuestos.edit', $presupuesto->ID) }}"><span class="glyphicon glyphicon-edit" aria-hidden="true" style="font-size:20px; color: black"></span></a>
-                                   </td>
+                                   <td><a href="{{ route('presupuestos.edit', $presupuesto->ID) }}">{{ $presupuesto->ID }}</a></td>
+                                   <td><a href="{{ route('presupuestos.edit', $presupuesto->ID) }}">{{ $presupuesto->USUARIO }}</a></td>
+                                   <td><a href="{{ route('presupuestos.edit', $presupuesto->ID) }}">{{ $presupuesto->RUTA }}</a></td>
                                    <td class="text-center">
                                      <a href="{{-- route('anularEmpresa', $empresa->ID) --}}"><span class="glyphicon glyphicon-ban-circle" aria-hidden="true" style="font-size:20px; color: black"></span></a>
-                                   </td>
-                                   <td class="text-center">
-
-                                   </td>
+                                   </td>                                   
                                </tr>
                            @endforeach
 

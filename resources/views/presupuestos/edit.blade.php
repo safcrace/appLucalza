@@ -7,7 +7,7 @@
       <div class="row">
           <div class="col-md-12 ">
             <div class="panel panel-default">
-                 <div class="panel-heading">
+                 <div class="panel-heading panel-title">
                     Editar Presupuesto {{ $presupuesto->ID }}
 
                   </div>
@@ -26,7 +26,7 @@
                </div>
 
                <div class="panel panel-default">
-                   <div class="panel-heading">Detalle Presupuesto</div>
+                   <div class="panel-heading panel-title">Detalle Presupuesto</div>
 
 
                      <div class="panel-body text-right">
@@ -37,7 +37,7 @@
 
                    <div class="panel-body">
 
-                      <table class="table table-bordered table-striped ">
+                      <table class="table table-bordered table-striped table-hover">
                         <thead>
                           <th class="text-center">Tipo Gasto</th>
                           <th class="text-center">Frecuencia</th>
@@ -49,12 +49,9 @@
 
                             @foreach ($detallePresupuestos as $detallePresupuesto)
                                 <tr>
-                                    <td>{{ $detallePresupuesto->TIPOGASTO}}</td>
-                                    <td>{{ $detallePresupuesto->MONTO}}</td>
-                                    <td>{{ $detallePresupuesto->FRECUENCIA}}</td>
-                                    <td class="text-center">
-                                      <a href="{{ route('detallePresupuestos.edit', $detallePresupuesto->ID) }}"><span class="glyphicon glyphicon-edit" aria-hidden="true" style="font-size:20px; color: black"></span></a>
-                                    </td>
+                                    <td><a href="{{ route('detallePresupuestos.edit', $detallePresupuesto->ID) }}">{{ $detallePresupuesto->TIPOGASTO}}</a></td>
+                                    <td><a href="{{ route('detallePresupuestos.edit', $detallePresupuesto->ID) }}">{{ $detallePresupuesto->MONTO}}</a></td>
+                                    <td><a href="{{ route('detallePresupuestos.edit', $detallePresupuesto->ID) }}">{{ $detallePresupuesto->FRECUENCIA}}</a></td>
                                     <td class="text-center">
                                       <a href="{{ route('anularProveedor', $detallePresupuesto->ID) }}"><span class="glyphicon glyphicon-ban-circle" aria-hidden="true" style="font-size:20px; color: black"></span></a>
                                     </td>

@@ -6,7 +6,7 @@
       <div class="row">
           <div class="col-md-12 ">
               <div class="panel panel-default">
-                  <div class="panel-heading">Control de Empresas</div>
+                  <div class="panel-heading panel-title">Control de Empresas</div>
 
 
                     <div class="panel-body text-right">
@@ -17,11 +17,10 @@
 
                   <div class="panel-body">
 
-                     <table class="table table-bordered table-striped ">
+                     <table class="table table-bordered table-striped table-hover">
                        <thead>
                          <th class="text-center">Código</th>
-                         <th class="text-center">Nombre</th>
-                         <th class="text-center">Editar</th>
+                         <th class="text-center">Nombre</th>                         
                          <th class="text-center">Anular</th>
                          <th class="text-center">Módulo</th>
                        </thead>
@@ -29,11 +28,11 @@
 
                            @foreach ($empresas as $empresa)
                                <tr>
-                                   <td>{{ $empresa->CLAVE}}</td>
-                                   <td>{{ $empresa->DESCRIPCION}}</td>
-                                   <td class="text-center">
+                                   <td><a href="{{ route('empresas.edit', $empresa->ID) }}">{{ $empresa->CLAVE}}</a></td>
+                                   <td><a href="{{ route('empresas.edit', $empresa->ID) }}">{{ $empresa->DESCRIPCION}}</a></td>
+                                   {{--<td class="text-center">
                                      <a href="{{ route('empresas.edit', $empresa->ID) }}"><span class="glyphicon glyphicon-edit" aria-hidden="true" style="font-size:20px; color: black"></span></a>
-                                   </td>
+                                   </td>--}}
                                    <td class="text-center">
                                      <a href="{{ route('anularEmpresa', $empresa->ID) }}"><span class="glyphicon glyphicon-ban-circle" aria-hidden="true" style="font-size:20px; color: black"></span></a>
                                    </td>

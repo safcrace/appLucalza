@@ -7,7 +7,7 @@
       <div class="row">
           <div class="col-md-12 ">
             <div class="panel panel-default">
-                 <div class="panel-heading">
+                 <div class="panel-heading panel-title">
                     Editar Liquidación {{ $liquidacion->ID }}
 
                   </div>
@@ -26,7 +26,7 @@
                </div>
 
                <div class="panel panel-default">
-                   <div class="panel-heading">Control de Facturas</div>
+                   <div class="panel-heading panel-title">Control de Facturas</div>
 
 
                      <div class="panel-body text-right">
@@ -37,7 +37,7 @@
 
                    <div class="panel-body">
 
-                      <table class="table table-bordered table-striped ">
+                      <table class="table table-bordered table-striped table-hover">
                         <thead>
                           <th class="text-center">Fecha</th>
                           <th class="text-center">Proveedor</th>
@@ -45,22 +45,18 @@
                           <th class="text-center">Numero</th>
                           <th class="text-center">Tipo de Gasto</th>
                           <th class="text-center">Total</th>
-                          <th class="text-center">Editar</th>
                           <th class="text-center">Anular</th>
                         </thead>
                         <tbody>
 
                             @foreach ($facturas as $factura)
                                 <tr>
-                                    <td>{{ $factura->FECHA }}</td>
-                                    <td>{{ $factura->NOMBRE}}</td>
-                                    <td>{{ $factura->SERIE}}</td>
-                                    <td>{{ $factura->NUMERO}}</td>
-                                    <td>{{ $factura->TIPOGASTO}}</td>
-                                    <td>{{ $factura->TOTAL}}</td>
-                                    <td class="text-center">
-                                      <a href="{{ route('facturas.edit', $factura->ID) }}"><span class="glyphicon glyphicon-edit" aria-hidden="true" style="font-size:20px; color: black"></span></a>
-                                    </td>
+                                    <td><a href="{{ route('facturas.edit', $factura->ID) }}">{{ $factura->FECHA }}</a></td>
+                                    <td><a href="{{ route('facturas.edit', $factura->ID) }}">{{ $factura->NOMBRE}}</a></td>
+                                    <td><a href="{{ route('facturas.edit', $factura->ID) }}">{{ $factura->SERIE}}</a></td>
+                                    <td><a href="{{ route('facturas.edit', $factura->ID) }}">{{ $factura->NUMERO}}</a></td>
+                                    <td><a href="{{ route('facturas.edit', $factura->ID) }}">{{ $factura->TIPOGASTO}}</a></td>
+                                    <td><a href="{{ route('facturas.edit', $factura->ID) }}">{{ $factura->TOTAL}}</a></td>                                    
                                     <td class="text-center">
                                       <a href="{{ route('anularProveedor', $factura->ID) }}"><span class="glyphicon glyphicon-ban-circle" aria-hidden="true" style="font-size:20px; color: black"></span></a>
                                     </td>

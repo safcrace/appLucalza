@@ -128,7 +128,7 @@ class LiquidacionController extends Controller
                                                   ->where('liq_factura.LIQUIDACION_ID', '=', $id)
                                                   ->paginate();
 
-
+        
         return view('liquidaciones.edit', compact('liquidacion', 'usuario', 'usuario_id', 'rutas', 'combo', 'facturas'));
     }
 

@@ -6,7 +6,7 @@
       <div class="row">
           <div class="col-md-12 ">
               <div class="panel panel-default">
-                  <div class="panel-heading">Control de Monedas</div>
+                  <div class="panel-heading panel-title">Control de Monedas</div>
 
 
                     <div class="panel-body text-right">
@@ -17,24 +17,20 @@
 
                   <div class="panel-body">
 
-                     <table class="table table-bordered table-striped ">
+                     <table class="table table-bordered table-striped table-hover">
                        <thead>
                          <th class="text-center">ID</th>
                          <th class="text-center">Clave</th>
                          <th class="text-center">Descripción</th>
-                         <th class="text-center">Editar</th>
                          <th class="text-center">Anular</th>
                        </thead>
                        <tbody>
 
                            @foreach ($monedas as $moneda)
                                <tr>
-                                   <td>{{ $moneda->ID}}</td>
-                                   <td>{{ $moneda->CLAVE}}</td>
-                                   <td>{{ $moneda->DESCRIPCION}}</td>
-                                   <td class="text-center">
-                                     <a href="{{ route('monedas.edit', $moneda->ID) }}"><span class="glyphicon glyphicon-edit" aria-hidden="true" style="font-size:20px; color: black"></span></a>
-                                   </td>
+                                   <td><a href="{{ route('monedas.edit', $moneda->ID) }}">{{ $moneda->ID}}</a></td>
+                                   <td><a href="{{ route('monedas.edit', $moneda->ID) }}">{{ $moneda->CLAVE}}</a></td>
+                                   <td><a href="{{ route('monedas.edit', $moneda->ID) }}">{{ $moneda->DESCRIPCION}}</a></td>
                                    <td class="text-center">
                                      <a href="{{ route('anular', $moneda->ID) }}"><span class="glyphicon glyphicon-ban-circle" aria-hidden="true" style="font-size:20px; color: black"></span></a>
                                    </td>

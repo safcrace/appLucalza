@@ -6,7 +6,7 @@
       <div class="row">
           <div class="col-md-12 ">
               <div class="panel panel-default">
-                  <div class="panel-heading">Control de Usuarios</div>
+                  <div class="panel-heading panel-title">Control de Usuarios</div>
 
 
                     <div class="panel-body text-right">
@@ -17,12 +17,11 @@
 
                   <div class="panel-body">
 
-                     <table class="table table-bordered table-striped ">
+                     <table class="table table-bordered table-striped table-hover">
                        <thead>
                          <th class="text-center">Código</th>
                          <th class="text-center">Nombre</th>
-                         <th class="text-center">Correo Electrónico</th>
-                         <th class="text-center">Editar</th>
+                         <th class="text-center">Correo Electrónico</th>                        
                          <th class="text-center">Anular</th>
                          <th class="text-center">Módulo</th>
                        </thead>
@@ -30,12 +29,9 @@
 
                            @foreach ($users as $user)
                                <tr>
-                                   <td>{{ $user->id}}</td>
-                                   <td>{{ $user->nombre}}</td>
-                                   <td>{{ $user->email}}</td>
-                                   <td class="text-center">
-                                     <a href="{{ route('usuarios.edit', $user->id) }}"><span class="glyphicon glyphicon-edit" aria-hidden="true" style="font-size:20px; color: black"></span></a>
-                                   </td>
+                                   <td><a href="{{ route('usuarios.edit', $user->id) }}">{{ $user->id}}</a></td>
+                                   <td><a href="{{ route('usuarios.edit', $user->id) }}">{{ $user->nombre}}</a></td>
+                                   <td><a href="{{ route('usuarios.edit', $user->id) }}">{{ $user->email}}</a></td>
                                    <td class="text-center">
                                      <a href="{{ route('anular', $user->id) }}"><span class="glyphicon glyphicon-ban-circle" aria-hidden="true" style="font-size:20px; color: black"></span></a>
                                    </td>

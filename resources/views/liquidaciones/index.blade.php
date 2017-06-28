@@ -6,7 +6,7 @@
       <div class="row">
           <div class="col-md-12 ">
               <div class="panel panel-default">
-                  <div class="panel-heading">Control de Liquidaciones</div>
+                  <div class="panel-heading panel-title">Control de Liquidaciones</div>
 
 
                     <div class="panel-body text-right">
@@ -17,33 +17,26 @@
 
                   <div class="panel-body">
 
-                     <table class="table table-bordered table-striped ">
+                     <table class="table table-bordered table-striped table-hover">
                        <thead>
                          <th class="text-center">No.</th>
                          <th class="text-center">Fecha</th>
                          <th class="text-center">Ruta</th>
-                         {{--<th class="text-center">Monto</th>--}}
+                         <th class="text-center">Monto</th>
                          <th class="text-center">Estatus</th>
-                         <th class="text-center">Editar</th>
                          <th class="text-center">Anular</th>
                        </thead>
                        <tbody>
 
                            @foreach ($liquidaciones as $liquidacion)
                                <tr>
-                                   <td>{{ $liquidacion->ID }}</td>
-                                   <td>{{ $liquidacion->FECHA }}</td>
-                                   <td>{{ $liquidacion->RUTA }}</td>
-                                   {{--<td>###</td>--}}
-                                   <td>{{ $liquidacion->DESCRIPCION }}</td>
+                                   <td><a href="{{ route('liquidaciones.edit', $liquidacion->ID) }}">{{ $liquidacion->ID }}</td>
+                                   <td><a href="{{ route('liquidaciones.edit', $liquidacion->ID) }}">{{ $liquidacion->FECHA }}</td>
+                                   <td><a href="{{ route('liquidaciones.edit', $liquidacion->ID) }}">{{ $liquidacion->RUTA }}</td>
+                                   <td><a href="{{ route('liquidaciones.edit', $liquidacion->ID) }}">{{ 'Q.' . App\Factura::where('LIQUIDACION_ID', '=', $liquidacion->ID)->sum('TOTAL')}}</td>
+                                   <td><a href="{{ route('liquidaciones.edit', $liquidacion->ID) }}">{{ $liquidacion->DESCRIPCION }}</td>
                                    <td class="text-center">
-                                     <a href="{{ route('liquidaciones.edit', $liquidacion->ID) }}#"><span class="glyphicon glyphicon-edit" aria-hidden="true" style="font-size:20px; color: black"></span></a>
-                                   </td>
-                                   <td class="text-center">
-                                     <a href="{{ route('anularEmpresa', $liquidacion->ID) }}#"><span class="glyphicon glyphicon-ban-circle" aria-hidden="true" style="font-size:20px; color: black"></span></a>
-                                   </td>
-                                   <td class="text-center">
-
+                                     <a href="{{ route('anularEmpresa', $liquidacion->ID) }}"><span class="glyphicon glyphicon-ban-circle" aria-hidden="true" style="font-size:20px; color: black"></span></a>
                                    </td>
                                </tr>
                             @endforeach

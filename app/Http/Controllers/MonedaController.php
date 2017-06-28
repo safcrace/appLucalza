@@ -54,18 +54,6 @@ class MonedaController extends Controller
 
         $moneda->save();
 
-        $tasaCambio = new TasaCambio();
-
-        $tasaCambio->FECHA = $request->FECHA;
-        $tasaCambio->COMPRA = $request->COMPRA;
-        $tasaCambio->VENTA = $request->VENTA;
-        $tasaCambio->PROMEDIO = $request->PROMEDIO;
-        $tasaCambio->ANULADO = $request->ANULADOTC;
-        if ($tasaCambio->ANULADO === null) {
-            $tasaCambio->ANULADO = 0;
-        }
-
-        $moneda->tasaCambios()->save($tasaCambio);
 
         return redirect::to('monedas');
     }

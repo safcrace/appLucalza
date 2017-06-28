@@ -24,6 +24,20 @@ class SupervisorController extends Controller
                                   ->join('cat_ruta', 'cat_ruta.ID', '=', 'cat_usuarioruta.RUTA_ID')
                                   ->paginate(10);
 
+                                /*  $total = Factura::where('LIQUIDACION_ID', '=', 4)->sum('TOTAL');
+                                  dd($total);
+                                  $totalLiquidacion = array();
+                                  foreach ($liquidaciones as $liquidacion) {
+                                       echo $liquidacion->ID;
+                                       array_push($totalLiquidacion, "arándano");
+
+                                  }
+
+
+      /*$totales = \DB::select("select SUM(liq_factura.TOTAL)
+                              FROM liq_factura inner join liq_liquidacion on liq_liquidacion.ID = liq_factura.LIQUIDACION_ID");
+                            //  dd($totales);*/
+
         return view('supervisor.index', compact('liquidaciones'));
     }
 

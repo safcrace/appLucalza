@@ -6,7 +6,7 @@
       <div class="row">
           <div class="col-md-12 ">
               <div class="panel panel-default">
-                  <div class="panel-heading">Control de Rutas</div>
+                  <div class="panel-heading panel-title">Control de Rutas</div>
 
 
                     <div class="panel-body text-right">
@@ -17,22 +17,18 @@
 
                   <div class="panel-body">
 
-                     <table class="table table-bordered table-striped ">
+                     <table class="table table-bordered table-striped table-hover">
                        <thead>
                          <th class="text-center">Código</th>
-                         <th class="text-center">Ruta</th>
-                         <th class="text-center">Editar</th>
+                         <th class="text-center">Ruta</th>                        
                          <th class="text-center">Anular</th>
                        </thead>
                        <tbody>
 
                            @foreach ($rutas as $ruta)
                                <tr>
-                                   <td>{{ $ruta->CLAVE}}</td>
-                                   <td>{{ $ruta->DESCRIPCION}}</td>
-                                   <td class="text-center">
-                                     <a href="{{ route('rutas.edit', $ruta->ID) }}"><span class="glyphicon glyphicon-edit" aria-hidden="true" style="font-size:20px; color: black"></span></a>
-                                   </td>
+                                   <td><a href="{{ route('rutas.edit', $ruta->ID) }}">{{ $ruta->CLAVE}}</a></td>
+                                   <td><a href="{{ route('rutas.edit', $ruta->ID) }}">{{ $ruta->DESCRIPCION}}</a></td>
                                    <td class="text-center">
                                      <a href="{{ route('anularRuta', $ruta->ID) }}"><span class="glyphicon glyphicon-ban-circle" aria-hidden="true" style="font-size:20px; color: black"></span></a>
                                    </td>

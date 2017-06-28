@@ -9,10 +9,10 @@
   <div class="col-md-3">
       {!! Form::text('USUARIO', $usuario, ['class' => 'form-control', 'disabled' => 'true']); !!}
   </div>
-  <div class="col-md-1 col-md-offset-3">
+  <div class="col-md-1 col-md-offset-2">
         {!! Form::label('TOTAL', 'TOTAL') !!}
   </div>
-  <div class="col-md-1 col-md-offset-1">
+  <div class="col-md-1 col-md-offset-2">
       <button type="button" class="btn btn-primary btn-sm">Imprimir</button>
   </div>
 </div>
@@ -24,8 +24,8 @@
   <div class="col-md-3">
           {!! Form::select('RUTA_ID', $rutas, $combo->RUTA, ['class' => 'form-control', 'placeholder' => 'Seleccione una Ruta']); !!}
   </div>
-  <div class="col-md-1 col-md-offset-3">
-      {!! Form::text('TOTAL', '####', ['class' => 'form-control', 'disabled' => 'true']); !!}
+  <div class="col-md-2 col-md-offset-2">
+      {!! Form::text('TOTAL', 'Q.' . App\Factura::where('LIQUIDACION_ID', '=', $liquidacion->ID)->sum('TOTAL'), ['class' => 'form-control', 'disabled' => 'true']); !!}
   </div>
   <div class="col-md-1 col-md-offset-1">
       <button type="button" class="btn btn-primary btn-sm">Enviar</button>

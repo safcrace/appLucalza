@@ -13,28 +13,10 @@
 
 <div class="row form-group">
   <div class="col-md-1 col-md-offset-1">
-        {!! Form::label('COMPRA', 'Compra') !!}
+        {!! Form::label('COMPRA', 'Tasa de Cambio') !!}
   </div>
   <div class="col-md-4">
-      {!! Form::text('COMPRA', null, ['class' => 'form-control', 'placeholder' => 'Valor de Compra']); !!}
-  </div>
-</div>
-
-<div class="row form-group">
-  <div class="col-md-1 col-md-offset-1">
-        {!! Form::label('VENTA', 'Venta') !!}
-  </div>
-  <div class="col-md-4">
-      {!! Form::text('VENTA', null, ['class' => 'form-control', 'placeholder' => 'Valor de Venta']); !!}
-  </div>
-</div>
-
-<div class="row form-group">
-  <div class="col-md-1 col-md-offset-1">
-        {!! Form::label('PROMEDIO', 'Promedio') !!}
-  </div>
-  <div class="col-md-4">
-      {!! Form::text('PROMEDIO', null, ['class' => 'form-control', 'placeholder' => 'Valor de Promedio']); !!}
+      {!! Form::text('COMPRA', null, ['class' => 'form-control', 'placeholder' => 'Tasa de Cambio']); !!}
   </div>
 </div>
 

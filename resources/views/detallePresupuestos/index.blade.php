@@ -6,7 +6,7 @@
       <div class="row">
           <div class="col-md-12 ">
               <div class="panel panel-default">
-                  <div class="panel-heading">Detalle Presupuesto</div>
+                  <div class="panel-heading panel-title">Detalle Presupuesto</div>
 
 
                     <div class="panel-body text-right">
@@ -17,7 +17,7 @@
 
                   <div class="panel-body">
 
-                     <table class="table table-bordered table-striped ">
+                     <table class="table table-bordered table-striped table-hover">
                        <thead>
                          <th class="text-center">Tipo Gasto</th>
                          <th class="text-center">Frecuencia</th>

@@ -7,7 +7,7 @@
       <div class="row">
           <div class="col-md-12 ">
               <div class="panel panel-default">
-                  <div class="panel-heading">Ingreso de Monedas</div>
+                  <div class="panel-heading panel-title">Ingreso de Monedas</div>
 
                   <div class="panel-body">
 
@@ -21,14 +21,8 @@
                       </div>
 
 
-                      @include('monedas.partials.fields')
+                      @include('monedas.partials.fields')                      
 
-                      <div class="panel-title">
-                        <h4 class="text-center">Tasa de Cambio USD</h4>
-                      </div>
-
-
-                      @include('monedas.partials.fieldsTwo')
 
                    {!! Form::close() !!}
 
