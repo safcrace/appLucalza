@@ -62,6 +62,7 @@ class UsuarioController extends Controller
     public function store(Request $request)
     {
         $empresa_id = $request->EMPRESA_ID;
+        $codigoProveedorSap = $request->codigoProveedorSap;
         //dd($empresa_id);
 
         $usuario = new User();
@@ -81,7 +82,7 @@ class UsuarioController extends Controller
 
         $usuario->save();
 
-        UsuarioEmpresa::insert( ['USER_ID' => $usuario->id, 'EMPRESA_ID' => $empresa_id, 'ANULADO' => 0] );
+        UsuarioEmpresa::insert( ['USER_ID' => $usuario->id, 'EMPRESA_ID' => $empresa_id, 'CODIGO_PROVEEDOR_SAP' => $codigoProveedorSap, 'ANULADO' => 0] );
 
         return redirect::to('empresas');
     }

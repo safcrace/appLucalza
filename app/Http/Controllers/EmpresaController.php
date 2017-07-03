@@ -9,6 +9,7 @@ use App\Http\Requests\CreateEmpresaRequest;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Redirect;
 use App\Empresa;
+use App\Moneda;
 
 class EmpresaController extends Controller
 {
@@ -17,8 +18,10 @@ class EmpresaController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
+        //$user = $request->user();
+        //dd($user->can('ver usuarios'));
         $empresas = Empresa::select('*')
                             ->where('cat_empresa.ANULADO', '=', 0)
                             ->paginate(10);
@@ -33,7 +36,9 @@ class EmpresaController extends Controller
      */
     public function create()
     {
-        return view('empresas.create');
+        $moneda = Moneda::lists('DESCRIPCION', 'ID')
+                                        ->toArray();
+        return view('empresas.create', compact('moneda'));
     }
 
     /**
@@ -47,6 +52,7 @@ class EmpresaController extends Controller
         $empresa = new Empresa();
         $empresa->CLAVE = $request->CLAVE;
         $empresa->DESCRIPCION = $request->DESCRIPCION;
+        $empresa->MONEDA_ID = $request->MONEDA_ID;
         $empresa->ANULADO = $request->ANULADO;
         $empresa->LICENSESERVER = $request->LICENSESERVER;
         $empresa->USERSAP = $request->USERSAP;
@@ -83,7 +89,10 @@ class EmpresaController extends Controller
     {
       $empresa = Empresa::findOrFail($id);
 
-      return view('empresas.edit', compact('empresa'));
+      $moneda = Moneda::lists('DESCRIPCION', 'ID')
+                                      ->toArray();
+
+      return view('empresas.edit', compact('empresa', 'moneda'));
     }
 
     /**
@@ -101,7 +110,7 @@ class EmpresaController extends Controller
         Empresa::where('ID', $empresa->ID)
           ->update(['CLAVE' => $request->CLAVE, 'DESCRIPCION' => $request->DESCRIPCION, 'ANULADO' => $request->ANULADO, 'LICENSESERVER' => $request->LICENSESERVER,
                     'USERSAP' => $request->USERSAP, 'PASSSAP' => bcrypt($request->PASSSAP), 'DBSAP' => $request->DBSAP, 'USERSQL' => $request->USERSQL,
-                    'PASSSQL' => bcrypt($request->ANULADO), 'SERVIDORSQL' => $request->SERVIDORSQL, 'SAPDBTYPE' => $request->SAPDBTYPE,]);
+                    'PASSSQL' => bcrypt($request->ANULADO), 'SERVIDORSQL' => $request->SERVIDORSQL, 'SAPDBTYPE' => $request->SAPDBTYPE, 'MONEDA_ID' => $request->MONEDA_ID]);
 
         return Redirect::to('empresas');
     }

@@ -151,7 +151,26 @@ class FacturaController extends Controller
                 ->update(['TIPOGASTO_ID' => $request->TIPOGASTO_ID, 'MONEDA_ID' => $request->MONEDA_ID, 'PROVEEDOR_ID' => $request->PROVEEDOR_ID,
                           'SERIE' => $request->SERIE, 'NUMERO' => $request->NUMERO, 'FECHA_FACTURA' => $request->FECHA_FACTURA, 'TOTAL' => $request->TOTAL]);
 
-                
+
+
+        return Redirect::to('liquidaciones');
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function updateComentarioFactura(Request $request, $id)
+    {
+        $comentarioActual = Factura::select('COMENTARIO_SUPERVISOR')->where('ID', '=', $id)->first();
+        $nuevoComentario = $comentarioActual->COMENTARIO_SUPERVISOR . ' ' . $request->COMENTARIO_SUPERVISOR;
+        Factura::where('ID', $id)
+                ->update(['COMENTARIO_SUPERVISOR' => $nuevoComentario]);
+
+        return $request->COMENTARIO_SUPERVISOR;
 
         return Redirect::to('liquidaciones');
     }

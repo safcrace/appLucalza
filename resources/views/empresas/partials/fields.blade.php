@@ -19,6 +19,13 @@
       <div class="col-md-4">
           {!! Form::text('DESCRIPCION', null, ['class' => 'form-control', 'placeholder' => 'Nombre de Empresa']); !!}
       </div>
+
+      <div class="col-md-1">
+            {!! Form::label('MONEDA_ID', 'Moneda') !!}
+      </div>
+      <div class="col-md-3">
+          {!! Form::select('MONEDA_ID', $moneda, null, ['class' => 'form-control', 'placeholder' => 'Seleccione Moneda']); !!}
+      </div>
     </div>
 
     <div class="row form-group">

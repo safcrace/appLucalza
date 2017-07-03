@@ -6,10 +6,9 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
-use App\Factura;
 use App\Liquidacion;
 
-class SupervisorController extends Controller
+class ContabilidadController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -18,7 +17,7 @@ class SupervisorController extends Controller
      */
     public function index()
     {
-        $liquidaciones = Liquidacion::select('liq_liquidacion.ID', 'liq_liquidacion.FECHA_INICIO as FECHA', 'users.nombre as USUARIO', 'cat_ruta.DESCRIPCION as RUTA')
+        $liquidaciones = Liquidacion::select('liq_liquidacion.ID', 'liq_liquidacion.FECHA_INICIO as FECHA', 'users.nombre as USUARIO', 'cat_ruta.DESCRIPCION as RUTA' )
                                   ->join('cat_usuarioruta', 'cat_usuarioruta.ID', '=', 'liq_liquidacion.USUARIORUTA_ID')
                                   ->join('users', 'users.id', '=', 'cat_usuarioruta.USER_ID')
                                   ->join('cat_ruta', 'cat_ruta.ID', '=', 'cat_usuarioruta.RUTA_ID')
@@ -28,7 +27,7 @@ class SupervisorController extends Controller
                               FROM liq_factura inner join liq_liquidacion on liq_liquidacion.ID = liq_factura.LIQUIDACION_ID");
                             //  dd($totales);*/
 
-        return view('supervisor.index', compact('liquidaciones'));
+        return view('contabilidad.index', compact('liquidaciones'));
     }
 
     /**
@@ -67,8 +66,7 @@ class SupervisorController extends Controller
                                   ->where('liq_liquidacion.id', '=', $id)
                                   ->first();
 
-        $facturas = Factura::select('liq_factura.ID', 'cat_proveedor.NOMBRE', 'liq_factura.SERIE as SERIE', 'liq_factura.NUMERO as NUMERO', 'liq_factura.TOTAL as TOTAL',
-                                    'liq_factura.FECHA_FACTURA AS FECHA', 'cat_tipogasto.DESCRIPCION as TIPOGASTO', 'liq_factura.COMENTARIO_SUPERVISOR as COMENTARIO')
+        $facturas = Factura::select('liq_factura.ID', 'cat_proveedor.NOMBRE', 'liq_factura.SERIE as SERIE', 'liq_factura.NUMERO as NUMERO', 'liq_factura.TOTAL as TOTAL', 'liq_factura.FECHA_FACTURA AS FECHA', 'cat_tipogasto.DESCRIPCION as TIPOGASTO')
                                                   ->join('cat_proveedor', 'cat_proveedor.ID', '=', 'liq_factura.PROVEEDOR_ID')
                                                   ->join('cat_tipogasto', 'cat_tipogasto.ID', '=', 'liq_factura.TIPOGASTO_ID')
                                                   //->join('cat_frecuenciatiempo', 'cat_frecuenciatiempo.ID', '=', 'pre_detpresupuesto.FRECUENCIATIEMPO_ID')
@@ -76,7 +74,7 @@ class SupervisorController extends Controller
                                                   ->paginate();
         $corregirFactura = array();
 
-        return view('supervisor.edit', compact('liquidacion', 'facturas', 'corregirFactura'));
+        return view('contabilidad.edit', compact('liquidacion', 'facturas', 'corregirFactura'));
     }
 
     /**

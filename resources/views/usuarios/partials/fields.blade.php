@@ -11,7 +11,7 @@
       <div class="col-md-1 col-md-offset-1">
             {!! Form::label('nombre', 'Nombre') !!}
       </div>
-      <div class="col-md-5 col-md-offset-1">
+      <div class="col-md-4 col-md-offset-1">
           {!! Form::text('nombre', null, ['class' => 'form-control', 'placeholder' => 'Nombre']); !!}
       </div>
     </div>
@@ -55,18 +55,29 @@
       <div class="col-md-1 col-md-offset-1">
             {!! Form::label('usuario', 'Usuario') !!}
       </div>
-      <div class="col-md-5 col-md-offset-1">
+      <div class="col-md-3 col-md-offset-1">
           {!! Form::text('usuario', null, ['class' => 'form-control', 'placeholder' => 'Usuario']); !!}
+      </div>
+
+      <div class="col-md-1 col-md-offset-1">
+            {!! Form::label('password', 'Contraseña') !!}
+      </div>
+      <div class="col-md-3">
+          {!! Form::password('password', ['class' => 'form-control awesome', 'placeholder' => 'Contraseña']); !!}
       </div>
     </div>
 
     <div class="row form-group">
-      <div class="col-md-1 col-md-offset-1">
-            {!! Form::label('password', 'Contraseña') !!}
+      <div class="col-md-2 col-md-offset-1">
+            {!! Form::label('codigoProveedorSap', 'Código Proveedor SAP') !!}
       </div>
-      <div class="col-md-3 col-md-offset-1">
-          {!! Form::password('password', ['class' => 'form-control awesome', 'placeholder' => 'Contraseña']); !!}
+      <div class="col-md-3">
+          {!! Form::text('codigoProveedorSap', null, ['class' => 'form-control', 'placeholder' => 'Código Proveedor SAP']); !!}
       </div>
+
+      <div class="col-md-1">
+          <span class="glyphicon glyphicon-import" aria-hidden="true"></span>
+      </div>      
     </div>
 
     <div class="row form-group">

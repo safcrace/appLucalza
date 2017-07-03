@@ -1,4 +1,4 @@
-<nav class="navbar navbar-default navbar-static-top">
+<nav class="navbar navbar-default navbar-static-top" >
     <div class="container">
         <div class="navbar-header">
 
@@ -42,10 +42,12 @@
                         <li><a href="#">One more separated link</a></li> --}}
                       </ul>
                     </li>
-                    <li class=""><a href="{{ route('presupuestos.index') }}" data-toggle="tooltip" data-placement="top" title="Presupuestos"><span class="glyphicon glyphicon-usd" aria-hidden="true" style="font-size:32px;"></span></a></li>
-                    <li class=""><a href="{{ route('liquidaciones.index') }}" data-toggle="tooltip" data-placement="top" title="Liquidaciones"><span class="glyphicon glyphicon-list-alt" aria-hidden="true" style="font-size:32px;"></span></a></li>
-                    <li class=""><a href="{{ route('supervisor') }}" data-toggle="tooltip" data-placement="top" title="Revisión Supervisor"><span class="glyphicon glyphicon-floppy-saved" aria-hidden="true" style="font-size:32px;"></span></a></li>
-                    <li class=""><a href="#" data-toggle="tooltip" data-placement="top" title="Revisión Cotabilidad"><span class="glyphicon glyphicon-share" aria-hidden="true" style="font-size:32px;"></span></a></li>
+                    @if (auth()->user()->hasRole('superAdmin'))
+                      <li class=""><a href="{{ route('presupuestos.index') }}" data-toggle="tooltip" data-placement="top" title="Presupuestos"><span class="glyphicon glyphicon-usd" aria-hidden="true" style="font-size:32px;"></span></a></li>
+                      <li class=""><a href="{{ route('liquidaciones.index') }}" data-toggle="tooltip" data-placement="top" title="Liquidaciones"><span class="glyphicon glyphicon-list-alt" aria-hidden="true" style="font-size:32px;"></span></a></li>
+                      <li class=""><a href="{{ route('supervisor') }}" data-toggle="tooltip" data-placement="top" title="Revisión Supervisor"><span class="glyphicon glyphicon-inbox" aria-hidden="true" style="font-size:32px;"></span></a></li>
+                      <li class=""><a href="{{ route('contabilidad') }}" data-toggle="tooltip" data-placement="top" title="Revisión Cotabilidad"><span class="glyphicon glyphicon-floppy-saved" aria-hidden="true" style="font-size:32px;"></span></a></li>
+                    @endif
                     {{--<li class=""><a href="#"><img src="{{ asset('images/abogado.png') }}" alt=""> Sender</a></li>
                     <li class=""><a href="#"><img src="{{ asset('images/admon.png') }}" alt=""></a></li>--}}
                     <li class="">

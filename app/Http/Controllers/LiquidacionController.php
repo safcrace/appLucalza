@@ -128,7 +128,7 @@ class LiquidacionController extends Controller
                                                   ->where('liq_factura.LIQUIDACION_ID', '=', $id)
                                                   ->paginate();
 
-        
+
         return view('liquidaciones.edit', compact('liquidacion', 'usuario', 'usuario_id', 'rutas', 'combo', 'facturas'));
     }
 
@@ -151,6 +151,38 @@ class LiquidacionController extends Controller
                 ->update(['USUARIORUTA_ID' => $usuarioRuta_id->ID, 'FECHA_INICIO' => $request->FECHA_INICIO]);
 
         return Redirect::to('liquidaciones');
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function updateLiquidacionCorreccion(Request $request, $id)
+    {
+
+        Liquidacion::where('ID', $id)
+                ->update(['SUPERVISOR_COMENTARIO' => $request->SUPERVISOR_COMENTARIO, 'ESTADOLIQUIDACION_ID' => 6]);
+
+        return Redirect::to('supervisor');
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function updateLiquidacionAprobacion(Request $request, $id)
+    {
+
+        Liquidacion::where('ID', $id)
+                ->update(['ESTADOLIQUIDACION_ID' => 3]);
+
+        return Redirect::to('supervisor');
     }
 
     /**
