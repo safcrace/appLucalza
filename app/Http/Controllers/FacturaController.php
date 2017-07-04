@@ -176,6 +176,26 @@ class FacturaController extends Controller
     }
 
     /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function updateComentarioContabilidadFactura(Request $request, $id)
+    {
+        $comentarioActual = Factura::select('COMENTARIO_CONTABILIDAD')->where('ID', '=', $id)->first();
+        $nuevoComentario = $comentarioActual->COMENTARIO_CONTABILIDAD . ' ' . $request->COMENTARIO_CONTABILIDAD;
+
+        Factura::where('ID', $id)
+                ->update(['COMENTARIO_CONTABILIDAD' => $nuevoComentario]);
+
+        return $nuevoComentario;
+
+        return Redirect::to('liquidaciones');
+    }
+
+    /**
      * Remove the specified resource from storage.
      *
      * @param  int  $id

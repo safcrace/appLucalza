@@ -21,9 +21,11 @@
                        <thead>
                          <th class="text-center">Código</th>
                          <th class="text-center">Nombre</th>
-                         <th class="text-center">Correo Electrónico</th>                        
+                         <th class="text-center">Correo Electrónico</th>
                          <th class="text-center">Anular</th>
-                         <th class="text-center">Módulo</th>
+                         @can('ver rutas')
+                           <th class="text-center">Módulo</th>
+                         @endcan
                        </thead>
                        <tbody>
 
@@ -35,9 +37,11 @@
                                    <td class="text-center">
                                      <a href="{{ route('anular', $user->id) }}"><span class="glyphicon glyphicon-ban-circle" aria-hidden="true" style="font-size:20px; color: black"></span></a>
                                    </td>
-                                   <td class="text-center">
-                                     <a href="{{ route('indexRutasUsuario', $empresa . '-'  . $user->id) }}"><button type="button" class="btn btn-primary btn-sm">Rutas</button></a>
-                                   </td>
+                                   @can('ver rutas')
+                                     <td class="text-center">
+                                       <a href="{{ route('indexRutasUsuario', $empresa . '-'  . $user->id) }}"><button type="button" class="btn btn-primary btn-sm">Rutas</button></a>
+                                     </td>
+                                   @endcan
                                </tr>
                            @endforeach
 

@@ -20,6 +20,7 @@ class Presupuesto extends Model
      */
     protected $fillable = ['USUARIORUTA_ID', 'MONEDA_ID', 'FRECUENCIATIEMPO_ID', 'VIGENCIA_INICIO', 'VIGENCIA_FINAL', 'DESCRIPCION', 'ANULADO'];
 
+    protected $dates = ['VIGENCIA_INICIO', 'VIGENCIA_FINAL'];
 
     public $timestamps = false;
 

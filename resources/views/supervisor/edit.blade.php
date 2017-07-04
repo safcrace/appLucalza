@@ -47,7 +47,7 @@
 
                             @foreach ($facturas as $factura)
                                 <tr data-id={{ $factura->ID }} data-factura={{ $factura->NUMERO }}>
-                                    <td>{{ $factura->FECHA }}</td>
+                                    <td>{{ $factura->FECHA_FACTURA->format('d-m-Y') }}</td>
                                     <td>{{ $factura->NOMBRE}}</td>
                                     <td>{{ $factura->SERIE}}</td>
                                     <td>{{ $factura->NUMERO}}</td>

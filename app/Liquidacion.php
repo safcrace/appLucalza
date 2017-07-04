@@ -21,6 +21,7 @@ class Liquidacion extends Model
     protected $fillable = ['USUARIORUTA_ID', 'ESTADOLIQUIDACION_ID', 'FECHA_INICIO', 'FECHA_FINAL', 'ES_LOCAL', 'COMENTARIO', 'SUPERVISOR_AUTORIZACION',
                            'SUPERVISOR_COMENTARIO', 'SUPERVISOR_FECHA', 'CONTABILIDAD_AUTORIZACION', 'CONTABILIDAD_COMENTARIO', 'CONTABILIDAD_FECHA', 'ANULADO'];
 
+    protected $dates = ['FECHA_INICIO', 'FECHA_FINAL'];
 
     public $timestamps = false;
 

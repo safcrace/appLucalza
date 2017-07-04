@@ -31,7 +31,7 @@
                            @foreach ($liquidaciones as $liquidacion)
                                <tr>
                                    <td><a href="{{ route('liquidaciones.edit', $liquidacion->ID) }}">{{ $liquidacion->ID }}</td>
-                                   <td><a href="{{ route('liquidaciones.edit', $liquidacion->ID) }}">{{ $liquidacion->FECHA }}</td>
+                                   <td><a href="{{ route('liquidaciones.edit', $liquidacion->ID) }}">{{ $liquidacion->FECHA_INICIO->format('d-m-Y') }}</td>
                                    <td><a href="{{ route('liquidaciones.edit', $liquidacion->ID) }}">{{ $liquidacion->RUTA }}</td>
                                    <td><a href="{{ route('liquidaciones.edit', $liquidacion->ID) }}">{{ 'Q.' . App\Factura::where('LIQUIDACION_ID', '=', $liquidacion->ID)->sum('TOTAL')}}</td>
                                    <td><a href="{{ route('liquidaciones.edit', $liquidacion->ID) }}">{{ $liquidacion->DESCRIPCION }}</td>

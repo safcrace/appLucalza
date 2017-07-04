@@ -14,9 +14,18 @@ use App\Ruta;
 use App\Presupuesto;
 use App\UsuarioRuta;
 use App\DetallePresupuesto;
+use Carbon\Carbon;
 
 class PresupuestoController extends Controller
 {
+
+    /**
+     * Carbon
+     */
+    public function __construct()
+    {
+      Carbon::setLocale('es');
+    }
     /**
      * Display a listing of the resource.
      *
@@ -26,7 +35,7 @@ class PresupuestoController extends Controller
     {
         $usuario_id = Auth::user()->id;
 
-        $presupuestos = Presupuesto::select('pre_presupuesto.ID as ID', 'users.nombre as USUARIO', 'cat_ruta.DESCRIPCION as RUTA' )
+        $presupuestos = Presupuesto::select('pre_presupuesto.ID as ID', 'users.nombre as USUARIO', 'cat_ruta.DESCRIPCION as RUTA', 'pre_presupuesto.VIGENCIA_INICIO', 'pre_presupuesto.VIGENCIA_FINAL')
                                       ->join('cat_usuarioruta', 'cat_usuarioruta.ID', '=', 'pre_presupuesto.USUARIORUTA_ID')
                                       ->join('users', 'users.id', '=', 'cat_usuarioruta.USER_ID')
                                       ->join('cat_ruta', 'cat_ruta.ID', '=', 'cat_usuarioruta.RUTA_ID')

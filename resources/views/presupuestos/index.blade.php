@@ -22,6 +22,8 @@
                          <th class="text-center">Código</th>
                          <th class="text-center">Usuario</th>
                          <th class="text-center">Ruta</th>
+                         <th class="text-center">Del</th>
+                         <th class="text-center">Al</th>
                          <th class="text-center">Anular</th>
                        </thead>
                        <tbody>
@@ -31,9 +33,11 @@
                                    <td><a href="{{ route('presupuestos.edit', $presupuesto->ID) }}">{{ $presupuesto->ID }}</a></td>
                                    <td><a href="{{ route('presupuestos.edit', $presupuesto->ID) }}">{{ $presupuesto->USUARIO }}</a></td>
                                    <td><a href="{{ route('presupuestos.edit', $presupuesto->ID) }}">{{ $presupuesto->RUTA }}</a></td>
+                                   <td><a href="{{ route('presupuestos.edit', $presupuesto->ID) }}">{{ $presupuesto->VIGENCIA_INICIO->format('d-m-Y') }}</a></td>
+                                   <td><a href="{{ route('presupuestos.edit', $presupuesto->ID) }}">{{ $presupuesto->VIGENCIA_FINAL->format('d-m-Y') }}</a></td>
                                    <td class="text-center">
                                      <a href="{{-- route('anularEmpresa', $empresa->ID) --}}"><span class="glyphicon glyphicon-ban-circle" aria-hidden="true" style="font-size:20px; color: black"></span></a>
-                                   </td>                                   
+                                   </td>
                                </tr>
                            @endforeach
 

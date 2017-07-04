@@ -91,13 +91,15 @@ Route::resource('detallePresupuestos', 'DetallePresupuestoController');
 
 // Liquidacion routes
 //Route::get('presupuesto/create/{id}', ['uses' => 'PresupuestoController@presupuestoCreate', 'as' => 'presupuestoCreate']);
-Route::patch('liquidacion/{id}/update', ['uses' => 'LiquidacionController@updateLiquidacionCorreccion', 'as' => 'correccionLiquidacion']);
+Route::patch('liquidacion/{id}/update/supervisor', ['uses' => 'LiquidacionController@updateLiquidacionCorreccion', 'as' => 'correccionLiquidacion']);
 Route::patch('liquidacion/{id}/update/aprobacion', ['uses' => 'LiquidacionController@updateLiquidacionAprobacion', 'as' => 'aprobacionLiquidacion']);
+Route::patch('liquidacion/{id}/update/contabilidad', ['uses' => 'LiquidacionController@updateLiquidacionCorreccionContabilidad', 'as' => 'correccionLiquidacionContabilidad']);
 Route::resource('liquidaciones', 'LiquidacionController');
 
 // Facturas routes
 Route::get('liquidacion/{id}/create/factura',  ['uses' => 'FacturaController@liquidacionCreateFactura', 'as' => 'createFactura']);
 Route::patch('update/factura/{id}/supervisor/comentario', ['uses' => 'FacturaController@updateComentarioFactura', 'as' => 'comentarioSupervisor']);
+Route::patch('update/factura/{id}/contabilidad/comentario', ['uses' => 'FacturaController@updateComentarioContabilidadFactura', 'as' => 'comentarioContabilidad']);
 Route::resource('facturas', 'FacturaController');
 
 //Supervisor routes
@@ -105,5 +107,5 @@ Route::get('supervisor', ['uses' => 'SupervisorController@index', 'as' => 'super
 Route::get('supervisor/show/{id}', ['uses' => 'SupervisorController@show', 'as' => 'showLiquidacion']);
 
 //Contabilidad routes
-Route::get('Contabilidad', ['uses' => 'ContabilidadController@index', 'as' => 'contabilidad']);
+Route::get('contabilidad', ['uses' => 'ContabilidadController@index', 'as' => 'contabilidad']);
 Route::get('contabilidad/show/{id}', ['uses' => 'ContabilidadController@show', 'as' => 'showLiquidacionRev']);

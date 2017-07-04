@@ -29,7 +29,7 @@
         {!! Form::label('FECHA', 'Fecha') !!}
   </div>
   <div class="col-md-2">
-        {!! Form::text('FECHA', $liquidacion->FECHA, ['class' => 'form-control', 'disabled' => 'true']); !!}
+        {!! Form::text('FECHA', $liquidacion->FECHA_INICIO->format('d-m-Y'), ['class' => 'form-control', 'disabled' => 'true']); !!}
   </div>
   <div class="col-md-2">
 

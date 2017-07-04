@@ -7,16 +7,14 @@
       <div class="row">
           <div class="col-md-12 ">
             <div class="panel panel-default">
-                 <div class="panel-heading panel-title">
+                 <div class="panel-heading panel-title" style="height: 65px">
                     Datos Liquidación
+
+                      <button type="button" class="btn btn-default text-right" style="border-color: white; float: right"><a href="{{ route('supervisor') }}"><span class="glyphicon glyphicon-remove-sign" aria-hidden="true" style="font-size:32px; color: black"></span></a></button>
 
                   </div>
                  <div class="panel-body">
 
-                     <div class="panel-body text-right">
-                       <button type="button" class="btn btn-default" style="border-color: white"><a href="{{ route('supervisor') }}"><span class="glyphicon glyphicon-remove-sign" aria-hidden="true" style="font-size:32px; color: black"></span></a></button>
-
-                     </div>
 
                      @include('contabilidad.detalle')
                   {!! Form::close() !!}
@@ -40,16 +38,16 @@
                           <th class="text-center">Numero</th>
                           <th class="text-center">Tipo de Gasto</th>
                           <th class="text-center">Total</th>
-                          {{--<th class="text-center">Moneda</th>--}}
                           <th class="text-center">Ver</th>
-                          <th class="text-center">Aprobar</th>
                           <th class="text-center">Corregir</th>
+                          <th class="text-center">Comentario</th>
+                          {{--<th class="text-center">Corregir</th>--}}
                         </thead>
                         <tbody>
 
                             @foreach ($facturas as $factura)
-                                <tr data-id={{  $factura->NUMERO }}>
-                                    <td>{{ $factura->FECHA }}</td>
+                                <tr data-id={{ $factura->ID }} data-factura={{ $factura->NUMERO }}>
+                                    <td>{{ $factura->FECHA_FACTURA->format('d-m-Y') }}</td>
                                     <td>{{ $factura->NOMBRE}}</td>
                                     <td>{{ $factura->SERIE}}</td>
                                     <td>{{ $factura->NUMERO}}</td>
@@ -58,8 +56,9 @@
                                     <td class="text-center">
                                       <a href="#"><span class="glyphicon glyphicon-eye-open" aria-hidden="true" style="font-size:20px; color: black"></span></a>
                                     </td>
-                                    <td class="text-center">{!! Form::checkbox('Aprobar', false, true, ['class' => 'btn_aprobar']); !!}</td>
-                                    <td class="text-center">{!! Form::checkbox('Corregir', true, false, ['class' => 'btn_corregir']); !!}</td>
+                                    <td class="text-center"><span class="glyphicon glyphicon-pencil btn_corregir" aria-hidden="true" style="font-size:20px; color: black" data-toggle="modal" data-target="#myModal"></td>
+                                    <td style="max-widht: 200px">{{ $factura->COMENTARIO}}</td>
+                                    {{--<td class="text-center">{!! Form::checkbox('Corregir', true, false, ['class' => 'btn_corregir']); !!}</td>--}}
                                 </tr>
                             @endforeach
 
@@ -79,21 +78,49 @@
               </div>
         </div>
   </div>
-
+  <div class="" id="facturaId" style:"display: none"></div>
   <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title" id="myModalLabel">Factura No. {{$factura->ID}}</h4>
+        <h4 class="modal-title" id="myModalLabel"></h4>
       </div>
+      {!! Form::model($factura, ['route' => ['comentarioContabilidad', ':FACTURA_ID'], 'method' => 'PATCH', 'id' => 'form-update']) !!}
       <div class="modal-body">
-        ...
+
+          <textarea name="COMENTARIO_CONTABILIDAD" class="form-control" rows="3"></textarea>
+
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Save changes</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal"><span class="glyphicon glyphicon-remove-sign" aria-hidden="true" style="font-size:32px; color: black"></span></button>
+        <button type="submit" class="btn btn-default" style="border-color: white"><span class="glyphicon glyphicon-ok-sign btn_enviar" aria-hidden="true" style="font-size:32px; color: black;"></button>
       </div>
+      {!! Form::close() !!}
+    </div>
+  </div>
+  </div>
+
+  {{-- Corrección Liquidación --}}
+
+  <div class="modal fade" id="myModalTwo" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabelTwo">Comentario Liquidación No. {{ $liquidacion->ID }}</h4>
+      </div>
+      {!! Form::model($liquidacion, ['route' => ['correccionLiquidacionContabilidad', $liquidacion->ID], 'method' => 'PATCH']) !!}
+      <div class="modal-body">
+
+          <textarea name="CONTABILIDAD_COMENTARIO" class="form-control" rows="3"></textarea>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal"><span class="glyphicon glyphicon-remove-sign" aria-hidden="true" style="font-size:32px; color: black"></span></button>
+        <button type="submit" class="btn btn-default" style="border-color: white"><span class="glyphicon glyphicon-ok-sign" aria-hidden="true" style="font-size:32px; color: black;"></button>
+      </div>
+      {!! Form::close() !!}
     </div>
   </div>
   </div>
@@ -101,31 +128,30 @@
 
 @push('scripts')
   <script type="text/javascript">
-      var corregirFactura = [];
+      //var corregirFactura = [];
       $(".btn_corregir").click(function(e){
-
-        //$aprobar = $(this).prev('.btn_aprobar');//.prop( "checked", false );
-
         var row = $(this).parents('tr');
-        row.find('.btn_aprobar').prop( "checked", false );
+        {{--row.find('.btn_aprobar').prop( "checked", false );--}}
+        var factura = row.data('factura');
         var id = row.data('id');
-        corregirFactura.push(id);
-        alert (corregirFactura);
-
-
-/*
-        alert('Yes??');
-        if (valor === true)
-        alert (valor);*/
+        $("#facturaId").html(id);
+        $("#myModalLabel").html('Factura No. ' + factura);
       });
 
-      $(".btn_aprobar").click(function(e){
+      $(".btn_enviar").click(function(e){
+          e.preventDefault();
 
-        var row = $(this).parents('tr');
-        var id = row.data('id');
-        valor = $(this).val();
-        //if (valor === true)
-        //alert (valor);
+          var form = $('#form-update');
+          var id = $("#facturaId").html();
+          var url = form.attr('action').replace(':FACTURA_ID', id);
+          var data = form.serialize();
+
+          $.post(url, data, function (result){
+            alert(result);
+            $('#myModal').modal('hide');
+            location.reload();
+          })
+
       });
   </script>
 @endpush

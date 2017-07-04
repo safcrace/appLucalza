@@ -6,7 +6,9 @@
       <div class="row">
           <div class="col-md-12 ">
               <div class="panel panel-default">
-                  <div class="panel-heading panel-title">Revisión Liquidaciones Supervisor</div>
+                  <div class="panel-heading panel-title" style="height: 65px">Revisión Liquidaciones Supervisor
+                      <button type="button" class="btn btn-default text-right" style="border-color: white; float: right"><a href="{{ route('home') }}"><span class="glyphicon glyphicon-remove-sign" aria-hidden="true" style="font-size:32px; color: black"></span></a></button>
+                  </div>
 
 
                   <div class="panel-body">
@@ -26,7 +28,7 @@
                                <tr>
 
                                      <td><a href="{{ route('showLiquidacion', $liquidacion->ID) }}">{{ $liquidacion->ID }}</a></td>
-                                     <td><a href="{{ route('showLiquidacion', $liquidacion->ID) }}">{{ $liquidacion->FECHA }}</a></td>
+                                     <td><a href="{{ route('showLiquidacion', $liquidacion->ID) }}">{{ $liquidacion->FECHA_INICIO->format('d-m-Y') }}</a></td>
                                      <td><a href="{{ route('showLiquidacion', $liquidacion->ID) }}">{{ $liquidacion->USUARIO }}</a></td>
                                      <td><a href="{{ route('showLiquidacion', $liquidacion->ID) }}">{{ $liquidacion->RUTA }}</a></td>
                                      <TD><a href="{{ route('showLiquidacion', $liquidacion->ID) }}">

@@ -31,17 +31,23 @@
                     {{--<li><a href="{{ route('register') }}">Register</a></li>--}}
                 @else
 
-                    <li class="dropdown">
-                      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" data-toggle="tooltip" data-placement="top" title="Cátalogos"><span class="glyphicon glyphicon-cog" aria-hidden="true" style="font-size:32px;"></span> <span class="caret"></span></a>
-                      <ul class="dropdown-menu">
-                        <li><a href="{{ route('monedas.index') }}">Monedas</a></li>
-                        <li><a href="{{ route('empresas.index') }}">Empresas</a></li>
-                        <li role="separator" class="divider"></li>
-                        <li class="dropdown-header">Nav header</li>
-                        {{--<li><a href="#">Separated link</a></li>
-                        <li><a href="#">One more separated link</a></li> --}}
-                      </ul>
-                    </li>
+                    @if (auth()->user()->hasRole('superAdmin', 'master', 'administrador'))
+                      <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" data-toggle="tooltip" data-placement="top" title="Cátalogos"><span class="glyphicon glyphicon-cog" aria-hidden="true" style="font-size:32px;"></span> <span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                          @can('ver monedas')
+                            <li><a href="{{ route('monedas.index') }}">Monedas</a></li>
+                          @endcan
+                          @can('ver empresas')
+                            <li><a href="{{ route('empresas.index') }}">Empresas</a></li>
+                          @endcan
+                          <li role="separator" class="divider"></li>
+                          <li class="dropdown-header">Pendiente</li>
+                          {{--<li><a href="#">Separated link</a></li>
+                          <li><a href="#">One more separated link</a></li> --}}
+                        </ul>
+                      </li>
+                    @endif
                     @if (auth()->user()->hasRole('superAdmin'))
                       <li class=""><a href="{{ route('presupuestos.index') }}" data-toggle="tooltip" data-placement="top" title="Presupuestos"><span class="glyphicon glyphicon-usd" aria-hidden="true" style="font-size:32px;"></span></a></li>
                       <li class=""><a href="{{ route('liquidaciones.index') }}" data-toggle="tooltip" data-placement="top" title="Liquidaciones"><span class="glyphicon glyphicon-list-alt" aria-hidden="true" style="font-size:32px;"></span></a></li>

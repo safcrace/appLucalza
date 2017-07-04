@@ -51,12 +51,12 @@
 
                             @foreach ($facturas as $factura)
                                 <tr>
-                                    <td><a href="{{ route('facturas.edit', $factura->ID) }}">{{ $factura->FECHA }}</a></td>
+                                    <td><a href="{{ route('facturas.edit', $factura->ID) }}">{{ $factura->FECHA_FACTURA->format('d-m-Y') }}</a></td>
                                     <td><a href="{{ route('facturas.edit', $factura->ID) }}">{{ $factura->NOMBRE}}</a></td>
                                     <td><a href="{{ route('facturas.edit', $factura->ID) }}">{{ $factura->SERIE}}</a></td>
                                     <td><a href="{{ route('facturas.edit', $factura->ID) }}">{{ $factura->NUMERO}}</a></td>
                                     <td><a href="{{ route('facturas.edit', $factura->ID) }}">{{ $factura->TIPOGASTO}}</a></td>
-                                    <td><a href="{{ route('facturas.edit', $factura->ID) }}">{{ $factura->TOTAL}}</a></td>                                    
+                                    <td><a href="{{ route('facturas.edit', $factura->ID) }}">{{ $factura->TOTAL}}</a></td>
                                     <td class="text-center">
                                       <a href="{{ route('anularProveedor', $factura->ID) }}"><span class="glyphicon glyphicon-ban-circle" aria-hidden="true" style="font-size:20px; color: black"></span></a>
                                     </td>
