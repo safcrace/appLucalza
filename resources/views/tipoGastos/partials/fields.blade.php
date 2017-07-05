@@ -16,27 +16,27 @@
         {!! Form::label('EXENTO', 'Exento') !!}
   </div>
   <div class="col-md-1">
-      {!! Form::radio('EXENTO', 1); !!}  SI
+      {!! Form::radio('EXENTO', 1, false, ['id' => 'exento']); !!}  SI
   </div>
-  <div class="col-md-2">
-      {!! Form::radio('CAUSAEXENCION_ID', 2); !!}  CANTIDAD
+  <div class="col-md-2 div_exento" style="display: none">
+      {!! Form::radio('CAUSAEXENCION_ID', 2, false, ['id' => 'cantidad']); !!}  CANTIDAD
   </div>
-  <div class="col-md-2">
+  <div class="col-md-2" style="display: none" id="ph_cantidad">
       {!! Form::text('MONTO_A_APLICAR', null, ['class' => 'form-control', 'placeholder' => 'Cantidad']); !!}
   </div>
-  <div class="col-md-2">
+  <div class="col-md-2" style="display: none" id="unidad">
       {!! Form::text('UNIDAD_MEDIDA', null, ['class' => 'form-control', 'placeholder' => 'Unidad de Medida']); !!}
   </div>
 </div>
 
 <div class="row form-group">
   <div class="col-md-1  col-md-offset-3">
-      {!! Form::radio('EXENTO', 0); !!}  NO
+      {!! Form::radio('EXENTO', 0, false, ['id' => 'no_exento']); !!}  NO
   </div>
-  <div class="col-md-2">
-      {!! Form::radio('CAUSAEXENCION_ID', 3); !!}  PORCENTAJE
+  <div class="col-md-2 div_exento" style="display: none">
+      {!! Form::radio('CAUSAEXENCION_ID', 3, false, ['id' => 'porcentaje']); !!}  PORCENTAJE
   </div>
-  <div class="col-md-2">
+  <div class="col-md-2" style="display: none" id="ph_porcentaje">
       {!! Form::text('MONTO_A_APLICAR', null, ['class' => 'form-control', 'placeholder' => 'Porcentaje']); !!}
   </div>
 </div>
@@ -121,3 +121,32 @@
       {!! Form::checkbox('ANULADO', 1); !!}
   </div>
 </div>
+
+@push('scripts')
+  <script type="text/javascript">
+      $(document).ready(function () {
+        $('#exento').click(function () {
+          $('.div_exento').show();
+        });
+
+        $('#cantidad').click(function () {
+          $('#ph_cantidad').show();
+          $('#unidad').show()
+          $('#ph_porcentaje').hide();
+        })
+
+        $('#porcentaje').click(function () {
+          $('#ph_porcentaje').show();
+          $('#ph_cantidad').hide();
+          $('#unidad').hide()
+        })
+
+        $('#no_exento').click(function () {
+          $('.div_exento').hide();
+          $('#ph_porcentaje').hide();
+          $('#ph_cantidad').hide();
+          $('#unidad').hide()
+        })
+      });      
+  </script>
+@endpush

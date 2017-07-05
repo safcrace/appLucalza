@@ -18,6 +18,9 @@ Route::get('/', [
 
 
 // Usuarios routes...
+Route::get('empresa/vendedores/supervisor/{id}', ['uses' => 'UsuarioController@vendedoresSupervisor', 'as' => 'vendedoresSupervisor']);
+Route::post('empresa/usuarios/crea/equipo', ['uses' => 'UsuarioController@creaEquipo', 'as' => 'creaEquipo']);
+Route::get('empresa/usuarios/{id}/equipo', ['uses' => 'UsuarioController@asignaEquipo', 'as' => 'asignaEquipo']);
 Route::get('usuario/anular/{id}', ['uses' => 'UsuarioController@anular', 'as' => 'anularUsuario']);
 Route::get('empresa/usuario/{id}', ['uses' => 'UsuarioController@indexUsuario', 'as' => 'indexUsuario']);
 Route::resource('usuarios', 'UsuarioController');

@@ -44,6 +44,7 @@
                                      @can('ver rutas')
                                        <a href="{{ route('indexRuta', $empresa->ID) }}"><button type="button" class="btn btn-primary btn-sm">Rutas</button></a>
                                        <a href="{{ route('indexProveedor', $empresa->ID) }}"><button type="button" class="btn btn-primary btn-sm">Proveedores</button></a>
+                                       <a href="{{ route('asignaEquipo', $empresa->ID) }}"><button type="button" class="btn btn-primary btn-sm">Equipos</button></a>
                                      @endcan
                                    </td>
                                </tr>

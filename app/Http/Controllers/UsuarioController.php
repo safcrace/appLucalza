@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Redirect;
 use App\User;
 use App\Empresa;
 use App\UsuarioEmpresa;
+use App\SupervisorVendedor;
 
 class UsuarioController extends Controller
 {
@@ -31,6 +32,23 @@ class UsuarioController extends Controller
     }
 
     /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function vendedoresSupervisor($id)
+    {
+        $users = User::select('users.nombre', 'users.email')
+                            ->join('cat_supervisor_vendedor', 'cat_supervisor_vendedor.VENDEDOR_ID_USUARIO', '=', 'users.id')
+                            //->where('users.anulado', '=', 0)
+                            ->where('cat_supervisor_vendedor.SUPERVISOR_ID_USUARIO', '=', $id)
+                            ->paginate(10);
+      
+
+        return view('equipos.vendedores', compact('users'));
+    }
+
+    /**
      * Show the form for creating a new resource.
      *
      * @return \Illuminate\Http\Response
@@ -49,7 +67,38 @@ class UsuarioController extends Controller
     public function empresaCreateUsuario($id)
     {
         $empresa_id = $id;
+
+
         return view('usuarios.create', compact('empresa_id'));
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function asignaEquipo($id)
+    {
+        $empresa_id = $id;
+
+        $supervisores = User::join('cat_usuarioempresa', 'cat_usuarioempresa.USER_ID', '=', 'users.id')
+                              ->join('cat_empresa', 'cat_empresa.ID', '=', 'cat_usuarioempresa.EMPRESA_ID')
+                              ->join('users_roles', 'users_roles.user_id', '=', 'users.id')
+                              ->where('cat_empresa.ID', '=', $id)
+                              ->where('users_roles.role_id', '=', 5)
+                              ->lists('users.nombre', 'users.id')
+                              ->toArray();
+
+        $vendedores = User::join('cat_usuarioempresa', 'cat_usuarioempresa.USER_ID', '=', 'users.id')
+                              ->join('cat_empresa', 'cat_empresa.ID', '=', 'cat_usuarioempresa.EMPRESA_ID')
+                              ->join('users_roles', 'users_roles.user_id', '=', 'users.id')
+                              ->where('cat_empresa.ID', '=', $id)
+                              ->where('users_roles.role_id', '=', 7)
+                              ->lists('users.nombre', 'users.id')
+                              ->toArray();
+
+        return view('equipos.asignacion', compact('empresa_id', 'supervisores', 'vendedores'));
     }
 
 
@@ -85,6 +134,24 @@ class UsuarioController extends Controller
         UsuarioEmpresa::insert( ['USER_ID' => $usuario->id, 'EMPRESA_ID' => $empresa_id, 'CODIGO_PROVEEDOR_SAP' => $codigoProveedorSap, 'ANULADO' => 0] );
 
         return redirect::to('empresas');
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function creaEquipo(Request $request)
+    {
+        $supervisorVendedor = new SupervisorVendedor();
+
+        $supervisorVendedor->SUPERVISOR_ID_USUARIO = $request->SUPERVISOR_ID;
+        $supervisorVendedor->VENDEDOR_ID_USUARIO = $request->VENDEDOR_ID;
+
+        $supervisorVendedor->save();
+
+        return back()->withInput();
     }
 
     /**
