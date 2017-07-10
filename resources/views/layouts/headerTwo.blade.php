@@ -13,7 +13,7 @@
             <!-- Branding Image -->
             <a class="navbar-brand" href="{{ route('home') }}">
                 {{-- config('app.name', 'Lucalza') --}}
-                <img src="{{ asset('images/logoLucalza.png') }}" alt="" width="175" style="position:relative; top:-70px; left: -200px; ">
+                <img src="{{ asset('images/logoLucalza.png') }}" alt="" width="175" style="position:relative; top:-70px;">
             </a>
         </div>
 

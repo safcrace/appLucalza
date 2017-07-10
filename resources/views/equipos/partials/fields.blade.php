@@ -11,6 +11,6 @@
         {!! Form::label('VENDEDOR_ID', 'Vendedor') !!}
   </div>
   <div class="col-md-3">
-        {!! Form::select('VENDEDOR_ID', $vendedores, null, ['class' => 'form-control', 'placeholder' => 'Seleccione un Vendedor']); !!}
+        {!! Form::select('VENDEDOR_ID', $vendedores, null, ['class' => 'form-control', 'placeholder' => 'Seleccione un Vendedor', 'id' => 'vendedor']); !!}
   </div>
 </div>

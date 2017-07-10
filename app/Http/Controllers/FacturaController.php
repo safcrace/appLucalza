@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
-
+use Illuminate\Support\Facades\Auth;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
@@ -67,6 +67,17 @@ class FacturaController extends Controller
     {
         $factura = new Factura();
 
+        $file = $request->file('FOTO');
+        $name = $request->LIQUIDACION_ID . '-' . $request->NUMERO . '-' . time() . '-' . $file->getClientOriginalName();
+        $path = public_path() . '/images/' .  Auth::user()->email ;
+
+        if (file_exists($path)) {
+
+        } else {
+            mkdir($path, 0700);
+        }
+        $file->move($path,$name);
+
 /*
         $detPresupuestoId = Liquidacion::select('liq_liquidacion.USUARIORUTA_ID')
                                       ->join('cat_usuarioruta', 'cat_usuarioruta.ID', '=', 'liq_liquidacion.USUARIORUTA_ID')
@@ -87,6 +98,7 @@ class FacturaController extends Controller
 			on dp.PRESUPUESTO_ID = p.ID
 				and dp.TIPOGASTO_ID = @tipogastoId
 	where ur.ID = @usuarioRutaId;*/
+
         $factura->LIQUIDACION_ID = $request->LIQUIDACION_ID;
         $factura->TIPOGASTO_ID = $request->TIPOGASTO_ID;
         $factura->DETPRESUPUESTO_ID = 1;
@@ -97,11 +109,12 @@ class FacturaController extends Controller
         $factura->NUMERO = $request->NUMERO;
         $factura->FECHA_FACTURA = $request->FECHA_FACTURA;
         $factura->TOTAL = $request->TOTAL;
+        $factura->FOTO = $name;
         $factura->ANULADO = 0;
 
         $factura->save();
 
-        return Redirect::to('liquidaciones');
+        return Redirect::to('liquidaciones/' . $request->LIQUIDACION_ID . '/edit');
     }
 
     /**
@@ -146,14 +159,14 @@ class FacturaController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
-    {
+    {   
         Factura::where('ID', $id)
                 ->update(['TIPOGASTO_ID' => $request->TIPOGASTO_ID, 'MONEDA_ID' => $request->MONEDA_ID, 'PROVEEDOR_ID' => $request->PROVEEDOR_ID,
                           'SERIE' => $request->SERIE, 'NUMERO' => $request->NUMERO, 'FECHA_FACTURA' => $request->FECHA_FACTURA, 'TOTAL' => $request->TOTAL]);
 
 
 
-        return Redirect::to('liquidaciones');
+        return Redirect::to('liquidaciones/' . $request->LIQUIDACION_ID . '/edit');
     }
 
     /**

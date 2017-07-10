@@ -79,7 +79,7 @@ class MonedaController extends Controller
     {
         $moneda = Moneda::findOrFail($id);
 
-        $tasaCambio = TasaCambio::select('cat_tasacambio.ID', 'cat_tasacambio.MONEDA_ID', 'cat_tasacambio.FECHA', 'cat_tasacambio.COMPRA', 'cat_tasacambio.VENTA', 'cat_tasacambio.PROMEDIO', 'cat_tasacambio.ANULADO')
+        $tasaCambio = TasaCambio::select('cat_tasacambio.ID', 'cat_tasacambio.MONEDA_ID', 'cat_tasacambio.FECHA', 'cat_tasacambio.COMPRA', 'cat_tasacambio.ANULADO')
                                   ->where('cat_tasacambio.MONEDA_ID', '=', $id)->paginate(4);
 
         //dd($tasaCambio);

@@ -77,7 +77,7 @@ class ProveedorController extends Controller
 
         $proveedor->save();
 
-        return redirect::to('empresas');
+        return redirect::to('empresa/proveedor/' . $empresa_id);
     }
 
     /**
@@ -124,7 +124,7 @@ class ProveedorController extends Controller
                 ->update(['MONEDA_ID' => $request->MONEDA_ID, 'IDENTIFICADOR_TRIBUTARIO' => $request->IDENTIFICADOR_TRIBUTARIO, 'NOMBRE' => $request->NOMBRE,
                           'DOMICILIO' => $request->DOMICILIO, 'ANULADO' => $request->ANULADO]);
 
-        return Redirect::to('empresas');
+        return redirect::to('empresa/proveedor/' . $proveedor->EMPRESA_ID);
     }
 
     /**

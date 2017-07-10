@@ -77,12 +77,14 @@ class RutaController extends Controller
          $empresa_id = $param[0];
          $usuario_id = $param[1];
 
+
          $rutas = Ruta::where('EMPRESA_ID', '=', $empresa_id)
                              ->where('ANULADO', '=', 0)
                              ->lists('DESCRIPCION', 'ID')
                              ->toArray();
 
-         return view('rutas.createUsuarioRuta', compact('rutas','usuario_id'));
+
+         return view('rutas.createUsuarioRuta', compact('rutas','usuario_id', 'empresa_id'));
      }
 
     /**
@@ -119,7 +121,7 @@ class RutaController extends Controller
 
         $ruta->save();
 
-        return redirect::to('empresas');
+        return redirect::to('empresa/ruta/' . $empresa_id);
     }
 
     /**
@@ -128,15 +130,17 @@ class RutaController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function storeUsuarioRuta(Request $request)
+    public function storeUsuarioRuta(Request $request, $id)
     {
         $usuarioRuta = new UsuarioRuta();
 
-
+        $param = explode('-', $id);
+        $empresa_id = $param[0];
+        $usuario_id = $param[1];
 
         UsuarioRuta::insert( ['USER_ID' => $request->USUARIO_ID, 'RUTA_ID' => $request->RUTA_ID, 'ANULADO' => 0] );
 
-        return redirect::to('empresas');
+        return redirect('rutas/usuario/' . $empresa_id . '-'  . $usuario_id);
     }
 
     /**
@@ -190,7 +194,7 @@ class RutaController extends Controller
 
 
 
-        return view('rutas.editUsuarioRuta', compact('usuarioRuta', 'rutas', 'usuario_id'));
+        return view('rutas.editUsuarioRuta', compact('usuarioRuta', 'rutas', 'usuario_id', 'empresa_id'));
     }
 
     /**
@@ -203,6 +207,7 @@ class RutaController extends Controller
     public function update(Request $request, $id)
     {
         $ruta = Ruta::findOrFail($id);
+        $empresa_id = $request->EMPRESA_ID;
         //$moneda->fill($request->all());
 
         if ($request->ANULADO === null) {
@@ -212,7 +217,7 @@ class RutaController extends Controller
         Ruta::where('ID', $ruta->ID)
                 ->update(['CLAVE' => $request->CLAVE, 'DESCRIPCION' => $request->DESCRIPCION, 'ANULADO' => $request->ANULADO]);
 
-        return Redirect::to('empresas');
+        return redirect::to('empresa/ruta/' . $empresa_id);
     }
 
     /**
@@ -224,8 +229,13 @@ class RutaController extends Controller
      */
     public function updateUsuarioRuta(Request $request, $id)
     {
-        $usuario_id = $request->USUARIO_ID;
-        $ruta_id = $id;
+        //$usuario_id = $request->USUARIO_ID;
+        //$ruta_id = $id;
+
+        $param = explode('-', $id);
+        $empresa_id = $param[1];
+        $usuario_id = $param[2];
+        $ruta_id = $param[0];
         //echo ($id);
 
         //dd($request->all());
@@ -238,7 +248,7 @@ class RutaController extends Controller
                 ->where('RUTA_ID', '=', $ruta_id)
                 ->update(['USER_ID' => $request->USUARIO_ID, 'RUTA_ID' => $request->RUTA_ID, 'ANULADO' => $request->ANULADO]);
 
-        return Redirect::to('empresas');
+        return redirect('rutas/usuario/' . $empresa_id . '-'  . $usuario_id);
     }
 
     /**

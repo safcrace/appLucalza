@@ -10,7 +10,7 @@
                  <div class="panel-heading panel-title" style="height: 65px">
                     Datos Liquidación
 
-                      <button type="button" class="btn btn-default text-right" style="border-color: white; float: right"><a href="{{ route('supervisor') }}"><span class="glyphicon glyphicon-remove-sign" aria-hidden="true" style="font-size:32px; color: black"></span></a></button>
+                      <button type="button" class="btn btn-default text-right" style="border-color: white; float: right"><a href="{{ route('contabilidad') }}" title="Cerrar"><span class="glyphicon glyphicon-remove-sign" aria-hidden="true" style="font-size:32px; color: black"></span></a></button>
 
                   </div>
                  <div class="panel-body">

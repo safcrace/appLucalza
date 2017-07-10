@@ -10,7 +10,7 @@
                  <div class="panel-heading panel-title" style="height: 65px">
                     Datos Liquidación
 
-                      <button type="button" class="btn btn-default text-right" style="border-color: white; float: right"><a href="{{ route('supervisor') }}"><span class="glyphicon glyphicon-remove-sign" aria-hidden="true" style="font-size:32px; color: black"></span></a></button>
+                      <button type="button" class="btn btn-default text-right" style="border-color: white; float: right"><a href="{{ route('supervisor') }}" title="Cerrar"><span class="glyphicon glyphicon-remove-sign" aria-hidden="true" style="font-size:32px; color: black"></span></a></button>
 
                   </div>
                  <div class="panel-body">
@@ -46,15 +46,18 @@
                         <tbody>
 
                             @foreach ($facturas as $factura)
+
                                 <tr data-id={{ $factura->ID }} data-factura={{ $factura->NUMERO }}>
                                     <td>{{ $factura->FECHA_FACTURA->format('d-m-Y') }}</td>
                                     <td>{{ $factura->NOMBRE}}</td>
-                                    <td>{{ $factura->SERIE}}</td>
+                                    <td>{{ $factura->SERIE }}</td>
                                     <td>{{ $factura->NUMERO}}</td>
                                     <td>{{ $factura->TIPOGASTO}}</td>
                                     <td>Q.{{ $factura->TOTAL}}</td>
                                     <td class="text-center">
-                                      <a href="#"><span class="glyphicon glyphicon-eye-open" aria-hidden="true" style="font-size:20px; color: black"></span></a>
+                                      <a class="image-popup-fit-width" href='{{ asset("images/$factura->EMAIL/$factura->FOTO") }}' title="Imagen Factura.">
+                                          <img src='{{ asset("images/$factura->EMAIL/$factura->FOTO") }}' height="32px">
+                                      </a>
                                     </td>
                                     <td class="text-center"><span class="glyphicon glyphicon-pencil btn_corregir" aria-hidden="true" style="font-size:20px; color: black" data-toggle="modal" data-target="#myModal"></td>
                                     <td style="max-widht: 200px">{{ $factura->COMENTARIO}}</td>
@@ -124,6 +127,7 @@
     </div>
   </div>
   </div>
+
 @endsection
 
 @push('scripts')
@@ -151,7 +155,55 @@
             $('#myModal').modal('hide');
             location.reload();
           })
-
       });
+
+      $('.popup-gallery').magnificPopup({
+    		delegate: 'a',
+    		type: 'image',
+    		tLoading: 'Loading image #%curr%...',
+    		mainClass: 'mfp-img-mobile',
+    		gallery: {
+    			enabled: true,
+    			navigateByImgClick: true,
+    			preload: [0,1] // Will preload 0 - before current, and 1 after the current image
+    		},
+    		image: {
+    			tError: '<a href="%url%">The image #%curr%</a> could not be loaded.',
+    			titleSrc: function(item) {
+    				return item.el.attr('title') + '<small>by Marsel Van Oosten</small>';
+    			}
+    		}
+    	});
+      $('.image-popup-vertical-fit').magnificPopup({
+        type: 'image',
+        closeOnContentClick: true,
+        mainClass: 'mfp-img-mobile',
+        image: {
+          verticalFit: true
+        }
+      });
+      $('.image-popup-fit-width').magnificPopup({
+        type: 'image',
+        closeOnContentClick: true,
+        image: {
+          verticalFit: false
+        }
+      });
+      $('.image-popup-no-margins').magnificPopup({
+        type: 'image',
+        closeOnContentClick: true,
+        closeBtnInside: false,
+        fixedContentPos: true,
+        mainClass: 'mfp-no-margins mfp-with-zoom', // class to remove default margin from left and right side
+        image: {
+          verticalFit: true
+        },
+        zoom: {
+          enabled: true,
+          duration: 300 // don't foget to change the duration also in CSS
+        }
+      });
+
+
   </script>
 @endpush

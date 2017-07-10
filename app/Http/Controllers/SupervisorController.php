@@ -68,12 +68,17 @@ class SupervisorController extends Controller
                                   ->first();
 
         $facturas = Factura::select('liq_factura.ID', 'cat_proveedor.NOMBRE', 'liq_factura.SERIE as SERIE', 'liq_factura.NUMERO as NUMERO', 'liq_factura.TOTAL as TOTAL',
-                                    'liq_factura.FECHA_FACTURA', 'cat_tipogasto.DESCRIPCION as TIPOGASTO', 'liq_factura.COMENTARIO_SUPERVISOR as COMENTARIO')
+                                    'liq_factura.FECHA_FACTURA', 'cat_tipogasto.DESCRIPCION as TIPOGASTO', 'liq_factura.COMENTARIO_SUPERVISOR as COMENTARIO',
+                                    'users.email as EMAIL', 'liq_factura.FOTO as FOTO')
                                                   ->join('cat_proveedor', 'cat_proveedor.ID', '=', 'liq_factura.PROVEEDOR_ID')
                                                   ->join('cat_tipogasto', 'cat_tipogasto.ID', '=', 'liq_factura.TIPOGASTO_ID')
+                                                  ->join('liq_liquidacion', 'liq_liquidacion.ID', '=', 'liq_factura.LIQUIDACION_ID')
+                                                  ->join('cat_usuarioruta', 'cat_usuarioruta.ID', '=', 'liq_liquidacion.USUARIORUTA_ID')
+                                                  ->join('users', 'users.id', '=', 'cat_usuarioruta.USER_ID')
                                                   //->join('cat_frecuenciatiempo', 'cat_frecuenciatiempo.ID', '=', 'pre_detpresupuesto.FRECUENCIATIEMPO_ID')
                                                   ->where('liq_factura.LIQUIDACION_ID', '=', $id)
                                                   ->paginate();
+
         $corregirFactura = array();
 
         return view('supervisor.edit', compact('liquidacion', 'facturas', 'corregirFactura'));

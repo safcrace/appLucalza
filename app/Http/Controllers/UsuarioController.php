@@ -43,7 +43,7 @@ class UsuarioController extends Controller
                             //->where('users.anulado', '=', 0)
                             ->where('cat_supervisor_vendedor.SUPERVISOR_ID_USUARIO', '=', $id)
                             ->paginate(10);
-      
+
 
         return view('equipos.vendedores', compact('users'));
     }
@@ -133,7 +133,8 @@ class UsuarioController extends Controller
 
         UsuarioEmpresa::insert( ['USER_ID' => $usuario->id, 'EMPRESA_ID' => $empresa_id, 'CODIGO_PROVEEDOR_SAP' => $codigoProveedorSap, 'ANULADO' => 0] );
 
-        return redirect::to('empresas');
+        return redirect::to('empresa/usuario/' . $empresa_id);
+
     }
 
     /**
@@ -173,9 +174,13 @@ class UsuarioController extends Controller
      */
     public function edit($id)
     {
-        $usuario = User::findOrFail($id);
+        $param = explode('-', $id);
+        $empresa_id = $param[1];
+        $usuario_id = $param[0];
+        $usuario = User::findOrFail($usuario_id);
 
-        return view('usuarios.edit', compact('usuario'));
+
+        return view('usuarios.edit', compact('usuario', 'empresa_id'));
     }
 
     /**
@@ -187,18 +192,22 @@ class UsuarioController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $usuario = User::findOrFail($id);
+        //$usuario = User::findOrFail($id);
         //$moneda->fill($request->all());    bcrypt($request->PASSSAP)
+        $param = explode('-', $id);
+        $empresa_id = $param[1];
+        $usuario_id = $param[0];
+
 
         if ($request->anulado === null) {
             $request->anulado = 0;
         }
 
-        User::where('ID', $id)
+        User::where('ID', $usuario_id)
                 ->update(['nombre' => $request->nombre, 'email' => $request->email, 'usuario' => $request->usuario, 'tel_codpais' => $request->tel_codpais,
                           'telefono' => $request->telefono, 'activo' => $request->activo, 'anulado' => $request->anulado]);
 
-        return Redirect::to('empresas');
+        return redirect::to('empresa/usuario/' . $empresa_id);
     }
 
     /**

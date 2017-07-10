@@ -67,7 +67,7 @@ Route::get('ruta/anular/{id}', ['uses' => 'RutaController@anular', 'as' => 'anul
 Route::get('empresa/{id}/create/ruta/usuario',  ['uses' => 'RutaController@empresaCreateRutaUsuario', 'as' => 'createRutaUsuario']);
 Route::get('empresa/{id}/create/ruta',  ['uses' => 'RutaController@empresaCreateRuta', 'as' => 'createRuta']);
 Route::get('empresa/ruta/{id}', ['uses' => 'RutaController@indexRuta', 'as' => 'indexRuta']);
-Route::post('empresa/usuario/ruta', ['uses' => 'RutaController@storeUsuarioRuta', 'as' => 'storeUsuarioRuta']);
+Route::post('empresa/usuario/ruta/{id}', ['uses' => 'RutaController@storeUsuarioRuta', 'as' => 'storeUsuarioRuta']);
 Route::get('edit/usuario/ruta/{id}', ['uses' => 'RutaController@UsuarioRutaEdit', 'as' => 'editUsuarioRuta']);
 Route::patch('update/usuario/ruta/{id}', ['uses' => 'RutaController@updateUsuarioRuta', 'as' => 'updateUsuarioRuta']);
 Route::resource('rutas', 'RutaController');

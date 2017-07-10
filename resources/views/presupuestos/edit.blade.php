@@ -16,9 +16,9 @@
                    {!! Form::model($presupuesto, ['route' => ['presupuestos.update', $presupuesto->ID], 'method' => 'PATCH']) !!}
 
                      <div class="panel-body text-right">
-                       <button type="button" class="btn btn-default" style="border-color: white"><a href="{{ route('presupuestos.index') }}"><span class="glyphicon glyphicon-remove-sign" aria-hidden="true" style="font-size:32px; color: black"></span></a>
+                       <button type="button" class="btn btn-default" style="border-color: white"><a href="{{ route('presupuestos.index') }}" title="Cerrar"><span class="glyphicon glyphicon-remove-sign" aria-hidden="true" style="font-size:32px; color: black"></span></a>
 
-                       <button type="submit" class="btn btn-default" style="border-color: white"><span class="glyphicon glyphicon-ok-sign" aria-hidden="true" style="font-size:32px; color: black;"></button>
+                       <button type="submit" class="btn btn-default" style="border-color: white"><span class="glyphicon glyphicon-ok-sign" aria-hidden="true" style="font-size:32px; color: black;" data-toggle="tooltip" data-placement="top" title="Grabar"></button>
                      </div>
                      @include('presupuestos.partials.fields')
                   {!! Form::close() !!}
@@ -30,8 +30,7 @@
 
 
                      <div class="panel-body text-right">
-                       <button type="button" class="btn btn-default" style="border-color: white"><a href="{{ route('presupuestos.index') }}"><span class="glyphicon glyphicon-remove-sign" aria-hidden="true" style="font-size:32px; color: black"></span></a>
-                       <button type="button" class="btn btn-default" style="border-color: white"><a href="{{ route('createDetalle', $combos->ID) }}"><span class="glyphicon glyphicon-plus-sign" aria-hidden="true" style="font-size:32px; color: black"></span></a>
+                       <button type="button" class="btn btn-default" style="border-color: white"><a href="{{ route('createDetalle', $combos->ID) }}" title="Agregar"><span class="glyphicon glyphicon-plus-sign" aria-hidden="true" style="font-size:32px; color: black"></span></a>
                      </div>
 
 
@@ -41,8 +40,7 @@
                         <thead>
                           <th class="text-center">Tipo Gasto</th>
                           <th class="text-center">Frecuencia</th>
-                          <th class="text-center">Monto</th>
-                          <th class="text-center">Editar</th>
+                          <th class="text-center">Monto</th>                        
                           <th class="text-center">Anular</th>
                         </thead>
                         <tbody>

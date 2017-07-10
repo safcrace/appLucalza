@@ -10,8 +10,8 @@
 
 
                     <div class="panel-body text-right">
-                      <button type="button" class="btn btn-default" style="border-color: white"><a href="{{ route('empresas.index') }}"><span class="glyphicon glyphicon-remove-sign" aria-hidden="true" style="font-size:32px; color: black"></span></a>
-                      <button type="button" class="btn btn-default" style="border-color: white"><a href="{{ route('createUsuario', $empresa) }}"><span class="glyphicon glyphicon-plus-sign" aria-hidden="true" style="font-size:32px; color: black"></span></a>
+                      <button type="button" class="btn btn-default" style="border-color: white"><a href="{{ route('empresas.index') }}" title="Cerrar"><span class="glyphicon glyphicon-remove-sign" aria-hidden="true" style="font-size:32px; color: black"></span></a>
+                      <button type="button" class="btn btn-default" style="border-color: white"><a href="{{ route('createUsuario', $empresa) }}" title="Agregar"><span class="glyphicon glyphicon-plus-sign" aria-hidden="true" style="font-size:32px; color: black"></span></a>
                     </div>
 
 
@@ -31,9 +31,9 @@
 
                            @foreach ($users as $user)
                                <tr>
-                                   <td><a href="{{ route('usuarios.edit', $user->id) }}">{{ $user->id}}</a></td>
-                                   <td><a href="{{ route('usuarios.edit', $user->id) }}">{{ $user->nombre}}</a></td>
-                                   <td><a href="{{ route('usuarios.edit', $user->id) }}">{{ $user->email}}</a></td>
+                                   <td><a href="{{ route('usuarios.edit', $user->id . '-' . $empresa) }}">{{ $user->id}}</a></td>
+                                   <td><a href="{{ route('usuarios.edit', $user->id . '-' . $empresa) }}">{{ $user->nombre}}</a></td>
+                                   <td><a href="{{ route('usuarios.edit', $user->id . '-' . $empresa) }}">{{ $user->email}}</a></td>
                                    <td class="text-center">
                                      <a href="{{ route('anular', $user->id) }}"><span class="glyphicon glyphicon-ban-circle" aria-hidden="true" style="font-size:20px; color: black"></span></a>
                                    </td>

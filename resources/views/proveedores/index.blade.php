@@ -10,8 +10,8 @@
 
 
                     <div class="panel-body text-right">
-                      <button type="button" class="btn btn-default" style="border-color: white"><a href="{{ route('empresas.index') }}"><span class="glyphicon glyphicon-remove-sign" aria-hidden="true" style="font-size:32px; color: black"></span></a>
-                      <button type="button" class="btn btn-default" style="border-color: white"><a href="{{ route('createProveedor', $empresa_id) }}"><span class="glyphicon glyphicon-plus-sign" aria-hidden="true" style="font-size:32px; color: black"></span></a>
+                      <button type="button" class="btn btn-default" style="border-color: white"><a href="{{ route('empresas.index') }}" title="Cerrar"><span class="glyphicon glyphicon-remove-sign" aria-hidden="true" style="font-size:32px; color: black"></span></a>
+                      <button type="button" class="btn btn-default" style="border-color: white"><a href="{{ route('createProveedor', $empresa_id) }}" title="Agregar"><span class="glyphicon glyphicon-plus-sign" aria-hidden="true" style="font-size:32px; color: black"></span></a>
                     </div>
 
 

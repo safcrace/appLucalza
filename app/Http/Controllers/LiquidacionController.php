@@ -127,8 +127,7 @@ class LiquidacionController extends Controller
                                                   //->join('cat_frecuenciatiempo', 'cat_frecuenciatiempo.ID', '=', 'pre_detpresupuesto.FRECUENCIATIEMPO_ID')
                                                   ->where('liq_factura.LIQUIDACION_ID', '=', $id)
                                                   ->paginate();
-
-
+        
         return view('liquidaciones.edit', compact('liquidacion', 'usuario', 'usuario_id', 'rutas', 'combo', 'facturas'));
     }
 

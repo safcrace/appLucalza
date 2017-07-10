@@ -2,6 +2,10 @@
     <input id="EMPRESA_ID" name="EMPRESA_ID" type="hidden" value="{{ $empresa_id }}">
 @endif
 
+@if (isset($ruta->EMPRESA_ID))
+    <input id="EMPRESA_ID" name="EMPRESA_ID" type="hidden" value="{{ $ruta->EMPRESA_ID }}">
+@endif
+
 <div class="row form-group">
   <div class="col-md-1 col-md-offset-1">
         {!! Form::label('CLAVE', 'Código') !!}

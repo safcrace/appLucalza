@@ -10,8 +10,8 @@
 
 
                     <div class="panel-body text-right">
-                      <button type="button" class="btn btn-default" style="border-color: white"><a href="{{ route('empresas.index') }}"><span class="glyphicon glyphicon-remove-sign" aria-hidden="true" style="font-size:32px; color: black"></span></a>
-                      <button type="button" class="btn btn-default" style="border-color: white"><a href="{{ route('createRutaUsuario', $empresa_id. '-'  . $usuario_id) }}"><span class="glyphicon glyphicon-plus-sign" aria-hidden="true" style="font-size:32px; color: black"></span></a>
+                      <button type="button" class="btn btn-default" style="border-color: white"><a href="{{ route('indexUsuario', $empresa_id) }}" title="Cerrar"><span class="glyphicon glyphicon-remove-sign" aria-hidden="true" style="font-size:32px; color: black"></span></a>
+                      <button type="button" class="btn btn-default" style="border-color: white"><a href="{{ route('createRutaUsuario', $empresa_id. '-'  . $usuario_id) }}" title="Agregar"><span class="glyphicon glyphicon-plus-sign" aria-hidden="true" style="font-size:32px; color: black"></span></a>
                     </div>
 
 
@@ -20,7 +20,7 @@
                      <table class="table table-bordered table-striped table-hover">
                        <thead>
                          <th class="text-center">Código</th>
-                         <th class="text-center">Ruta</th>                         
+                         <th class="text-center">Ruta</th>
                          <th class="text-center">Anular</th>
                        </thead>
                        <tbody>

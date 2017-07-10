@@ -67,7 +67,7 @@ class DetallePresupuestoController extends Controller
 
         $detallePresupuesto->save();
 
-        return Redirect::to('presupuestos');
+        return Redirect::to('presupuestos/' . $request->PRESUPUESTO_ID . '/edit' );
 
     }
 
@@ -118,7 +118,7 @@ class DetallePresupuestoController extends Controller
                           'MONTO' => $request->MONTO, 'CENTROCOSTO1' => $request->CENTROCOSTO1, 'CENTROCOSTO2' => $request->CESTROCOSTO2, 'CENTROCOSTO3' => $request->CENTROCOSTO3,
                           'CENTROCOSTO4' => $request->CENTROCOSTO4, 'CENTROCOSTO5' => $request->CESTROCOSTO5, 'ANULADO' => $request->ANULADO]);
 
-        return Redirect::to('presupuestos');
+        return Redirect::to('presupuestos/' . $request->PRESUPUESTO_ID . '/edit' );
     }
 
     /**

@@ -11,11 +11,11 @@
 
                   <div class="panel-body">
 
-                    {!! Form::open(['route' => 'storeUsuarioRuta', 'method' => 'POST']) !!}
+                    {!! Form::open(['route' => ['storeUsuarioRuta',  $empresa_id . '-'  . $usuario_id], 'method' => 'POST']) !!}
 
 
                       <div class="panel-body text-right">
-                        <button type="button" class="btn btn-default" style="border-color: white"><a href="{{ route('empresas.index') }}"><span class="glyphicon glyphicon-remove-sign" aria-hidden="true" style="font-size:32px; color: black"></span></a>
+                        <button type="button" class="btn btn-default" style="border-color: white"><a href="{{ route('indexRutasUsuario', $empresa_id . '-'  . $usuario_id)  }}" title="Cerrar"><span class="glyphicon glyphicon-remove-sign" aria-hidden="true" style="font-size:32px; color: black"></span></a>
 
                         <button type="submit" class="btn btn-default" style="border-color: white"><span class="glyphicon glyphicon-ok-sign" aria-hidden="true" style="font-size:32px; color: black;"></button>
                       </div>

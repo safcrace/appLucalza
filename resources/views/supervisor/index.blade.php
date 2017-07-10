@@ -7,7 +7,7 @@
           <div class="col-md-12 ">
               <div class="panel panel-default">
                   <div class="panel-heading panel-title" style="height: 65px">Revisión Liquidaciones Supervisor
-                      <button type="button" class="btn btn-default text-right" style="border-color: white; float: right"><a href="{{ route('home') }}"><span class="glyphicon glyphicon-remove-sign" aria-hidden="true" style="font-size:32px; color: black"></span></a></button>
+                      <button type="button" class="btn btn-default text-right" style="border-color: white; float: right"><a href="{{ route('home') }}" title="Cerrar"><span class="glyphicon glyphicon-remove-sign" aria-hidden="true" style="font-size:32px; color: black"></span></a></button>
                   </div>
 
 

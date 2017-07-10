@@ -22,7 +22,7 @@
       {!! Form::radio('CAUSAEXENCION_ID', 2, false, ['id' => 'cantidad']); !!}  CANTIDAD
   </div>
   <div class="col-md-2" style="display: none" id="ph_cantidad">
-      {!! Form::text('MONTO_A_APLICAR', null, ['class' => 'form-control', 'placeholder' => 'Cantidad']); !!}
+      {!! Form::text('MONTO_A_APLICAR_CANTIDAD', null, ['class' => 'form-control', 'placeholder' => 'Cantidad']); !!}
   </div>
   <div class="col-md-2" style="display: none" id="unidad">
       {!! Form::text('UNIDAD_MEDIDA', null, ['class' => 'form-control', 'placeholder' => 'Unidad de Medida']); !!}
@@ -36,8 +36,9 @@
   <div class="col-md-2 div_exento" style="display: none">
       {!! Form::radio('CAUSAEXENCION_ID', 3, false, ['id' => 'porcentaje']); !!}  PORCENTAJE
   </div>
+
   <div class="col-md-2" style="display: none" id="ph_porcentaje">
-      {!! Form::text('MONTO_A_APLICAR', null, ['class' => 'form-control', 'placeholder' => 'Porcentaje']); !!}
+      {!! Form::text('MONTO_A_APLICAR_PORCENTAJE', null, ['class' => 'form-control', 'placeholder' => 'Porcentaje']); !!}
   </div>
 </div>
 
@@ -147,6 +148,6 @@
           $('#ph_cantidad').hide();
           $('#unidad').hide()
         })
-      });      
+      });
   </script>
 @endpush

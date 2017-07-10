@@ -1,6 +1,6 @@
 
-@if (isset($liquidacion_id))
-    <input id="LIQUIDACION_ID" name="LIQUIDACION_ID" type="hidden" value="{{ $liquidacion_id }}">
+@if (isset($factura->LIQUIDACION_ID))
+    <input id="LIQUIDACION_ID" name="LIQUIDACION_ID" type="hidden" value="{{ $factura->LIQUIDACION_ID }}">
 @endif
 
 <div class="panel panel-default">
@@ -80,7 +80,7 @@
             {!! Form::label('FOTO', 'Imagen Factura') !!}
       </div>
       <div class="col-md-1">
-        {!! Form::file('FOTO', null, ['class' => 'form-control']); !!}
+        {!! Form::file('FOTO'); !!}
       </div>
     </div>
 

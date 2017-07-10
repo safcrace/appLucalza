@@ -37,6 +37,7 @@ class TipoGastoController extends Controller
      public function empresaCreateTipoGasto($id)
      {
          $empresa_id = $id;
+
          return view('tipoGastos.create', compact('empresa_id'));
      }
 
@@ -59,15 +60,15 @@ class TipoGastoController extends Controller
     public function store(Request $request)
     {
         $empresa_id = $request->EMPRESA_ID;
-        //dd($empresa_id);
 
         $tipoGasto = new TipoGasto();
 
         $tipoGasto->EMPRESA_ID = $empresa_id;
         $tipoGasto->DESCRIPCION = $request->DESCRIPCION;
         $tipoGasto->EXENTO = $request->EXENTO;
+        $tipoGasto->MONTO_A_APLICAR = ($request->MONTO_A_APLICAR_CANTIDAD) ? $request->MONTO_A_APLICAR_CANTIDAD : $request->MONTO_A_APLICAR_PORCENTAJE;
         $tipoGasto->CAUSAEXENCION_ID = $request->CAUSAEXENCION_ID;
-        $tipoGasto->MONTO_A_APLICAR = $request->MONTO_A_APLICAR;
+        //$tipoGasto->MONTO_A_APLICAR = $request->MONTO_A_APLICAR;
         $tipoGasto->CUENTA_CONTABLE_EXENTO = $request->CUENTA_CONTABLE_EXENTO;
         $tipoGasto->CODIGO_IMPUESTO_EXENTO = $request->CODIGO_IMPUESTO_EXENTO;
         $tipoGasto->CUENTA_CONTABLE_AFECTO = $request->CUENTA_CONTABLE_AFECTO;
@@ -82,7 +83,7 @@ class TipoGastoController extends Controller
 
         $tipoGasto->save();
 
-        return redirect::to('empresas');
+        return redirect::to('empresa/tipoGasto/' . $empresa_id);
     }
 
     /**
@@ -120,18 +121,20 @@ class TipoGastoController extends Controller
     {
       $tipoGasto = TipoGasto::findOrFail($id);
       //$moneda->fill($request->all());
+      //$
+      $montoAplicar = ($request->MONTO_A_APLICAR_CANTIDAD) ? $request->MONTO_A_APLICAR_CANTIDAD : $request->MONTO_A_APLICAR_PORCENTAJE;
 
       if ($request->ANULADO === null) {
           $request->ANULADO = 0;
       }
-      
+
       $tipoGasto::where('ID', $tipoGasto->ID)
-              ->update(['DESCRIPCION' => $request->DESCRIPCION, 'EXENTO' => $request->EXENTO, 'MONTO_A_APLICAR' => $request->MONTO_A_APLICAR,
+              ->update(['DESCRIPCION' => $request->DESCRIPCION, 'EXENTO' => $request->EXENTO, 'MONTO_A_APLICAR' => $montoAplicar,
                         'CAUSAEXENCION_ID' => $request->CAUSAEXENCION_ID, 'CUENTA_CONTABLE_EXENTO' => $request->CUENTA_CONTABLE_EXENTO, 'CODIGO_IMPUESTO_EXENTO' => $request->CODIGO_IMPUESTO_EXENTO,
                         'CUENTA_CONTABLE_AFECTO' => $request->CUENTA_CONTABLE_AFECTO, 'CODIGO_IMPUESTO_AFECTO' => $request->CODIGO_IMPUESTO_AFECTO,
                         'CUENTA_CONTABLE_REMANENTE' => $request->CUENTA_CONTABLE_REMANENTE, 'CODIGO_IMPUESTO_REMANENTE' => $request->CODIGO_IMPUESTO_REMANENTE, 'ANULADO' => $request->ANULADO]);
 
-      return Redirect::to('empresas');
+      return redirect::to('empresa/tipoGasto/' . $tipoGasto->EMPRESA_ID);
     }
 
     /**

@@ -8,17 +8,17 @@
           <div class="col-md-12 ">
             <div class="panel panel-default">
                  <div class="panel-heading panel-title">
-                    Editar Ruta Usuario {{ $usuario_id }}
+                    Editar Ruta Usuario {{ $usuario_id }}  
 
                   </div>
                  <div class="panel-body">
 
-                   {!! Form::model($usuarioRuta, ['route' => ['updateUsuarioRuta', $usuarioRuta->RUTA_ID], 'method' => 'PATCH']) !!}
+                   {!! Form::model($usuarioRuta, ['route' => ['updateUsuarioRuta', $usuarioRuta->RUTA_ID . '-' . $empresa_id . '-' . $usuario_id], 'method' => 'PATCH']) !!}
 
                      <div class="panel-body text-right">
-                       <button type="button" class="btn btn-default" style="border-color: white"><a href="{{ route('empresas.index') }}"><span class="glyphicon glyphicon-remove-sign" aria-hidden="true" style="font-size:32px; color: black"></span></a>
+                       <button type="button" class="btn btn-default" style="border-color: white"><a href="{{ route('empresas.index') }}" title="Cerrar"><span class="glyphicon glyphicon-remove-sign" aria-hidden="true" style="font-size:32px; color: black"></span></a>
 
-                       <button type="submit" class="btn btn-default" style="border-color: white"><span class="glyphicon glyphicon-ok-sign" aria-hidden="true" style="font-size:32px; color: black;"></button>
+                       <button type="submit" class="btn btn-default" style="border-color: white"><span class="glyphicon glyphicon-ok-sign" aria-hidden="true" style="font-size:32px; color: black;" data-toggle="tooltip" data-placement="top" title="Grabar"></button>
                      </div>
                      @include('rutas.partials.fieldsTwo')
 
