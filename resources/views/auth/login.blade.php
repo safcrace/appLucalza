@@ -63,10 +63,9 @@
                                 <button type="submit" class="btn btn-primary">
                                     {{ trans('validation.attributes.login') }}
                                 </button>
-                                {{--
-                                <a class="btn btn-link" href="#">
-                                    Forgot Your Password?
-                                </a>--}}
+                                <a class="btn btn-link" href="{{ asset('/password/email') }}">
+                                    {{ trans('passwords.attributes.forgot') }}
+                                </a>
                             </div>
                         </div>
                     </form>
