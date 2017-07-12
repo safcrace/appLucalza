@@ -14,8 +14,9 @@ return [
     */
 
     'failed'   => 'Estas credenciales no coinciden con nuestros registros.',
-    'throttle' => 'Demasiados intentos de acceso. Por favor intente nuevamente en :seconds segundos.',
+    'throttle' => 'Demasiados intentos de acceso. Su cuenta ha sido bloqueada. Pongase en contacto con el Administrador!!', //Por favor intente nuevamente en :seconds segundos.
     'email'    =>  'Correo Electronico',
+    'blocked'  =>  'Usuario Bloqueado. Por favor pongase en contacto con el Administrador!!!',
 
     'attributes'           => [
         'email'                 => 'Correo Electrónico',

@@ -22,6 +22,9 @@ class AuthController extends Controller
     |
     */
 
+    protected $maxLoginAttempts = 3;
+    protected $lockoutTime = 60;
+
     use AuthenticatesAndRegistersUsers, ThrottlesLogins;
 
     /**
@@ -41,7 +44,7 @@ class AuthController extends Controller
      * @return \Illuminate\Contracts\Validation\Validator
      */
     protected function validator(array $data)
-    {
+    {        
         return Validator::make($data, [
             'name' => 'required|max:255',
             'email' => 'required|email|max:255|unique:users',
@@ -96,5 +99,20 @@ class AuthController extends Controller
 
         return redirect(property_exists($this, 'redirectAfterLogout') ? $this->redirectAfterLogout : '/');
     }
+
+    /**
+     * Get the login lockout error message.
+     *
+     * @param  int  $seconds
+     * @return string
+     */
+      protected function getLockoutErrorMessage($seconds)
+      {
+          $minutes = round($seconds / 60);
+          return \Lang::has('auth.throttle')
+              ? \Lang::get('auth.throttle', ['minutes' => $minutes])
+              : 'Too many login attempts. Please try again in '.$seconds.' seconds.';
+      }
+
 
 }
