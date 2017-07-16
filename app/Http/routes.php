@@ -116,3 +116,15 @@ Route::get('supervisor/show/{id}', ['uses' => 'SupervisorController@show', 'as' 
 //Contabilidad routes
 Route::get('contabilidad', ['uses' => 'ContabilidadController@index', 'as' => 'contabilidad']);
 Route::get('contabilidad/show/{id}', ['uses' => 'ContabilidadController@show', 'as' => 'showLiquidacionRev']);
+
+//Permisos routes
+Route::get('permisos/role', ['uses' => 'PermisoController@asignaPermisosRole', 'as' => 'asignaPermisosRole']);
+Route::get('permisos/usuario', ['uses' => 'PermisoController@asignaPermisosUsuario', 'as' => 'asignaPermisosUsuario']);
+Route::get('permisos/usuario/{id}', ['uses' => 'PermisoController@showPermisos', 'as' => 'showPermisos']);
+Route::post('permisos/role/create', ['uses' => 'PermisoController@creaPermisoRole', 'as' => 'creaPermisosRole']);
+Route::post('permisos/usuario/create', ['uses' => 'PermisoController@creaPermisoUsuario', 'as' => 'creaPermisosUsuario']);
+Route::resource('permisos', 'PermisoController');
+
+//Roles routes
+
+Route::resource('roles', 'RoleController');

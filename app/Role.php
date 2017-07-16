@@ -10,4 +10,13 @@ class Role extends Model
   {
     return $this->belongsToMany(Permission::class, 'roles_permissions');
   }
+
+  /**
+   * Get a list of permission associate with the role
+   * @return array
+   */
+  public function getPermissionListAttribute()
+  {
+    return $this->permissions->lists('id');
+  }
 }

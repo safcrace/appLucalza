@@ -42,9 +42,13 @@
                             <li><a href="{{ route('empresas.index') }}">Empresas</a></li>
                           @endcan
                           <li role="separator" class="divider"></li>
-                          <li class="dropdown-header">Pendiente</li>
-                          {{--<li><a href="#">Separated link</a></li>
-                          <li><a href="#">One more separated link</a></li> --}}
+                          <li class="dropdown-header">Seguridad</li>
+                          <li><a href="{{ route('permisos.index') }}">Permisos</a></li>
+                          <li><a href="{{ route('roles.index') }}">Roles</a></li>
+                          <li><a href="{{ route('asignaPermisosRole') }}">Permisos por Rol</a></li>
+                          <li><a href="{{ route('asignaPermisosUsuario') }}">Permisos por Usuario</a></li>
+                          <li><a href="#">Roles por Usuario</a></li>
+
                         </ul>
                       </li>
                     @endif
