@@ -47,7 +47,7 @@
                           <li><a href="{{ route('roles.index') }}">Roles</a></li>
                           <li><a href="{{ route('asignaPermisosRole') }}">Permisos por Rol</a></li>
                           <li><a href="{{ route('asignaPermisosUsuario') }}">Permisos por Usuario</a></li>
-                          <li><a href="#">Roles por Usuario</a></li>
+                          <li><a href="{{ route('asignaRoleUsuario') }}">Roles por Usuario</a></li>
 
                         </ul>
                       </li>

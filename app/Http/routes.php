@@ -126,5 +126,6 @@ Route::post('permisos/usuario/create', ['uses' => 'PermisoController@creaPermiso
 Route::resource('permisos', 'PermisoController');
 
 //Roles routes
-
+Route::get('roles/usuario', ['uses' => 'RoleController@asignaRoleUsuario', 'as' => 'asignaRoleUsuario']);
+Route::post('roles/usuario/create', ['uses' => 'RoleController@creaRolesUsuario', 'as' => 'creaRolesUsuario']);
 Route::resource('roles', 'RoleController');

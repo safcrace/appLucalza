@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\User;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
@@ -34,6 +35,41 @@ class RoleController extends Controller
     }
 
     /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function asignaRoleUsuario()
+    {
+        $usuarios = User::lists('nombre', 'id')
+            ->toArray();
+
+        $roles = Role::lists('name', 'id')
+            ->toArray();
+
+
+        return view('rolesXusuario.asignacion', compact('roles', 'usuarios'));
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function creaRolesUsuario(Request $request)
+    {
+        $user_id = $request->usuario;
+        $user = User::findOrFail($user_id);
+
+        $roles = $request->input('roles_list');
+
+        $user->roles()->sync($roles);
+
+        return redirect::to('roles/' . $user_id);
+    }
+
+    /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -57,7 +93,27 @@ class RoleController extends Controller
      */
     public function show($id)
     {
-        //
+        $usuario = $id;
+
+        $roles = Role::lists('name', 'id')
+            ->toArray();
+
+        $usuarios = User::lists('nombre', 'id')
+            ->toArray();
+
+        $autorizado = Role::join('users_roles', 'users_roles.role_id', '=', 'roles.id')
+            ->join('users', 'users.id', '=', 'users_roles.user_id')
+            ->where('users.id', '=', $id)
+            ->lists('roles.id')
+            ->toArray();
+        //dd($autorizado);
+
+        $autorizados = []                                              ;
+        foreach ($autorizado as $auto) {
+            $autorizados[] = intval($auto);
+        }
+       //dd($autorizados);
+        return view('rolesXusuario.asignacion', compact('roles','usuarios', 'autorizados', 'usuario'));
     }
 
     /**
