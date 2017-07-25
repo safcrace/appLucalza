@@ -24,8 +24,9 @@ class TipoGastoController extends Controller
                              ->where('cat_tipogasto.ANULADO', '=', 0)
                              ->paginate(10);
          $empresa_id = $id;
+         $nombreEmpresa = Empresa::select('DESCRIPCION')->where('ID', '=', $id)->first();
 
-         return view('tipoGastos.index', compact('tipoGastos', 'empresa_id'));
+         return view('tipoGastos.index', compact('tipoGastos', 'empresa_id', 'nombreEmpresa'));
      }
 
      /**
@@ -68,7 +69,7 @@ class TipoGastoController extends Controller
         $tipoGasto->EXENTO = $request->EXENTO;
         $tipoGasto->MONTO_A_APLICAR = ($request->MONTO_A_APLICAR_CANTIDAD) ? $request->MONTO_A_APLICAR_CANTIDAD : $request->MONTO_A_APLICAR_PORCENTAJE;
         $tipoGasto->CAUSAEXENCION_ID = $request->CAUSAEXENCION_ID;
-        //$tipoGasto->MONTO_A_APLICAR = $request->MONTO_A_APLICAR;
+        $tipoGasto->UNIDAD_MEDIDA = $request->UNIDAD_MEDIDA;
         $tipoGasto->CUENTA_CONTABLE_EXENTO = $request->CUENTA_CONTABLE_EXENTO;
         $tipoGasto->CODIGO_IMPUESTO_EXENTO = $request->CODIGO_IMPUESTO_EXENTO;
         $tipoGasto->CUENTA_CONTABLE_AFECTO = $request->CUENTA_CONTABLE_AFECTO;
@@ -106,6 +107,13 @@ class TipoGastoController extends Controller
     public function edit($id)
     {
       $tipoGasto = TipoGasto::findOrFail($id);
+      //dd($tipoGasto->CAUSAEXENCION_ID);
+
+      if($tipoGasto->CAUSAEXENCION_ID == 2){
+          $tipoGasto->MONTO_A_APLICAR_CANTIDAD = $tipoGasto->MONTO_A_APLICAR;
+      } else {
+          $tipoGasto->MONTO_A_APLICAR_PORCENTAJE = $tipoGasto->MONTO_A_APLICAR;
+      }
 
       return view('tipoGastos.edit', compact('tipoGasto'));
     }
@@ -129,7 +137,7 @@ class TipoGastoController extends Controller
       }
 
       $tipoGasto::where('ID', $tipoGasto->ID)
-              ->update(['DESCRIPCION' => $request->DESCRIPCION, 'EXENTO' => $request->EXENTO, 'MONTO_A_APLICAR' => $montoAplicar,
+              ->update(['DESCRIPCION' => $request->DESCRIPCION, 'EXENTO' => $request->EXENTO, 'MONTO_A_APLICAR' => $montoAplicar, 'UNIDAD_MEDIDA' => $request->UNIDAD_MEDIDA,
                         'CAUSAEXENCION_ID' => $request->CAUSAEXENCION_ID, 'CUENTA_CONTABLE_EXENTO' => $request->CUENTA_CONTABLE_EXENTO, 'CODIGO_IMPUESTO_EXENTO' => $request->CODIGO_IMPUESTO_EXENTO,
                         'CUENTA_CONTABLE_AFECTO' => $request->CUENTA_CONTABLE_AFECTO, 'CODIGO_IMPUESTO_AFECTO' => $request->CODIGO_IMPUESTO_AFECTO,
                         'CUENTA_CONTABLE_REMANENTE' => $request->CUENTA_CONTABLE_REMANENTE, 'CODIGO_IMPUESTO_REMANENTE' => $request->CODIGO_IMPUESTO_REMANENTE, 'ANULADO' => $request->ANULADO]);
@@ -146,5 +154,22 @@ class TipoGastoController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    /**
+     * Anule the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function anular($id)
+    {
+        $param = explode('-', $id);
+        $id = $param[0];
+        $empresa_id = $param[1];
+        TipoGasto::where('ID', $id)
+            ->update(['ANULADO' => 1]);
+
+        return Redirect::to('empresa/tipoGasto/' . $empresa_id);
     }
 }

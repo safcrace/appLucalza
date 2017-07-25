@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\CreateUsuarioRequest;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
@@ -27,8 +28,9 @@ class UsuarioController extends Controller
                             ->where('cat_usuarioempresa.EMPRESA_ID', '=', $id)
                             ->paginate(10);
         $empresa = $id;
+        $nombreEmpresa = Empresa::select('DESCRIPCION')->where('ID', '=', $id)->first();
 
-        return view('usuarios.index', compact('users', 'empresa'));
+        return view('usuarios.index', compact('users', 'empresa', 'nombreEmpresa'));
     }
 
     /**
@@ -108,7 +110,7 @@ class UsuarioController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(CreateUsuarioRequest $request)
     {
         $empresa_id = $request->EMPRESA_ID;
         $codigoProveedorSap = $request->codigoProveedorSap;
@@ -119,9 +121,9 @@ class UsuarioController extends Controller
         $usuario->nombre = $request->nombre;
         $usuario->email = $request->email;
         $usuario->password = bcrypt($request->password);
-        $usuario->usuario = $request->usuario;
         $usuario->tel_codpais = $request->tel_codpais;
         $usuario->telefono = $request->telefono;
+        $usuario->codigoProveedorSap = $request->codigoProveedorSap;
         $usuario->activo = $request->activo;
         $usuario->anulado = $request->anulado;
 
@@ -198,14 +200,13 @@ class UsuarioController extends Controller
         $empresa_id = $param[1];
         $usuario_id = $param[0];
 
-
         if ($request->anulado === null) {
             $request->anulado = 0;
         }
 
         User::where('ID', $usuario_id)
-                ->update(['nombre' => $request->nombre, 'email' => $request->email, 'usuario' => $request->usuario, 'tel_codpais' => $request->tel_codpais,
-                          'telefono' => $request->telefono, 'activo' => $request->activo, 'anulado' => $request->anulado]);
+                ->update(['nombre' => $request->nombre, 'email' => $request->email, 'tel_codpais' => $request->tel_codpais, 'password' => bcrypt($request->password),
+                          'telefono' => $request->telefono, 'codigoProveedorSap' => $request->codigoProveedorSap, 'activo' => $request->activo, 'anulado' => $request->anulado]);
 
         return redirect::to('empresa/usuario/' . $empresa_id);
     }
@@ -229,9 +230,12 @@ class UsuarioController extends Controller
      */
     public function anular($id)
     {
+        $param = explode('-', $id);
+        $id = $param[0];
+        $empresa_id = $param[1];
         User::where('ID', $id)
                 ->update(['ANULADO' => 1]);
 
-        return Redirect::to('empresas');
+        return Redirect::to('empresa/usuario/' . $empresa_id);
     }
 }

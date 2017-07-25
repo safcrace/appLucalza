@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Redirect;
 use App\FrecuenciaTiempo;
 use App\TipoGasto;
 use App\DetallePresupuesto;
+use Illuminate\Support\Facades\Session;
 
 class DetallePresupuestoController extends Controller
 {
@@ -32,11 +33,14 @@ class DetallePresupuestoController extends Controller
      {
          $presupuesto_id = $id;
 
+         $empresa_id = Session::get('empresa');
+
          $frecuencia = FrecuenciaTiempo::lists('DESCRIPCION', 'ID')
                                          ->toArray();
 
-         $tipoGasto = TipoGasto::lists('DESCRIPCION', 'ID')
-                                         ->toArray();
+         $tipoGasto = TipoGasto::where('EMPRESA_ID', '=', $empresa_id)
+                                        ->lists('DESCRIPCION', 'ID')
+                                        ->toArray();
 
          return view('detallePresupuestos.create', compact('presupuesto_id', 'tipoGasto', 'frecuencia'));
      }
@@ -131,4 +135,22 @@ class DetallePresupuestoController extends Controller
     {
         //
     }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function anular($id)
+    {
+        $param = explode('-', $id);
+        $id = $param[0];
+        $presupuesto_id = $param[1];
+        DetallePresupuesto::where('ID', $id)
+            ->update(['ANULADO' => 1]);
+
+        return Redirect::to('presupuestos/' . $presupuesto_id . '/edit');
+    }
+
 }

@@ -6,14 +6,10 @@
       <div class="row">
           <div class="col-md-12 ">
               <div class="panel panel-default">
-                  <div class="panel-heading panel-title">Control de Proveedores</div>
-
-
-                    <div class="panel-body text-right">
-                      <button type="button" class="btn btn-default" style="border-color: white"><a href="{{ route('empresas.index') }}" title="Cerrar"><span class="glyphicon glyphicon-remove-sign" aria-hidden="true" style="font-size:32px; color: black"></span></a>
-                      <button type="button" class="btn btn-default" style="border-color: white"><a href="{{ route('createProveedor', $empresa_id) }}" title="Agregar"><span class="glyphicon glyphicon-plus-sign" aria-hidden="true" style="font-size:32px; color: black"></span></a>
-                    </div>
-
+                  <div class="panel-heading panel-title" style="height: 65px">Proveedores por Empresa: <span style="font-weight: 700">{{ $nombreEmpresa->DESCRIPCION }}</span>
+                      <button type="button" class="btn btn-default" style="border-color: white; float: right"><a href="{{ route('empresas.index') }}" title="Cerrar"><span class="glyphicon glyphicon-remove-sign" aria-hidden="true" style="font-size:32px; color: black"></span></a></button>
+                      <button type="button" class="btn btn-default" style="border-color: white; float: right"><a href="{{ route('createProveedor', $empresa_id) }}" title="Agregar"><span class="glyphicon glyphicon-plus-sign" aria-hidden="true" style="font-size:32px; color: black"></span></a></button>
+                  </div>
 
                   <div class="panel-body">
 
@@ -30,7 +26,7 @@
                                    <td><a href="{{ route('proveedores.edit', $proveedor->ID) }}">{{ $proveedor->IDENTIFICADOR_TRIBUTARIO}}</a></td>
                                    <td><a href="{{ route('proveedores.edit', $proveedor->ID) }}">{{ $proveedor->NOMBRE}}</a></td>
                                    <td class="text-center">
-                                     <a href="{{ route('anularProveedor', $proveedor->ID) }}"><span class="glyphicon glyphicon-ban-circle" aria-hidden="true" style="font-size:20px; color: black"></span></a>
+                                     <a href="{{ route('anularProveedor', $proveedor->ID . '-' . $empresa_id) }}"><span class="glyphicon glyphicon-ban-circle" aria-hidden="true" style="font-size:20px; color: black"></span></a>
                                    </td>
                                </tr>
                            @endforeach

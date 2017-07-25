@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
 use App\Moneda;
 use App\TasaCambio;
@@ -55,7 +56,7 @@ class MonedaController extends Controller
         $moneda->save();
 
 
-        return redirect::to('monedas');
+        return redirect::to('monedas/' . $moneda->id . '/edit');
     }
 
     /**
@@ -80,9 +81,10 @@ class MonedaController extends Controller
         $moneda = Moneda::findOrFail($id);
 
         $tasaCambio = TasaCambio::select('cat_tasacambio.ID', 'cat_tasacambio.MONEDA_ID', 'cat_tasacambio.FECHA', 'cat_tasacambio.COMPRA', 'cat_tasacambio.ANULADO')
+                                  ->where('cat_tasacambio.ANULADO', '=', 0)
                                   ->where('cat_tasacambio.MONEDA_ID', '=', $id)->paginate(4);
 
-        //dd($tasaCambio);
+
         return view('monedas.edit', compact('moneda','tasaCambio'));
     }
 
@@ -102,11 +104,15 @@ class MonedaController extends Controller
         $moneda->CLAVE = $request->CLAVE;
         $moneda->DESCRIPCION = $request->DESCRIPCION;
         $moneda->ANULADO = $request->ANULADO;
+
+        if ($moneda->ANULADO === null) {
+            $moneda->ANULADO = 0;
+        }
         //dd($moneda);
         $moneda->save();
 
         Moneda::where('ID', $moneda->ID)
-          ->update(['CLAVE' => $request->CLAVE, 'DESCRIPCION' => $request->DESCRIPCION, 'ANULADO' => $request->ANULADO]);
+          ->update(['CLAVE' => $request->CLAVE, 'DESCRIPCION' => $request->DESCRIPCION, 'ANULADO' => $moneda->ANULADO]);
         //dd('se supone que ya grabo');
         return Redirect::to('monedas');
     }
@@ -130,9 +136,18 @@ class MonedaController extends Controller
      */
     public function anular($id)
     {
-        Moneda::where('ID', $id)
-                ->update(['ANULADO' => 1]);
+        /** Verifica si moneda esta asignada a una empresa **/
+        $monedaActiva = DB::table('cat_moneda')
+                                    ->join('cat_empresa', 'cat_empresa.MONEDA_ID', '=', 'cat_moneda.ID')
+                                    ->where('cat_moneda.ID', '=', $id)
+                                    ->count();
 
-        return Redirect::to('monedas');
+        if($monedaActiva == 0) {
+            Moneda::where('ID', $id)
+                ->update(['ANULADO' => 1]);
+            return Redirect::to('monedas');
+        } else {
+            return Redirect::to('monedas');
+        }
     }
 }

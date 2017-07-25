@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\CreateTasaCambioRequest;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
@@ -18,7 +19,7 @@ class TasaCambioController extends Controller
         return view('monedas.tasaCambio.create', compact('moneda_id'));
     }
 
-    public function store(Request $request)
+    public function store(CreateTasaCambioRequest $request)
     {
         $moneda = Moneda::find($request->MONEDA_ID);
 
@@ -62,5 +63,25 @@ class TasaCambioController extends Controller
           ->update(['FECHA' => $request->FECHA, 'COMPRA' => $request->COMPRA, 'ANULADO' => $request->ANULADO]);
         //dd('se supone que ya grabo');
         return Redirect::to('monedas/' . $tasaCambio->MONEDA_ID . '/edit');
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function anularTasaCambio($id)
+    {
+
+        $param = explode('-', $id);
+        $tasa_id = $param[0];
+        $moneda_id = $param[1];
+
+
+        TasaCambio::where('ID', $tasa_id)
+            ->update(['ANULADO' => 1]);
+
+        return Redirect::to('monedas/' . $moneda_id . '/edit');
     }
 }

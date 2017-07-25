@@ -33,7 +33,7 @@ class CreateEmpresaRequest extends Request
             'USERSQL'    => 'required',
             'PASSSQL'    => 'required',
             'SERVIDORSQL'    => 'required',
-            'SAPDBTYE'    => 'required',
+            'SAPDBTYPE'    => 'required',
         ];
     }
 }

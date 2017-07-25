@@ -6,8 +6,10 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
 use App\Ruta;
+use App\User;
 use App\Empresa;
 use App\UsuarioEmpresa;
 use App\UsuarioRuta;
@@ -26,8 +28,9 @@ class RutaController extends Controller
                              ->where('cat_ruta.ANULADO', '=', 0)
                              ->paginate(10);
          $empresa_id = $id;
+         $nombreEmpresa = Empresa::select('DESCRIPCION')->where('ID', '=', $id)->first();
 
-         return view('rutas.index', compact('rutas', 'empresa_id'));
+         return view('rutas.index', compact('rutas', 'empresa_id', 'nombreEmpresa'));
      }
 
      /**
@@ -41,16 +44,24 @@ class RutaController extends Controller
           $empresa_id = $param[0];
           $usuario_id = $param[1];
 
+          $user =  User::select('nombre')->where('id', '=', $param[1])->first();
+
           $rutas = Ruta::select('cat_ruta.ID', 'cat_ruta.CLAVE', 'cat_ruta.DESCRIPCION', 'users.nombre')
                               ->join('cat_usuarioruta', 'cat_usuarioruta.RUTA_ID', '=', 'cat_ruta.ID')
                               ->join('users', 'users.id', '=', 'cat_usuarioruta.USER_ID')
                               ->where('users.id', '=', $param[1])
                               ->where('cat_ruta.EMPRESA_ID', '=', $param[0])
-                              ->where('cat_ruta.ANULADO', '=', 0)
+                              ->where('cat_usuarioruta.ANULADO', '=', 0)
                               ->paginate(10);
-          //dd($rutas);
 
-          return view('rutas.indexRutasUsuario', compact('rutas', 'empresa_id', 'usuario_id'));
+          $usuario = User::select('nombre')
+                                ->join('cat_usuarioempresa', 'cat_usuarioempresa.USER_ID', '=', 'users.id')
+                                ->where('cat_usuarioempresa.EMPRESA_ID', '=', $empresa_id)
+                                //->where('RUTA_ID', '=', $ruta_id)
+                                ->first();
+          //dd($usuario->nombre);
+
+          return view('rutas.indexRutasUsuario', compact('rutas', 'empresa_id', 'usuario_id', 'user'));
       }
 
      /**
@@ -270,9 +281,49 @@ class RutaController extends Controller
      */
     public function anular($id)
     {
-        Ruta::where('ID', $id)
+        $param = explode('-', $id);
+        $id = $param[0];
+        $empresa_id = $param[1];
+
+        /* Verifica si Ruta posee Presupuesto Activo */
+        $fechaActual = \Carbon\Carbon::now();
+
+        $presupuestoActivo = DB::table('cat_ruta')
+                                    ->join('cat_usuarioruta', 'cat_usuarioruta.RUTA_ID', '=', 'cat_ruta.ID')
+                                    ->join('pre_presupuesto', 'pre_presupuesto.USUARIORUTA_ID', '=', 'cat_usuarioruta.ID')
+                                    ->where('pre_presupuesto.VIGENCIA_FINAL', '>', $fechaActual)
+                                    ->where('cat_ruta.ID', '=', $id)
+                                    ->count();
+
+        if($presupuestoActivo == 0) {
+            Ruta::where('ID', $id)
                 ->update(['ANULADO' => 1]);
 
-        return Redirect::to('empresas');
+            return Redirect::to('empresa/ruta/' . $empresa_id);
+        } else {
+            return Redirect::to('empresa/ruta/' . $empresa_id);
+        }
+
+
+
+    }
+
+    /**
+     * Anule the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function anularRutaUsuario($id)
+    {
+        $param = explode('-', $id);
+        $id = $param[0];
+        $usuario_id = $param[1];
+        $empresa_id = $param[2];
+        UsuarioRuta::where('USER_ID', $usuario_id)
+                            ->where('RUTA_ID', $id)
+                            ->update(['ANULADO' => 1]);
+
+        return Redirect::to('rutas/usuario/' . $empresa_id . '-' . $usuario_id);
     }
 }

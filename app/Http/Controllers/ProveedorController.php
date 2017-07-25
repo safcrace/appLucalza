@@ -26,7 +26,9 @@ class ProveedorController extends Controller
                              ->paginate(10);
          $empresa_id = $id;
 
-         return view('proveedores.index', compact('proveedores', 'empresa_id'));
+         $nombreEmpresa = Empresa::select('DESCRIPCION')->where('ID', '=', $empresa_id)->first();
+
+         return view('proveedores.index', compact('proveedores', 'empresa_id', 'nombreEmpresa'));
      }
 
      /**
@@ -140,9 +142,12 @@ class ProveedorController extends Controller
 
     public function anular($id)
     {
+        $param = explode('-', $id);
+        $id = $param[0];
+        $empresa_id = $param[1];
         Proveedor::where('ID', $id)
                 ->update(['ANULADO' => 1]);
 
-        return Redirect::to('empresas');
+        return Redirect::to('empresa/proveedor/' . $empresa_id);
     }
 }

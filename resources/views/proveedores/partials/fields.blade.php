@@ -32,7 +32,7 @@
 
 <div class="row form-group">
   <div class="col-md-2 col-md-offset-1">
-        {!! Form::label('DOMICILIO', 'Domicilio') !!}
+        {!! Form::label('DOMICILIO', 'Dirección') !!}
   </div>
   <div class="col-md-4">
       {!! Form::text('DOMICILIO', null, ['class' => 'form-control', 'placeholder' => 'Dirección de Proveedor']); !!}

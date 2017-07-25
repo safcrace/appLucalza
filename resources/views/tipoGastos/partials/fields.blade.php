@@ -126,6 +126,24 @@
 @push('scripts')
   <script type="text/javascript">
       $(document).ready(function () {
+
+          var exento = $("#exento").prop("checked") ? true : false;
+          if (exento === true) {
+              $('.div_exento').show();
+          }
+
+          var cantidad = $("#cantidad").prop("checked") ? true : false;
+          if (cantidad == true) {
+              $('#ph_cantidad').show();
+              $('#unidad').show()
+          }
+
+          var porcentaje = $("#porcentaje").prop("checked") ? true : false;
+          if (porcentaje == true) {
+              $('#ph_porcentaje').show();
+          }
+
+
         $('#exento').click(function () {
           $('.div_exento').show();
         });

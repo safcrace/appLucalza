@@ -18,15 +18,6 @@
 
     <div class="row form-group">
       <div class="col-md-2 col-md-offset-1">
-            {!! Form::label('email', 'Correo Electrónico') !!}
-      </div>
-      <div class="col-md-3">
-          {!! Form::email('email', null, ['class' => 'form-control', 'placeholder' => 'Correo Electrónico']); !!}
-      </div>
-    </div>
-
-    <div class="row form-group">
-      <div class="col-md-2 col-md-offset-1">
             {!! Form::label('tel_codpais', 'Código Pais Télefono') !!}
       </div>
       <div class="col-md-2">
@@ -53,11 +44,12 @@
 
     <div class="row form-group">
       <div class="col-md-1 col-md-offset-1">
-            {!! Form::label('usuario', 'Usuario') !!}
+        {!! Form::label('email', 'Correo Electrónico') !!}
       </div>
       <div class="col-md-3 col-md-offset-1">
-          {!! Form::text('usuario', null, ['class' => 'form-control', 'placeholder' => 'Usuario']); !!}
+        {!! Form::email('email', null, ['class' => 'form-control', 'placeholder' => 'Correo Electrónico']); !!}
       </div>
+
 
       <div class="col-md-1 col-md-offset-1">
             {!! Form::label('password', 'Contraseña') !!}

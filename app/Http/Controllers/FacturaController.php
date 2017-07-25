@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Empresa;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Auth;
 
@@ -13,6 +16,7 @@ use App\Proveedor;
 use App\Moneda;
 use App\Factura;
 use App\Liquidacion;
+use Illuminate\Support\Facades\Session;
 
 class FacturaController extends Controller
 {
@@ -45,16 +49,62 @@ class FacturaController extends Controller
      {
          $liquidacion_id = $id;
 
+        /* $tipoGasto = DB::select("select tg.DESCRIPCION, tg.ID
+                                  from liq_liquidacion as l inner join pre_presupuesto as p on p.USUARIORUTA_ID = l.USUARIORUTA_ID
+                                                               inner join pre_detpresupuesto as dp on dp.PRESUPUESTO_ID = p.ID
+                                                               inner join cat_tipogasto as tg on tg.ID = dp.TIPOGASTO_ID
+                                                               where l.FECHA_INICIO = p.VIGENCIA_INICIO and
+                                                                     l.FECHA_FINAL = p.VIGENCIA_FINAL and
+                                                                     l.ID = $liquidacion_id");
+         dd($tipoGasto[0],[1]);
+dd($resultado);
+*/
+         $fechas =  Liquidacion::select('liq_liquidacion.FECHA_INICIO', 'liq_liquidacion.FECHA_FINAL', 'pre_presupuesto.VIGENCIA_INICIO', 'pre_presupuesto.VIGENCIA_FINAL')
+             ->join('pre_presupuesto', 'pre_presupuesto.USUARIORUTA_ID', '=', 'liq_liquidacion.USUARIORUTA_ID')
+             ->join('pre_detpresupuesto', 'pre_detpresupuesto.ID', '=', 'pre_presupuesto.ID' )
+             ->where('liq_liquidacion.ID', '=', $liquidacion_id)
+             ->first();
+
+
+         $vigenciaInicio = $fechas->VIGENCIA_INICIO;
+         $vigenciaFinal = $fechas->VIGENCIA_FINAL;
+
+         $tipoGasto =  Liquidacion::join('pre_presupuesto', 'pre_presupuesto.USUARIORUTA_ID', '=', 'liq_liquidacion.USUARIORUTA_ID')
+                                  ->join('pre_detpresupuesto', 'pre_detpresupuesto.PRESUPUESTO_ID', '=', 'pre_presupuesto.ID' )
+                                  ->join('cat_tipogasto', 'cat_tipogasto.ID', '=', 'pre_detpresupuesto.TIPOGASTO_ID')
+                                  ->whereDate('liq_liquidacion.FECHA_INICIO', '=', $vigenciaInicio)
+                                  ->whereDate('liq_liquidacion.FECHA_FINAL', '=', $vigenciaFinal)
+                                  ->where('liq_liquidacion.ID', '=', $liquidacion_id)
+                                  ->lists('cat_tipogasto.DESCRIPCION', 'cat_tipogasto.ID')
+                                  ->toArray();
+
+
+
+/*
+       select tg.DESCRIPCION
+from liq_liquidacion as l inner join pre_presupuesto as p on p.USUARIORUTA_ID = l.USUARIORUTA_ID
+                         inner join pre_detpresupuesto as dp on dp.PRESUPUESTO_ID = p.ID
+                         inner join cat_tipogasto as tg on tg.ID = dp.TIPOGASTO_ID
+                         where l.FECHA_INICIO = p.VIGENCIA_INICIO and
+   l.FECHA_FINAL = p.VIGENCIA_FINAL and
+   l.ID = 6
+
          $tipoGasto = TipoGasto::lists('DESCRIPCION', 'ID')
                                          ->toArray();
-
+dd($tipoGasto);*/
          $proveedor = Proveedor::lists('IDENTIFICADOR_TRIBUTARIO', 'ID')
                                          ->toArray();
 
-         $moneda = Moneda::lists('DESCRIPCION', 'ID')
-                                         ->toArray();
+         $empresa_id = Session::get('empresa');
 
-         return view('facturas.create', compact('liquidacion_id', 'tipoGasto', 'proveedor', 'moneda'));
+         $moneda = Empresa::select('cat_moneda.ID', 'cat_moneda.DESCRIPCION')
+             ->join('cat_moneda', 'cat_moneda.ID', '=', 'cat_empresa.MONEDA_ID')
+             ->where('cat_empresa.ID', '=',  $empresa_id)
+             ->first();
+
+         $fechaFactura = null;
+
+         return view('facturas.create', compact('liquidacion_id', 'tipoGasto', 'proveedor', 'moneda', 'fechaFactura'));
      }
 
     /**
@@ -123,9 +173,22 @@ class FacturaController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
+    public function tipoGasto($id)
+    {
+        $tipoGasto = TipoGasto::select('UNIDAD_MEDIDA')->where('ID', '=', $id)->first();
+        return $tipoGasto->UNIDAD_MEDIDA;
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
     public function show($id)
     {
-        //
+        $proveedor = Proveedor::select('NOMBRE')->where('ID', '=', $id)->first();
+        return $proveedor->NOMBRE;
     }
 
     /**
@@ -144,11 +207,16 @@ class FacturaController extends Controller
         $proveedor = Proveedor::lists('IDENTIFICADOR_TRIBUTARIO', 'ID')
                                         ->toArray();
 
-        $moneda = Moneda::lists('DESCRIPCION', 'ID')
-                                        ->toArray();
+        $empresa_id = Session::get('empresa');
 
+        $moneda = Empresa::select('cat_moneda.ID', 'cat_moneda.DESCRIPCION')
+            ->join('cat_moneda', 'cat_moneda.ID', '=', 'cat_empresa.MONEDA_ID')
+            ->where('cat_empresa.ID', '=',  $empresa_id)
+            ->first();
 
-        return view('facturas.edit', compact('factura', 'tipoGasto', 'proveedor', 'moneda'));
+        $fechaFactura = $factura->FECHA_FACTURA;
+
+        return view('facturas.edit', compact('factura', 'tipoGasto', 'proveedor', 'moneda', 'fechaFactura'));
     }
 
     /**

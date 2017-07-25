@@ -10,6 +10,8 @@ class TasaCambio extends Model
 
     protected $fillable = ['MONEDA_ID', 'FECHA', 'COMPRA', 'VENTA', 'PROMEDIO', 'ANULADO'];
 
+    protected $dates = ['FECHA'];
+
     public $timestamps = false;
 
     public function moneda(){

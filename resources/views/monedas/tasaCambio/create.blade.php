@@ -11,6 +11,8 @@
 
                   <div class="panel-body">
 
+                      @include('partials.messages')
+
                     {!! Form::open(['route' => 'tasaCambio.store', 'method' => 'POST']) !!}
 
                       <div class="panel-body text-right">

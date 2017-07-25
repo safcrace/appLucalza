@@ -10,6 +10,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Redirect;
 use App\Empresa;
 use App\Moneda;
+use Illuminate\Support\Facades\Session;
 
 class EmpresaController extends Controller
 {
@@ -22,6 +23,20 @@ class EmpresaController extends Controller
     {
         //$user = $request->user();
         //dd($user->can('ver usuarios'));
+
+
+
+        if (auth()->user()->hasRole('administrador')) {
+            $empresa_id = Session::get('empresa');
+            $empresas = Empresa::select('*')
+                ->where('ANULADO', '=', 0)
+                ->where('ID', '=', $empresa_id)
+                ->paginate(10);
+
+            return view('empresas.index', compact('empresas'));
+
+        }
+
         $empresas = Empresa::select('*')
                             ->where('cat_empresa.ANULADO', '=', 0)
                             ->paginate(10);
@@ -36,7 +51,8 @@ class EmpresaController extends Controller
      */
     public function create()
     {
-        $moneda = Moneda::lists('DESCRIPCION', 'ID')
+        $moneda = Moneda::where('ANULADO', '=', 0)
+                                        ->lists('DESCRIPCION', 'ID')
                                         ->toArray();
         return view('empresas.create', compact('moneda'));
     }
@@ -89,8 +105,9 @@ class EmpresaController extends Controller
     {
       $empresa = Empresa::findOrFail($id);
 
-      $moneda = Moneda::lists('DESCRIPCION', 'ID')
-                                      ->toArray();
+      $moneda = Moneda::where('ANULADO', '=', 0)
+                             ->lists('DESCRIPCION', 'ID')
+                             ->toArray();
 
       return view('empresas.edit', compact('empresa', 'moneda'));
     }

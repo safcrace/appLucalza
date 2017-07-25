@@ -57,6 +57,7 @@ Route::resource('monedas', 'MonedaController');
 
 // Tasa Cambio routes...
 Route::get('tasaCambio/moneda/{id}', ['uses' => 'TasaCambioController@createTasaCambio', 'as' => 'createTasa']);
+Route::get('tasaCambio/anular/{id}', ['uses' => 'TasaCambioController@anularTasaCambio', 'as' => 'anularTasaCambio']);
 Route::resource('tasaCambio', 'TasaCambioController');
 
 // Empresas routes...
@@ -68,6 +69,7 @@ Route::get('usuarioEmpresa/{id}', ['uses' => 'UsuarioController@usuarioEmpresa',
 // Rutas routes
 Route::get('rutas/usuario/{id}', ['uses' => 'RutaController@indexRutasUsuario', 'as' => 'indexRutasUsuario']);
 Route::get('ruta/anular/{id}', ['uses' => 'RutaController@anular', 'as' => 'anularRuta']);
+Route::get('ruta/usuario/anular/{id}', ['uses' => 'RutaController@anularRutaUsuario', 'as' => 'anularRutaUsuario']);
 Route::get('empresa/{id}/create/ruta/usuario',  ['uses' => 'RutaController@empresaCreateRutaUsuario', 'as' => 'createRutaUsuario']);
 Route::get('empresa/{id}/create/ruta',  ['uses' => 'RutaController@empresaCreateRuta', 'as' => 'createRuta']);
 Route::get('empresa/ruta/{id}', ['uses' => 'RutaController@indexRuta', 'as' => 'indexRuta']);
@@ -89,11 +91,13 @@ Route::get('empresa/tipoGasto/{id}', ['uses' => 'TipoGastoController@indexTipoGa
 Route::resource('tipoGastos', 'TipoGastoController');
 
 // Presupuesto routes
+Route::get('presupuesto/anular/{id}', ['uses' => 'PresupuestoController@anular', 'as' => 'anularPresupuesto']);
 Route::get('presupuesto/create/{id}', ['uses' => 'PresupuestoController@presupuestoCreate', 'as' => 'presupuestoCreate']);
 Route::resource('presupuestos', 'PresupuestoController');
 
 // Detalle Presupuestos routes
 Route::get('presupuesto/{id}/create/detalle',  ['uses' => 'DetallePresupuestoController@presupuestoCreateDetalle', 'as' => 'createDetalle']);
+Route::get('presupuesto/detalle/anular/{id}', ['uses' => 'DetallePresupuestoController@anular', 'as' => 'anularDetallePresupuesto']);
 Route::resource('detallePresupuestos', 'DetallePresupuestoController');
 
 // Liquidacion routes
@@ -101,12 +105,14 @@ Route::resource('detallePresupuestos', 'DetallePresupuestoController');
 Route::patch('liquidacion/{id}/update/supervisor', ['uses' => 'LiquidacionController@updateLiquidacionCorreccion', 'as' => 'correccionLiquidacion']);
 Route::patch('liquidacion/{id}/update/aprobacion', ['uses' => 'LiquidacionController@updateLiquidacionAprobacion', 'as' => 'aprobacionLiquidacion']);
 Route::patch('liquidacion/{id}/update/contabilidad', ['uses' => 'LiquidacionController@updateLiquidacionCorreccionContabilidad', 'as' => 'correccionLiquidacionContabilidad']);
+Route::get('liquidacion/anular/{id}', ['uses' => 'LiquidacionController@anular', 'as' => 'anularLiquidacion']);
 Route::resource('liquidaciones', 'LiquidacionController');
 
 // Facturas routes
 Route::get('liquidacion/{id}/create/factura',  ['uses' => 'FacturaController@liquidacionCreateFactura', 'as' => 'createFactura']);
 Route::patch('update/factura/{id}/supervisor/comentario', ['uses' => 'FacturaController@updateComentarioFactura', 'as' => 'comentarioSupervisor']);
 Route::patch('update/factura/{id}/contabilidad/comentario', ['uses' => 'FacturaController@updateComentarioContabilidadFactura', 'as' => 'comentarioContabilidad']);
+Route::get('factura/tipoGasto/{id}', ['uses' => 'FacturaController@tipoGasto', 'as' => 'tipoGasto']);
 Route::resource('facturas', 'FacturaController');
 
 //Supervisor routes

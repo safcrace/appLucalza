@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Auth;
 
 use App\User;
+use App\Empresa;
+use Illuminate\Support\Facades\Session;
 use Validator;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\ThrottlesLogins;
@@ -85,6 +87,15 @@ class AuthController extends Controller
      */
     public function redirectPath()
     {
+        $user_id = Auth::user()->id;
+        $EMPRESA = Empresa::select('cat_empresa.ID', 'cat_empresa.DESCRIPCION')
+            ->join('cat_usuarioempresa', 'cat_usuarioempresa.EMPRESA_ID', '=', 'cat_empresa.ID')
+            ->join('users', 'users.id', '=', 'cat_usuarioempresa.USER_ID')
+            ->where('users.id', '=', $user_id)
+            ->first();
+
+        Session::put('empresa', $EMPRESA->ID);
+
         return route('home');
     }
 

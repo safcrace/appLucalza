@@ -28,11 +28,8 @@
         {!! Form::label('RUTA_ID', 'Ruta') !!}
   </div>
   <div class="col-md-3">
-      @if (isset($ruta_id))
-          {!! Form::select('RUTA_ID', $rutas, $ruta_id, ['class' => 'form-control', 'placeholder' => 'Seleccione una Ruta']); !!}
-      @else
+
           {!! Form::select('RUTA_ID', $rutas, null, ['class' => 'form-control', 'placeholder' => 'Seleccione una Ruta']); !!}
-      @endif
 
   </div>
 
@@ -40,12 +37,8 @@
         {!! Form::label('VIGENCIA_INICIO', 'Vigencia Del') !!}
   </div>
   <div class="col-md-2">
-        @if(isset($vigenciaInicio))
-            {!! Form::date('VIGENCIA_INICIO', $vigenciaInicio, ['class' => 'form-control']); !!}
-        @else
-          {!! Form::date('VIGENCIA_INICIO', null, ['class' => 'form-control']); !!}
-        @endif
 
+        {!! Form::date('VIGENCIA_INICIO', null, ['class' => 'form-control']); !!}
 
   </div>
 </div>
@@ -66,7 +59,7 @@
   </div>
   <div class="col-md-2">
 
-        {!! Form::date('VIGENCIA_FINAL', $vigenciaFinal, ['class' => 'form-control']); !!}
+        {!! Form::date('VIGENCIA_FINAL', null, ['class' => 'form-control']); !!}
 
 
 

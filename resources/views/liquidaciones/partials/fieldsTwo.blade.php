@@ -7,7 +7,7 @@
         {!! Form::label('USUARIO', 'Usuario') !!}
   </div>
   <div class="col-md-3">
-      {!! Form::text('USUARIO', $usuario, ['class' => 'form-control', 'disabled' => 'true']); !!}
+      {!! Form::text('USUARIO', $usuario->nombre, ['class' => 'form-control', 'disabled' => 'true']); !!}
   </div>
   <div class="col-md-1 col-md-offset-2">
         {!! Form::label('TOTAL', 'TOTAL') !!}
@@ -34,12 +34,26 @@
 
 <div class="row form-group">
   <div class="col-md-1 col-md-offset-1">
-        {!! Form::label('FECHA_INICIO', 'Fecha') !!}
+        {!! Form::label('FECHA_INICIO', 'Fecha Inicio') !!}
   </div>
   <div class="col-md-2">
-        {!! Form::date('FECHA_INICIO', null, ['class' => 'form-control']); !!}
+        @if($liquidacion->FECHA_INICIO)
+            {!! Form::date('FECHA_INICIO', $liquidacion->FECHA_INICIO, ['class' => 'form-control']); !!}
+        @else
+            {!! Form::date('FECHA_INICIO', null, ['class' => 'form-control']); !!}
+        @endif
   </div>
-  <div class="col-md-1 col-md-offset-6">
+    <div class="col-md-1 col-md-offset-1">
+        {!! Form::label('FECHA_FINAL', 'Fecha Final') !!}
+    </div>
+    <div class="col-md-2">
+        @if($liquidacion->FECHA_FINAL)
+            {!! Form::date('FECHA_FINAL', $liquidacion->FECHA_FINAL, ['class' => 'form-control']); !!}
+        @else
+            {!! Form::date('FECHA_FINAL', null, ['class' => 'form-control']); !!}
+        @endif
+    </div>
+  <div class="col-md-1 col-md-offset-2">
       <button type="button" class="btn btn-primary btn-sm">Anular</button>
   </div>
     {{--<div class="col-md-1 col-md-offset-1">
