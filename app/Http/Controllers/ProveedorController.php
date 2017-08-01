@@ -148,6 +148,6 @@ class ProveedorController extends Controller
         Proveedor::where('ID', $id)
                 ->update(['ANULADO' => 1]);
 
-        return Redirect::to('empresa/proveedor/' . $empresa_id);
+        return 1; //Redirect::to('empresa/proveedor/' . $empresa_id);
     }
 }

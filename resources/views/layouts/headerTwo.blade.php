@@ -12,8 +12,8 @@
 
             <!-- Branding Image -->
             <a class="navbar-brand" href="{{ route('home') }}">
-                {{-- config('app.name', 'Lucalza') --}}
-                <img src="{{ asset('images/logoLucalza.PNG') }}" alt="" width="175" style="position:relative; top:-70px;">
+                {{ config('app.name', 'Lucalza') }}
+                <img src="{{ asset('images/logoLucalza.PNG') }}" alt="" width="175" style="position:relative; top:-30px;">
             </a>
         </div>
 

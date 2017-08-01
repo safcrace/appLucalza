@@ -27,4 +27,16 @@ class CreateTasaCambioRequest extends Request
             'FECHA'    => 'unique:cat_tasacambio,FECHA',
         ];
     }
+
+    /**
+     * Set custom messages for validator errors.
+     *
+     * @return array
+     */
+    public function messages()
+    {
+        return [
+            'FECHA.unique' => 'No se puede ingresar dos tipos de cambio con la misma fecha',
+        ];
+    }
 }

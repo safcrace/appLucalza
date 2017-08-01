@@ -13,9 +13,15 @@ use App\User;
 use App\Empresa;
 use App\UsuarioEmpresa;
 use App\UsuarioRuta;
+use Illuminate\Support\Facades\Session;
 
 class RutaController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -40,17 +46,16 @@ class RutaController extends Controller
       */
       public function indexRutasUsuario($id)
       {
-          $param = explode('-', $id);
-          $empresa_id = $param[0];
-          $usuario_id = $param[1];
+          $usuario_id = $id;
+          $empresa_id = Session::get('empresa');
 
-          $user =  User::select('nombre')->where('id', '=', $param[1])->first();
+          $user =  User::select('nombre')->where('id', '=', $usuario_id)->first();
 
           $rutas = Ruta::select('cat_ruta.ID', 'cat_ruta.CLAVE', 'cat_ruta.DESCRIPCION', 'users.nombre')
                               ->join('cat_usuarioruta', 'cat_usuarioruta.RUTA_ID', '=', 'cat_ruta.ID')
                               ->join('users', 'users.id', '=', 'cat_usuarioruta.USER_ID')
-                              ->where('users.id', '=', $param[1])
-                              ->where('cat_ruta.EMPRESA_ID', '=', $param[0])
+                              ->where('users.id', '=', $usuario_id)
+                              ->where('cat_ruta.EMPRESA_ID', '=', $empresa_id)
                               ->where('cat_usuarioruta.ANULADO', '=', 0)
                               ->paginate(10);
 
@@ -88,13 +93,22 @@ class RutaController extends Controller
          $empresa_id = $param[0];
          $usuario_id = $param[1];
 
-
-         $rutas = Ruta::where('EMPRESA_ID', '=', $empresa_id)
-                             ->where('ANULADO', '=', 0)
-                             ->lists('DESCRIPCION', 'ID')
+         $seleccionadas = Ruta::join('cat_usuarioruta', 'cat_usuarioruta.RUTA_ID', '=', 'cat_ruta.ID')
+                             ->join('users', 'users.id', '=', 'cat_usuarioruta.USER_ID')
+                             ->where('users.id', '=', $usuario_id)
+                             ->where('cat_ruta.EMPRESA_ID', '=', $empresa_id)
+                             ->where('cat_usuarioruta.ANULADO', '=', 0)
+                             ->lists('cat_ruta.ID')
                              ->toArray();
 
 
+         $rutas = Ruta::join('cat_usuarioruta', 'cat_usuarioruta.RUTA_ID', '=', 'cat_ruta.ID')
+                             ->where('cat_ruta.EMPRESA_ID', '=', $empresa_id)
+                             ->where('cat_ruta.ANULADO', '=', 0)
+                             ->whereNotIn('cat_ruta.ID', $seleccionadas)
+                             ->lists('cat_ruta.DESCRIPCION', 'cat_ruta.ID')
+                             ->toArray();
+//
          return view('rutas.createUsuarioRuta', compact('rutas','usuario_id', 'empresa_id'));
      }
 
@@ -148,10 +162,26 @@ class RutaController extends Controller
         $param = explode('-', $id);
         $empresa_id = $param[0];
         $usuario_id = $param[1];
+        $ruta_id = $request->RUTA_ID;
+        //dd('esta es la empresa: ' . $empresa_id . ' este es el usuario: ' . $usuario_id . ' y esta es la ruta: ' . $ruta_id);
 
-        UsuarioRuta::insert( ['USER_ID' => $request->USUARIO_ID, 'RUTA_ID' => $request->RUTA_ID, 'ANULADO' => 0] );
+        $existe = UsuarioRuta::select('ID')
+                                    ->where('USER_ID', '=', $usuario_id)
+                                    ->where('cat_usuarioruta.RUTA_ID', '=', $ruta_id)
+                                    ->first();
 
-        return redirect('rutas/usuario/' . $empresa_id . '-'  . $usuario_id);
+        if ($existe === null) {
+            $usuarioRuta->USER_ID = $request->USUARIO_ID;
+            $usuarioRuta->RUTA_ID = $request->RUTA_ID;
+            $usuarioRuta->ANULADO = 0;
+            $usuarioRuta->save();
+        } else {
+            UsuarioRuta::where('ID', '=', $existe->ID)
+                                ->update(['ANULADO' => 0]);
+        }
+
+
+        return redirect('rutas/usuario/' . $usuario_id);
     }
 
     /**
@@ -196,12 +226,21 @@ class RutaController extends Controller
                                     ->where('RUTA_ID', '=', $ruta_id)
                                     ->first();
 
+        $seleccionadas = Ruta::join('cat_usuarioruta', 'cat_usuarioruta.RUTA_ID', '=', 'cat_ruta.ID')
+                                    ->join('users', 'users.id', '=', 'cat_usuarioruta.USER_ID')
+                                    ->where('users.id', '=', $usuario_id)
+                                    ->where('cat_ruta.EMPRESA_ID', '=', $empresa_id)
+                                    ->where('cat_usuarioruta.ANULADO', '=', 0)
+                                    ->lists('cat_ruta.ID')
+                                    ->toArray();
 
 
-        $rutas = Ruta::where('EMPRESA_ID', '=', $empresa_id)
-                            ->where('ANULADO', '=', 0)
-                            ->lists('DESCRIPCION', 'ID')
-                            ->toArray();
+        $rutas = Ruta::join('cat_usuarioruta', 'cat_usuarioruta.RUTA_ID', '=', 'cat_ruta.ID')
+                                    ->where('cat_ruta.EMPRESA_ID', '=', $empresa_id)
+                                    ->where('cat_ruta.ANULADO', '=', 0)
+                                    ->whereNotIn('cat_ruta.ID', $seleccionadas)
+                                    ->lists('cat_ruta.DESCRIPCION', 'cat_ruta.ID')
+                                    ->toArray();
 
 
 
@@ -244,7 +283,7 @@ class RutaController extends Controller
         //$ruta_id = $id;
 
         $param = explode('-', $id);
-        $empresa_id = $param[1];
+        $usuarioRuta_id = $param[1];
         $usuario_id = $param[2];
         $ruta_id = $param[0];
         //echo ($id);
@@ -255,11 +294,26 @@ class RutaController extends Controller
             $request->ANULADO = 0;
         }
 
-        UsuarioRuta::where('USER_ID', '=', $usuario_id)
-                ->where('RUTA_ID', '=', $ruta_id)
-                ->update(['USER_ID' => $request->USUARIO_ID, 'RUTA_ID' => $request->RUTA_ID, 'ANULADO' => $request->ANULADO]);
+        UsuarioRuta::where('ID', '=', $usuarioRuta_id)
+                        ->update(['ANULADO' => 1]);
 
-        return redirect('rutas/usuario/' . $empresa_id . '-'  . $usuario_id);
+
+        $existe = UsuarioRuta::select('ID')
+                                    ->where('USER_ID', '=', $usuario_id)
+                                    ->where('RUTA_ID', '=', $request->RUTA_ID)
+                                    ->first();
+
+        if ($existe === null) {
+            $usuarioRuta->USER_ID = $request->USUARIO_ID;
+            $usuarioRuta->RUTA_ID = $request->RUTA_ID;
+            $usuarioRuta->ANULADO = 0;
+            $usuarioRuta->save();
+        } else {
+            UsuarioRuta::where('ID', '=', $existe->ID)
+                ->update(['ANULADO' => 0]);
+        }
+
+        return redirect('rutas/usuario/' . $usuario_id);
     }
 
     /**
@@ -299,9 +353,9 @@ class RutaController extends Controller
             Ruta::where('ID', $id)
                 ->update(['ANULADO' => 1]);
 
-            return Redirect::to('empresa/ruta/' . $empresa_id);
+            return 1; //Redirect::to('empresa/ruta/' . $empresa_id);
         } else {
-            return Redirect::to('empresa/ruta/' . $empresa_id);
+            return 0; //Redirect::to('empresa/ruta/' . $empresa_id);
         }
 
 
@@ -324,6 +378,6 @@ class RutaController extends Controller
                             ->where('RUTA_ID', $id)
                             ->update(['ANULADO' => 1]);
 
-        return Redirect::to('rutas/usuario/' . $empresa_id . '-' . $usuario_id);
+        return 1; // Redirect::to('rutas/usuario/' . $empresa_id . '-' . $usuario_id);
     }
 }

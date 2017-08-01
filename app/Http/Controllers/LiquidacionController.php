@@ -28,14 +28,15 @@ class LiquidacionController extends Controller
     {
         $usuario_id = Auth::user()->id;
 
-        $liquidaciones = Liquidacion::select('liq_liquidacion.ID as ID', 'liq_liquidacion.FECHA_INICIO', 'cat_ruta.DESCRIPCION as RUTA', 'cat_estadoliquidacion.DESCRIPCION', 'users.nombre' )
+        $liquidaciones = Liquidacion::select('liq_liquidacion.ID as ID', 'liq_liquidacion.FECHA_INICIO', 'liq_liquidacion.FECHA_FINAL', 'cat_ruta.DESCRIPCION as RUTA', 'cat_estadoliquidacion.DESCRIPCION', 'users.nombre' )
                                       ->orderBy('cat_estadoliquidacion.ID')
                                       ->join('cat_usuarioruta', 'cat_usuarioruta.ID', '=', 'liq_liquidacion.USUARIORUTA_ID')
                                       ->join('users', 'users.id', '=', 'cat_usuarioruta.USER_ID')
                                       ->join('cat_ruta', 'cat_ruta.ID', '=', 'cat_usuarioruta.RUTA_ID')
                                       ->join('cat_estadoliquidacion', 'cat_estadoliquidacion.ID', '=', 'liq_liquidacion.ESTADOLIQUIDACION_ID')
                                       ->where('liq_liquidacion.ANULADO', '=', 0)
-                                      ->where('users.id','=', $usuario_id)
+                                      //->where('users.id','=', $usuario_id)
+                                      //->whereIn('liq_liquidacion.ESTADOLIQUIDACION_ID', [1,6])
                                       ->paginate();
 
         return view('liquidaciones.index', compact('usuario_id', 'liquidaciones'));
@@ -96,7 +97,7 @@ class LiquidacionController extends Controller
      */
     public function show($id)
     {
-        //
+        return $id;
     }
 
     /**
@@ -136,6 +137,7 @@ class LiquidacionController extends Controller
                                                   ->join('cat_tipogasto', 'cat_tipogasto.ID', '=', 'liq_factura.TIPOGASTO_ID')
                                                   //->join('cat_frecuenciatiempo', 'cat_frecuenciatiempo.ID', '=', 'pre_detpresupuesto.FRECUENCIATIEMPO_ID')
                                                   ->where('liq_factura.LIQUIDACION_ID', '=', $id)
+                                                  ->where('liq_factura.ANULADO', '=', 0)
                                                   ->paginate();
 
         return view('liquidaciones.edit', compact('liquidacion', 'usuario', 'usuario_id', 'rutas', 'combo', 'facturas'));
@@ -159,6 +161,20 @@ class LiquidacionController extends Controller
         Liquidacion::where('ID', $id)
                 ->update(['USUARIORUTA_ID' => $usuarioRuta_id->ID, 'FECHA_INICIO' => $request->FECHA_INICIO]);
 
+        return Redirect::to('liquidaciones');
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function updateEnviarLiquidacion(Request $request, $id)
+    {
+        Liquidacion::where('ID', $id)
+            ->update(['ESTADOLIQUIDACION_ID' => 2]);
         return Redirect::to('liquidaciones');
     }
 
@@ -230,8 +246,7 @@ class LiquidacionController extends Controller
     {
         Liquidacion::where('ID', $id)
             ->update(['ANULADO' => 1]);
-
-        return Redirect::to('liquidaciones');
+        return 1; //Redirect::to('liquidaciones');
     }
 
 }

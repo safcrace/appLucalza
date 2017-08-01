@@ -20,7 +20,7 @@ class HomeController extends Controller
     {
         $empresa_id = Session::get('empresa');
 
-        $empresa = Empresa::select('DESCRIPCION')->where('ID', '=', $empresa_id)->FIRST();
+        $empresa = Empresa::select('ID', 'DESCRIPCION')->where('ID', '=', $empresa_id)->FIRST();
 
         return view('home', compact('empresa'));
     }

@@ -59,26 +59,24 @@ class FacturaController extends Controller
          dd($tipoGasto[0],[1]);
 dd($resultado);
 */
-         $fechas =  Liquidacion::select('liq_liquidacion.FECHA_INICIO', 'liq_liquidacion.FECHA_FINAL', 'pre_presupuesto.VIGENCIA_INICIO', 'pre_presupuesto.VIGENCIA_FINAL')
-             ->join('pre_presupuesto', 'pre_presupuesto.USUARIORUTA_ID', '=', 'liq_liquidacion.USUARIORUTA_ID')
-             ->join('pre_detpresupuesto', 'pre_detpresupuesto.ID', '=', 'pre_presupuesto.ID' )
-             ->where('liq_liquidacion.ID', '=', $liquidacion_id)
-             ->first();
+         $fechas =  Liquidacion::select('liq_liquidacion.FECHA_INICIO', 'liq_liquidacion.FECHA_FINAL')
+                                        ->where('liq_liquidacion.ID', '=', $liquidacion_id)
+                                        ->first();
 
 
-         $vigenciaInicio = $fechas->VIGENCIA_INICIO;
-         $vigenciaFinal = $fechas->VIGENCIA_FINAL;
+         $fechaInicio = $fechas->FECHA_INICIO;
+         $fechaFinal = $fechas->FECHA_FINAL;
+
+
 
          $tipoGasto =  Liquidacion::join('pre_presupuesto', 'pre_presupuesto.USUARIORUTA_ID', '=', 'liq_liquidacion.USUARIORUTA_ID')
                                   ->join('pre_detpresupuesto', 'pre_detpresupuesto.PRESUPUESTO_ID', '=', 'pre_presupuesto.ID' )
                                   ->join('cat_tipogasto', 'cat_tipogasto.ID', '=', 'pre_detpresupuesto.TIPOGASTO_ID')
-                                  ->whereDate('liq_liquidacion.FECHA_INICIO', '=', $vigenciaInicio)
-                                  ->whereDate('liq_liquidacion.FECHA_FINAL', '=', $vigenciaFinal)
+                                  ->whereDate('pre_presupuesto.VIGENCIA_INICIO', '=', $fechaInicio)
+                                  ->whereDate('pre_presupuesto.VIGENCIA_FINAL', '=', $fechaFinal)
                                   ->where('liq_liquidacion.ID', '=', $liquidacion_id)
                                   ->lists('cat_tipogasto.DESCRIPCION', 'cat_tipogasto.ID')
                                   ->toArray();
-
-
 
 /*
        select tg.DESCRIPCION
@@ -285,5 +283,18 @@ dd($tipoGasto);*/
     public function destroy($id)
     {
         //
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function anular($id)
+    {
+        Factura::where('ID', $id)
+            ->update(['ANULADO' => 1]);
+        return 1; //Redirect::to('liquidaciones');
     }
 }

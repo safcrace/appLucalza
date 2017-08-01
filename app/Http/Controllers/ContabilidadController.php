@@ -8,6 +8,7 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use App\Liquidacion;
 use App\Factura;
+use Illuminate\Support\Facades\Session;
 
 class ContabilidadController extends Controller
 {
@@ -18,10 +19,16 @@ class ContabilidadController extends Controller
      */
     public function index()
     {
+        $empresa_id = Session::get('empresa');
+
         $liquidaciones = Liquidacion::select('liq_liquidacion.ID', 'liq_liquidacion.FECHA_INICIO', 'users.nombre as USUARIO', 'cat_ruta.DESCRIPCION as RUTA' )
                                   ->join('cat_usuarioruta', 'cat_usuarioruta.ID', '=', 'liq_liquidacion.USUARIORUTA_ID')
                                   ->join('users', 'users.id', '=', 'cat_usuarioruta.USER_ID')
                                   ->join('cat_ruta', 'cat_ruta.ID', '=', 'cat_usuarioruta.RUTA_ID')
+                                  ->join('cat_usuarioempresa', 'cat_usuarioempresa.USER_ID', '=', 'users.id')
+                                  ->join('cat_empresa', 'cat_empresa.ID', '=', 'cat_usuarioempresa.EMPRESA_ID')
+                                  ->where('cat_empresa.ID', '=', $empresa_id)
+                                  ->where('liq_liquidacion.ESTADOLIQUIDACION_ID', '=', 3)
                                   ->paginate(10);
 
                                       /*$totales = \DB::select("select SUM(liq_factura.TOTAL)

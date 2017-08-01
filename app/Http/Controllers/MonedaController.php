@@ -145,9 +145,9 @@ class MonedaController extends Controller
         if($monedaActiva == 0) {
             Moneda::where('ID', $id)
                 ->update(['ANULADO' => 1]);
-            return Redirect::to('monedas');
+            return "Registro No. $id fue Eliminado!!";//Redirect::to('monedas');
         } else {
-            return Redirect::to('monedas');
+            return  'La Moneda no se puede eliminar, pertenece a una Empresa Activa.';//Redirect::to('monedas');
         }
     }
 }

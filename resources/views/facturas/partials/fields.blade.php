@@ -117,8 +117,10 @@
                 type:'get',
                 url:vurl,
                 success: function(data){
-                    $('#etiqueta').html(data);
-                    $('#cantidadPorcentaje').show();
+                    if(data == 'Galones') {
+                        $('#etiqueta').html(data);
+                        $('#cantidadPorcentaje').show();
+                    }
                 }
             });
 

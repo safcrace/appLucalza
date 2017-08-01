@@ -59,18 +59,6 @@
       </div>
     </div>
 
-    <div class="row form-group">
-      <div class="col-md-2 col-md-offset-1">
-            {!! Form::label('codigoProveedorSap', 'Código Proveedor SAP') !!}
-      </div>
-      <div class="col-md-3">
-          {!! Form::text('codigoProveedorSap', null, ['class' => 'form-control', 'placeholder' => 'Código Proveedor SAP']); !!}
-      </div>
-
-      <div class="col-md-1">
-          <span class="glyphicon glyphicon-import" aria-hidden="true"></span>
-      </div>      
-    </div>
 
     <div class="row form-group">
       <div class="col-md-2 col-md-offset-1">

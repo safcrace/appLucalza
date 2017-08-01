@@ -34,7 +34,8 @@ class PresupuestoController extends Controller
      */
     public function index()
     {
-        $usuario_id = Auth::user()->id;
+        //$usuario_id = Auth::user()->id;
+        //dd($usuario_id);
         $empresa_id = Session::get('empresa');
 
         $presupuestos = Presupuesto::select('pre_presupuesto.ID as ID', 'users.nombre as USUARIO', 'cat_ruta.DESCRIPCION as RUTA', 'pre_presupuesto.VIGENCIA_INICIO', 'pre_presupuesto.VIGENCIA_FINAL')
@@ -57,7 +58,7 @@ class PresupuestoController extends Controller
                            where (e.ID = 1) and (e.ANULADO = 0)"*/
 //dd($presupuestos);
 
-        return view('presupuestos.index', compact('usuario_id', 'presupuestos'));
+        return view('presupuestos.index', compact( 'presupuestos'));
     }
 
     /**
@@ -106,7 +107,35 @@ class PresupuestoController extends Controller
      */
     public function create()
     {
-        //
+        $empresa_id = Session::get('empresa');
+
+        $moneda = Empresa::select('cat_moneda.ID', 'cat_moneda.DESCRIPCION')
+            ->join('cat_moneda', 'cat_moneda.ID', '=', 'cat_empresa.MONEDA_ID')
+            ->where('cat_empresa.ID', '=',  $empresa_id)
+            ->first();
+
+        $usuarios = User::join('cat_usuarioempresa', 'cat_usuarioempresa.USER_ID', '=', 'users.id')
+            ->join('cat_empresa', 'cat_empresa.ID', '=', 'cat_usuarioempresa.EMPRESA_ID')
+            ->where('cat_usuarioempresa.EMPRESA_ID', '=', $empresa_id)
+            ->lists('users.nombre', 'users.id')
+            ->toArray();
+
+        $rutas = Ruta::join('cat_usuarioruta', 'cat_usuarioruta.RUTA_ID', '=', 'cat_ruta.ID')
+            ->join('users', 'users.id', '=', 'cat_usuarioruta.USER_ID')
+            ->lists('cat_ruta.DESCRIPCION', 'cat_ruta.ID')
+            ->toArray();
+
+        /*$combos = Presupuesto::select('pre_presupuesto.ID as ID', 'users.id as USUARIO', 'cat_ruta.ID as RUTA', 'cat_empresa.ID as EMPRESA')
+                                      ->join('cat_usuarioruta', 'cat_usuarioruta.ID', '=', 'pre_presupuesto.USUARIORUTA_ID')
+                                      ->join('users', 'users.id', '=', 'cat_usuarioruta.USER_ID')
+                                      ->join('cat_ruta', 'cat_ruta.ID', '=', 'cat_usuarioruta.RUTA_ID')
+                                      ->join('cat_empresa', 'cat_empresa.ID', '=', 'cat_ruta.EMPRESA_ID')
+                                      ->where('pre_presupuesto.ID', '=', $id)
+                                      ->first();*/
+        $vigenciaInicio = null;
+        $vigenciaFinal = null;
+
+        return view('presupuestos.create', compact('usuarios', 'rutas', 'moneda', 'vigenciaInicio', 'vigenciaFinal'));
     }
 
     /**
@@ -133,7 +162,7 @@ class PresupuestoController extends Controller
 
         $presupuesto->save();
 
-        return redirect::to('presupuestos/' . $presupuesto->id . '/edit');
+        return redirect::to('presupuestos/' . $presupuesto->id . '/edit')->withInput();
     }
 
     /**
@@ -192,15 +221,10 @@ class PresupuestoController extends Controller
 
 
         $usuarios = User::join('cat_usuarioempresa', 'cat_usuarioempresa.USER_ID', '=', 'users.id')
-                              ->join('cat_empresa', 'cat_empresa.ID', '=', 'cat_usuarioempresa.EMPRESA_ID')
-                              ->lists('users.nombre', 'users.id')
-                              ->toArray();
-
-        $rutas = User::join('cat_usuarioruta', 'cat_usuarioruta.USER_ID', '=', 'users.id')
-            ->join('cat_ruta', 'cat_ruta.ID', '=', 'cat_usuarioruta.RUTA_ID')
-            ->where('cat_usuarioruta.USER_ID', '=', $usuario_id)
-            ->lists('cat_ruta.DESCRIPCION', 'cat_ruta.ID')
-            ->toArray();
+                                ->join('cat_empresa', 'cat_empresa.ID', '=', 'cat_usuarioempresa.EMPRESA_ID')
+                                ->where('cat_usuarioempresa.EMPRESA_ID', '=', $empresa_id)
+                                ->lists('users.nombre', 'users.id')
+                                ->toArray();
 
         /*$frecuencia = FrecuenciaTiempo::lists('DESCRIPCION', 'ID')
                                         ->toArray();*/
@@ -214,9 +238,17 @@ class PresupuestoController extends Controller
                                       ->first();
 
         $usuario_id = $combos->USUARIO;
+
         $ruta_id = $combos->RUTA;
+        //dd($ruta_id);
         $vigenciaInicio = $presupuesto->VIGENCIA_INICIO;
         $vigenciaFinal = $presupuesto->VIGENCIA_FINAL;
+
+        $rutas = User::join('cat_usuarioruta', 'cat_usuarioruta.USER_ID', '=', 'users.id')
+            ->join('cat_ruta', 'cat_ruta.ID', '=', 'cat_usuarioruta.RUTA_ID')
+            ->where('cat_usuarioruta.USER_ID', '=', $usuario_id)
+            ->lists('cat_ruta.DESCRIPCION', 'cat_ruta.ID')
+            ->toArray();
 
 
         $detallePresupuestos = DetallePresupuesto::select('pre_detpresupuesto.ID', 'cat_tipogasto.DESCRIPCION as TIPOGASTO', 'pre_detpresupuesto.MONTO', 'cat_frecuenciatiempo.DESCRIPCION as FRECUENCIA')
@@ -284,7 +316,7 @@ class PresupuestoController extends Controller
         Presupuesto::where('ID', $id)
             ->update(['ANULADO' => 1]);
 
-        return Redirect::to('presupuestos');
+        return 1; //Redirect::to('presupuestos');
     }
 
 }

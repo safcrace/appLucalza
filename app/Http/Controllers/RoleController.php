@@ -19,7 +19,7 @@ class RoleController extends Controller
      */
     public function index()
     {
-        $roles = Role::paginate(10);
+        $roles = Role::where('anulado', '=', 0)->paginate(10);
 
         return view('roles.index', compact('roles'));
     }
@@ -156,5 +156,19 @@ class RoleController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function anular($id)
+    {
+        Role::where('id', $id)
+            ->update(['anulado' => 1]);
+
+        return 1; //Redirect::to('presupuestos');
     }
 }

@@ -13,7 +13,7 @@
         {!! Form::label('TOTAL', 'TOTAL') !!}
   </div>
   <div class="col-md-1 col-md-offset-2">
-      <button type="button" class="btn btn-primary btn-sm">Imprimir</button>
+      <button type="button" class="btn btn-default"><span class="glyphicon glyphicon-print" aria-hidden="true" style="font-size:32px; color: black" data-toggle="tooltip" data-placement="top" title="Imprimr"></button>
   </div>
 </div>
 
@@ -28,7 +28,10 @@
       {!! Form::text('TOTAL', 'Q.' . App\Factura::where('LIQUIDACION_ID', '=', $liquidacion->ID)->sum('TOTAL'), ['class' => 'form-control', 'disabled' => 'true']); !!}
   </div>
   <div class="col-md-1 col-md-offset-1">
-      <button type="button" class="btn btn-primary btn-sm">Enviar</button>
+
+      <a href="{{ route('enviarLiquidacion', $liquidacion->ID) }}">
+        <button type="button" class="btn btn-default" ><span class="glyphicon glyphicon-floppy-saved" aria-hidden="true" style="font-size:32px; color: black" data-toggle="tooltip" data-placement="top" title="Enviar"></button>
+      </a>
   </div>
 </div>
 
@@ -54,7 +57,7 @@
         @endif
     </div>
   <div class="col-md-1 col-md-offset-2">
-      <button type="button" class="btn btn-primary btn-sm">Anular</button>
+      <button type="button" class="btn btn-default" data-toggle="modal" data-target="#myModalTwo"><span class="glyphicon glyphicon-floppy-remove" aria-hidden="true" style="font-size:32px; color: black" data-toggle="tooltip" data-placement="top" title="Anular"></span></button>
   </div>
     {{--<div class="col-md-1 col-md-offset-1">
         {!! Form::label('ANULADO', 'Estatus') !!}

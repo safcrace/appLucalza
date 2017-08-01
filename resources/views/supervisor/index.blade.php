@@ -31,7 +31,7 @@
                                      <td><a href="{{ route('showLiquidacion', $liquidacion->ID) }}">{{ $liquidacion->FECHA_INICIO->format('d-m-Y') }}</a></td>
                                    <td><a href="{{ route('showLiquidacion', $liquidacion->ID) }}">{{ $liquidacion->USUARIO }}</a></td>
                                      <td><a href="{{ route('showLiquidacion', $liquidacion->ID) }}">{{ $liquidacion->RUTA }}</a></td>
-                                     <TD><a href="{{ route('showLiquidacion', $liquidacion->ID) }}">
+                                     <td><a href="{{ route('showLiquidacion', $liquidacion->ID) }}">
                                        {{ App\Factura::where('LIQUIDACION_ID', '=', $liquidacion->ID)->sum('TOTAL')}}</a></td>
                                </tr>
 

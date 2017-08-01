@@ -22,7 +22,10 @@ Route::get('empresa/vendedores/supervisor/{id}', ['uses' => 'UsuarioController@v
 Route::post('empresa/usuarios/crea/equipo', ['uses' => 'UsuarioController@creaEquipo', 'as' => 'creaEquipo']);
 Route::get('empresa/usuarios/{id}/equipo', ['uses' => 'UsuarioController@asignaEquipo', 'as' => 'asignaEquipo']);
 Route::get('usuario/anular/{id}', ['uses' => 'UsuarioController@anular', 'as' => 'anularUsuario']);
-Route::get('empresa/usuario/{id}', ['uses' => 'UsuarioController@indexUsuario', 'as' => 'indexUsuario']);
+Route::get('usuario/empresa', ['uses' => 'UsuarioController@createUsuarioEmpresa', 'as' => 'createUsuarioEmpresa']);
+Route::post('usuario/empresa', ['uses' => 'UsuarioController@storeUsuarioEmpresa', 'as' => 'storeUsuarioEmpresa']);
+Route::get('usuario/{id}/asignacion/empresa', ['uses' => 'UsuarioController@usuariosAsignadosEmpresa', 'as' => 'usuariosEmpresa']);
+//Route::get('empresa/usuario/{id}', ['uses' => 'UsuarioController@indexUsuario', 'as' => 'indexUsuario']);
 Route::resource('usuarios', 'UsuarioController');
 
 // Authentication routes...
@@ -102,10 +105,12 @@ Route::resource('detallePresupuestos', 'DetallePresupuestoController');
 
 // Liquidacion routes
 //Route::get('presupuesto/create/{id}', ['uses' => 'PresupuestoController@presupuestoCreate', 'as' => 'presupuestoCreate']);
+Route::get('liquidacion/{id}/update/enviar', ['uses' => 'LiquidacionController@updateEnviarLiquidacion', 'as' => 'enviarLiquidacion']);
 Route::patch('liquidacion/{id}/update/supervisor', ['uses' => 'LiquidacionController@updateLiquidacionCorreccion', 'as' => 'correccionLiquidacion']);
 Route::patch('liquidacion/{id}/update/aprobacion', ['uses' => 'LiquidacionController@updateLiquidacionAprobacion', 'as' => 'aprobacionLiquidacion']);
 Route::patch('liquidacion/{id}/update/contabilidad', ['uses' => 'LiquidacionController@updateLiquidacionCorreccionContabilidad', 'as' => 'correccionLiquidacionContabilidad']);
 Route::get('liquidacion/anular/{id}', ['uses' => 'LiquidacionController@anular', 'as' => 'anularLiquidacion']);
+//Route::get('liquidacion/enviar/{id}', ['uses' => 'LiquidacionController@show', 'as' => 'enviarLiquidacion']);
 Route::resource('liquidaciones', 'LiquidacionController');
 
 // Facturas routes
@@ -113,9 +118,11 @@ Route::get('liquidacion/{id}/create/factura',  ['uses' => 'FacturaController@liq
 Route::patch('update/factura/{id}/supervisor/comentario', ['uses' => 'FacturaController@updateComentarioFactura', 'as' => 'comentarioSupervisor']);
 Route::patch('update/factura/{id}/contabilidad/comentario', ['uses' => 'FacturaController@updateComentarioContabilidadFactura', 'as' => 'comentarioContabilidad']);
 Route::get('factura/tipoGasto/{id}', ['uses' => 'FacturaController@tipoGasto', 'as' => 'tipoGasto']);
+Route::get('factura/anular/{id}', ['uses' => 'FacturaController@anular', 'as' => 'anularFactura']);
 Route::resource('facturas', 'FacturaController');
 
 //Supervisor routes
+
 Route::get('supervisor', ['uses' => 'SupervisorController@index', 'as' => 'supervisor']);
 Route::get('supervisor/show/{id}', ['uses' => 'SupervisorController@show', 'as' => 'showLiquidacion']);
 
@@ -129,9 +136,11 @@ Route::get('permisos/usuario', ['uses' => 'PermisoController@asignaPermisosUsuar
 Route::get('permisos/usuario/{id}', ['uses' => 'PermisoController@showPermisos', 'as' => 'showPermisos']);
 Route::post('permisos/role/create', ['uses' => 'PermisoController@creaPermisoRole', 'as' => 'creaPermisosRole']);
 Route::post('permisos/usuario/create', ['uses' => 'PermisoController@creaPermisoUsuario', 'as' => 'creaPermisosUsuario']);
+Route::get('permiso/anular/{id}', ['uses' => 'PermisoController@anular', 'as' => 'anularPermiso']);
 Route::resource('permisos', 'PermisoController');
 
 //Roles routes
 Route::get('roles/usuario', ['uses' => 'RoleController@asignaRoleUsuario', 'as' => 'asignaRoleUsuario']);
 Route::post('roles/usuario/create', ['uses' => 'RoleController@creaRolesUsuario', 'as' => 'creaRolesUsuario']);
+Route::get('role/anular/{id}', ['uses' => 'RoleController@anular', 'as' => 'anularRole']);
 Route::resource('roles', 'RoleController');

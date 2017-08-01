@@ -12,8 +12,8 @@
 
             <!-- Branding Image -->
             <a class="navbar-brand" href="{{ route ('home') }}">
-                {{-- config('app.name', 'Lucalza') --}}
-                <img src="{{ asset('images/logoLucalza.PNG') }}" alt="" width="175" style="position:relative; top:-70px;">
+                {{ config('app.name', 'Lucalza') }}
+                <img src="{{ asset('images/logoLucalza.PNG') }}" alt="" width="175" style="position:relative; top:-30px;">
             </a>
         </div>
 
@@ -41,13 +41,16 @@
                           @can('ver empresas')
                             <li><a href="{{ route('empresas.index') }}">Empresas</a></li>
                           @endcan
+                          @can('ver usuarios por empresa')
+                            <li><a href="{{ route('createUsuarioEmpresa') }}">Usuarios por Empresa</a></li>
+                          @endcan
                           @can('ver seguridad')
                           <li role="separator" class="divider"></li>
                           <li class="dropdown-header">Seguridad</li>
                           <li><a href="{{ route('permisos.index') }}">Permisos</a></li>
                           <li><a href="{{ route('roles.index') }}">Roles</a></li>
+                          <li><a href="{{ route('usuarios.index') }}">Usuarios</a></li>
                           <li><a href="{{ route('asignaPermisosRole') }}">Permisos por Rol</a></li>
-                          <li><a href="{{ route('asignaPermisosUsuario') }}">Permisos por Usuario</a></li>
                           <li><a href="{{ route('asignaRoleUsuario') }}">Roles por Usuario</a></li>
                           @endcan
                         </ul>

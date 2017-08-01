@@ -14,6 +14,12 @@ use Illuminate\Support\Facades\Session;
 
 class EmpresaController extends Controller
 {
+
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -154,7 +160,7 @@ class EmpresaController extends Controller
         Empresa::where('ID', $id)
                 ->update(['ANULADO' => 1]);
 
-        return Redirect::to('empresas');
+        return 1;//Redirect::to('empresas');
     }
 
 }

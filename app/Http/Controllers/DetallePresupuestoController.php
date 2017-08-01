@@ -150,7 +150,7 @@ class DetallePresupuestoController extends Controller
         DetallePresupuesto::where('ID', $id)
             ->update(['ANULADO' => 1]);
 
-        return Redirect::to('presupuestos/' . $presupuesto_id . '/edit');
+        return 1; //Redirect::to('presupuestos/' . $presupuesto_id . '/edit');
     }
 
 }

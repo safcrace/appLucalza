@@ -82,6 +82,6 @@ class TasaCambioController extends Controller
         TasaCambio::where('ID', $tasa_id)
             ->update(['ANULADO' => 1]);
 
-        return Redirect::to('monedas/' . $moneda_id . '/edit');
+        return 1; //Redirect::to('monedas/' . $moneda_id . '/edit');
     }
 }

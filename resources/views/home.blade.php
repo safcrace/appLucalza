@@ -12,7 +12,10 @@
                         <h1>Lucalza</h1>
                         <p>Bienvenido a Nuestra Aplicación</p>
 
-                        <p class="text-center">Aqui irá el logo de la Empresa: <span style="font-weight: 700">{{$empresa->DESCRIPCION}}</span></p>
+
+                        <div class="text-center"><img src="{{ asset('images/logoLucalza.PNG') }}" alt=""></div>
+
+                        <p class="text-center"><span style="font-weight: 700">{{$empresa->DESCRIPCION}}</span></p>
                     </div>
                 </div>
             </div>

@@ -170,6 +170,6 @@ class TipoGastoController extends Controller
         TipoGasto::where('ID', $id)
             ->update(['ANULADO' => 1]);
 
-        return Redirect::to('empresa/tipoGasto/' . $empresa_id);
+        return 1; //Redirect::to('empresa/tipoGasto/' . $empresa_id);
     }
 }

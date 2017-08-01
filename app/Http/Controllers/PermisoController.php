@@ -20,7 +20,7 @@ class PermisoController extends Controller
      */
     public function index()
     {
-        $permisos = Permission::paginate(10);
+        $permisos = Permission::where('anulado', '=', 0)->paginate(10);
 
         return view('permisos.index', compact('permisos'));
     }
@@ -231,5 +231,19 @@ class PermisoController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function anular($id)
+    {
+        Permission::where('id', $id)
+            ->update(['anulado' => 1]);
+
+        return 1; //Redirect::to('presupuestos');
     }
 }

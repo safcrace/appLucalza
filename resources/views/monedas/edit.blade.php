@@ -41,11 +41,11 @@
                         <tbody>
 
                                 @foreach ($tasaCambio as $tasa)
-                                    <tr>
+                                    <tr data-id="{{ $tasa->ID . '-' . $moneda->ID }}">
                                         <td><a href="{{ route('tasaCambio.edit', $tasa->ID) }}">{{ $tasa->FECHA->format('d-m-Y') }}</a></td>
                                         <td><a href="{{ route('tasaCambio.edit', $tasa->ID) }}">{{ $tasa->COMPRA }}</a></td>
                                         <td>
-                                            <a href="{{ route('anularTasaCambio', $tasa->ID . '-' . $moneda->ID) }}"><span class="glyphicon glyphicon-ban-circle" aria-hidden="true" style="font-size:20px; color: black"></span></a>
+                                            <a href="{{ route('anularTasaCambio', $tasa->ID . '-' . $moneda->ID) }}" class="btn-delete"><span class="glyphicon glyphicon-ban-circle" aria-hidden="true" style="font-size:20px; color: black"></span></a>
                                         </td>
                                     </tr>
                                 @endforeach
@@ -64,5 +64,44 @@
 
               </div>
         </div>
+
+      @include('partials.anular');
+
   </div>
 @endsection
+
+@push('scripts')
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        $('.btn-delete').click(function (e) {
+            e.preventDefault();
+            var row = $(this).parents('tr');
+            var id = row.data('id');
+            vurl = '{{ route('anularTasaCambio') }}';
+            vurl = vurl.replace('%7Bid%7D', id);
+            row.fadeOut();
+            $('#myModal').modal('show');
+            $('#revertir').click(function () {
+               row.show();
+            });
+            $('#anular').click(function () {
+                $('#myModal').modal('hide');
+                $.ajax({
+                    type: 'get',
+                    url: vurl,
+                    success: function (data) {
+                        if(data == 1) {
+                            console.log('La Tasa de Cambio fue Eliminada Exitosamente!!!.');
+                        } else {
+                            alert('La Tasa de Cambio fue Eliminada!!!');
+                        }
+                    }
+                }).fail(function () {
+                    alert ('La Tasa de Cambio no pudo ser Eliminada!!!');
+                });
+            })
+        });
+    });
+</script>
+@endpush

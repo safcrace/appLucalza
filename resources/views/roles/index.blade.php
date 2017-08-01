@@ -26,11 +26,11 @@
                        <tbody>
 
                            @foreach ($roles as $role)
-                               <tr>
+                               <tr data-id="{{ $role->id }}">
                                    <td><a href="{{ route('roles.edit', $role->id) }}">{{ $role->id}}</a></td>
                                    <td><a href="{{ route('roles.edit', $role->id) }}">{{ $role->name}}</a></td>
                                    <td class="text-center">
-                                     <a href="{{ route('roles.destroy', $role->id) }}"><span class="glyphicon glyphicon-ban-circle" aria-hidden="true" style="font-size:20px; color: black"></span></a>
+                                     <a href="{{ route('anularRole', $role->id) }}" class="btn-delete"><span class="glyphicon glyphicon-ban-circle" aria-hidden="true" style="font-size:20px; color: black"></span></a>
                                    </td>
                                </tr>
                            @endforeach
@@ -47,8 +47,45 @@
                   </div>
                   </div>
 
-
               </div>
         </div>
+
+      @include('partials.anular')
   </div>
 @endsection
+
+@push('scripts')
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('.btn-delete').click(function (e) {
+            e.preventDefault();
+            var row = $(this).parents('tr');
+            var id = row.data('id');
+            vurl = '{{ route('anularRole') }}';
+            vurl = vurl.replace('%7Bid%7D', id);
+            row.fadeOut();
+            $('#myModal').modal('show');
+            $('#revertir').click(function () {
+                row.show();
+            });
+            $('#anular').click(function () {
+                $('#myModal').modal('hide');
+                $.ajax({
+                    type: 'get',
+                    url: vurl,
+                    success: function (data) {
+                        if(data == 1) {
+                            console.log('El Rol fue Eliminado Exitosamente!!!.');
+                        } else {
+                            alert('El Rol no fue Eliminado!!!');
+                        }
+                    }
+                }).fail(function () {
+                    alert ('El Rol no pudo ser Eliminado!!!');
+                    row.show();
+                });
+            })
+        });
+    });
+</script>
+@endpush

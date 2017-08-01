@@ -145,6 +145,7 @@ return [
         'CLAVE'                 => 'código',
         'email'                 => 'Correo Electrónico',
         'login'                 => 'Inicio de Sesión',
+        'telefono'                 => 'Telefono'
     ],
 
 ];

@@ -13,7 +13,7 @@
   </div>
 
   <div class="col-md-2 col-md-offset-2">
-        {!! Form::label('MONEDA_ID', 'Moneda') !!}  {{ $moneda->ID }}
+        {!! Form::label('MONEDA_ID', 'Moneda') !!}
   </div>
   <div class="col-md-2">
     {!! Form::radio('MONEDA_ID', $moneda->ID, true); !!}  {{ $moneda->DESCRIPCION }}
@@ -83,7 +83,7 @@
             var usuario = $('#usuario').val();
             vurl = '{{ route('presupuestos.show') }}' + usuario;
             vurl = vurl.replace('%7Bpresupuestos%7D', '');
-            alert(vurl)
+
             location.href = vurl;
         });
 

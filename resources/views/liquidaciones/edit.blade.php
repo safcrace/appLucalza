@@ -41,7 +41,7 @@
                         <tbody>
 
                             @foreach ($facturas as $factura)
-                                <tr>
+                                <tr data-id="{{ $factura->ID }}">
                                     <td><a href="{{ route('facturas.edit', $factura->ID) }}">{{ $factura->FECHA_FACTURA->format('d-m-Y') }}</a></td>
                                     <td><a href="{{ route('facturas.edit', $factura->ID) }}">{{ $factura->NOMBRE}}</a></td>
                                     <td><a href="{{ route('facturas.edit', $factura->ID) }}">{{ $factura->SERIE}}</a></td>
@@ -49,7 +49,7 @@
                                     <td><a href="{{ route('facturas.edit', $factura->ID) }}">{{ $factura->TIPOGASTO}}</a></td>
                                     <td><a href="{{ route('facturas.edit', $factura->ID) }}">{{ $factura->TOTAL}}</a></td>
                                     <td class="text-center">
-                                      <a href="{{ route('anularProveedor', $factura->ID) }}"><span class="glyphicon glyphicon-ban-circle" aria-hidden="true" style="font-size:20px; color: black"></span></a>
+                                      <a href="{{ route('anularFactura', $factura->ID) }}" class="btn-delete"><span class="glyphicon glyphicon-ban-circle" aria-hidden="true" style="font-size:20px; color: black"></span></a>
                                     </td>
                                 </tr>
                             @endforeach
@@ -68,5 +68,44 @@
 
               </div>
         </div>
+
+      @include('partials.anular')
+
   </div>
 @endsection
+
+@push('scripts')
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('.btn-delete').click(function (e) {
+            e.preventDefault();
+            var row = $(this).parents('tr');
+            var id = row.data('id');
+            vurl = '{{ route('anularFactura') }}';
+            vurl = vurl.replace('%7Bid%7D', id);
+            row.fadeOut();
+            $('#myModal').modal('show');
+            $('#revertir').click(function () {
+                row.show();
+            });
+            $('#anular').click(function () {
+                $('#myModal').modal('hide');
+                $.ajax({
+                    type: 'get',
+                    url: vurl,
+                    success: function (data) {
+                        if(data == 1) {
+                            console.log('La Factura fue Eliminada Exitosamente!!!.');
+                        } else {
+                            alert('La Factura no fue Eliminada!!!');
+                        }
+                    }
+                }).fail(function () {
+                    alert ('La Factura no pudo ser Eliminada!!!');
+                    row.show();
+                });
+            })
+        });
+    });
+</script>
+@endpush

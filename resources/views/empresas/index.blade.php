@@ -24,18 +24,18 @@
                        <tbody>
 
                            @foreach ($empresas as $empresa)
-                               <tr>
+                               <tr data-id="{{ $empresa->ID }}">
                                    <td><a href="{{ route('empresas.edit', $empresa->ID) }}">{{ $empresa->CLAVE}}</a></td>
                                    <td><a href="{{ route('empresas.edit', $empresa->ID) }}">{{ $empresa->DESCRIPCION}}</a></td>
                                    {{--<td class="text-center">
                                      <a href="{{ route('empresas.edit', $empresa->ID) }}"><span class="glyphicon glyphicon-edit" aria-hidden="true" style="font-size:20px; color: black"></span></a>
                                    </td>--}}
                                    <td class="text-center">
-                                     <a href="{{ route('anularEmpresa', $empresa->ID) }}"><span class="glyphicon glyphicon-ban-circle" aria-hidden="true" style="font-size:20px; color: black"></span></a>
+                                     <a href="{{ route('anularEmpresa', $empresa->ID) }}" class="btn-delete"><span class="glyphicon glyphicon-ban-circle" aria-hidden="true" style="font-size:20px; color: black"></span></a>
                                    </td>
                                    <td class="text-center">
                                      @can('ver usuarios')
-                                       <a href="{{ route('indexUsuario', $empresa->ID) }}"><button type="button" class="btn btn-primary btn-sm">Usuarios</button></a>
+                                       <a href="{{ route('usuarios.index', $empresa->ID) }}"><button type="button" class="btn btn-primary btn-sm">Usuarios</button></a>
                                      @endcan
                                      @can('ver tipo gasto')
                                        <a href="{{ route('indexTipoGasto', $empresa->ID) }}"><button type="button" class="btn btn-primary btn-sm">Tipo de Gasto</button></a>
@@ -64,5 +64,43 @@
 
               </div>
         </div>
+
+      @include('partials.anular')
+
   </div>
 @endsection
+
+@push('scripts')
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('.btn-delete').click(function (e) {
+            e.preventDefault();
+            var row = $(this).parents('tr');
+            var id = row.data('id');
+            vurl = '{{ route('anularEmpresa') }}';
+            vurl = vurl.replace('%7Bid%7D', id);
+            row.fadeOut();
+            $('#myModal').modal('show');
+            $('#revertir').click(function () {
+                row.show();
+            });
+            $('#anular').click(function () {
+                $('#myModal').modal('hide');
+                $.ajax({
+                    type: 'get',
+                    url: vurl,
+                    success: function (data) {
+                        if(data == 1) {
+                            console.log('La Empresa fue Eliminada Exitosamente!!!.');
+                        } else {
+                            alert('La Empresa no fue Eliminada!!!');
+                        }
+                    }
+                }).fail(function () {
+                    alert ('La Empresa no pudo ser Eliminada!!!');
+                });
+            })
+        });
+    });
+</script>
+@endpush

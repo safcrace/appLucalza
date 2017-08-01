@@ -8,9 +8,17 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use App\Factura;
 use App\Liquidacion;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
 
 class SupervisorController extends Controller
 {
+
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -18,10 +26,20 @@ class SupervisorController extends Controller
      */
     public function index()
     {
+        $empresa_id = Session::get('empresa');
+
+        $usuario_id = Auth::user()->id;
+
         $liquidaciones = Liquidacion::select('liq_liquidacion.ID', 'liq_liquidacion.FECHA_INICIO', 'users.nombre as USUARIO', 'cat_ruta.DESCRIPCION as RUTA')
                                   ->join('cat_usuarioruta', 'cat_usuarioruta.ID', '=', 'liq_liquidacion.USUARIORUTA_ID')
                                   ->join('users', 'users.id', '=', 'cat_usuarioruta.USER_ID')
                                   ->join('cat_ruta', 'cat_ruta.ID', '=', 'cat_usuarioruta.RUTA_ID')
+                                  ->join('cat_usuarioempresa', 'cat_usuarioempresa.USER_ID', '=', 'users.id')
+                                  ->join('cat_empresa', 'cat_empresa.ID', '=', 'cat_usuarioempresa.EMPRESA_ID')
+                                  ->join('cat_supervisor_vendedor', 'cat_supervisor_vendedor.VENDEDOR_ID_USUARIO', '=', 'users.id')
+                                  //->where('cat_supervisor_vendedor.SUPERVISOR_ID_USUARIO', '=', $usuario_id )
+                                  //->where('cat_empresa.ID', '=', $empresa_id)
+                                  //->where('liq_liquidacion.ESTADOLIQUIDACION_ID', '=', 2)
                                   ->paginate(10);
 
                                       /*$totales = \DB::select("select SUM(liq_factura.TOTAL)
@@ -65,8 +83,9 @@ class SupervisorController extends Controller
                                   ->join('users', 'users.id', '=', 'cat_usuarioruta.USER_ID')
                                   ->join('cat_ruta', 'cat_ruta.ID', '=', 'cat_usuarioruta.RUTA_ID')
                                   ->where('liq_liquidacion.id', '=', $id)
+                                 // ->where('liq_liquidacion.ESTADOLIQUIDACION_ID', '=', 2)
                                   ->first();
-
+//dd($liquidacion);
         $facturas = Factura::select('liq_factura.ID', 'cat_proveedor.NOMBRE', 'liq_factura.SERIE as SERIE', 'liq_factura.NUMERO as NUMERO', 'liq_factura.TOTAL as TOTAL',
                                     'liq_factura.FECHA_FACTURA', 'cat_tipogasto.DESCRIPCION as TIPOGASTO', 'liq_factura.COMENTARIO_SUPERVISOR as COMENTARIO',
                                     'users.email as EMAIL', 'liq_factura.FOTO as FOTO')

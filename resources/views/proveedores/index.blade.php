@@ -22,11 +22,11 @@
                        <tbody>
 
                            @foreach ($proveedores as $proveedor)
-                               <tr>
+                               <tr data-id="{{ $proveedor->ID . '-' . $empresa_id }}">
                                    <td><a href="{{ route('proveedores.edit', $proveedor->ID) }}">{{ $proveedor->IDENTIFICADOR_TRIBUTARIO}}</a></td>
                                    <td><a href="{{ route('proveedores.edit', $proveedor->ID) }}">{{ $proveedor->NOMBRE}}</a></td>
                                    <td class="text-center">
-                                     <a href="{{ route('anularProveedor', $proveedor->ID . '-' . $empresa_id) }}"><span class="glyphicon glyphicon-ban-circle" aria-hidden="true" style="font-size:20px; color: black"></span></a>
+                                     <a href="{{ route('anularProveedor', $proveedor->ID . '-' . $empresa_id) }}" class="btn-delete"><span class="glyphicon glyphicon-ban-circle" aria-hidden="true" style="font-size:20px; color: black"></span></a>
                                    </td>
                                </tr>
                            @endforeach
@@ -42,9 +42,45 @@
                       </div>
                   </div>
                   </div>
-
-
               </div>
         </div>
+
+      @include('partials.anular')
   </div>
 @endsection
+
+@push('scripts')
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('.btn-delete').click(function (e) {
+            e.preventDefault();
+            var row = $(this).parents('tr');
+            var id = row.data('id');
+            vurl = '{{ route('anularProveedor') }}';
+            vurl = vurl.replace('%7Bid%7D', id);
+            row.fadeOut();
+            $('#myModal').modal('show');
+            $('#revertir').click(function () {
+                row.show();
+            });
+            $('#anular').click(function () {
+                $('#myModal').modal('hide');
+                $.ajax({
+                    type: 'get',
+                    url: vurl,
+                    success: function (data) {
+                        if(data == 1) {
+                            console.log('El Proveedor fue Eliminado Exitosamente!!!.');
+                        } else {
+                            alert('El Proveedor no fue Eliminado!!!');
+                        }
+                    }
+                }).fail(function () {
+                    alert ('El Proveedor no pudo ser Eliminado!!!');
+                    row.show();
+                });
+            })
+        });
+    });
+</script>
+@endpush

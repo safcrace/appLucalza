@@ -4,7 +4,7 @@
 
 <div class="row form-group">
   <div class="col-md-1 col-md-offset-1">
-        {!! Form::label('RUTA_ID', 'Ruta Sender') !!}
+        {!! Form::label('RUTA_ID', 'Ruta') !!}
   </div>
   <div class="col-md-3">
       {!! Form::select('RUTA_ID', $rutas, null, ['class' => 'form-control', 'placeholder' => 'Seleccione una Ruta']); !!}
