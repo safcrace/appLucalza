@@ -5,10 +5,13 @@
 
 <div class="row form-group">
   <div class="col-md-2 col-md-offset-1">
-        {!! Form::label('MONEDA ID', 'Moneda') !!}
+    {!! Form::label('MONEDA_ID', 'Moneda') !!}
   </div>
-  <div class="col-md-3">
-      {!! Form::select('MONEDA_ID', ['01' => 'Quetzal', '02' => 'Dolar', '03' => 'Euro'], null, ['class' => 'form-control', 'placeholder' => 'Seleccione una Moneda']); !!}
+  <div class="col-md-2 ">
+    {!! Form::radio('MONEDA_ID', $moneda->ID, true); !!}  {{ $moneda->DESCRIPCION }}
+  </div>
+  <div class="col-md-2">
+    {!! Form::radio('MONEDA_ID', 2); !!}  DOLAR
   </div>
 </div>
 
@@ -17,7 +20,16 @@
         {!! Form::label('IDENTIFICADOR_TRIBUTARIO', 'Identificador Tributario') !!}
   </div>
   <div class="col-md-3">
-      {!! Form::text('IDENTIFICADOR_TRIBUTARIO', null, ['class' => 'form-control', 'placeholder' => 'Identificador Tributario Proveedor']); !!}
+      {!! Form::text('IDENTIFICADOR_TRIBUTARIO', null, ['class' => 'form-control', 'placeholder' => 'Identificador Tributario Proveedor', 'id' => 'identificador_tributario']); !!}
+  </div>
+</div>
+
+<div class="row form-group">
+  <div class="col-md-2 col-md-offset-1">
+    {!! Form::label('TIPOPROVEDOR_ID', 'Tipo Proveedor') !!}
+  </div>
+  <div class="col-md-3">
+    {!! Form::select('TIPOPROVEEDOR_ID', $tipoProveedor, 1, ['class' => 'form-control', 'placeholder' => 'Seleccione Tipo Proveedor', 'id' => 'tipoproveedor_id']); !!}
   </div>
 </div>
 
@@ -26,7 +38,7 @@
         {!! Form::label('NOMBRE', 'Nombre') !!}
   </div>
   <div class="col-md-4">
-      {!! Form::text('NOMBRE', null, ['class' => 'form-control', 'placeholder' => 'Nombre de Proveedor']); !!}
+      {!! Form::text('NOMBRE', null, ['class' => 'form-control', 'placeholder' => 'Nombre de Proveedor', 'id' => 'nombre']); !!}
   </div>
 </div>
 
@@ -35,7 +47,7 @@
         {!! Form::label('DOMICILIO', 'Dirección') !!}
   </div>
   <div class="col-md-4">
-      {!! Form::text('DOMICILIO', null, ['class' => 'form-control', 'placeholder' => 'Dirección de Proveedor']); !!}
+      {!! Form::text('DOMICILIO', null, ['class' => 'form-control', 'placeholder' => 'Dirección de Proveedor', 'id' => 'domicilio']); !!}
   </div>
 </div>
 

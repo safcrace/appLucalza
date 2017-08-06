@@ -13,7 +13,13 @@
             {!! Form::label('TIPOGASTO_ID', 'Tipo de Gasto') !!}
       </div>
       <div class="col-md-3">
-          {!! Form::select('TIPOGASTO_ID', $tipoGasto, null, ['class' => 'form-control', 'placeholder' => 'Seleccione Tipo de Gasto']); !!}
+          {!! Form::select('TIPOGASTO_ID', $tipoGasto, null, ['class' => 'form-control', 'placeholder' => 'Seleccione Tipo de Gasto', 'id' => 'tipo']); !!}
+      </div>
+      <div class="col-md-2 asignacion" style="display: none">
+        {!! Form::label('TIPOASIGNACION_ID', 'Tipo de Asignación') !!}
+      </div>
+      <div class="col-md-3 asignacion" style="display: none">
+        {!! Form::select('TIPOASIGNACION_ID', $tipoAsignacion, null, ['class' => 'form-control', 'placeholder' => 'Seleccione Tipo de Asignación']); !!}
       </div>
     </div>
 
@@ -107,3 +113,26 @@
 
   </div>
 </div>
+
+@push('scripts')
+<script type="text/javascript">
+    $(document).ready(function () {
+        var tipo = $('#tipo').val()
+        if(tipo != null) {
+            if ((tipo == 2) || (tipo == 3) || (tipo == 6)) {
+                $('.asignacion').show()
+            } else {
+                $('.asignacion').hide()
+            }
+        }
+        $('#tipo').change(function () {
+            var tipo = $('#tipo').val()
+            if ((tipo == 2) || (tipo == 3) || (tipo == 6)) {
+                $('.asignacion').show()
+            } else {
+                $('.asignacion').hide()
+            }
+        });
+    });
+</script>
+@endpush

@@ -80,6 +80,7 @@ class LiquidacionController extends Controller
         $liquidacion->ESTADOLIQUIDACION_ID = 1;
         $liquidacion->FECHA_INICIO = $request->FECHA_INICIO;
         $liquidacion->FECHA_FINAL = $request->FECHA_FINAL;
+        $liquidacion->COMENTARIO_PAGO = $request->COMENTARIO_PAGO;
         $liquidacion->SUPERVISOR_AUTORIZACION = 0;
         $liquidacion->CONTABILIDAD_AUTORIZACION = 0;
         $liquidacion->ANULADO = 0;
@@ -159,7 +160,8 @@ class LiquidacionController extends Controller
 
 
         Liquidacion::where('ID', $id)
-                ->update(['USUARIORUTA_ID' => $usuarioRuta_id->ID, 'FECHA_INICIO' => $request->FECHA_INICIO]);
+                ->update(['USUARIORUTA_ID' => $usuarioRuta_id->ID, 'FECHA_INICIO' => $request->FECHA_INICIO, 'FECHA_FINAL' => $request->FECHA_FINAL,
+                          'COMENTARIO_PAGO' => $request->COMENTARIO_PAGO]);
 
         return Redirect::to('liquidaciones');
     }

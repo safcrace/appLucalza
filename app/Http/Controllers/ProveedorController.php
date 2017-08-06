@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\TipoProveedor;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
@@ -9,10 +10,16 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Redirect;
 use App\Proveedor;
 use App\Empresa;
+use Illuminate\Support\Facades\Session;
 
 
 class ProveedorController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -40,7 +47,16 @@ class ProveedorController extends Controller
      public function empresaCreateProveedor($id)
      {
          $empresa_id = $id;
-         return view('proveedores.create', compact('empresa_id'));
+         $tipoProveedor = TipoProveedor::lists('DESCRIPCION', 'ID')->toArray();
+
+         //$empresa_id = Session::get('empresa');
+
+         $moneda = Empresa::select('cat_moneda.ID', 'cat_moneda.DESCRIPCION')
+             ->join('cat_moneda', 'cat_moneda.ID', '=', 'cat_empresa.MONEDA_ID')
+             ->where('cat_empresa.ID', '=',  $empresa_id)
+             ->first();
+
+         return view('proveedores.create', compact('empresa_id', 'tipoProveedor', 'moneda'));
      }
 
     /**
@@ -61,8 +77,12 @@ class ProveedorController extends Controller
      */
     public function store(Request $request)
     {
-        $empresa_id = $request->EMPRESA_ID;
-        //dd($empresa_id);
+        //dd('esta llegando aqui');
+        if(isset($request->EMPRESA_ID)) {
+            $empresa_id = $request->EMPRESA_ID;
+        } else {
+            $empresa_id = Session::get('empresa');
+        }
 
         $proveedor = new Proveedor();
 
@@ -79,6 +99,17 @@ class ProveedorController extends Controller
 
         $proveedor->save();
 
+        if ($request->ajax()) {
+
+            $nuevoProveedor[] = $proveedor->IDENTIFICADOR_TRIBUTARIO;
+            $nuevoProveedor[] = $proveedor->NOMBRE;
+            $nuevoProveedor[] = $proveedor->id;
+
+
+            return  $nuevoProveedor;
+        }
+
+
         return redirect::to('empresa/proveedor/' . $empresa_id);
     }
 
@@ -88,9 +119,10 @@ class ProveedorController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show()
     {
-        //
+        $proveedores = Proveedor::orderBy('ID')->lists('IDENTIFICADOR_TRIBUTARIO', 'ID')->toArray();
+        return ( compact('proveedores'));
     }
 
     /**

@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Http\Requests\Request;
 use App\User;
 use App\Empresa;
+use App\UsuarioEmpresa;
 use Illuminate\Support\Facades\Session;
 use Validator;
 use App\Http\Controllers\Controller;
@@ -87,14 +89,31 @@ class AuthController extends Controller
      */
     public function redirectPath()
     {
-        $user_id = Auth::user()->id;
-        $EMPRESA = Empresa::select('cat_empresa.ID', 'cat_empresa.DESCRIPCION')
-            ->join('cat_usuarioempresa', 'cat_usuarioempresa.EMPRESA_ID', '=', 'cat_empresa.ID')
-            ->join('users', 'users.id', '=', 'cat_usuarioempresa.USER_ID')
-            ->where('users.id', '=', $user_id)
-            ->first();
+        $loginEmpresa = Session::get('loginEmpresa');
+        if ($loginEmpresa != null) {
+            $user_id = Auth::user()->id;
+            $usuarioEmpresa = UsuarioEmpresa::select('ID')
+                                                ->where('USER_ID', '=', $user_id)
+                                                ->where('EMPRESA_ID', '=', $loginEmpresa)
+                                                ->first();
+            if ($usuarioEmpresa){
+                Session::put('empresa', $loginEmpresa);;
+            } else {
+                dd('Pendiente Definir!!');
+            }
 
-        Session::put('empresa', $EMPRESA->ID);
+        } else {
+            $user_id = Auth::user()->id;
+            $EMPRESA = Empresa::select('cat_empresa.ID', 'cat_empresa.DESCRIPCION')
+                ->join('cat_usuarioempresa', 'cat_usuarioempresa.EMPRESA_ID', '=', 'cat_empresa.ID')
+                ->join('users', 'users.id', '=', 'cat_usuarioempresa.USER_ID')
+                ->where('users.id', '=', $user_id)
+                ->first();
+
+            Session::put('empresa', $EMPRESA->ID);
+        }
+
+
 
         return route('home');
     }

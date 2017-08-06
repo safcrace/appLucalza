@@ -9,36 +9,46 @@
   <div class="col-md-3">
       {!! Form::text('DESCRIPCION', null, ['class' => 'form-control', 'placeholder' => 'Descripción Gasto']); !!}
   </div>
-</div>
-
-<div class="row form-group">
-  <div class="col-md-2 col-md-offset-1">
-        {!! Form::label('EXENTO', 'Exento') !!}
+  <div class="col-md-1 col-md-offset-1">
+    {!! Form::label('EXENTO', 'Exento') !!}
   </div>
   <div class="col-md-1">
-      {!! Form::radio('EXENTO', 1, false, ['id' => 'exento']); !!}  SI
+    {!! Form::radio('EXENTO', 1, false, ['id' => 'exento']); !!}  SI
   </div>
-  <div class="col-md-2 div_exento" style="display: none">
-      {!! Form::radio('CAUSAEXENCION_ID', 2, false, ['id' => 'cantidad']); !!}  CANTIDAD
-  </div>
-  <div class="col-md-2" style="display: none" id="ph_cantidad">
-      {!! Form::text('MONTO_A_APLICAR_CANTIDAD', null, ['class' => 'form-control', 'placeholder' => 'Cantidad']); !!}
-  </div>
-  <div class="col-md-2" style="display: none" id="unidad">
-      {!! Form::text('UNIDAD_MEDIDA', null, ['class' => 'form-control', 'placeholder' => 'Unidad de Medida']); !!}
+  <div class="col-md-1">
+    {!! Form::radio('EXENTO', 0, false, ['id' => 'no_exento']); !!}  NO
   </div>
 </div>
 
 <div class="row form-group">
-  <div class="col-md-1  col-md-offset-3">
-      {!! Form::radio('EXENTO', 0, false, ['id' => 'no_exento']); !!}  NO
+  <div class="col-md-2 col-md-offset-1 div_exento" style="display: none">
+      {!! Form::radio('CAUSAEXENCION_ID', 2, false, ['id' => 'cantidad']); !!}  CANTIDAD
   </div>
-  <div class="col-md-2 div_exento" style="display: none">
+  <div class="col-md-2 ph_cantidad" style="display: none">
+      {!! Form::text('MONTO_A_APLICAR_CANTIDAD', null, ['class' => 'form-control', 'placeholder' => 'Cantidad']); !!}
+  </div>
+  <div class="col-md-2 ph_cantidad" style="display: none" >
+      {!! Form::text('UNIDAD_MEDIDA', null, ['class' => 'form-control', 'placeholder' => 'Unidad de Medida']); !!}
+  </div>
+  <div class="col-md-2 ph_cantidad" style="display: none">
+    {!! Form::label('OPCIONKILOMETRAJE_ID', 'Control Kilometraje') !!}
+  </div>
+  <div class="col-md-1 ph_cantidad" style="display: none">
+    {!! Form::radio('OPCIONKILOMETRAJE_ID', 1); !!}  SI
+  </div>
+</div>
+
+<div class="row form-group">
+  <div class="col-md-2 col-md-offset-1 div_exento" style="display: none">
       {!! Form::radio('CAUSAEXENCION_ID', 3, false, ['id' => 'porcentaje']); !!}  PORCENTAJE
   </div>
 
   <div class="col-md-2" style="display: none" id="ph_porcentaje">
       {!! Form::text('MONTO_A_APLICAR_PORCENTAJE', null, ['class' => 'form-control', 'placeholder' => 'Porcentaje']); !!}
+  </div>
+
+  <div class="col-md-1 col-md-offset-6 ph_cantidad" style="display: none">
+    {!! Form::radio('OPCIONKILOMETRAJE_ID', 2); !!} NO
   </div>
 </div>
 
@@ -149,22 +159,19 @@
         });
 
         $('#cantidad').click(function () {
-          $('#ph_cantidad').show();
-          $('#unidad').show()
+          $('.ph_cantidad').show();
           $('#ph_porcentaje').hide();
         })
 
         $('#porcentaje').click(function () {
           $('#ph_porcentaje').show();
-          $('#ph_cantidad').hide();
-          $('#unidad').hide()
+          $('.ph_cantidad').hide();
         })
 
         $('#no_exento').click(function () {
           $('.div_exento').hide();
           $('#ph_porcentaje').hide();
-          $('#ph_cantidad').hide();
-          $('#unidad').hide()
+          $('.ph_cantidad').hide();
         })
       });
   </script>

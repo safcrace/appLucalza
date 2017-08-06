@@ -1,7 +1,7 @@
 @if (isset($usuario_id))
     <input id="USUARIO_ID" name="USUARIO_ID" type="hidden" value="{{ $usuario_id }}">
 @endif
-<hr>
+
 <div class="row form-group">
   <div class="col-md-1 col-md-offset-1">
         {!! Form::label('USUARIO', 'Usuario') !!}
@@ -36,6 +36,7 @@
     {!! Form::date('FECHA_FINAL', null, ['class' => 'form-control']); !!}
   </div>
 
+
     {{--<div class="col-md-1 col-md-offset-1">
         {!! Form::label('ANULADO', 'Estatus') !!}
   </div>
@@ -45,6 +46,13 @@
   <div class="col-md-2">
       {!! Form::radio('ANULADO', 1); !!}  Baja
   </div>--}}
+</div>
 
-
+<div class="row form-group">
+  <div class="col-md-1 col-md-offset-1">
+    {!! Form::label('COMENTARIO_PAGO', 'Comentario') !!}
+  </div>
+  <div class="col-md-8">
+    {!! Form::textarea('COMENTARIO_PAGO', null, ['class' => 'form-control', 'rows' => '2', 'cols' => '500', 'placeholder' => 'Observaciones y/o Comentarios']); !!}
+  </div>
 </div>

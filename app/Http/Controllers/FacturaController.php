@@ -3,11 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Empresa;
+use App\TipoProveedor;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Requests\CreateFacturaRequest;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
@@ -20,6 +22,12 @@ use Illuminate\Support\Facades\Session;
 
 class FacturaController extends Controller
 {
+
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -93,6 +101,8 @@ dd($tipoGasto);*/
          $proveedor = Proveedor::lists('IDENTIFICADOR_TRIBUTARIO', 'ID')
                                          ->toArray();
 
+         $tipoProveedor = TipoProveedor::lists('DESCRIPCION', 'ID')->toArray();
+
          $empresa_id = Session::get('empresa');
 
          $moneda = Empresa::select('cat_moneda.ID', 'cat_moneda.DESCRIPCION')
@@ -102,7 +112,8 @@ dd($tipoGasto);*/
 
          $fechaFactura = null;
 
-         return view('facturas.create', compact('liquidacion_id', 'tipoGasto', 'proveedor', 'moneda', 'fechaFactura'));
+
+         return view('facturas.create', compact('liquidacion_id', 'tipoGasto', 'proveedor', 'moneda', 'fechaFactura', 'tipoProveedor'));
      }
 
     /**
@@ -111,8 +122,10 @@ dd($tipoGasto);*/
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(CreateFacturaRequest $request)
     {
+
+
         $factura = new Factura();
 
         $file = $request->file('FOTO');
@@ -156,6 +169,11 @@ dd($tipoGasto);*/
         $factura->SERIE = $request->SERIE;
         $factura->NUMERO = $request->NUMERO;
         $factura->FECHA_FACTURA = $request->FECHA_FACTURA;
+        $factura->CANTIDAD_PORCENTAJE_CUSTOM = $request->CANTIDAD_PORCENTAJE;
+        $factura->TIPODOCUMENTO_ID = $request->TIPODOCUMENTO;
+        $factura->KILOMETRAJE_INICIAL = $request->KM_INICIO;
+        $factura->KILOMETRAJE_FINAL = $request->KM_FINAL;
+        $factura->COMENTARIO_PAGO = $request->COMENTARIO_PAGO;
         $factura->TOTAL = $request->TOTAL;
         $factura->FOTO = $name;
         $factura->ANULADO = 0;
@@ -199,11 +217,15 @@ dd($tipoGasto);*/
     {
         $factura = Factura::findOrFail($id);
 
+        $liquidacion_id = $factura->LIQUIDACION_ID;
+
         $tipoGasto = TipoGasto::lists('DESCRIPCION', 'ID')
                                         ->toArray();
 
         $proveedor = Proveedor::lists('IDENTIFICADOR_TRIBUTARIO', 'ID')
                                         ->toArray();
+
+        $tipoProveedor = TipoProveedor::lists('DESCRIPCION', 'ID')->toArray();
 
         $empresa_id = Session::get('empresa');
 
@@ -214,7 +236,7 @@ dd($tipoGasto);*/
 
         $fechaFactura = $factura->FECHA_FACTURA;
 
-        return view('facturas.edit', compact('factura', 'tipoGasto', 'proveedor', 'moneda', 'fechaFactura'));
+        return view('facturas.edit', compact('factura', 'tipoGasto', 'proveedor', 'moneda', 'fechaFactura', 'tipoProveedor', 'liquidacion_id'));
     }
 
     /**
@@ -225,9 +247,10 @@ dd($tipoGasto);*/
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
-    {   
+    {
         Factura::where('ID', $id)
-                ->update(['TIPOGASTO_ID' => $request->TIPOGASTO_ID, 'MONEDA_ID' => $request->MONEDA_ID, 'PROVEEDOR_ID' => $request->PROVEEDOR_ID,
+                ->update(['TIPOGASTO_ID' => $request->TIPOGASTO_ID, 'MONEDA_ID' => $request->MONEDA_ID, 'PROVEEDOR_ID' => $request->PROVEEDOR_ID, 'COMENTARIO_PAGO' => $request->COMENTARIO_PAGO,
+                          'TIPODOCUMENTO_ID' => $request->TIPODOCUMENTO, 'KILOMETRAJE_INICIAL' => $request->KM_INICIO, 'KILOMETRAJE_FINAL' => $request->KM_FINAL,
                           'SERIE' => $request->SERIE, 'NUMERO' => $request->NUMERO, 'FECHA_FACTURA' => $request->FECHA_FACTURA, 'TOTAL' => $request->TOTAL]);
 
 

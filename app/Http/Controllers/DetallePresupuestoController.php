@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\TipoAsignacion;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
@@ -42,7 +43,10 @@ class DetallePresupuestoController extends Controller
                                         ->lists('DESCRIPCION', 'ID')
                                         ->toArray();
 
-         return view('detallePresupuestos.create', compact('presupuesto_id', 'tipoGasto', 'frecuencia'));
+         $tipoAsignacion = TipoAsignacion::lists('DESCRIPCION', 'ID')
+             ->toArray();
+
+         return view('detallePresupuestos.create', compact('presupuesto_id', 'tipoGasto', 'frecuencia', 'tipoAsignacion'));
      }
 
     /**
@@ -57,6 +61,7 @@ class DetallePresupuestoController extends Controller
 
         $detallePresupuesto->PRESUPUESTO_ID = $request->PRESUPUESTO_ID;
         $detallePresupuesto->TIPOGASTO_ID = $request->TIPOGASTO_ID;
+        $detallePresupuesto->TIPOASIGNACION_ID = $request->TIPOASIGNACION_ID;
         $detallePresupuesto->MONTO = $request->MONTO;
         $detallePresupuesto->FRECUENCIATIEMPO_ID = $request->FRECUENCIATIEMPO_ID;
         $detallePresupuesto->CENTROCOSTO1 = $request->CENTROCOSTO1;
@@ -102,7 +107,10 @@ class DetallePresupuestoController extends Controller
         $tipoGasto = TipoGasto::lists('DESCRIPCION', 'ID')
                                         ->toArray();
 
-        return view('detallePresupuestos.edit', compact('detallePresupuesto', 'frecuencia', 'tipoGasto'));
+        $tipoAsignacion = TipoAsignacion::lists('DESCRIPCION', 'ID')
+            ->toArray();
+
+        return view('detallePresupuestos.edit', compact('detallePresupuesto', 'frecuencia', 'tipoGasto', 'tipoAsignacion'));
     }
 
     /**
@@ -120,7 +128,7 @@ class DetallePresupuestoController extends Controller
         DetallePresupuesto::where('ID', $id)
                 ->update(['PRESUPUESTO_ID' => $request->PRESUPUESTO_ID, 'TIPOGASTO_ID' => $request->TIPOGASTO_ID, 'FRECUENCIATIEMPO_ID' => $request->FRECUENCIATIEMPO_ID,
                           'MONTO' => $request->MONTO, 'CENTROCOSTO1' => $request->CENTROCOSTO1, 'CENTROCOSTO2' => $request->CESTROCOSTO2, 'CENTROCOSTO3' => $request->CENTROCOSTO3,
-                          'CENTROCOSTO4' => $request->CENTROCOSTO4, 'CENTROCOSTO5' => $request->CESTROCOSTO5, 'ANULADO' => $request->ANULADO]);
+                          'CENTROCOSTO4' => $request->CENTROCOSTO4, 'CENTROCOSTO5' => $request->CESTROCOSTO5, 'TIPOASIGNACION_ID' => $request->TIPOASIGNACION_ID, 'ANULADO' => $request->ANULADO]);
 
         return Redirect::to('presupuestos/' . $request->PRESUPUESTO_ID . '/edit' );
     }

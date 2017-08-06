@@ -70,6 +70,7 @@ class TipoGastoController extends Controller
         $tipoGasto->MONTO_A_APLICAR = ($request->MONTO_A_APLICAR_CANTIDAD) ? $request->MONTO_A_APLICAR_CANTIDAD : $request->MONTO_A_APLICAR_PORCENTAJE;
         $tipoGasto->CAUSAEXENCION_ID = $request->CAUSAEXENCION_ID;
         $tipoGasto->UNIDAD_MEDIDA = $request->UNIDAD_MEDIDA;
+        $tipoGasto->OPCIONKILOMETRAJE_ID = $request->OPCIONKILOMETRAJE_ID;
         $tipoGasto->CUENTA_CONTABLE_EXENTO = $request->CUENTA_CONTABLE_EXENTO;
         $tipoGasto->CODIGO_IMPUESTO_EXENTO = $request->CODIGO_IMPUESTO_EXENTO;
         $tipoGasto->CUENTA_CONTABLE_AFECTO = $request->CUENTA_CONTABLE_AFECTO;
@@ -139,7 +140,7 @@ class TipoGastoController extends Controller
       $tipoGasto::where('ID', $tipoGasto->ID)
               ->update(['DESCRIPCION' => $request->DESCRIPCION, 'EXENTO' => $request->EXENTO, 'MONTO_A_APLICAR' => $montoAplicar, 'UNIDAD_MEDIDA' => $request->UNIDAD_MEDIDA,
                         'CAUSAEXENCION_ID' => $request->CAUSAEXENCION_ID, 'CUENTA_CONTABLE_EXENTO' => $request->CUENTA_CONTABLE_EXENTO, 'CODIGO_IMPUESTO_EXENTO' => $request->CODIGO_IMPUESTO_EXENTO,
-                        'CUENTA_CONTABLE_AFECTO' => $request->CUENTA_CONTABLE_AFECTO, 'CODIGO_IMPUESTO_AFECTO' => $request->CODIGO_IMPUESTO_AFECTO,
+                        'CUENTA_CONTABLE_AFECTO' => $request->CUENTA_CONTABLE_AFECTO, 'CODIGO_IMPUESTO_AFECTO' => $request->CODIGO_IMPUESTO_AFECTO, 'OPCIONKILOMETRAJE_ID' => $request->OPCIONKILOMETRAJE_ID,
                         'CUENTA_CONTABLE_REMANENTE' => $request->CUENTA_CONTABLE_REMANENTE, 'CODIGO_IMPUESTO_REMANENTE' => $request->CODIGO_IMPUESTO_REMANENTE, 'ANULADO' => $request->ANULADO]);
 
       return redirect::to('empresa/tipoGasto/' . $tipoGasto->EMPRESA_ID);
