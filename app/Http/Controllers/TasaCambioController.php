@@ -13,6 +13,11 @@ use App\Moneda;
 
 class TasaCambioController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
     public function createTasaCambio($id)
     {
         $moneda_id = $id;

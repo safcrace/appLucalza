@@ -16,6 +16,10 @@ use Maatwebsite\Excel\Facades\Excel;
 
 class MonedaController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
     /**
      * Display a listing of the resource.
      *
@@ -164,13 +168,14 @@ class MonedaController extends Controller
         if($almacenado) {
             Excel::selectSheetsByIndex(0)->load($rutaAlmacenado, function($hoja) {
                 $hoja->each(function($fila) {
-                    $tasa = TasaCambio::where('FECHA', '=', $fila->FECHA)->where('MONEDA_ID', '=', $fila->MONEDA_ID)->where('COMPRA', '=', $fila->COMPRA)->first();
+                    $tasa = TasaCambio::where('FECHA', '=', $fila->fecha)->where('MONEDA_ID', '=', $fila->moneda_id)->where('COMPRA', '=', $fila->compra)->first();
                     if(count($tasa) == 0) {
+                        dd('entro y no debio!');
                         $tasaCambio = new TasaCambio();
-                        $tasaCambio->MONEDA_ID = $fila->MONEDA_ID;
-                        $tasaCambio->FECHA = $fila->FECHA;
-                        $tasaCambio->COMPRA = $fila->COMPRA;
-                        $tasaCambio->ANULADO = $fila->ANULADO;
+                        $tasaCambio->MONEDA_ID = $fila->moneda_id;
+                        $tasaCambio->FECHA = $fila->fecha;
+                        $tasaCambio->COMPRA = $fila->compra;
+                        $tasaCambio->ANULADO = $fila->anulado;
 
                         $tasaCambio->save();
                     }
@@ -178,6 +183,6 @@ class MonedaController extends Controller
 
             });
         }
-
+        return redirect::to('monedas/' . $id . '/edit');
     }
 }

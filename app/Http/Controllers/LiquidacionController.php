@@ -35,8 +35,8 @@ class LiquidacionController extends Controller
                                       ->join('cat_ruta', 'cat_ruta.ID', '=', 'cat_usuarioruta.RUTA_ID')
                                       ->join('cat_estadoliquidacion', 'cat_estadoliquidacion.ID', '=', 'liq_liquidacion.ESTADOLIQUIDACION_ID')
                                       ->where('liq_liquidacion.ANULADO', '=', 0)
-                                      //->where('users.id','=', $usuario_id)
-                                      //->whereIn('liq_liquidacion.ESTADOLIQUIDACION_ID', [1,6])
+                                      ->where('users.id','=', $usuario_id)
+                                      ->whereIn('liq_liquidacion.ESTADOLIQUIDACION_ID', [1,6])
                                       ->paginate();
 
         return view('liquidaciones.index', compact('usuario_id', 'liquidaciones'));

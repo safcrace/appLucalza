@@ -19,7 +19,10 @@ use Illuminate\Support\Facades\Session;
 
 class PresupuestoController extends Controller
 {
-
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
     /**
      * Carbon
      */
