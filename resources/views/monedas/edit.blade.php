@@ -24,6 +24,7 @@
 
                <div class="panel panel-default">
                    <div class="panel-heading panel-title" style="height: 65px">Tipo de Cambio USD
+                       <button type="button" class="btn btn-default" style="border-color: white; float: right" data-toggle="modal" data-target="#myModalA"><a href="#" title="Cargar Archivo"><span class="glyphicon glyphicon-import" aria-hidden="true" style="font-size:32px; color: black"></span></a></button>
                        <button type="button" class="btn btn-default" style="border-color: white; float: right"><a href="{{ route('createTasa', $moneda->ID) }}" title="Agregar"><span class="glyphicon glyphicon-plus-sign" aria-hidden="true" style="font-size:32px; color: black"></span></a>
                    </div>
 
@@ -66,6 +67,29 @@
         </div>
 
       @include('partials.anular');
+
+      <div class="modal fade" id="myModalA" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+          <div class="modal-dialog modal-lg" role="document">
+              <div class="modal-content">
+                  <div class="modal-header">
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                      <h4 class="modal-title" id="myModalLabel">Carga de Archivos Externos</h4>
+                  </div>
+
+                  <div class="modal-body">
+
+                      {!! Form::open(['route' => ['cargaArchivo', $moneda->ID], 'method' => 'POST', 'enctype' => 'multipart/form-data']) !!}
+                        @include('monedas.tasaCambio.field')
+
+                  </div>
+                  <div class="modal-footer">
+                      <button type="button" class="btn btn-default" data-dismiss="modal"><span class="glyphicon glyphicon-remove-sign" aria-hidden="true" style="font-size:32px; color: black"></span></button>
+                      <button type="submit" class="btn btn-default" style="border-color: white"><span class="glyphicon glyphicon-ok-sign" aria-hidden="true" style="font-size:32px; color: black;"></button>
+                  </div>
+                  {!! Form::close() !!}
+              </div>
+          </div>
+      </div>
 
   </div>
 @endsection

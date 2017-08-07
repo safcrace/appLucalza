@@ -130,6 +130,7 @@ dd($tipoGasto);*/
 
         $file = $request->file('FOTO');
         $name = $request->LIQUIDACION_ID . '-' . $request->NUMERO . '-' . time() . '-' . $file->getClientOriginalName();
+
         $path = public_path() . '/images/' .  Auth::user()->email ;
 
         if (file_exists($path)) {

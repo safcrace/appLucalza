@@ -7,9 +7,12 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Redirect;
 use App\Moneda;
 use App\TasaCambio;
+use Illuminate\Support\Facades\Storage;
+use Maatwebsite\Excel\Facades\Excel;
 
 class MonedaController extends Controller
 {
@@ -149,5 +152,32 @@ class MonedaController extends Controller
         } else {
             return  'La Moneda no se puede eliminar, pertenece a una Empresa Activa.';//Redirect::to('monedas');
         }
+    }
+
+    public function cargaArchivo(Request $request, $id)
+    {
+        $file = $request->file('tasasCambio');
+        $originalName = 'Moneda-' . $id . '-' . $file->getClientOriginalName();
+        $almacenado = Storage::disk('tasasCambio')->put($originalName,  \File::get($file) );
+        $rutaAlmacenado = storage_path('tasasCambio') . '/' . $originalName;
+
+        if($almacenado) {
+            Excel::selectSheetsByIndex(0)->load($rutaAlmacenado, function($hoja) {
+                $hoja->each(function($fila) {
+                    $tasa = TasaCambio::where('FECHA', '=', $fila->FECHA)->where('MONEDA_ID', '=', $fila->MONEDA_ID)->where('COMPRA', '=', $fila->COMPRA)->first();
+                    if(count($tasa) == 0) {
+                        $tasaCambio = new TasaCambio();
+                        $tasaCambio->MONEDA_ID = $fila->MONEDA_ID;
+                        $tasaCambio->FECHA = $fila->FECHA;
+                        $tasaCambio->COMPRA = $fila->COMPRA;
+                        $tasaCambio->ANULADO = $fila->ANULADO;
+
+                        $tasaCambio->save();
+                    }
+                });
+
+            });
+        }
+
     }
 }

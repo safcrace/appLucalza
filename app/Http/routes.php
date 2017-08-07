@@ -54,6 +54,7 @@ Route::get('password/reset/{token}', 'Auth\PasswordController@getReset');
 Route::post('password/reset', 'Auth\PasswordController@postReset');
 
 // Monedas routes...
+Route::post('moneda/tasaCambio/cargaArchivo/{id}', ['uses' => 'MonedaController@cargaArchivo', 'as' => 'cargaArchivo']);
 Route::get('moneda/anular/{id}', ['uses' => 'MonedaController@anular', 'as' => 'anular']);
 Route::resource('monedas', 'MonedaController');
 
