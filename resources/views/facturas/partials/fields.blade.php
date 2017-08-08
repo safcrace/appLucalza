@@ -148,7 +148,16 @@
     </div>
 
 
-
+      @if($factura->COMENTARIO_SUPERVISOR)
+          <div class="row form-group">
+              <div class="col-md-1 col-md-offset-1">
+                  {!! Form::label('COMENTARIO_SUPERVISOR', 'Rechazo Supervisor') !!}
+              </div>
+              <div class="col-md-8">
+                  {!! Form::textarea('COMENTARIO_SUPERVISOR', null, ['class' => 'form-control', 'rows' => '3', 'cols' => '500', 'placeholder' => 'Observaciones y/o Comentarios']); !!}
+              </div>
+          </div>
+      @endif
     {{--<div class="row form-group">
       <div class="col-md-2 col-md-offset-1">
             {!! Form::label('ANULADODP', 'Anular') !!}

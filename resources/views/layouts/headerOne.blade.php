@@ -47,7 +47,9 @@
                           @can('ver seguridad')
                           <li role="separator" class="divider"></li>
                           <li class="dropdown-header">Seguridad</li>
-                          <li><a href="{{ route('permisos.index') }}">Permisos</a></li>
+                          @can('ver permisos')
+                                <li><a href="{{ route('permisos.index') }}">Permisos</a></li>
+                          @endcan
                           <li><a href="{{ route('roles.index') }}">Roles</a></li>
                           <li><a href="{{ route('usuarios.index') }}">Usuarios</a></li>
                           <li><a href="{{ route('asignaPermisosRole') }}">Permisos por Rol</a></li>

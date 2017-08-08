@@ -170,7 +170,6 @@ class MonedaController extends Controller
                 $hoja->each(function($fila) {
                     $tasa = TasaCambio::where('FECHA', '=', $fila->fecha)->where('MONEDA_ID', '=', $fila->moneda_id)->where('COMPRA', '=', $fila->compra)->first();
                     if(count($tasa) == 0) {
-                        dd('entro y no debio!');
                         $tasaCambio = new TasaCambio();
                         $tasaCambio->MONEDA_ID = $fila->moneda_id;
                         $tasaCambio->FECHA = $fila->fecha;

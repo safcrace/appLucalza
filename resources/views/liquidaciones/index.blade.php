@@ -32,7 +32,11 @@
                                    <td><a href="{{ route('liquidaciones.edit', $liquidacion->ID) }}">{{ $liquidacion->FECHA_FINAL->format('d-m-Y') }}</td>
                                    <td><a href="{{ route('liquidaciones.edit', $liquidacion->ID) }}">{{ $liquidacion->RUTA }}</td>
                                    <td><a href="{{ route('liquidaciones.edit', $liquidacion->ID) }}">{{ 'Q.' . App\Factura::where('LIQUIDACION_ID', '=', $liquidacion->ID)->sum('TOTAL')}}</td>
-                                   <td><a href="{{ route('liquidaciones.edit', $liquidacion->ID) }}">{{ $liquidacion->DESCRIPCION }}</td>
+                                   @if($liquidacion->DESCRIPCION == 'En Corrección')
+                                        <td style="background-color: red; color: #ffffff;"><a href="{{ route('liquidaciones.edit', $liquidacion->ID) }}" style="text-decoration:none; color: white;">{{ $liquidacion->DESCRIPCION }}</td>
+                                   @else
+                                        <td><a href="{{ route('liquidaciones.edit', $liquidacion->ID) }}">{{ $liquidacion->DESCRIPCION }}</td>
+                                   @endif
                                    <td class="text-center">
                                      <a href="{{ route('anularLiquidacion', $liquidacion->ID) }}" class="btn-delete"><span class="glyphicon glyphicon-ban-circle" aria-hidden="true" style="font-size:20px; color: black"></span></a>
                                    </td>

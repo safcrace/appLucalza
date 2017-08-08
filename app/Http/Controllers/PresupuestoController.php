@@ -22,14 +22,9 @@ class PresupuestoController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
+        Carbon::setLocale('es');
     }
-    /**
-     * Carbon
-     */
-    public function __construct()
-    {
-      Carbon::setLocale('es');
-    }
+
     /**
      * Display a listing of the resource.
      *
