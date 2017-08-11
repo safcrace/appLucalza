@@ -188,17 +188,22 @@ class UsuarioController extends Controller
     {
         $usuarioEmpresa = new UsuarioEmpresa();
 
-        $usuarioEmpresa->USER_ID = $request->USUARIO_ID;
-        $usuarioEmpresa->EMPRESA_ID = $request->EMPRESA_ID;
-        $usuarioEmpresa->CODIGO_PROVEEDOR_SAP = $request->codigoProveedorSap;
-        $usuarioEmpresa->ANULADO = 0;
+        $existe = UsuarioEmpresa::where('USER_ID', '=', $request->USUARIO_ID)->where('EMPRESA_ID', '=', $request->EMPRESA_ID)->first();
+        if($existe) {
+            UsuarioEmpresa::where('USER_ID', '=', $request->USUARIO_ID)->where('EMPRESA_ID', '=', $request->EMPRESA_ID)
+                                ->update(['ANULADO' => 0]);
+
+        } else {
+            $usuarioEmpresa->USER_ID = $request->USUARIO_ID;
+            $usuarioEmpresa->EMPRESA_ID = $request->EMPRESA_ID;
+            $usuarioEmpresa->CODIGO_PROVEEDOR_SAP = $request->codigoProveedorSap;
+            $usuarioEmpresa->ANULADO = 0;
+
+            $usuarioEmpresa->save();
+        }
 
 
-        $usuarioEmpresa->save();
 
-        /** Esto debe ser reubicado queda pendiete
-        UsuarioEmpresa::insert( ['USER_ID' => $usuario->id, 'EMPRESA_ID' => $empresa_id, 'CODIGO_PROVEEDOR_SAP' => $codigoProveedorSap, 'ANULADO' => 0] );
-         **/
 
         return redirect::back()->withInput();
 
@@ -278,5 +283,13 @@ class UsuarioController extends Controller
                 ->update(['ANULADO' => 1]);
 
         return 1;//Redirect::to('empresa/usuario/' . $empresa_id);
+    }
+    public function anularUsuarioEmpresa($id)
+    {
+
+        UsuarioEmpresa::where('id', $id)
+            ->update(['ANULADO' => 1]);
+
+        return redirect::back()->withInput();//return 1;//Redirect::to('empresa/usuario/' . $empresa_id);
     }
 }

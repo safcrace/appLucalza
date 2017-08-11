@@ -20,13 +20,15 @@
                         {!! Form::close() !!}
 
                     </div>
+
+                    <div id="empresas">
+
+                    </div>
                 </div>
 
                 {{-- Usuario Asignados --}}
 
-                <div id="empresas">
 
-                </div>
 
 
 
@@ -39,6 +41,8 @@
 @push('scripts')
 <script type="text/javascript">
     $(document).ready(function () {
+
+
         var usuario = $('#usuario').val();
          if (usuario != "") {
              vurl = '{{ route('usuariosEmpresa')}}'
@@ -52,6 +56,10 @@
              }
              });
          }
+
+         $('#imagen').click(function() {
+             alert('Hola Sender');
+        });
 
 
         $('#usuario').change(function () {
@@ -67,6 +75,10 @@
                 }
             });
         });
+
+
+
+
 
         $('#usuario').select2({
             placeholder: 'Seleccione un Usuario'

@@ -10,7 +10,7 @@
       {!! Form::text('USUARIO', $usuario, ['class' => 'form-control', 'disabled' => 'true']); !!}
   </div>
   <div class="col-md-1 col-md-offset-3">
-        {!! Form::label('TOTAL', 'TOTAL') !!}
+        {!! Form::label('TOTAL', 'TOTAL sender') !!}
   </div>
   <div class="col-md-1 col-md-offset-1">
       <button type="button" class="btn btn-primary btn-sm">Imprimir</button>
@@ -54,3 +54,5 @@
 
 
 </div>
+
+

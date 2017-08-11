@@ -16,7 +16,8 @@
                      <table class="table table-bordered table-striped table-hover">
                        <thead>
                          <th class="text-center">No.</th>
-                         <th class="text-center">Fecha</th>
+                         <th class="text-center">Fecha Inicio</th>
+                         <th class="text-center">Fecha Final</th>
                          <th class="text-center">Vendedor</th>
                          <th class="text-center">Ruta</th>
                          <th class="text-center">Monto</th>
@@ -29,7 +30,8 @@
 
                                      <td><a href="{{ route('showLiquidacion', $liquidacion->ID) }}">{{ $liquidacion->ID }}</a></td>
                                      <td><a href="{{ route('showLiquidacion', $liquidacion->ID) }}">{{ $liquidacion->FECHA_INICIO->format('d-m-Y') }}</a></td>
-                                   <td><a href="{{ route('showLiquidacion', $liquidacion->ID) }}">{{ $liquidacion->USUARIO }}</a></td>
+                                     <td><a href="{{ route('showLiquidacion', $liquidacion->ID) }}">{{ $liquidacion->FECHA_FINAL->format('d-m-Y') }}</a></td>
+                                     <td><a href="{{ route('showLiquidacion', $liquidacion->ID) }}">{{ $liquidacion->USUARIO }}</a></td>
                                      <td><a href="{{ route('showLiquidacion', $liquidacion->ID) }}">{{ $liquidacion->RUTA }}</a></td>
                                      <td><a href="{{ route('showLiquidacion', $liquidacion->ID) }}">
                                        {{ App\Factura::where('LIQUIDACION_ID', '=', $liquidacion->ID)->sum('TOTAL')}}</a></td>

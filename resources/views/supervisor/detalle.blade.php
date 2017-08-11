@@ -47,3 +47,25 @@
       <button type="button" class="btn btn-default"><span class="glyphicon glyphicon-print" aria-hidden="true" style="font-size:32px; color: black" data-toggle="tooltip" data-placement="top" title="Imprimr"></button>
   </div>
 </div>
+
+
+  <div class="row form-group">
+    @if($liquidacion->SUPERVISOR_COMENTARIO)
+        <div class="col-md-1">
+          {!! Form::label('COMENTARIO_SUPERVISOR', 'Rechazo Supervisor') !!}
+        </div>
+        <div class="col-md-5">
+          {!! Form::textarea('COMENTARIO_SUPERVISOR', $liquidacion->SUPERVISOR_COMENTARIO, ['class' => 'form-control', 'rows' => '2', 'cols' => '500', 'placeholder' => 'Observaciones y/o Comentarios', 'disabled' => 'true']); !!}
+        </div>
+    @endif
+    @if($liquidacion->CONTABILIDAD_COMENTARIO)
+        <div class="col-md-1">
+          {!! Form::label('COMENTARIO_CONTABILIDAD', 'Rechazo Contabilidad') !!}
+        </div>
+        <div class="col-md-5">
+          {!! Form::textarea('COMENTARIO_CONTABILIDAD', $liquidacion->CONTABILIDAD_COMENTARIO, ['class' => 'form-control', 'rows' => '2', 'cols' => '500', 'placeholder' => 'Observaciones y/o Comentarios', 'disabled' => 'true']); !!}
+        </div>
+    @endif
+  </div>
+
+

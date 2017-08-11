@@ -25,6 +25,7 @@ Route::get('usuario/anular/{id}', ['uses' => 'UsuarioController@anular', 'as' =>
 Route::get('usuario/empresa', ['uses' => 'UsuarioController@createUsuarioEmpresa', 'as' => 'createUsuarioEmpresa']);
 Route::post('usuario/empresa', ['uses' => 'UsuarioController@storeUsuarioEmpresa', 'as' => 'storeUsuarioEmpresa']);
 Route::get('usuario/{id}/asignacion/empresa', ['uses' => 'UsuarioController@usuariosAsignadosEmpresa', 'as' => 'usuariosEmpresa']);
+Route::get('empresa/usuarioEmpresa/anular/{id}', ['uses' => 'UsuarioController@anularUsuarioEmpresa', 'as' => 'anularUsuarioEmpresa']);
 //Route::get('empresa/usuario/{id}', ['uses' => 'UsuarioController@indexUsuario', 'as' => 'indexUsuario']);
 Route::resource('usuarios', 'UsuarioController');
 
@@ -86,6 +87,7 @@ Route::resource('rutas', 'RutaController');
 Route::get('proveedor/anular/{id}', ['uses' => 'ProveedorController@anular', 'as' => 'anularProveedor']);
 Route::get('empresa/{id}/create/proveedor',  ['uses' => 'ProveedorController@empresaCreateProveedor', 'as' => 'createProveedor']);
 Route::get('empresa/proveedor/{id}', ['uses' => 'ProveedorController@indexProveedor', 'as' => 'indexProveedor']);
+Route::get('tipoProveedor/actualizar/{id}', ['uses' => 'ProveedorController@actualizarProveedor', 'as' => 'actualizarProveedor']);
 Route::resource('proveedores', 'ProveedorController');
 
 // Tipo Gasto routes

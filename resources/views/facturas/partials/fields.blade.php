@@ -154,7 +154,18 @@
                   {!! Form::label('COMENTARIO_SUPERVISOR', 'Rechazo Supervisor') !!}
               </div>
               <div class="col-md-8">
-                  {!! Form::textarea('COMENTARIO_SUPERVISOR', null, ['class' => 'form-control', 'rows' => '3', 'cols' => '500', 'placeholder' => 'Observaciones y/o Comentarios']); !!}
+                  {!! Form::textarea('COMENTARIO_SUPERVISOR', null, ['class' => 'form-control', 'rows' => '3', 'cols' => '500', 'placeholder' => 'Observaciones y/o Comentarios', 'disabled']); !!}
+              </div>
+          </div>
+      @endif
+
+      @if($factura->COMENTARIO_CONTABILIDAD)
+          <div class="row form-group">
+              <div class="col-md-1 col-md-offset-1">
+                  {!! Form::label('COMENTARIO_CONTABILIDAD', 'Rechazo Contabilidad') !!}
+              </div>
+              <div class="col-md-8">
+                  {!! Form::textarea('COMENTARIO_CONTABILIDAD', null, ['class' => 'form-control', 'rows' => '3', 'cols' => '500', 'placeholder' => 'Observaciones y/o Comentarios', 'disabled']); !!}
               </div>
           </div>
       @endif

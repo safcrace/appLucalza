@@ -40,7 +40,8 @@
                           <th class="text-center">Total</th>
                           <th class="text-center">Ver</th>
                           <th class="text-center">Corregir</th>
-                          <th class="text-center">Comentario</th>
+                          <th class="text-center">Comentario Supervisor</th>
+                          <th class="text-center">Comentario Contabilidad</th>
                           {{--<th class="text-center">Corregir</th>--}}
                         </thead>
                         <tbody>
@@ -60,7 +61,8 @@
                                       </a>
                                     </td>
                                     <td class="text-center"><span class="glyphicon glyphicon-pencil btn_corregir" aria-hidden="true" style="font-size:20px; color: black" data-toggle="modal" data-target="#myModal"></td>
-                                    <td style="max-widht: 200px">{{ $factura->COMENTARIO}}</td>
+                                    <td style="max-widht: 200px">{{ $factura->COMENTARIO_SUPERVISOR}}</td>
+                                    <td style="max-widht: 200px">{{ $factura->COMENTARIO_CONTABILIDAD}}</td>
                                     {{--<td class="text-center">{!! Form::checkbox('Corregir', true, false, ['class' => 'btn_corregir']); !!}</td>--}}
                                 </tr>
                             @endforeach

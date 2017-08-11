@@ -162,6 +162,26 @@ class ProveedorController extends Controller
     }
 
     /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function actualizarProveedor($id)
+    {
+        $param = explode('-', $id);
+        $tipoProveedor = $param[0];
+        $proveedorId = $param[1];
+        $liquidacionId = $param[2];
+
+        Proveedor::where('ID', $proveedorId)
+            ->update(['TIPOPROVEEDOR_ID' => $tipoProveedor]);
+
+        return 'Actualización Realizada'; //redirect::to('contabilidad/show/' . $liquidacionId);
+    }
+
+    /**
      * Remove the specified resource from storage.
      *
      * @param  int  $id

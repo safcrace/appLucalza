@@ -87,7 +87,18 @@
             {!! Form::label('COMENTARIO_SUPERVISOR', 'Rechazo Supervisor') !!}
         </div>
         <div class="col-md-8">
-            {!! Form::textarea('COMENTARIO_SUPERVISOR', $liquidacion->SUPERVISOR_COMENTARIO, ['class' => 'form-control', 'rows' => '2', 'cols' => '500', 'placeholder' => 'Observaciones y/o Comentarios']); !!}
+            {!! Form::textarea('COMENTARIO_SUPERVISOR', $liquidacion->SUPERVISOR_COMENTARIO, ['class' => 'form-control', 'rows' => '2', 'cols' => '500', 'placeholder' => 'Observaciones y/o Comentarios', 'disabled' => 'true']); !!}
+        </div>
+    </div>
+@endif
+
+@if($liquidacion->CONTABILIDAD_COMENTARIO)
+    <div class="row form-group">
+        <div class="col-md-1 col-md-offset-1">
+            {!! Form::label('COMENTARIO_CONTABILIDAD', 'Rechazo Contabilidad') !!}
+        </div>
+        <div class="col-md-8">
+            {!! Form::textarea('COMENTARIO_CONTABILIDAD', $liquidacion->CONTABILIDAD_COMENTARIO, ['class' => 'form-control', 'rows' => '2', 'cols' => '500', 'placeholder' => 'Observaciones y/o Comentarios', 'disabled' => 'true']); !!}
         </div>
     </div>
 @endif

@@ -40,7 +40,8 @@
                           <th class="text-center">Total</th>
                           <th class="text-center">Ver</th>
                           <th class="text-center">Corregir</th>
-                          <th class="text-center">Comentario</th>
+                          <th class="text-center">Comentario Supervisor</th>
+                          <th class="text-center">Comentario Contabilidad</th>
                           {{--<th class="text-center">Corregir</th>--}}
                         </thead>
                         <tbody>
@@ -48,16 +49,23 @@
                             @foreach ($facturas as $factura)
                                 <tr data-id={{ $factura->ID }} data-factura={{ $factura->NUMERO }}>
                                     <td>{{ $factura->FECHA_FACTURA->format('d-m-Y') }}</td>
-                                    <td>{{ $factura->NOMBRE}}</td>
+                                    @if($factura->TIPOPROVEEDOR_ID == 1)
+                                        <td style="background-color: red; color: white;" id="proveedor">{{ $factura->NOMBRE}}</td>
+                                    @else
+                                        <td>{{ $factura->NOMBRE}}</td>
+                                    @endif
                                     <td>{{ $factura->SERIE}}</td>
                                     <td>{{ $factura->NUMERO}}</td>
                                     <td>{{ $factura->TIPOGASTO}}</td>
                                     <td>Q.{{ $factura->TOTAL}}</td>
                                     <td class="text-center">
-                                      <a href="#"><span class="glyphicon glyphicon-eye-open" aria-hidden="true" style="font-size:20px; color: black"></span></a>
+                                        <a class="image-popup-fit-width" href='{{ asset("images/$factura->EMAIL/$factura->FOTO") }}' title="Imagen Factura.">
+                                            <img src='{{ asset("images/$factura->EMAIL/$factura->FOTO") }}' height="32px">
+                                        </a>
                                     </td>
                                     <td class="text-center"><span class="glyphicon glyphicon-pencil btn_corregir" aria-hidden="true" style="font-size:20px; color: black" data-toggle="modal" data-target="#myModal"></td>
-                                    <td style="max-widht: 200px">{{ $factura->COMENTARIO}}</td>
+                                    <td style="max-widht: 200px">{{ $factura->COMENTARIO_SUPERVISOR}}</td>
+                                    <td style="max-widht: 200px">{{ $factura->COMENTARIO_CONTABILIDAD}}</td>
                                     {{--<td class="text-center">{!! Form::checkbox('Corregir', true, false, ['class' => 'btn_corregir']); !!}</td>--}}
                                 </tr>
                             @endforeach
@@ -124,6 +132,30 @@
     </div>
   </div>
   </div>
+
+  {{-- Corrección Liquidación --}}
+
+  <div class="modal fade" id="myModalThree" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+      <div class="modal-dialog" role="document">
+          <div class="modal-content">
+              <div class="modal-header">
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                  <h4 class="modal-title" id="myModalLabelThree">Actualización de Proveedor</h4>
+              </div>
+              {{--!! Form::model($liquidacion, ['route' => ['correccionLiquidacionContabilidad', $liquidacion->ID], 'method' => 'PATCH']) !!--}}
+              <div class="modal-body">
+
+                  @include('contabilidad.proveedor')
+
+              </div>
+              <div class="modal-footer">
+                  <button type="button" class="btn btn-default" data-dismiss="modal"><span class="glyphicon glyphicon-remove-sign" aria-hidden="true" style="font-size:32px; color: black"></span></button>
+                  <button type="button" class="btn btn-default" style="border-color: white" id="actualizarProveedor"><span class="glyphicon glyphicon-ok-sign" aria-hidden="true" style="font-size:32px; color: black;"></button>
+              </div>
+              {{--!! Form::close() !! --}}
+          </div>
+      </div>
+  </div>
 @endsection
 
 @push('scripts')
@@ -151,7 +183,76 @@
             $('#myModal').modal('hide');
             location.reload();
           })
+      });
 
+      $('.popup-gallery').magnificPopup({
+          delegate: 'a',
+          type: 'image',
+          tLoading: 'Loading image #%curr%...',
+          mainClass: 'mfp-img-mobile',
+          gallery: {
+              enabled: true,
+              navigateByImgClick: true,
+              preload: [0,1] // Will preload 0 - before current, and 1 after the current image
+          },
+          image: {
+              tError: '<a href="%url%">The image #%curr%</a> could not be loaded.',
+              titleSrc: function(item) {
+                  return item.el.attr('title') + '<small>by Marsel Van Oosten</small>';
+              }
+          }
+      });
+      $('.image-popup-vertical-fit').magnificPopup({
+          type: 'image',
+          closeOnContentClick: true,
+          mainClass: 'mfp-img-mobile',
+          image: {
+              verticalFit: true
+          }
+      });
+      $('.image-popup-fit-width').magnificPopup({
+          type: 'image',
+          closeOnContentClick: true,
+          image: {
+              verticalFit: false
+          }
+      });
+      $('.image-popup-no-margins').magnificPopup({
+          type: 'image',
+          closeOnContentClick: true,
+          closeBtnInside: false,
+          fixedContentPos: true,
+          mainClass: 'mfp-no-margins mfp-with-zoom', // class to remove default margin from left and right side
+          image: {
+              verticalFit: true
+          },
+          zoom: {
+              enabled: true,
+              duration: 300 // don't foget to change the duration also in CSS
+          }
+      });
+
+      $('#proveedor').click(function() {
+          $('#myModalThree').modal('show')
+      })
+
+      $('#actualizarProveedor').click(function () {
+
+          var tipoProveedor = $('#tipoproveedor_id').val()
+          var proveedor_id = $('#proveedor_id').val()
+          var numero_liquidacion = $('#numero_liquidacion').val()
+
+          vurl = '{{ route('actualizarProveedor')}}'
+          vurl = vurl.replace('%7Bid%7D', tipoProveedor + '-' + proveedor_id + '-' + numero_liquidacion);
+
+
+          $.ajax({
+              type: 'get',
+              url: vurl,
+              success: function (data) {
+                  location.reload(); //$('#vendedores').empty().html(data);
+              }
+          });
       });
   </script>
 @endpush
