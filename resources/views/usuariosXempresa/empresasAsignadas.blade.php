@@ -18,7 +18,7 @@
                     <td>{{ $empresa->DESCRIPCION }}</td>
                     <td>{{ $empresa->CODIGO_PROVEEDOR_SAP }}</td>
                     <td class="text-center">
-                      <a href="{{route('anularUsuarioEmpresa', $empresa->ID) }}" class="btn-delete"><span class="glyphicon glyphicon-ban-circle" aria-hidden="true" style="font-size:20px; color: black"></span></a>
+                      <a href="{{route('anularUsuarioEmpresa', $empresa->ID . '-' . $empresa->USER_ID) }}" class="btn-delete"><span class="glyphicon glyphicon-ban-circle" aria-hidden="true" style="font-size:20px; color: black"></span></a>
                     </td>
 
                 </tr>
@@ -39,6 +39,8 @@
 @push('scripts')
 <script type="text/javascript">
     $(document).ready(function () {
+
+
         $('.btn-delete').click(function (e) {
             e.preventDefault();
             var row = $(this).parents('tr');

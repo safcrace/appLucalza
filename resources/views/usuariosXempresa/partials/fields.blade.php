@@ -5,7 +5,11 @@
         {!! Form::label('USUARIO_ID', 'Usuario') !!}
   </div>
   <div class="col-md-3">
+      @if(isset($usuario_id))
+        {!! Form::select('USUARIO_ID', $usuarios, $usuario_id, ['class' => 'form-control', 'placeholder' => 'Seleccione un Usuario', 'id' => 'usuario']); !!}
+      @else
         {!! Form::select('USUARIO_ID', $usuarios, null, ['class' => 'form-control', 'placeholder' => 'Seleccione un Usuario', 'id' => 'usuario']); !!}
+      @endif
   </div>
 </div>
 

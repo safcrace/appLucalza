@@ -10,6 +10,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Redirect;
 use App\TasaCambio;
 use App\Moneda;
+use Illuminate\Support\Facades\Session;
 
 class TasaCambioController extends Controller
 {
@@ -28,22 +29,30 @@ class TasaCambioController extends Controller
     {
         $moneda = Moneda::find($request->MONEDA_ID);
 
+        $existe = TasaCambio::where('MONEDA_ID', '=', $request->MONEDA_ID)->where('FECHA', '=', $request->FECHA)->first();
 
-        $tasaCambio = new TasaCambio();
+        if($existe) {
+            Session::flash('fechaDuplicada', '¡No se puede ingresar dos tipos de cambio con la misma fecha!');
+            return back()->withInput();
+        } else{
+            $tasaCambio = new TasaCambio();
 
-        $tasaCambio->moneda_id = $moneda->ID;
+            $tasaCambio->moneda_id = $moneda->ID;
 
-        $tasaCambio->FECHA = $request->FECHA;
-        $tasaCambio->COMPRA = $request->COMPRA;
+            $tasaCambio->FECHA = $request->FECHA;
+            $tasaCambio->COMPRA = $request->COMPRA;
 
-        $tasaCambio->ANULADO = $request->ANULADOTC;
-        if ($tasaCambio->ANULADO === null) {
-            $tasaCambio->ANULADO = 0;
+            $tasaCambio->ANULADO = $request->ANULADOTC;
+            if ($tasaCambio->ANULADO === null) {
+                $tasaCambio->ANULADO = 0;
+            }
+
+            $tasaCambio->save();
+
+            return redirect::to('monedas/' . $request->MONEDA_ID . '/edit');
         }
 
-        $tasaCambio->save();
 
-        return redirect::to('monedas/' . $request->MONEDA_ID . '/edit');
     }
 
     public function edit($id)
@@ -88,5 +97,22 @@ class TasaCambioController extends Controller
             ->update(['ANULADO' => 1]);
 
         return 1; //Redirect::to('monedas/' . $moneda_id . '/edit');
+    }
+
+    public function verificaFecha($id)
+    {
+
+        $param = explode('&', $id);
+        $fecha = $param[0];
+        $moneda_id = $param[1];
+
+        $existe = TasaCambio::where('ID', '=', $moneda_id)->where('FECHA', '=', $fecha)->first();
+        if($existe) {
+            return 'Ya Existe';
+        } else {
+            return 'No existe';
+        }
+
+
     }
 }

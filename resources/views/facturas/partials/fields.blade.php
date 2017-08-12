@@ -119,7 +119,7 @@
             <div id="etiqueta" style="font-weight: 700"></div>
         </div>
         <div class="col-md-1" id="cantidadPorcentaje" style="display: block">
-            @if($factura->CANTIDAD_PORCENTAJE_CUSTOM)
+            @if(isset($factura->CANTIDAD_PORCENTAJE_CUSTOM))
                 {!! Form::text('CANTIDAD_PORCENTAJE', $factura->CANTIDAD_PORCENTAJE_CUSTOM, ['class' => 'form-control', 'placeholder' => 'Cantidad']); !!}
             @else
                 {!! Form::text('CANTIDAD_PORCENTAJE', null, ['class' => 'form-control', 'placeholder' => 'Cantidad']); !!}
@@ -129,7 +129,7 @@
             {!! Form::label('KM_INICIO', 'Km Inicial') !!}
         </div>
         <div class="col-md-1">
-            @if($factura->KILOMETRAJE_INICIAL)
+            @if(isset($factura->KILOMETRAJE_INICIAL))
                 {!! Form::text('KM_INICIO', $factura->KILOMETRAJE_INICIAL, ['class' => 'form-control', 'placeholder' => 'Inicio']); !!}
             @else
                 {!! Form::text('KM_INICIO', null, ['class' => 'form-control', 'placeholder' => 'Inicio']); !!}
@@ -139,7 +139,7 @@
                 {!! Form::label('KM_FINAL', 'Km Final') !!}
         </div>
         <div class="col-md-1">
-            @if($factura->KILOMETRAJE_FINAL)
+            @if(isset($factura->KILOMETRAJE_FINAL))
                 {!! Form::text('KM_FINAL', $factura->KILOMETRAJE_FINAL, ['class' => 'form-control', 'placeholder' => 'Final']); !!}
             @else
                 {!! Form::text('KM_FINAL', null, ['class' => 'form-control', 'placeholder' => 'Final']); !!}
@@ -148,7 +148,7 @@
     </div>
 
 
-      @if($factura->COMENTARIO_SUPERVISOR)
+      @if(isset($factura->COMENTARIO_SUPERVISOR))
           <div class="row form-group">
               <div class="col-md-1 col-md-offset-1">
                   {!! Form::label('COMENTARIO_SUPERVISOR', 'Rechazo Supervisor') !!}
@@ -159,7 +159,7 @@
           </div>
       @endif
 
-      @if($factura->COMENTARIO_CONTABILIDAD)
+      @if(isset($factura->COMENTARIO_CONTABILIDAD))
           <div class="row form-group">
               <div class="col-md-1 col-md-offset-1">
                   {!! Form::label('COMENTARIO_CONTABILIDAD', 'Rechazo Contabilidad') !!}

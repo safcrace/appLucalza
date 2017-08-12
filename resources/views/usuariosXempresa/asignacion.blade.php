@@ -42,7 +42,7 @@
 <script type="text/javascript">
     $(document).ready(function () {
 
-
+        alert('Hola Mundo');
         var usuario = $('#usuario').val();
          if (usuario != "") {
              vurl = '{{ route('usuariosEmpresa')}}'

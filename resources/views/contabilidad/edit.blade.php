@@ -32,7 +32,7 @@
 
                       <table class="table table-bordered table-striped table-hover">
                         <thead>
-                          <th class="text-center">Fecha</th>
+                          <th class="text-center">Fecha Factura</th>
                           <th class="text-center">Proveedor</th>
                           <th class="text-center">Serie</th>
                           <th class="text-center">Numero</th>
@@ -64,8 +64,16 @@
                                         </a>
                                     </td>
                                     <td class="text-center"><span class="glyphicon glyphicon-pencil btn_corregir" aria-hidden="true" style="font-size:20px; color: black" data-toggle="modal" data-target="#myModal"></td>
-                                    <td style="max-widht: 200px">{{ $factura->COMENTARIO_SUPERVISOR}}</td>
-                                    <td style="max-widht: 200px">{{ $factura->COMENTARIO_CONTABILIDAD}}</td>
+                                    <td class="text-center" style="max-widht: 200px" >
+                                        <button type="button" class="btn btn-sm btn-default" data-toggle="popover" data-trigger="focus" title="Comentario Supervisor" data-content="{{ $factura->COMENTARIO_SUPERVISOR }}">
+                                            {{ substr($factura->COMENTARIO_SUPERVISOR, 1, 20) }}
+                                        </button>
+                                    </td>
+                                    <td style="max-widht: 200px" class="text-center">
+                                        <button type="button" class="btn btn-sm btn-default" data-toggle="popover" data-trigger="focus" title="Comentario Contabilidad" data-content="{{ $factura->COMENTARIO_CONTABILIDAD }}">
+                                            {{ substr($factura->COMENTARIO_CONTABILIDAD, 1, 20) }}
+                                        </button>
+                                    </td>
                                     {{--<td class="text-center">{!! Form::checkbox('Corregir', true, false, ['class' => 'btn_corregir']); !!}</td>--}}
                                 </tr>
                             @endforeach
@@ -86,6 +94,7 @@
               </div>
         </div>
   </div>
+
   <div class="" id="facturaId" style:"display: none"></div>
   <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
   <div class="modal-dialog" role="document">
@@ -254,5 +263,9 @@
               }
           });
       });
+
+      $(function () {
+          $('[data-toggle="popover"]').popover()
+      })
   </script>
 @endpush

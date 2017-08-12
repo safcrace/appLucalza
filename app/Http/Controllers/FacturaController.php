@@ -112,6 +112,8 @@ dd($tipoGasto);*/
 
          $fechaFactura = null;
 
+        // $factura->CANTIDAD_PORCENTAJE_CUSTOM = null;
+
 
          return view('facturas.create', compact('liquidacion_id', 'tipoGasto', 'proveedor', 'moneda', 'fechaFactura', 'tipoProveedor'));
      }

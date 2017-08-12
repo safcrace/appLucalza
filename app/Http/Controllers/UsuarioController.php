@@ -174,7 +174,7 @@ class UsuarioController extends Controller
      */
     public function usuariosAsignadosEmpresa($id)
     {
-        $empresas = Empresa::select('cat_empresa.DESCRIPCION', 'cat_usuarioempresa.ID', 'cat_usuarioempresa.CODIGO_PROVEEDOR_SAP')
+        $empresas = Empresa::select('cat_empresa.DESCRIPCION', 'cat_usuarioempresa.ID', 'cat_usuarioempresa.CODIGO_PROVEEDOR_SAP', 'cat_usuarioempresa.USER_ID')
                             ->join('cat_usuarioempresa', 'cat_usuarioempresa.EMPRESA_ID', '=', 'cat_empresa.id')
                             ->where('cat_usuarioempresa.USER_ID', '=', $id)
                             ->where('cat_usuarioempresa.ANULADO', '=', 0)
@@ -189,11 +189,14 @@ class UsuarioController extends Controller
         $usuarioEmpresa = new UsuarioEmpresa();
 
         $existe = UsuarioEmpresa::where('USER_ID', '=', $request->USUARIO_ID)->where('EMPRESA_ID', '=', $request->EMPRESA_ID)->first();
+
         if($existe) {
+
             UsuarioEmpresa::where('USER_ID', '=', $request->USUARIO_ID)->where('EMPRESA_ID', '=', $request->EMPRESA_ID)
                                 ->update(['ANULADO' => 0]);
 
         } else {
+
             $usuarioEmpresa->USER_ID = $request->USUARIO_ID;
             $usuarioEmpresa->EMPRESA_ID = $request->EMPRESA_ID;
             $usuarioEmpresa->CODIGO_PROVEEDOR_SAP = $request->codigoProveedorSap;
@@ -286,10 +289,17 @@ class UsuarioController extends Controller
     }
     public function anularUsuarioEmpresa($id)
     {
+        $param = explode('-', $id);
+        $usuarioEmpresa_id = $param[0];
+        $usuario_id = $param[1];
 
-        UsuarioEmpresa::where('id', $id)
+        UsuarioEmpresa::where('id', $usuarioEmpresa_id)
             ->update(['ANULADO' => 1]);
 
-        return redirect::back()->withInput();//return 1;//Redirect::to('empresa/usuario/' . $empresa_id);
+        $usuarios = User::where('anulado', '=', 0)->lists('nombre','id')->toArray();
+        $empresas = Empresa::where('ANULADO', '=', 0)->lists('DESCRIPCION', 'ID')->toArray();
+        return view('usuariosXempresa.asignacion', compact('usuarios', 'empresas', 'usuario_id'));
+
+        //return redirect::back()->withInput();//return 1;//Redirect::to('empresa/usuario/' . $empresa_id);
     }
 }
