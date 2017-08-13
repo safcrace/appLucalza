@@ -62,7 +62,7 @@ class TasaCambioController extends Controller
         return view('monedas.tasaCambio.edit', compact('tasaCambio'));
     }
 
-    public function update(Request $request, $id)
+    public function update(CreateTasaCambioRequest $request, $id)
     {
         $tasaCambio = TasaCambio::findOrFail($id);
         //$tasaCambio->fill($request->all());

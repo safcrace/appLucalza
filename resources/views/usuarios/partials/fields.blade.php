@@ -2,7 +2,7 @@
     <input id="EMPRESA_ID" name="EMPRESA_ID" type="hidden" value="{{ $empresa_id }}">
 @endif
 
-<div class="panel panel-default">
+<div class="panel panel-primary">
   <div class="panel-heading">Datos Personales</div>
 
   <div class="panel-body">
@@ -37,7 +37,7 @@
   </div>
 </div>
 
-<div class="panel panel-default">
+<div class="panel panel-primary">
   <div class="panel-heading">Datos Usuario</div>
 
   <div class="panel-body">

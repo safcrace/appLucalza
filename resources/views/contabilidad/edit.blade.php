@@ -6,7 +6,7 @@
   <div class="container">
       <div class="row">
           <div class="col-md-12 ">
-            <div class="panel panel-default">
+            <div class="panel panel-primary">
                  <div class="panel-heading panel-title" style="height: 65px">
                     Datos Liquidación
 
@@ -21,7 +21,7 @@
                  </div>
                </div>
 
-               <div class="panel panel-default">
+               <div class="panel panel-primary">
                    <div class="panel-heading panel-title">Detalle de Facturación</div>
 
 

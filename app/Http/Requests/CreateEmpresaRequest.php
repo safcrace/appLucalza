@@ -33,7 +33,15 @@ class CreateEmpresaRequest extends Request
             'USERSQL'    => 'required',
             'PASSSQL'    => 'required',
             'SERVIDORSQL'    => 'required',
-            'SAPDBTYPE'    => 'required',
+            'ID_DATASERVERTYPE'    => 'required',
+        ];
+    }
+
+    public function messages()
+    {
+        return [
+            'CLAVE.required' => 'El campo Código Empresa es Obligatorio.',
+            'DESCRIPCION.required' => 'El campo Nombre Empresa es Obligatorio.',
         ];
     }
 }

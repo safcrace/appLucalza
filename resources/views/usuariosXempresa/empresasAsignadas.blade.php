@@ -1,4 +1,4 @@
-<div class="panel panel-default">
+<div class="panel panel-primary">
     <div class="panel-heading panel-title" style="height: 65px">Empresas Asignadas
         <button type="button" class="btn btn-default" style="border-color: white; float: right" data-toggle="modal" data-target="#myModal"><a href="#" title="Agregar"><span class="glyphicon glyphicon-plus-sign" aria-hidden="true" style="font-size:32px; color: black"></span></a></button>
     </div>

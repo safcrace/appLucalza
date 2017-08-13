@@ -6,8 +6,8 @@
         <div class="row">
             <div class="col-md-8 col-md-offset-2">
                 {{--@include('partials/success')--}}
-                <div class="panel panel-default" style="margin-top: 200px">
-                    <div class="panel-heading">Bienvenido!</div>
+                <div class="panel panel-primary" style="margin-top: 200px">
+                    <div class="panel-heading main-title">Bienvenido!</div>
                     <div class="panel-body">
                         <h1>Lucalza</h1>
                         <p>Bienvenido a Nuestra Aplicación</p>

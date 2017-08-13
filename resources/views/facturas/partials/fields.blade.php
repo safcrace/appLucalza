@@ -3,7 +3,7 @@
     <input id="LIQUIDACION_ID" name="LIQUIDACION_ID" type="hidden" value="{{ $liquidacion_id }}">
 @endif
 
-<div class="panel panel-default">
+<div class="panel panel-primary">
   <div class="panel-heading">Datos de la Factura </div>
   <div class="panel-body">
     <div class="row form-group">
@@ -60,9 +60,18 @@
         <div class="col-md-2 ">
             {!! Form::label('FOTO', 'Imagen Factura') !!}
         </div>
-        <div class="col-md-2">
-            {!! Form::file('FOTO'); !!}
-        </div>
+
+            @if(isset($factura->EMAIL))
+            <div class="col-md-1 text-center">
+                <a class="image-popup-fit-width" href='{{ asset("images/$factura->EMAIL/$factura->FOTO") }}' title="Imagen Factura.">
+                    <img src='{{ asset("images/$factura->EMAIL/$factura->FOTO") }}' height="32px">
+                </a>
+            </div>
+            @else
+                <div class="col-md-2">
+                    {!! Form::file('FOTO'); !!}
+                </div>
+            @endif
     </div>
 
     <div class="row form-group">
@@ -292,6 +301,53 @@
                 $('#nombreProveedor').val(data[1])
                 $('#myModalA').modal('hide')
             })
+        });
+
+        $('.popup-gallery').magnificPopup({
+            delegate: 'a',
+            type: 'image',
+            tLoading: 'Loading image #%curr%...',
+            mainClass: 'mfp-img-mobile',
+            gallery: {
+                enabled: true,
+                navigateByImgClick: true,
+                preload: [0,1] // Will preload 0 - before current, and 1 after the current image
+            },
+            image: {
+                tError: '<a href="%url%">The image #%curr%</a> could not be loaded.',
+                titleSrc: function(item) {
+                    return item.el.attr('title') + '<small>by Marsel Van Oosten</small>';
+                }
+            }
+        });
+        $('.image-popup-vertical-fit').magnificPopup({
+            type: 'image',
+            closeOnContentClick: true,
+            mainClass: 'mfp-img-mobile',
+            image: {
+                verticalFit: true
+            }
+        });
+        $('.image-popup-fit-width').magnificPopup({
+            type: 'image',
+            closeOnContentClick: true,
+            image: {
+                verticalFit: false
+            }
+        });
+        $('.image-popup-no-margins').magnificPopup({
+            type: 'image',
+            closeOnContentClick: true,
+            closeBtnInside: false,
+            fixedContentPos: true,
+            mainClass: 'mfp-no-margins mfp-with-zoom', // class to remove default margin from left and right side
+            image: {
+                verticalFit: true
+            },
+            zoom: {
+                enabled: true,
+                duration: 300 // don't foget to change the duration also in CSS
+            }
         });
 
     });

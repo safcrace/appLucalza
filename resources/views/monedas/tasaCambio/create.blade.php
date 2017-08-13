@@ -8,7 +8,7 @@
   <div class="container">
       @if(Session::has('fechaDuplicada'))
           <div class="alert alert-danger" role="alert">
-              <strong>{{ Session::get('fechaDuplicada') }}</strong>
+              {{ Session::get('fechaDuplicada') }}
           </div>
       @endif
       <div class="row">

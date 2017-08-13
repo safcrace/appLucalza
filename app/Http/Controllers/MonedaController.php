@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\CreateMonedaRequest;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
@@ -50,7 +51,7 @@ class MonedaController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(CreateMonedaRequest $request)
     {
         $moneda = new Moneda();
         $moneda->CLAVE = $request->CLAVE;
@@ -102,7 +103,7 @@ class MonedaController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(CreateMonedaRequest $request, $id)
     {
         $moneda = Moneda::findOrFail($id);
         //$moneda->fill($request->all());

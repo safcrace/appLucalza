@@ -26,6 +26,16 @@ class CreateUsuarioRequest extends Request
         return [
             'tel_codpais'    => 'digits_between:2,4',
             'telefono'    => 'digits:8',
+            'email' => 'required|unique:users',
+            'activo' => 'required',
+            'password' => 'required',
+        ];
+    }
+
+    public function messages()
+    {
+        return [
+            'email.unique' => 'El Correo Electrónico Ingresado Ya Existe!!',
         ];
     }
 }

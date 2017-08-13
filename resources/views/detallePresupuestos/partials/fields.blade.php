@@ -5,7 +5,7 @@
     <input id="PRESUPUESTO_ID" name="PRESUPUESTO_ID" type="hidden" value="{{ $presupuesto_id }}">
 @endif
 
-<div class="panel panel-default">
+<div class="panel panel-primary">
   <div class="panel-heading">Detalle Presupuesto </div>
   <div class="panel-body">
     <div class="row form-group">

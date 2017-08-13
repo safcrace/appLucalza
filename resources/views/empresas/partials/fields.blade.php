@@ -1,4 +1,4 @@
-<div class="panel panel-default">
+<div class="panel panel-primary">
   <div class="panel-heading">Datos Empresa</div>
 
   <div class="panel-body">
@@ -44,7 +44,7 @@
   </div>
 </div>
 
-<div class="panel panel-default">
+<div class="panel panel-primary">
   <div class="panel-heading">Datos SAP</div>
 
   <div class="panel-body">
@@ -86,7 +86,7 @@
   </div>
 </div>
 
-<div class="panel panel-default">
+<div class="panel panel-primary">
   <div class="panel-heading">Datos SQL</div>
 
   <div class="panel-body">
@@ -99,10 +99,10 @@
           {!! Form::text('USERSQL', null, ['class' => 'form-control', 'placeholder' => 'Usuario SQL']); !!}
       </div>
       <div class="col-md-2 col-md-offset-1">
-            {!! Form::label('SAPDBTYPE', 'SAP DB Type') !!}
+        {!! Form::label('ID_DATASERVERTYPE', 'SAP DB Type') !!}
       </div>
       <div class="col-md-3">
-          {!! Form::text('SAPDBTYPE', null, ['class' => 'form-control', 'placeholder' => 'SAP DB Type']); !!}
+        {!! Form::select('ID_DATASERVERTYPE', $sapDbType, 6, ['class' => 'form-control', 'placeholder' => 'Seleccione SAP DB Type']); !!}
       </div>
     </div>
 

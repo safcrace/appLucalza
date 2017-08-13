@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\CreateProveedorRequest;
 use App\TipoProveedor;
 use Illuminate\Http\Request;
 
@@ -75,7 +76,7 @@ class ProveedorController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(CreateProveedorRequest $request)
     {
         //dd('esta llegando aqui');
         if(isset($request->EMPRESA_ID)) {
@@ -145,7 +146,7 @@ class ProveedorController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(CreateProveedorRequest $request, $id)
     {
         $proveedor = Proveedor::findOrFail($id);
         //$moneda->fill($request->all());

@@ -239,6 +239,8 @@ dd($tipoGasto);*/
 
         $fechaFactura = $factura->FECHA_FACTURA;
 
+        $factura->EMAIL = Auth::user()->email;
+
         return view('facturas.edit', compact('factura', 'tipoGasto', 'proveedor', 'moneda', 'fechaFactura', 'tipoProveedor', 'liquidacion_id'));
     }
 

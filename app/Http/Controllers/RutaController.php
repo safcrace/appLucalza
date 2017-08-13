@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\CreateRutaRequest;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
@@ -128,7 +129,7 @@ class RutaController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(CreateRutaRequest $request)
     {
         $empresa_id = $request->EMPRESA_ID;
         //dd($empresa_id);
@@ -254,7 +255,7 @@ class RutaController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(CreateRutaRequest $request, $id)
     {
         $ruta = Ruta::findOrFail($id);
         $empresa_id = $request->EMPRESA_ID;

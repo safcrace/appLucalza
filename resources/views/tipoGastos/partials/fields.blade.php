@@ -56,7 +56,7 @@
 
 <div class="row">
   <div class="col-md-3 col-sm-offset-2">
-    <div class="panel panel-default">
+    <div class="panel panel-primary">
       <div class="panel-heading">
         <h3 class="panel-title">Exento</h3>
       </div>
@@ -78,7 +78,7 @@
   </div>
 
   <div class="col-md-3">
-    <div class="panel panel-default">
+    <div class="panel panel-primary">
       <div class="panel-heading">
         <h3 class="panel-title">Afecto</h3>
       </div>
@@ -100,7 +100,7 @@
   </div>
 
   <div class="col-md-3">
-    <div class="panel panel-default">
+    <div class="panel panel-primary">
       <div class="panel-heading">
         <h3 class="panel-title">Remanente</h3>
       </div>

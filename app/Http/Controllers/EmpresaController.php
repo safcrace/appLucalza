@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\SapDbType;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
@@ -60,7 +61,10 @@ class EmpresaController extends Controller
         $moneda = Moneda::where('ANULADO', '=', 0)
                                         ->lists('DESCRIPCION', 'ID')
                                         ->toArray();
-        return view('empresas.create', compact('moneda'));
+
+        $sapDbType = SapDbType::lists('DESCRIPCION', 'ID_DATASERVERTYPE')->toArray();
+
+        return view('empresas.create', compact('moneda','sapDbType'));
     }
 
     /**
@@ -83,7 +87,7 @@ class EmpresaController extends Controller
         $empresa->USERSQL = $request->USERSQL;
         $empresa->PASSSQL = bcrypt($request->PASSSQL);
         $empresa->SERVIDORSQL = $request->SERVIDORSQL;
-        $empresa->SAPDBTYPE = $request->SAPDBTYPE;
+        $empresa->ID_DATASERVERTYPE = $request->ID_DATASERVERTYPE;
 
         $empresa->save();
 
@@ -115,7 +119,9 @@ class EmpresaController extends Controller
                              ->lists('DESCRIPCION', 'ID')
                              ->toArray();
 
-      return view('empresas.edit', compact('empresa', 'moneda'));
+        $sapDbType = SapDbType::lists('DESCRIPCION', 'ID_DATASERVERTYPE')->toArray();
+
+      return view('empresas.edit', compact('empresa', 'moneda', 'sapDbType'));
     }
 
     /**
@@ -125,7 +131,7 @@ class EmpresaController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(CreateEmpresaRequest $request, $id)
     {
         $empresa = Empresa::findOrFail($id);
         //$moneda->fill($request->all());
@@ -133,7 +139,7 @@ class EmpresaController extends Controller
         Empresa::where('ID', $empresa->ID)
           ->update(['CLAVE' => $request->CLAVE, 'DESCRIPCION' => $request->DESCRIPCION, 'ANULADO' => $request->ANULADO, 'LICENSESERVER' => $request->LICENSESERVER,
                     'USERSAP' => $request->USERSAP, 'PASSSAP' => bcrypt($request->PASSSAP), 'DBSAP' => $request->DBSAP, 'USERSQL' => $request->USERSQL,
-                    'PASSSQL' => bcrypt($request->ANULADO), 'SERVIDORSQL' => $request->SERVIDORSQL, 'SAPDBTYPE' => $request->SAPDBTYPE, 'MONEDA_ID' => $request->MONEDA_ID]);
+                    'PASSSQL' => bcrypt($request->ANULADO), 'SERVIDORSQL' => $request->SERVIDORSQL, 'ID_DATASERVERTYPE' => $request->ID_DATASERVERTYPE, 'MONEDA_ID' => $request->MONEDA_ID]);
 
         return Redirect::to('empresas');
     }

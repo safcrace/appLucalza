@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\CreatePresupuestoRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -142,7 +143,7 @@ class PresupuestoController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(CreatePresupuestoRequest $request)
     {
         $usuarioRuta_id = UsuarioRuta::select('ID')
                         ->where('USER_ID', '=', $request->USUARIO_ID)
@@ -272,7 +273,7 @@ class PresupuestoController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(CreatePresupuestoRequest $request, $id)
     {
         $usuarioRuta_id = UsuarioRuta::select('ID')
                         ->where('USER_ID', '=', $request->USUARIO_ID)

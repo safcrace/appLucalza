@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\CreateTipoGastoRequest;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
@@ -62,7 +63,7 @@ class TipoGastoController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(CreateTipoGastoRequest $request)
     {
         $empresa_id = $request->EMPRESA_ID;
 
@@ -130,7 +131,7 @@ class TipoGastoController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(CreateTipoGastoRequest $request, $id)
     {
       $tipoGasto = TipoGasto::findOrFail($id);
       //$moneda->fill($request->all());

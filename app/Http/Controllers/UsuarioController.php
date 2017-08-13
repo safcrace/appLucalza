@@ -254,7 +254,7 @@ class UsuarioController extends Controller
 
         User::where('ID', $usuario_id)
                 ->update(['nombre' => $request->nombre, 'email' => $request->email, 'tel_codpais' => $request->tel_codpais, 'password' => bcrypt($request->password),
-                          'telefono' => $request->telefono, 'codigoProveedorSap' => $request->codigoProveedorSap, 'activo' => $request->activo, 'anulado' => $request->anulado]);
+                          'telefono' => $request->telefono, 'activo' => $request->activo, 'anulado' => $request->anulado]);
 
         return redirect::to('usuarios');
     }
@@ -278,10 +278,7 @@ class UsuarioController extends Controller
      */
     public function anular($id)
     {
-        $param = explode('-', $id);
-        $id = $param[0];
-        return $idl;
-        $empresa_id = $param[1];
+
         User::where('id', $id)
                 ->update(['ANULADO' => 1]);
 

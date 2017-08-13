@@ -55,7 +55,7 @@
         {!! Form::label('ANULADO', 'Estatus') !!}
   </div>
   <div class="col-md-1">
-      {!! Form::radio('ANULADO', 0); !!}  Alta
+      {!! Form::radio('ANULADO', 0, true); !!}  Alta
   </div>
   <div class="col-md-2">
       {!! Form::radio('ANULADO', 1); !!}  Baja
