@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use App\Http\Requests\Request;
 
-class CreateFacturaRequest extends Request
+class CreateDetallePresupuestoRequest extends Request
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,13 +24,9 @@ class CreateFacturaRequest extends Request
     public function rules()
     {
         return [
-            'PROVEEDOR_ID' => 'required',
-            'TIPOGASTO_ID' => 'required',
-            'FECHA_FACTURA' => 'required',
-            'SERIE' => 'required',
-            'NUMERO' => 'required',
-            'TOTAL' => 'required',
-            'FOTO'    => 'required',
+            'TIPOGASTO_ID'    => 'required',
+            'MONTO'    => 'required',
+            'FRECUENCIATIEMPO_ID' => 'required',
         ];
     }
 }

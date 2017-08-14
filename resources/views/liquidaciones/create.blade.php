@@ -15,8 +15,6 @@
 
                   <div class="panel-body">
 
-                      @include('partials.messages')
-
                       @include('liquidaciones.partials.fields')
                       {{--@include('detallePresupuestos.partials.fields')--}}
 

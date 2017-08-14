@@ -165,6 +165,17 @@ return [
         'VIGENCIA_FINAL'        => 'Al',
         'USUARIO_ID'            => 'Usuario',
         'RUTA_ID'               => 'Ruta',
+        'TIPOGASTO_ID'          => 'Tipo de Gasto',
+        'MONTO'                 => 'Asignación',
+        'FRECUENCIA_ID'         => 'Frecuencia',
+        'FECHA_INICIO'          => 'Fecha Inicio',
+        'FECHA_FINAL'           => 'Fecha Final',
+        'FECHA_FACTURA'         => 'Fecha Factura',
+        'NUMERO'                => 'Número',
+        'SERIE'                 => 'Serie',
+        'PROVEEDOR_ID'          => 'Nit Proveedor',
+        'TOTAL'                 => 'Total',
+        'FOTO'                  => 'Imagen Factura',
     ],
 
 ];

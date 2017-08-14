@@ -85,7 +85,7 @@ dd($resultado);
                                   ->where('liq_liquidacion.ID', '=', $liquidacion_id)
                                   ->lists('cat_tipogasto.DESCRIPCION', 'cat_tipogasto.ID')
                                   ->toArray();
-
+//dd($tipoGasto);
 /*
        select tg.DESCRIPCION
 from liq_liquidacion as l inner join pre_presupuesto as p on p.USUARIORUTA_ID = l.USUARIORUTA_ID
@@ -251,7 +251,7 @@ dd($tipoGasto);*/
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(CreateFacturaRequest $request, $id)
     {
         Factura::where('ID', $id)
                 ->update(['TIPOGASTO_ID' => $request->TIPOGASTO_ID, 'MONEDA_ID' => $request->MONEDA_ID, 'PROVEEDOR_ID' => $request->PROVEEDOR_ID, 'COMENTARIO_PAGO' => $request->COMENTARIO_PAGO,

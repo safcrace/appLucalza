@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\CreateLiquidacionRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
@@ -67,7 +68,7 @@ class LiquidacionController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(CreateLiquidacionRequest $request)
     {
         $usuarioRuta = UsuarioRuta::select('ID')
                         ->where('USER_ID', '=', $request->USUARIO_ID)
@@ -152,7 +153,7 @@ class LiquidacionController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(CreateLiquidacionRequest $request, $id)
     {
         $usuarioRuta_id = UsuarioRuta::select('ID')
                         ->where('USER_ID', '=', $request->USUARIO_ID)

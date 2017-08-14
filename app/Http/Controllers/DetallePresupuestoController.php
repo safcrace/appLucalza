@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\CreateDetallePresupuestoRequest;
 use App\TipoAsignacion;
 use Illuminate\Http\Request;
 
@@ -59,10 +60,9 @@ class DetallePresupuestoController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(CreateDetallePresupuestoRequest $request)
     {
         $detallePresupuesto = new DetallePresupuesto();
-
         $detallePresupuesto->PRESUPUESTO_ID = $request->PRESUPUESTO_ID;
         $detallePresupuesto->TIPOGASTO_ID = $request->TIPOGASTO_ID;
         $detallePresupuesto->TIPOASIGNACION_ID = $request->TIPOASIGNACION_ID;
@@ -124,7 +124,7 @@ class DetallePresupuestoController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(CreateDetallePresupuestoRequest $request, $id)
     {
         if ($request->ANULADO === null) {
             $request->ANULADO = 0;

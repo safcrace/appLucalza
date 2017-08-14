@@ -19,16 +19,16 @@
         {!! Form::label('TIPOASIGNACION_ID', 'Tipo de Asignación') !!}
       </div>
       <div class="col-md-3 asignacion" style="display: none">
-        {!! Form::select('TIPOASIGNACION_ID', $tipoAsignacion, null, ['class' => 'form-control', 'placeholder' => 'Seleccione Tipo de Asignación']); !!}
+        {!! Form::select('TIPOASIGNACION_ID', $tipoAsignacion, 1, ['class' => 'form-control', 'placeholder' => 'Seleccione Tipo de Asignación', 'id' => 'tipoAsignacion']); !!}
       </div>
     </div>
 
     <div class="row form-group">
       <div class="col-md-2 col-md-offset-1">
-            {!! Form::label('MONTO', 'Monto') !!}
+            {!! Form::label('MONTO', 'Asignación', ['id' => 'monto']) !!}
       </div>
       <div class="col-md-3">
-          {!! Form::text('MONTO', null, ['class' => 'form-control', 'placeholder' => 'Monto']); !!}
+          {!! Form::text('MONTO', null, ['class' => 'form-control', 'placeholder' => 'Asignación']); !!}
       </div>
     </div>
 
@@ -133,6 +133,16 @@
                 $('.asignacion').hide()
             }
         });
+        $('#tipoAsignacion').change(function() {
+            var tipoAsignacion = $('#tipoAsignacion').val()
+            if (tipoAsignacion == '2') {
+                $('#monto').html('Asignación Galones')
+            } else if (tipoAsignacion == '3') {
+                $('#monto').html('Asignación Kilometros')
+            } else {
+                $('#monto').html('Asignación')
+            }
+        })
     });
 </script>
 @endpush
