@@ -64,7 +64,7 @@ class TipoGastoController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(CreateTipoGastoRequest $request)
-    {
+    {   dd($request->all());
         $empresa_id = $request->EMPRESA_ID;
 
         $tipoGasto = new TipoGasto();

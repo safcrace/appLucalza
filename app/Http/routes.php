@@ -26,6 +26,7 @@ Route::get('usuario/empresa', ['uses' => 'UsuarioController@createUsuarioEmpresa
 Route::post('usuario/empresa', ['uses' => 'UsuarioController@storeUsuarioEmpresa', 'as' => 'storeUsuarioEmpresa']);
 Route::get('usuario/{id}/asignacion/empresa', ['uses' => 'UsuarioController@usuariosAsignadosEmpresa', 'as' => 'usuariosEmpresa']);
 Route::get('empresa/usuarioEmpresa/anular/{id}', ['uses' => 'UsuarioController@anularUsuarioEmpresa', 'as' => 'anularUsuarioEmpresa']);
+Route::get('equipos/vendedorSupervisor/anular/{id}', ['uses' => 'UsuarioController@anularVendedorSupervisor', 'as' => 'anularVendedorSupervisor']);
 //Route::get('empresa/usuario/{id}', ['uses' => 'UsuarioController@indexUsuario', 'as' => 'indexUsuario']);
 Route::resource('usuarios', 'UsuarioController');
 
@@ -147,3 +148,17 @@ Route::get('roles/usuario', ['uses' => 'RoleController@asignaRoleUsuario', 'as' 
 Route::post('roles/usuario/create', ['uses' => 'RoleController@creaRolesUsuario', 'as' => 'creaRolesUsuario']);
 Route::get('role/anular/{id}', ['uses' => 'RoleController@anular', 'as' => 'anularRole']);
 Route::resource('roles', 'RoleController');
+
+//Web Service routes
+Route::get('webservice/codigo/proveedorSap/{id}', ['uses' => 'WebServiceController@getCodeProveedorSap', 'as' => 'codigoProveedorSap']);
+Route::get('webservice/cuentaContable/exenta/{id}', ['uses' => 'WebServiceController@getCuentaContableExenta', 'as' => 'cuentaContableExenta']);
+Route::get('webservice/cuentaContable/afecta/{id}', ['uses' => 'WebServiceController@getCuentaContableAfecta', 'as' => 'cuentaContableAfecta']);
+Route::get('webservice/cuentaContable/remanente/{id}', ['uses' => 'WebServiceController@getCuentaContableRemanente', 'as' => 'cuentaContableRemanente']);
+Route::get('webservice/codigoImpuesto/exento/{id}', ['uses' => 'WebServiceController@getCodigoImpuestoExento', 'as' => 'codigoImpuestoExento']);
+Route::get('webservice/codigoImpuesto/afecto/{id}', ['uses' => 'WebServiceController@getCodigoImpuestoAfecto', 'as' => 'codigoImpuestoAfecto']);
+Route::get('webservice/codigoImpuesto/remanente/{id}', ['uses' => 'WebServiceController@getCodigoImpuestoRemanente', 'as' => 'codigoImpuestoRemanente']);
+Route::get('webservice/codigo/centroCosto1/{id}', ['uses' => 'WebServiceController@getCodigoCentroCostoUno', 'as' => 'codigoCentroCostoUno']);
+Route::get('webservice/codigo/centroCosto2/{id}', ['uses' => 'WebServiceController@getCodigoCentroCostoDos', 'as' => 'codigoCentroCostoDos']);
+Route::get('webservice/codigo/centroCosto3/{id}', ['uses' => 'WebServiceController@getCodigoCentroCostoTres', 'as' => 'codigoCentroCostoTres']);
+Route::get('webservice/codigo/centroCosto4/{id}', ['uses' => 'WebServiceController@getCodigoCentroCostoCuatro', 'as' => 'codigoCentroCostoCuatro']);
+Route::get('webservice/codigo/centroCosto5/{id}', ['uses' => 'WebServiceController@getCodigoCentroCostoCinco', 'as' => 'codigoCentroCostoCinco']);

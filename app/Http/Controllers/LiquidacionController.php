@@ -78,6 +78,7 @@ class LiquidacionController extends Controller
         $liquidacion = new Liquidacion();
 
         $liquidacion->USUARIORUTA_ID = $usuarioRuta->ID;
+        $liquidacion->PRESUPUESTO_ID = $request->PRESUPUESTO_ID;
         $liquidacion->ESTADOLIQUIDACION_ID = 1;
         $liquidacion->FECHA_INICIO = $request->FECHA_INICIO;
         $liquidacion->FECHA_FINAL = $request->FECHA_FINAL;
@@ -163,7 +164,7 @@ class LiquidacionController extends Controller
 
         Liquidacion::where('ID', $id)
                 ->update(['USUARIORUTA_ID' => $usuarioRuta_id->ID, 'FECHA_INICIO' => $request->FECHA_INICIO, 'FECHA_FINAL' => $request->FECHA_FINAL,
-                          'COMENTARIO_PAGO' => $request->COMENTARIO_PAGO]);
+                          'PRESUPUESTO_ID' => $request->PRESUPUESTO_ID, 'COMENTARIO_PAGO' => $request->COMENTARIO_PAGO]);
 
         return Redirect::to('liquidaciones');
     }

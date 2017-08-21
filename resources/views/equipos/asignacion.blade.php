@@ -4,6 +4,11 @@
 @include('layouts.headerTwo')
 @section('content')
   <div class="container">
+      @if(Session::has('validaVendedorSupervisor'))
+          <div class="alert alert-danger" role="alert">
+              {{ Session::get('validaVendedorSupervisor') }}
+          </div>
+      @endif
       <div class="row">
           <div class="col-md-12 ">
               {!! Form::open(['route' => 'creaEquipo', 'method' => 'POST']) !!}
@@ -40,10 +45,11 @@
   <script type="text/javascript">
       $(document).ready(function () {
           var supervisor = $('#supervisor').val();
+          var empresa = $('#empresa').val();
 
           if (supervisor != "") {
               vurl = '{{ route('vendedoresSupervisor')}}'
-              vurl = vurl.replace('%7Bid%7D', supervisor);
+              vurl = vurl.replace('%7Bid%7D', supervisor + '-' + empresa);
 
               $.ajax({
                   type: 'get',
@@ -57,9 +63,9 @@
 
           $('#supervisor').change(function () {
               var supervisor = $('#supervisor').val();
+              var empresa = $('#empresa').val();
               vurl = '{{ route('vendedoresSupervisor')}}'
-              vurl = vurl.replace('%7Bid%7D', supervisor);
-
+              vurl = vurl.replace('%7Bid%7D', supervisor + '-' + empresa);
               $.ajax({
                   type: 'get',
                   url: vurl,

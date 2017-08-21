@@ -28,6 +28,7 @@ class CreateLiquidacionRequest extends Request
             'RUTA_ID'    => 'required',
             'FECHA_INICIO' => 'required',
             'FECHA_FINAL' => 'required',
+            'PRESUPUESTO_ID' => 'required|numeric'
         ];
     }
 }

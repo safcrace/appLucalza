@@ -7,7 +7,7 @@
          <thead>
            <th class="text-center">Nombre</th>
            <th class="text-center">Correo Electrónico</th>
-           {{--<th class="text-center">Anular</th> --}}
+           <th class="text-center">Anular</th>
          </thead>
          <tbody>
 
@@ -15,9 +15,9 @@
                  <tr>
                      <td>{{ $user->nombre }}</td>
                      <td>{{ $user->email }}</td>
-                     {{--<td class="text-center">
-                       <a href="{{-- route('anular', $user->id) "><span class="glyphicon glyphicon-ban-circle" aria-hidden="true" style="font-size:20px; color: black"></span></a>
-                     </td> --}}
+                     <td class="text-center">
+                       <a href="{{ route('anularVendedorSupervisor', $user->ID_SUPERVISION . '-' . $supervisor_id . '-' . $empresa_id) }}" class="btn-delete"><span class="glyphicon glyphicon-ban-circle" aria-hidden="true" style="font-size:20px; color: black"></span></a>
+                     </td>
 
                  </tr>
              @endforeach

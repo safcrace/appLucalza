@@ -94,6 +94,7 @@ class RutaController extends Controller
          $empresa_id = $param[0];
          $usuario_id = $param[1];
 
+
          $seleccionadas = Ruta::join('cat_usuarioruta', 'cat_usuarioruta.RUTA_ID', '=', 'cat_ruta.ID')
                              ->join('users', 'users.id', '=', 'cat_usuarioruta.USER_ID')
                              ->where('users.id', '=', $usuario_id)
@@ -101,14 +102,15 @@ class RutaController extends Controller
                              ->where('cat_usuarioruta.ANULADO', '=', 0)
                              ->lists('cat_ruta.ID')
                              ->toArray();
+//dd($seleccionadas);
 
-
-         $rutas = Ruta::join('cat_usuarioruta', 'cat_usuarioruta.RUTA_ID', '=', 'cat_ruta.ID')
-                             ->where('cat_ruta.EMPRESA_ID', '=', $empresa_id)
+         $rutas = Ruta::join('cat_empresa', 'cat_empresa.ID', '=', 'cat_ruta.EMPRESA_ID')
+                             ->where('cat_empresa.ID', '=', $empresa_id)
                              ->where('cat_ruta.ANULADO', '=', 0)
                              ->whereNotIn('cat_ruta.ID', $seleccionadas)
                              ->lists('cat_ruta.DESCRIPCION', 'cat_ruta.ID')
                              ->toArray();
+
 //
          return view('rutas.createUsuarioRuta', compact('rutas','usuario_id', 'empresa_id'));
      }
@@ -132,7 +134,6 @@ class RutaController extends Controller
     public function store(CreateRutaRequest $request)
     {
         $empresa_id = $request->EMPRESA_ID;
-        //dd($empresa_id);
 
         $ruta = new Ruta();
 

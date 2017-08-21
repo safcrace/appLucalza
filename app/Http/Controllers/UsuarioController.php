@@ -55,14 +55,18 @@ class UsuarioController extends Controller
      */
     public function vendedoresSupervisor($id)
     {
-        $users = User::select('users.nombre', 'users.email')
+        $param = explode('-', $id);
+        $supervisor_id = $param[0];
+        $empresa_id = $param[1];
+
+        $users = User::select('users.nombre', 'users.email', 'cat_supervisor_vendedor.ID_SUPERVISION')
                             ->join('cat_supervisor_vendedor', 'cat_supervisor_vendedor.VENDEDOR_ID_USUARIO', '=', 'users.id')
-                            //->where('users.anulado', '=', 0)
-                            ->where('cat_supervisor_vendedor.SUPERVISOR_ID_USUARIO', '=', $id)
+                            ->where('cat_supervisor_vendedor.ANULADO', '=', 0)
+                            ->where('cat_supervisor_vendedor.SUPERVISOR_ID_USUARIO', '=', $supervisor_id)
                             ->paginate(10);
 
 
-        return view('equipos.vendedores', compact('users'));
+        return view('equipos.vendedores', compact('users','supervisor_id', 'empresa_id'));
     }
 
     /**
@@ -150,14 +154,52 @@ class UsuarioController extends Controller
      */
     public function creaEquipo(Request $request)
     {
+        if(($request->SUPERVISOR_ID === '') || ($request->VENDEDOR_ID === '')) {
+            Session::flash('validaVendedorSupervisor', '¡Los campos Supervisor y Vendedor son Obligatorios!');
+            return back()->withInput();
+        }
+
         $supervisorVendedor = new SupervisorVendedor();
 
-        $supervisorVendedor->SUPERVISOR_ID_USUARIO = $request->SUPERVISOR_ID;
-        $supervisorVendedor->VENDEDOR_ID_USUARIO = $request->VENDEDOR_ID;
+        $existe = SupervisorVendedor::where('SUPERVISOR_ID_USUARIO', '=', $request->SUPERVISOR_ID)->where('VENDEDOR_ID_USUARIO', '=', $request->VENDEDOR_ID)->first();
 
-        $supervisorVendedor->save();
+        if($existe) {
 
-        return back()->withInput();
+            SupervisorVendedor::where('ID_SUPERVISION', '=', $existe->ID_SUPERVISION)
+                ->update(['ANULADO' => 0]);
+
+        } else {
+
+            $supervisorVendedor->SUPERVISOR_ID_USUARIO = $request->SUPERVISOR_ID;
+            $supervisorVendedor->VENDEDOR_ID_USUARIO = $request->VENDEDOR_ID;
+            $supervisorVendedor->ANULADO = 0;
+
+            $supervisorVendedor->save();
+        }
+
+        $supervisorId = $request->SUPERVISOR_ID;
+
+        $empresa_id = $request->EMPRESA_ID;
+
+        $supervisores = User::join('cat_usuarioempresa', 'cat_usuarioempresa.USER_ID', '=', 'users.id')
+            ->join('cat_empresa', 'cat_empresa.ID', '=', 'cat_usuarioempresa.EMPRESA_ID')
+            ->join('users_roles', 'users_roles.user_id', '=', 'users.id')
+            ->where('cat_empresa.ID', '=', $empresa_id)
+            ->where('users_roles.role_id', '=', 5)
+            ->lists('users.nombre', 'users.id')
+            ->toArray();
+
+        $vendedores = User::join('cat_usuarioempresa', 'cat_usuarioempresa.USER_ID', '=', 'users.id')
+            ->join('cat_empresa', 'cat_empresa.ID', '=', 'cat_usuarioempresa.EMPRESA_ID')
+            ->join('users_roles', 'users_roles.user_id', '=', 'users.id')
+            ->where('cat_empresa.ID', '=', $empresa_id)
+            ->where('users_roles.role_id', '=', 7)
+            ->lists('users.nombre', 'users.id')
+            ->toArray();
+
+
+
+        return view('equipos.asignacion', compact( 'supervisores', 'vendedores', 'supervisorId', 'empresa_id'));
     }
 
     public function createUsuarioEmpresa(Request $request)
@@ -186,6 +228,12 @@ class UsuarioController extends Controller
 
     public function storeUsuarioEmpresa(Request $request)
     {
+
+        if(($request->EMPRESA_ID === '') || ($request->codigoProveedorSap === '')) {
+            Session::flash('validaUsuarioEmpresa', '¡Los campos Empresa y Código Proveedor SAP son Obligatorios!');
+            return back()->withInput();
+        }
+
         $usuarioEmpresa = new UsuarioEmpresa();
 
         $existe = UsuarioEmpresa::where('USER_ID', '=', $request->USUARIO_ID)->where('EMPRESA_ID', '=', $request->EMPRESA_ID)->first();
@@ -284,6 +332,7 @@ class UsuarioController extends Controller
 
         return 1;//Redirect::to('empresa/usuario/' . $empresa_id);
     }
+
     public function anularUsuarioEmpresa($id)
     {
         $param = explode('-', $id);
@@ -298,5 +347,35 @@ class UsuarioController extends Controller
         return view('usuariosXempresa.asignacion', compact('usuarios', 'empresas', 'usuario_id'));
 
         //return redirect::back()->withInput();//return 1;//Redirect::to('empresa/usuario/' . $empresa_id);
+    }
+
+    public function anularvendedorSupervisor($id)
+    {
+        $param = explode('-', $id);
+        $supervisionId = $param[0];
+        $supervisorId = $param[1];
+        $empresa_id = $param[2];
+
+        SupervisorVendedor::where('ID_SUPERVISION', $supervisionId)
+            ->update(['ANULADO' => 1]);
+
+        $supervisores = User::join('cat_usuarioempresa', 'cat_usuarioempresa.USER_ID', '=', 'users.id')
+            ->join('cat_empresa', 'cat_empresa.ID', '=', 'cat_usuarioempresa.EMPRESA_ID')
+            ->join('users_roles', 'users_roles.user_id', '=', 'users.id')
+            ->where('cat_empresa.ID', '=', $empresa_id)
+            ->where('users_roles.role_id', '=', 5)
+            ->lists('users.nombre', 'users.id')
+            ->toArray();
+
+        $vendedores = User::join('cat_usuarioempresa', 'cat_usuarioempresa.USER_ID', '=', 'users.id')
+            ->join('cat_empresa', 'cat_empresa.ID', '=', 'cat_usuarioempresa.EMPRESA_ID')
+            ->join('users_roles', 'users_roles.user_id', '=', 'users.id')
+            ->where('cat_empresa.ID', '=', $empresa_id)
+            ->where('users_roles.role_id', '=', 7)
+            ->lists('users.nombre', 'users.id')
+            ->toArray();
+
+        return view('equipos.asignacion', compact( 'supervisores', 'vendedores', 'supervisorId', 'empresa_id'));
+
     }
 }

@@ -6,7 +6,7 @@
         {!! Form::select('TIPOPROVEEDOR_ID', $tipoProveedor, 1, ['class' => 'form-control', 'placeholder' => 'Seleccione Tipo Proveedor', 'id' => 'tipoproveedor_id']); !!}
     </div>
     <div class="col-md-3">
-        {!! Form::hidden('PROVEEDOR_ID', $factura->PROVEEDORID, ['class' => 'form-control', 'id' => 'proveedor_id']); !!}
+        {!! Form::hidden('PROVEEDOR_ID', null, ['class' => 'form-control', 'id' => 'proveedor_id']); !!}
     </div>
     <div class="col-md-3">
         {!! Form::hidden('NUMERO_LIQUIDACION', $liquidacion->ID, ['class' => 'form-control', 'id' => 'numero_liquidacion']); !!}

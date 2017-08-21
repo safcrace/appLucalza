@@ -161,7 +161,7 @@ return [
         'IDENTIFICADOR_TRIBUTARIO' => 'Identificador Tributario',
         'NOMBRE'                => 'Nombre',
         'DOMICILIO'             => 'Domicilio',
-        'VIGENCIA_INICIAL'      => 'Vigencia Del',
+        'VIGENCIA_INICIO'      => 'Vigencia Del',
         'VIGENCIA_FINAL'        => 'Al',
         'USUARIO_ID'            => 'Usuario',
         'RUTA_ID'               => 'Ruta',
@@ -176,6 +176,7 @@ return [
         'PROVEEDOR_ID'          => 'Nit Proveedor',
         'TOTAL'                 => 'Total',
         'FOTO'                  => 'Imagen Factura',
+        'PRESUPUESTO_ID'        => 'No. Presupuesto',
     ],
 
 ];

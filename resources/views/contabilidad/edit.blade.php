@@ -47,10 +47,10 @@
                         <tbody>
 
                             @foreach ($facturas as $factura)
-                                <tr data-id={{ $factura->ID }} data-factura={{ $factura->NUMERO }}>
+                                <tr data-id={{ $factura->ID }} data-factura={{ $factura->NUMERO }} data-proveedor={{ $factura->PROVEEDORID }}>
                                     <td>{{ $factura->FECHA_FACTURA->format('d-m-Y') }}</td>
                                     @if($factura->TIPOPROVEEDOR_ID == 1)
-                                        <td style="background-color: red; color: white;" id="proveedor">{{ $factura->NOMBRE}}</td>
+                                        <td style="background-color: red; color: white;" class="proveedor">{{ $factura->NOMBRE}} || {{ $factura->PROVEEDORID }}</td>
                                     @else
                                         <td>{{ $factura->NOMBRE}}</td>
                                     @endif
@@ -241,7 +241,11 @@
           }
       });
 
-      $('#proveedor').click(function() {
+      $('.proveedor').click(function() {
+          var row = $(this).parents('tr');
+          var proveedor_id = row.data('proveedor');
+          $('#proveedor_id').val(proveedor_id)
+          //alert(proveedor_id)
           $('#myModalThree').modal('show')
       })
 
@@ -250,6 +254,7 @@
           var tipoProveedor = $('#tipoproveedor_id').val()
           var proveedor_id = $('#proveedor_id').val()
           var numero_liquidacion = $('#numero_liquidacion').val()
+
 
           vurl = '{{ route('actualizarProveedor')}}'
           vurl = vurl.replace('%7Bid%7D', tipoProveedor + '-' + proveedor_id + '-' + numero_liquidacion);
@@ -261,7 +266,7 @@
               success: function (data) {
                   location.reload(); //$('#vendedores').empty().html(data);
               }
-          });
+          })
       });
 
       $(function () {

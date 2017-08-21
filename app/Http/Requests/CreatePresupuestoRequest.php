@@ -24,7 +24,7 @@ class CreatePresupuestoRequest extends Request
     public function rules()
     {
         return [
-            'VIGENCIA_INICIAL'    => 'required',
+            'VIGENCIA_INICIO'    => 'required',
             'VIGENCIA_FINAL'    => 'required',
             'USUARIO_ID' => 'required',
             'RUTA_ID' => 'required',

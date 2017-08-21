@@ -4,6 +4,11 @@
 @include('layouts.headerTwo')
 @section('content')
     <div class="container">
+        @if(Session::has('validaUsuarioEmpresa'))
+            <div class="alert alert-danger" role="alert">
+                {{ Session::get('validaUsuarioEmpresa') }}
+            </div>
+        @endif
         <div class="row">
             <div class="col-md-12 ">
                 {!! Form::open(['route' => 'storeUsuarioEmpresa', 'method' => 'POST']) !!}
@@ -76,13 +81,27 @@
             });
         });
 
-
-
-
-
         $('#usuario').select2({
             placeholder: 'Seleccione un Usuario'
         });
+
+        $('#proveedorSap').click(function() {
+            vurl = '{{ route('codigoProveedorSap')}}'
+            vurl = vurl.replace('%7Bid%7D', 2);
+            $.ajax({
+                type: 'get',
+                url: vurl,
+                success: function (data) {
+                    $('#pro_sap').empty().html(data);
+                    $('#pro_sap').show()
+                    $('#cod_pro').remove()
+                }
+            });
+        })
+
+        $('#codProveedorSap').select2({
+            placeholder: 'Seleccione un Proveedor'
+        })
 
     });
 </script>

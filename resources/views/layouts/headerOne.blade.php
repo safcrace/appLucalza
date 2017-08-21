@@ -33,7 +33,7 @@
 
                     @if (auth()->user()->hasRole('superAdmin', 'master', 'administrador'))
                       <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" data-toggle="tooltip" data-placement="top" title="Cátalogos"><span class="glyphicon glyphicon-cog" aria-hidden="true" style="font-size:32px;"></span> <span class="caret"></span></a>
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" data-toggle="tooltip" data-placement="top" title="Cátalogos"><span class="glyphicon glyphicon-cog" aria-hidden="true" style="font-size:32px; color: #ffffff;"></span> <span class="caret" style="color: #ffffff;"></span></a>
                         <ul class="dropdown-menu">
                           @can('ver monedas')
                             <li><a href="{{ route('monedas.index') }}">Monedas</a></li>
@@ -60,22 +60,22 @@
                     @endif
                     {{-- @if (auth()->user()->hasRole('superAdmin')) --}}
                         @can('ver presupuestos')
-                      <li class=""><a href="{{ route('presupuestos.index') }}" data-toggle="tooltip" data-placement="top" title="Presupuestos"><span class="glyphicon glyphicon-usd" aria-hidden="true" style="font-size:32px;"></span></a></li>
+                      <li class=""><a href="{{ route('presupuestos.index') }}" data-toggle="tooltip" data-placement="top" title="Presupuestos"><span class="glyphicon glyphicon-usd" aria-hidden="true" style="font-size:32px; color: #ffffff;"></span></a></li>
                         @endcan
                         @can('ver liquidaciones')
-                      <li class=""><a href="{{ route('liquidaciones.index') }}" data-toggle="tooltip" data-placement="top" title="Liquidaciones"><span class="glyphicon glyphicon-list-alt" aria-hidden="true" style="font-size:32px;"></span></a></li>
+                      <li class=""><a href="{{ route('liquidaciones.index') }}" data-toggle="tooltip" data-placement="top" title="Liquidaciones"><span class="glyphicon glyphicon-list-alt" aria-hidden="true" style="font-size:32px; color: #ffffff;"></span></a></li>
                         @endcan
                         @can('ver supervision')
-                      <li class=""><a href="{{ route('supervisor') }}" data-toggle="tooltip" data-placement="top" title="Revisión Supervisor"><span class="glyphicon glyphicon-inbox" aria-hidden="true" style="font-size:32px;"></span></a></li>
+                      <li class=""><a href="{{ route('supervisor') }}" data-toggle="tooltip" data-placement="top" title="Revisión Supervisor"><span class="glyphicon glyphicon-inbox" aria-hidden="true" style="font-size:32px; color: #ffffff;"></span></a></li>
                         @endcan
                         @can('ver contabilidad')
-                      <li class=""><a href="{{ route('contabilidad') }}" data-toggle="tooltip" data-placement="top" title="Revisión Cotabilidad"><span class="glyphicon glyphicon-floppy-saved" aria-hidden="true" style="font-size:32px;"></span></a></li>
+                      <li class=""><a href="{{ route('contabilidad') }}" data-toggle="tooltip" data-placement="top" title="Revisión Cotabilidad"><span class="glyphicon glyphicon-floppy-saved" aria-hidden="true" style="font-size:32px; color: #ffffff;"></span></a></li>
                         @endcan
                     {{-- @endif --}}
                     {{--<li class=""><a href="#"><img src="{{ asset('images/abogado.png') }}" alt=""> Sender</a></li>
                     <li class=""><a href="#"><img src="{{ asset('images/admon.png') }}" alt=""></a></li>--}}
                     <li class="">
-                      <a href="{{ route('logout') }}" data-toggle="tooltip" data-placement="top" title="Cerrar Sesión"><span class="glyphicon glyphicon-off" aria-hidden="true" style="font-size:32px;"></span></a>
+                      <a href="{{ route('logout') }}" data-toggle="tooltip" data-placement="top" title="Cerrar Sesión"><span class="glyphicon glyphicon-off" aria-hidden="true" style="font-size:32px; color: #ffffff;"></span></a>
                     </li>
                     {{--<li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">

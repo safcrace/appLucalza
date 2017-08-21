@@ -36,14 +36,19 @@
               <div class="col-md-3">
                   {!! Form::label('codigoProveedorSap', 'Código Proveedor SAP') !!}
               </div>
-              <div class="col-md-3">
+              <div class="col-md-3" id="cod_pro">
                   {!! Form::text('codigoProveedorSap', null, ['class' => 'form-control', 'placeholder' => 'Código Proveedor SAP']); !!}
               </div>
+              <div class="col-md-3" id="pro_sap" style="display: none">
 
-              <div class="col-md-1">
-                  <span class="glyphicon glyphicon-import" aria-hidden="true"></span>
+              </div>
+
+              <div class="col-md-1 col-md-offset-1">
+                  <span class="glyphicon glyphicon-import" aria-hidden="true" id="proveedorSap"></span>
               </div>
           </div>
+
+
 
       </div>
       <div class="modal-footer">

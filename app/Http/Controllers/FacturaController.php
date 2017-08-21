@@ -75,8 +75,14 @@ dd($resultado);
          $fechaInicio = $fechas->FECHA_INICIO;
          $fechaFinal = $fechas->FECHA_FINAL;
 
+         $tipoGasto = Liquidacion::join('pre_presupuesto', 'pre_presupuesto.ID', '=', 'liq_liquidacion.PRESUPUESTO_ID')
+                                     ->join('pre_detpresupuesto', 'pre_detpresupuesto.PRESUPUESTO_ID', '=', 'pre_presupuesto.ID' )
+                                     ->join('cat_tipogasto', 'cat_tipogasto.ID', '=', 'pre_detpresupuesto.TIPOGASTO_ID')
+                                     ->where('liq_liquidacion.ID', '=', $liquidacion_id)
+                                     ->lists('cat_tipogasto.DESCRIPCION', 'cat_tipogasto.ID')
+                                     ->toArray();
 
-
+         /** Esta es la consulta original!!
          $tipoGasto =  Liquidacion::join('pre_presupuesto', 'pre_presupuesto.USUARIORUTA_ID', '=', 'liq_liquidacion.USUARIORUTA_ID')
                                   ->join('pre_detpresupuesto', 'pre_detpresupuesto.PRESUPUESTO_ID', '=', 'pre_presupuesto.ID' )
                                   ->join('cat_tipogasto', 'cat_tipogasto.ID', '=', 'pre_detpresupuesto.TIPOGASTO_ID')
@@ -85,19 +91,7 @@ dd($resultado);
                                   ->where('liq_liquidacion.ID', '=', $liquidacion_id)
                                   ->lists('cat_tipogasto.DESCRIPCION', 'cat_tipogasto.ID')
                                   ->toArray();
-//dd($tipoGasto);
-/*
-       select tg.DESCRIPCION
-from liq_liquidacion as l inner join pre_presupuesto as p on p.USUARIORUTA_ID = l.USUARIORUTA_ID
-                         inner join pre_detpresupuesto as dp on dp.PRESUPUESTO_ID = p.ID
-                         inner join cat_tipogasto as tg on tg.ID = dp.TIPOGASTO_ID
-                         where l.FECHA_INICIO = p.VIGENCIA_INICIO and
-   l.FECHA_FINAL = p.VIGENCIA_FINAL and
-   l.ID = 6
-
-         $tipoGasto = TipoGasto::lists('DESCRIPCION', 'ID')
-                                         ->toArray();
-dd($tipoGasto);*/
+         **/
          $proveedor = Proveedor::lists('IDENTIFICADOR_TRIBUTARIO', 'ID')
                                          ->toArray();
 

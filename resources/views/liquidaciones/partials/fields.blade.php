@@ -10,12 +10,13 @@
       {!! Form::text('USUARIO', $usuario, ['class' => 'form-control', 'disabled' => 'true']); !!}
   </div>
 
-  <div class="col-md-1 col-md-offset-1">
+  <div class="col-md-1 ">
     {!! Form::label('RUTA_ID', 'Ruta') !!}
   </div>
   <div class="col-md-3">
     {!! Form::select('RUTA_ID', $rutas, null, ['class' => 'form-control', 'placeholder' => 'Seleccione una Ruta']); !!}
   </div>
+
 </div>
 
 <div class="row form-group">
@@ -24,12 +25,18 @@
 
 <div class="row form-group">
   <div class="col-md-1 col-md-offset-1">
+    {!! Form::label('PRESUPUESTO_ID', 'No. Presupuesto') !!}
+  </div>
+  <div class="col-md-1">
+    {!! Form::text('PRESUPUESTO_ID', null, ['class' => 'form-control']); !!}
+  </div>
+  <div class="col-md-1 col-md-offset-2">
         {!! Form::label('FECHA_INICIO', 'Fecha Inicio') !!}
   </div>
   <div class="col-md-2">
         {!! Form::date('FECHA_INICIO', null, ['class' => 'form-control']); !!}
   </div>
-  <div class="col-md-1 col-md-offset-2">
+  <div class="col-md-1 ">
     {!! Form::label('FECHA_FINAL', 'Fecha Final') !!}
   </div>
   <div class="col-md-2">
