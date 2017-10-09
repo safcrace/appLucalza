@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\GrupoTipoGasto;
 use App\Http\Requests\CreateTipoGastoRequest;
+use App\SubcategoriaTipoGasto;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
@@ -44,7 +46,9 @@ class TipoGastoController extends Controller
      {
          $empresa_id = $id;
 
-         return view('tipoGastos.create', compact('empresa_id'));
+         $grupo = GrupoTipoGasto::lists('DESCRIPCION', 'ID')->toArray();
+
+         return view('tipoGastos.create', compact('empresa_id', 'grupo'));
      }
 
     /**
@@ -64,30 +68,39 @@ class TipoGastoController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(CreateTipoGastoRequest $request)
-    {   dd($request->all());
+    {   //dd($request->all());
         $empresa_id = $request->EMPRESA_ID;
 
         $tipoGasto = new TipoGasto();
 
         $tipoGasto->EMPRESA_ID = $empresa_id;
         $tipoGasto->DESCRIPCION = $request->DESCRIPCION;
-        $tipoGasto->EXENTO = $request->EXENTO;
-        $tipoGasto->MONTO_A_APLICAR = ($request->MONTO_A_APLICAR_CANTIDAD) ? $request->MONTO_A_APLICAR_CANTIDAD : $request->MONTO_A_APLICAR_PORCENTAJE;
-        $tipoGasto->CAUSAEXENCION_ID = $request->CAUSAEXENCION_ID;
-        $tipoGasto->UNIDAD_MEDIDA = $request->UNIDAD_MEDIDA;
+        //$tipoGasto->EXENTO = $request->EXENTO;
+        //$tipoGasto->MONTO_A_APLICAR = ($request->MONTO_A_APLICAR_CANTIDAD) ? $request->MONTO_A_APLICAR_CANTIDAD : $request->MONTO_A_APLICAR_PORCENTAJE;
+        //$tipoGasto->CAUSAEXENCION_ID = $request->CAUSAEXENCION_ID;
+        //$tipoGasto->UNIDAD_MEDIDA = $request->UNIDAD_MEDIDA;
+        $tipoGasto->GRUPOTIPOGASTO_ID = $request->GRUPO_ID;
+        $tipoGasto->OPCIONCOMBUSTIBLE_ID = $request->OPCIONCOMBUSTIBLE_ID;
         $tipoGasto->OPCIONKILOMETRAJE_ID = $request->OPCIONKILOMETRAJE_ID;
+        //$tipoGasto->ASIGNACIONPRESUPUESTO_ID = $request->ASIGNACIONPRESUPUESTO_ID;
         $tipoGasto->CUENTA_CONTABLE_EXENTO = $request->CUENTA_CONTABLE_EXENTO;
+        $tipoGasto->DESCRIPCION_CUENTA_EXENTO = trim($request->DESCRIPCION_CUENTA_EXENTO, "\t.");
         $tipoGasto->CODIGO_IMPUESTO_EXENTO = $request->CODIGO_IMPUESTO_EXENTO;
+        $tipoGasto->DESCRIPCION_IMPUESTO_EXENTO = $request->DESCRIPCION_IMPUESTO_EXENTO;
         $tipoGasto->CUENTA_CONTABLE_AFECTO = $request->CUENTA_CONTABLE_AFECTO;
+        $tipoGasto->DESCRIPCION_CUENTA_AFECTO = trim($request->DESCRIPCION_CUENTA_AFECTO, "\t.");
         $tipoGasto->CODIGO_IMPUESTO_AFECTO = $request->CODIGO_IMPUESTO_AFECTO;
+        $tipoGasto->DESCRIPCION_IMPUESTO_AFECTO = $request->DESCRIPCION_IMPUESTO_AFECTO;
         $tipoGasto->CUENTA_CONTABLE_REMANENTE = $request->CUENTA_CONTABLE_AFECTO;
+        $tipoGasto->DESCRIPCION_CUENTA_REMANENTE = trim($request->DESCRIPCION_CUENTA_REMANENTE, "\t.");
         $tipoGasto->CODIGO_IMPUESTO_REMANENTE = $request->CODIGO_IMPUESTO_REMANENTE;
+        $tipoGasto->DESCRIPCION_IMPUESTO_REMANENTE = $request->DESCRIPCION_IMPUESTO_REMANENTE;
         $tipoGasto->ANULADO = $request->ANULADO;
 
         if ($tipoGasto->ANULADO === null) {
             $tipoGasto->ANULADO = 0;
         }
-
+//dd($tipoGasto);
         $tipoGasto->save();
 
         return redirect::to('empresa/tipoGasto/' . $empresa_id);
@@ -113,7 +126,18 @@ class TipoGastoController extends Controller
     public function edit($id)
     {
       $tipoGasto = TipoGasto::findOrFail($id);
-      //dd($tipoGasto->CAUSAEXENCION_ID);
+      //dd($tipoGasto);//->GRUPOTIPOGASTO_ID);
+
+      $subcategoriaTipoGasto = SubcategoriaTipoGasto::select('ID', 'DESCRIPCION', 'EXENTO')
+                                                            ->where('ANULADO', '=', 0)
+                                                            ->where('TIPOGASTO_ID', '=', $id)
+                                                            ->paginate(10);
+
+      //dd($subcategoriaTipoGasto);
+
+     /* $tasaCambio = TasaCambio::select('cat_tasacambio.ID', 'cat_tasacambio.MONEDA_ID', 'cat_tasacambio.FECHA', 'cat_tasacambio.COMPRA', 'cat_tasacambio.ANULADO')
+          ->where('cat_tasacambio.ANULADO', '=', 0)
+          ->where('cat_tasacambio.MONEDA_ID', '=', $id)->paginate(4);*/
 
       if($tipoGasto->CAUSAEXENCION_ID == 2){
           $tipoGasto->MONTO_A_APLICAR_CANTIDAD = $tipoGasto->MONTO_A_APLICAR;
@@ -121,7 +145,9 @@ class TipoGastoController extends Controller
           $tipoGasto->MONTO_A_APLICAR_PORCENTAJE = $tipoGasto->MONTO_A_APLICAR;
       }
 
-      return view('tipoGastos.edit', compact('tipoGasto'));
+      $grupo = GrupoTipoGasto::lists('DESCRIPCION', 'ID')->toArray();
+
+      return view('tipoGastos.edit', compact('tipoGasto', 'grupo', 'subcategoriaTipoGasto'));
     }
 
     /**
@@ -134,6 +160,7 @@ class TipoGastoController extends Controller
     public function update(CreateTipoGastoRequest $request, $id)
     {
       $tipoGasto = TipoGasto::findOrFail($id);
+
       //$moneda->fill($request->all());
       //$
       $montoAplicar = ($request->MONTO_A_APLICAR_CANTIDAD) ? $request->MONTO_A_APLICAR_CANTIDAD : $request->MONTO_A_APLICAR_PORCENTAJE;
@@ -143,10 +170,15 @@ class TipoGastoController extends Controller
       }
 
       $tipoGasto::where('ID', $tipoGasto->ID)
-              ->update(['DESCRIPCION' => $request->DESCRIPCION, 'EXENTO' => $request->EXENTO, 'MONTO_A_APLICAR' => $montoAplicar, 'UNIDAD_MEDIDA' => $request->UNIDAD_MEDIDA,
-                        'CAUSAEXENCION_ID' => $request->CAUSAEXENCION_ID, 'CUENTA_CONTABLE_EXENTO' => $request->CUENTA_CONTABLE_EXENTO, 'CODIGO_IMPUESTO_EXENTO' => $request->CODIGO_IMPUESTO_EXENTO,
-                        'CUENTA_CONTABLE_AFECTO' => $request->CUENTA_CONTABLE_AFECTO, 'CODIGO_IMPUESTO_AFECTO' => $request->CODIGO_IMPUESTO_AFECTO, 'OPCIONKILOMETRAJE_ID' => $request->OPCIONKILOMETRAJE_ID,
-                        'CUENTA_CONTABLE_REMANENTE' => $request->CUENTA_CONTABLE_REMANENTE, 'CODIGO_IMPUESTO_REMANENTE' => $request->CODIGO_IMPUESTO_REMANENTE, 'ANULADO' => $request->ANULADO]);
+              ->update(['DESCRIPCION' => $request->DESCRIPCION, 'GRUPOTIPOGASTO_ID' => $request->GRUPO_ID, 'OPCIONCOMBUSTIBLE_ID' => $request->OPCIONCOMBUSTIBLE_ID,
+                        'OPCIONKILOMETRAJE_ID' => $request->OPCIONKILOMETRAJE_ID,
+                        'CUENTA_CONTABLE_EXENTO' => $request->CUENTA_CONTABLE_EXENTO,  'DESCRIPCION_CUENTA_EXENTO' => trim($request->DESCRIPCION_CUENTA_EXENTO, "\t."),
+                        'CODIGO_IMPUESTO_EXENTO' => $request->CODIGO_IMPUESTO_EXENTO, 'DESCRIPCION_IMPUESTO_EXENTO' => $request->DESCRIPCION_CODIGO_IE,
+                        'CUENTA_CONTABLE_AFECTO' => $request->CUENTA_CONTABLE_AFECTO, 'DESCRIPCION_CUENTA_AFECTO' => trim($request->DESCRIPCION_CUENTA_AFECTO, "\t."),
+                        'CODIGO_IMPUESTO_AFECTO' => $request->CODIGO_IMPUESTO_AFECTO, 'DESCRIPCION_IMPUESTO_AFECTO' => $request->DESCRIPCION_CODIGO_IA,
+                        'CUENTA_CONTABLE_REMANENTE' => $request->CUENTA_CONTABLE_REMANENTE, 'DESCRIPCION_CUENTA_REMANENTE' => trim($request->DESCRIPCION_CUENTA_REMANENTE, "\t."),
+                        'CODIGO_IMPUESTO_REMANENTE' => $request->CODIGO_IMPUESTO_REMANENTE, 'DESCRIPCION_IMPUESTO_REMANENTE' => $request->DESCRIPCION_CODIGO_IR, 'ANULADO' => $request->ANULADO
+                        ]);
 
       return redirect::to('empresa/tipoGasto/' . $tipoGasto->EMPRESA_ID);
     }

@@ -248,6 +248,7 @@ class UsuarioController extends Controller
             $usuarioEmpresa->USER_ID = $request->USUARIO_ID;
             $usuarioEmpresa->EMPRESA_ID = $request->EMPRESA_ID;
             $usuarioEmpresa->CODIGO_PROVEEDOR_SAP = $request->codigoProveedorSap;
+            $usuarioEmpresa->DESCRIPCION_PROVEEDORSAP = $request->DESCRIPCION_PROVEEDORSAP;
             $usuarioEmpresa->ANULADO = 0;
 
             $usuarioEmpresa->save();

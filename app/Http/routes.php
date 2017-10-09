@@ -95,7 +95,13 @@ Route::resource('proveedores', 'ProveedorController');
 Route::get('tipoGasto/anular/{id}', ['uses' => 'TipoGastoController@anular', 'as' => 'anularTipoGasto']);
 Route::get('empresa/{id}/create/tipoGasto',  ['uses' => 'tipoGastoController@empresaCreateTipoGasto', 'as' => 'createTipoGasto']);
 Route::get('empresa/tipoGasto/{id}', ['uses' => 'TipoGastoController@indexTipoGasto', 'as' => 'indexTipoGasto']);
+
 Route::resource('tipoGastos', 'TipoGastoController');
+
+// Subcategoria Tipo Gasto routes...
+Route::get('tipoGasto/subcategoriaTipoGasto/{id}', ['uses' => 'SubcategoriaTipoGastoController@createSubcategoria', 'as' => 'createSubcategoria']);
+Route::get('subcategoriaTipoGasto/anular/{id}', ['uses' => 'SubcategoriaTipoGastoController@anularSubcategoriaTipoGasto', 'as' => 'anularSubcategoriaTipoGasto']);
+Route::resource('subcategoriaTipoGastos', 'SubcategoriaTipoGastoController');
 
 // Presupuesto routes
 Route::get('presupuesto/anular/{id}', ['uses' => 'PresupuestoController@anular', 'as' => 'anularPresupuesto']);

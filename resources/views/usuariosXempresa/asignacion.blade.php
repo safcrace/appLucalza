@@ -97,11 +97,13 @@
                     $('#cod_pro').remove()
                 }
             });
+
+            $('#pro_sap').on('change', '#codigoProveedorSap', function() {
+                var descripcion_proveedorSap = $('#codigoProveedorSap option:selected').text()
+                $('#descripcion_proveedorsap').val(descripcion_proveedorSap)
+            })
         })
 
-        $('#codProveedorSap').select2({
-            placeholder: 'Seleccione un Proveedor'
-        })
 
     });
 </script>

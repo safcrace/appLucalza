@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\CreateLiquidacionRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Redirect;
 
 use App\Http\Requests;
@@ -192,9 +193,21 @@ class LiquidacionController extends Controller
      */
     public function updateLiquidacionCorreccion(Request $request, $id)
     {
+        $mail = Liquidacion::select('users.nombre', 'users.email')
+                                    ->join('cat_usuarioruta', 'cat_usuarioruta.ID', '=', 'liq_liquidacion.USUARIORUTA_ID')
+                                    ->join('users', 'users.id', '=', 'cat_usuarioruta.USER_ID')
+                                    ->where('liq_liquidacion.ID', '=', $id)
+                                    ->first();
 
         Liquidacion::where('ID', $id)
                 ->update(['SUPERVISOR_COMENTARIO' => $request->SUPERVISOR_COMENTARIO, 'ESTADOLIQUIDACION_ID' => 6]);
+
+        $liquidacion = Liquidacion::where('ID', '=', $id)->first();
+
+
+        Mail::send('emails/correccionSupervisor', compact('mail','liquidacion'), function($m) use ($mail) {
+           $m->to($mail->email, $mail->nombre)->subject('Corección de Liquidación');
+        });
 
         return Redirect::to('supervisor');
     }
@@ -208,8 +221,20 @@ class LiquidacionController extends Controller
      */
     public function updateLiquidacionCorreccionContabilidad(Request $request, $id)
     {
+        $mail = Liquidacion::select('users.nombre', 'users.email')
+            ->join('cat_usuarioruta', 'cat_usuarioruta.ID', '=', 'liq_liquidacion.USUARIORUTA_ID')
+            ->join('users', 'users.id', '=', 'cat_usuarioruta.USER_ID')
+            ->where('liq_liquidacion.ID', '=', $id)
+            ->first();
+
         Liquidacion::where('ID', $id)
                 ->update(['CONTABILIDAD_COMENTARIO' => $request->CONTABILIDAD_COMENTARIO, 'ESTADOLIQUIDACION_ID' => 6]);
+
+        $liquidacion = Liquidacion::where('ID', '=', $id)->first();
+
+        Mail::send('emails/correccionSupervisor', compact('mail','liquidacion'), function($m) use ($mail) {
+            $m->to($mail->email, $mail->nombre)->subject('Corección de Liquidación');
+        });
 
         return Redirect::to('contabilidad');
     }

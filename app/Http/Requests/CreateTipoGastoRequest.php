@@ -25,7 +25,7 @@ class CreateTipoGastoRequest extends Request
     {
         return [
             'DESCRIPCION'    => 'required',
-            'EXENTO'    => 'required',
+            'OPCIONCOMBUSTIBLE_ID'    => 'required',
         ];
     }
 

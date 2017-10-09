@@ -135,8 +135,15 @@ class ProveedorController extends Controller
     public function edit($id)
     {
         $proveedor = Proveedor::findOrFail($id);
+        //dd($proveedor);
+        $moneda = Empresa::select('cat_moneda.ID', 'cat_moneda.DESCRIPCION')
+            ->join('cat_moneda', 'cat_moneda.ID', '=', 'cat_empresa.MONEDA_ID')
+            ->where('cat_empresa.ID', '=',  $proveedor->EMPRESA_ID)
+            ->first();
 
-        return view('proveedores.edit', compact('proveedor'));
+        $tipoProveedor = TipoProveedor::lists('DESCRIPCION', 'ID')->toArray();
+
+        return view('proveedores.edit', compact('proveedor', 'moneda', 'tipoProveedor'));
     }
 
     /**

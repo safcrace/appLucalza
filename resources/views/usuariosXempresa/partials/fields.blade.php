@@ -38,6 +38,7 @@
               </div>
               <div class="col-md-3" id="cod_pro">
                   {!! Form::text('codigoProveedorSap', null, ['class' => 'form-control', 'placeholder' => 'Código Proveedor SAP']); !!}
+
               </div>
               <div class="col-md-3" id="pro_sap" style="display: none">
 
@@ -47,7 +48,7 @@
                   <span class="glyphicon glyphicon-import" aria-hidden="true" id="proveedorSap"></span>
               </div>
           </div>
-
+          {!! Form::hidden('DESCRIPCION_PROVEEDORSAP', null, ['class' => 'form-control', 'id' => 'descripcion_proveedorsap']); !!}
 
 
       </div>

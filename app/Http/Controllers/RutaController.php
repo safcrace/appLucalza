@@ -30,14 +30,17 @@ class RutaController extends Controller
      */
      public function indexRuta($id)
      {
+         $param = explode('-', $id);
+         $empresa_id = $param[0];
+         $descripcion = $param[1];
          $rutas = Ruta::select('*')
-                             ->where('cat_ruta.EMPRESA_ID', '=', $id)
+                             ->where('cat_ruta.EMPRESA_ID', '=', $empresa_id)
                              ->where('cat_ruta.ANULADO', '=', 0)
                              ->paginate(10);
-         $empresa_id = $id;
-         $nombreEmpresa = Empresa::select('DESCRIPCION')->where('ID', '=', $id)->first();
+         $empresa_id = $empresa_id;
+         $nombreEmpresa = Empresa::select('DESCRIPCION')->where('ID', '=', $empresa_id)->first();
 
-         return view('rutas.index', compact('rutas', 'empresa_id', 'nombreEmpresa'));
+         return view('rutas.index', compact('rutas', 'empresa_id', 'nombreEmpresa', 'descripcion'));
      }
 
      /**

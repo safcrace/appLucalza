@@ -1,7 +1,19 @@
 @if (isset($empresa_id))
     <input id="EMPRESA_ID" name="EMPRESA_ID" type="hidden" value="{{ $empresa_id }}">
 @endif
-
+{!! Form::hidden('CAUSAEXENCION_ID', 1, ['class' => 'form-control']); !!}
+<div class="row form-group">
+    <div class="col-md-2 col-md-offset-1">
+        {!! Form::label('GRUPO_ID', 'Grupo') !!}
+    </div>
+    <div class="col-md-3">
+        @if(isset($tipoGasto->GRUPOTIPOGASTO_ID))
+            {!! Form::select('GRUPO_ID', $grupo, $tipoGasto->GRUPOTIPOGASTO_ID, ['class' => 'form-control', 'placeholder' => 'Seleccione un Grupo']); !!}
+        @else
+            {!! Form::select('GRUPO_ID', $grupo, null, ['class' => 'form-control', 'placeholder' => 'Seleccione un Grupo']); !!}
+        @endif
+    </div>
+</div>
 <div class="row form-group">
   <div class="col-md-2 col-md-offset-1">
         {!! Form::label('DESCRIPCION', 'Descripción') !!}
@@ -9,6 +21,45 @@
   <div class="col-md-3">
       {!! Form::text('DESCRIPCION', null, ['class' => 'form-control', 'placeholder' => 'Descripción Gasto']); !!}
   </div>
+</div>
+    <div class="row form-group">
+        <div class="col-md-2 col-md-offset-1">
+            {!! Form::label('OPCIONCOMBUSTIBLE_ID', 'Control Combustible') !!}
+        </div>
+        <div class="col-md-1">
+            {!! Form::radio('OPCIONCOMBUSTIBLE_ID', 1, false, ['id' => 'gas']); !!}  SI
+        </div>
+        <div class="col-md-1">
+            {!! Form::radio('OPCIONCOMBUSTIBLE_ID', 2, true, ['id' => 'no_gas']); !!}  NO
+        </div>
+    </div>
+
+<div class="row form-group" id="Kilometros" style="display: none">
+    <div class="col-md-2 col-md-offset-1">
+        {!! Form::label('OPCIONKILOMETRAJE_ID', 'Control Kilometraje') !!}
+    </div>
+    <div class="col-md-1">
+        {!! Form::radio('OPCIONKILOMETRAJE_ID', 1, true, ['id' => 'kilometraje']); !!}  SI
+    </div>
+    <div class="col-md-1">
+        {!! Form::radio('OPCIONKILOMETRAJE_ID', 2, false, ['id' => 'no_kilometraje']); !!}  NO
+    </div>
+</div>
+
+{{--
+
+<div class="row form-group">
+    <div class="col-md-2 col-md-offset-1">
+        {!! Form::label('ASIGNACIONPRESUPUESTO_ID', 'Asignación') !!}
+    </div>
+    <div class="col-md-2">
+        {!! Form::radio('ASIGNACIONPRESUPUESTO_ID', 1, true, ['id' => 'asignacion']); !!}  DINERO
+    </div>
+    <div class="col-md-2">
+        {!! Form::radio('ASIGNACIONPRESUPUESTO_ID', 2, false, ['id' => 'no_asignacion']); !!}  UNIDAD
+    </div>
+</div>
+
   <div class="col-md-1 col-md-offset-1">
     {!! Form::label('EXENTO', 'Exento') !!}
   </div>
@@ -25,7 +76,7 @@
       {!! Form::radio('CAUSAEXENCION_ID', 2, false, ['id' => 'cantidad']); !!}  CANTIDAD
   </div>
   <div class="col-md-2 ph_cantidad" style="display: none">
-      {!! Form::text('MONTO_A_APLICAR_CANTIDAD', null, ['class' => 'form-control', 'placeholder' => 'Cantidad']); !!}
+      {!! Form::text('MONTO_A_APLICAR_CANTIDAD', 1, ['class' => 'form-control', 'placeholder' => 'Cantidad']); !!}
   </div>
   <div class="col-md-2 ph_cantidad" style="display: none" >
       {!! Form::text('UNIDAD_MEDIDA', null, ['class' => 'form-control', 'placeholder' => 'Unidad de Medida']); !!}
@@ -51,7 +102,7 @@
     {!! Form::radio('OPCIONKILOMETRAJE_ID', 2); !!} NO
   </div>
 </div>
-
+--}}
 <hr>
 
 <div class="row">
@@ -66,14 +117,14 @@
         </div>
         <div class="row form-group text-center">
                 {!! Form::hidden('CUENTA_CONTABLE_EXENTO', null, ['class' => 'form-control', 'id' => 'cuenta_contable_exenta']); !!}
-                {!! Form::text('DESCRIPCION_CUENTA_CE', null, ['class' => 'form-control', 'placeholder' => 'Cuenta Contable', 'id' => 'descripcion_cuenta_ce']); !!}
+                {!! Form::text('DESCRIPCION_CUENTA_EXENTO', null, ['class' => 'form-control', 'placeholder' => 'Cuenta Contable', 'id' => 'descripcion_cuenta_ce']); !!}
         </div>
         <div class="row form-group text-center">
                 {!! Form::label('CODIGO_IMPUESTO_EXENTO', 'Código Impuesto') !!} &nbsp; &nbsp; <span class="glyphicon glyphicon-import" aria-hidden="true" id="ci_exento"></span>
         </div>
         <div class="row form-group text-center">
                 {!! Form::hidden('CODIGO_IMPUESTO_EXENTO', null, ['class' => 'form-control', 'id' => 'codigo_impuesto_exento']); !!}
-                {!! Form::text('DESCRIPCION_CODIGO_IE', null, ['class' => 'form-control', 'placeholder' => 'Cuenta Contable', 'id' => 'descripcion_codigo_ie']); !!}
+                {!! Form::text('DESCRIPCION_IMPUESTO_EXENTO', null, ['class' => 'form-control', 'placeholder' => 'Cuenta Contable', 'id' => 'descripcion_codigo_ie']); !!}
         </div>
       </div>
     </div>
@@ -90,14 +141,14 @@
         </div>
         <div class="row form-group text-center">
                 {!! Form::hidden('CUENTA_CONTABLE_AFECTO', null, ['class' => 'form-control', 'id' => 'cuenta_contable_afecta']); !!}
-                {!! Form::text('DESCRIPCION_CUENTA_CA', null, ['class' => 'form-control', 'placeholder' => 'Cuenta Contable', 'id' => 'descripcion_cuenta_ca']); !!}
+                {!! Form::text('DESCRIPCION_CUENTA_AFECTO', null, ['class' => 'form-control', 'placeholder' => 'Cuenta Contable', 'id' => 'descripcion_cuenta_ca']); !!}
         </div>
         <div class="row form-group text-center">
                 {!! Form::label('CODIGO_IMPUESTO_AFECTO', 'Código Impuesto') !!} &nbsp; &nbsp; <span class="glyphicon glyphicon-import" aria-hidden="true" id="ci_afecto"></span>
         </div>
         <div class="row form-group text-center">
                 {!! Form::hidden('CODIGO_IMPUESTO_AFECTO', null, ['class' => 'form-control', 'id' => 'codigo_impuesto_afecto']); !!}
-                {!! Form::text('DESCRIPCION_CODIGO_IA', null, ['class' => 'form-control', 'placeholder' => 'Cuenta Contable', 'id' => 'descripcion_codigo_ia']); !!}
+                {!! Form::text('DESCRIPCION_IMPUESTO_AFECTO', null, ['class' => 'form-control', 'placeholder' => 'Cuenta Contable', 'id' => 'descripcion_codigo_ia']); !!}
         </div>
       </div>
     </div>
@@ -114,14 +165,14 @@
         </div>
         <div class="row form-group text-center">
                 {!! Form::hidden('CUENTA_CONTABLE_REMANENTE', null, ['class' => 'form-control', 'id' => 'cuenta_contable_remanente']); !!}
-                {!! Form::text('DESCRIPCION_CUENTA_CR', null, ['class' => 'form-control', 'placeholder' => 'Cuenta Contable', 'id' => 'descripcion_cuenta_cr']); !!}
+                {!! Form::text('DESCRIPCION_CUENTA_REMANENTE', null, ['class' => 'form-control', 'placeholder' => 'Cuenta Contable', 'id' => 'descripcion_cuenta_cr']); !!}
         </div>
         <div class="row form-group text-center">
                 {!! Form::label('CODIGO_IMPUESTO_REMANENTE', 'Código Impuesto') !!} &nbsp; &nbsp; <span class="glyphicon glyphicon-import" aria-hidden="true" id="ci_remanente"></span>
         </div>
         <div class="row form-group text-center">
                 {!! Form::hidden('CODIGO_IMPUESTO_REMANENTE', null, ['class' => 'form-control', 'id' => 'codigo_impuesto_remanente']); !!}
-                {!! Form::text('DESCRIPCION_CODIGO_IR', null, ['class' => 'form-control', 'placeholder' => 'Cuenta Contable', 'id' => 'descripcion_codigo_ir']); !!}
+                {!! Form::text('DESCRIPCION_IMPUESTO_REMANENTE', null, ['class' => 'form-control', 'placeholder' => 'Cuenta Contable', 'id' => 'descripcion_codigo_ir']); !!}
         </div>
       </div>
     </div>
@@ -165,7 +216,9 @@
         <h4 class="modal-title" id="myModalLabel">Cuenta Contable Afecta</h4>
       </div>
       <div class="modal-body">
-        <div id="cuenta_afecta"></div>
+        <div id="cuenta_afecta">
+
+        </div>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal"><span class="glyphicon glyphicon-remove-sign" aria-hidden="true" style="font-size:32px; color: black"></span></button>
@@ -203,6 +256,7 @@
       <div class="modal-body">
         <div id="impuesto_exento"></div>
       </div>
+
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal"><span class="glyphicon glyphicon-remove-sign" aria-hidden="true" style="font-size:32px; color: black"></span></button>
         <button type="button" class="btn btn-default" style="border-color: white"><span class="glyphicon glyphicon-ok-sign" aria-hidden="true" style="font-size:32px; color: black;" id="ok_iexento"></button>
@@ -251,14 +305,14 @@
   <script type="text/javascript">
       $(document).ready(function () {
 
-          var exento = $("#exento").prop("checked") ? true : false;
+          var exento = $("#gas").prop("checked") ? true : false;
           if (exento === true) {
-              $('.div_exento').show();
+              $('#Kilometros').show();
           }
 
           var cantidad = $("#cantidad").prop("checked") ? true : false;
           if (cantidad == true) {
-              $('#ph_cantidad').show();
+              $('.ph_cantidad').show();
               $('#unidad').show()
           }
 
@@ -268,8 +322,12 @@
           }
 
 
-        $('#exento').click(function () {
-          $('.div_exento').show();
+        $('#gas').click(function () {
+          $('#Kilometros').show();
+        });
+
+        $('#no_gas').click(function () {
+            $('#Kilometros').hide();
         });
 
         $('#cantidad').click(function () {
@@ -291,7 +349,7 @@
         $('#cc_exento').click(function() {
               vurl = '{{ route('cuentaContableExenta')}}'
               vurl = vurl.replace('%7Bid%7D', 1);
-              alert(vurl)
+              //alert(vurl)
               $.ajax({
                   type: 'get',
                   url: vurl,
@@ -300,6 +358,10 @@
                       $('#myModalCe').modal('show')
                   }
               });
+
+            $('#cuentaContableExenta').select2({
+                placeholder: 'Seleccione un Proveedor'
+            })
           })
 
           $('#ok_exenta').click(function() {
@@ -313,7 +375,7 @@
           $('#cc_afecta').click(function() {
               vurl = '{{ route('cuentaContableAfecta')}}'
               vurl = vurl.replace('%7Bid%7D', 1);
-              alert(vurl)
+              //alert(vurl)
               $.ajax({
                   type: 'get',
                   url: vurl,
@@ -335,7 +397,7 @@
           $('#cc_remanente').click(function() {
               vurl = '{{ route('cuentaContableRemanente')}}'
               vurl = vurl.replace('%7Bid%7D', 1);
-              alert(vurl)
+              //alert(vurl)
               $.ajax({
                   type: 'get',
                   url: vurl,
@@ -354,15 +416,13 @@
               $('#myModalCr').modal('hide')
           })
 
-          $('#cuentaContableExenta').select2({
-              placeholder: 'Seleccione un Proveedor'
-          })
+
 
           $('#ci_exento').click(function() {
-              alert('que pasa')
+              //alert('que pasa')
               vurl = '{{ route('codigoImpuestoExento')}}'
               vurl = vurl.replace('%7Bid%7D', 5);
-              alert(vurl)
+              //alert(vurl)
               $.ajax({
                   type: 'get',
                   url: vurl,
@@ -382,10 +442,10 @@
           })
 
           $('#ci_afecto').click(function() {
-              alert('que pasa')
+              //alert('que pasa')
               vurl = '{{ route('codigoImpuestoAfecto')}}'
               vurl = vurl.replace('%7Bid%7D', 5);
-              alert(vurl)
+              //alert(vurl)
               $.ajax({
                   type: 'get',
                   url: vurl,
@@ -406,7 +466,7 @@
           })
 
           $('#ci_remanente').click(function() {
-              alert('que pasa')
+              //alert('que pasa')
               vurl = '{{ route('codigoImpuestoRemanente')}}'
               vurl = vurl.replace('%7Bid%7D', 5);
 
@@ -421,7 +481,7 @@
           })
 
           $('#ok_iremanente').click(function() {
-              alert('sender')
+              //alert('sender')
               var codigo_impuesto_remanente = $('#codigoImpuestoRemanente').val()
               var descripcion_codigo_ir = $('#codigoImpuestoRemanente option:selected').text()
               $('#codigo_impuesto_remanente').val(codigo_impuesto_remanente)

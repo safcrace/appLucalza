@@ -10,7 +10,7 @@
       {!! Form::text('USUARIO', $usuario, ['class' => 'form-control', 'disabled' => 'true']); !!}
   </div>
   <div class="col-md-1 col-md-offset-3">
-        {!! Form::label('TOTAL', 'TOTAL sender') !!}
+        {!! Form::label('TOTAL', 'TOTAL') !!}
   </div>
   <div class="col-md-1 col-md-offset-1">
       <button type="button" class="btn btn-primary btn-sm">Imprimir</button>
@@ -22,7 +22,7 @@
         {!! Form::label('RUTA_ID', 'Ruta') !!}
   </div>
   <div class="col-md-3">
-          {!! Form::select('RUTA_ID', $rutas, $combo->RUTA, ['class' => 'form-control', 'placeholder' => 'Seleccione una Ruta']); !!}
+        {!! Form::select('RUTA_ID', $rutas, $combo->RUTA, ['class' => 'form-control', 'placeholder' => 'Seleccione una Ruta']); !!}
   </div>
   <div class="col-md-1 col-md-offset-3">
       {!! Form::text('TOTAL', '####', ['class' => 'form-control', 'disabled' => 'true']); !!}

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\CuentasContables;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
@@ -72,12 +73,15 @@ class WebServiceController extends Controller
 
 
         $filas = $data['nrows'];
-        $combo = '<select id="cuentaContableExenta" name="cuentaContableExenta">';
+        $combo = '<select id="cuentaContableExenta" class="form-control" name="cuentaContableExenta">';
         foreach ($data['data'] as $a => $b) {
             $combo .=  '<option value="' . $b['code'] . '">' . $b['name'] . '</option>';
+            //CuentasContables::insert(['code' => $b['code'], 'name' => $b['name'] ]);
         }
         $combo .= '</select>';
 
+        //$combo = CuentasContables::lists('name', 'code')->toArray();
+        //dd($combo);
         return $combo;
 
     }

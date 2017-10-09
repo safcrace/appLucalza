@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Empresa;
+use App\TipoDocumento;
 use App\TipoProveedor;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -56,8 +57,7 @@ class FacturaController extends Controller
      public function liquidacionCreateFactura($id)
      {
          $liquidacion_id = $id;
-
-        /* $tipoGasto = DB::select("select tg.DESCRIPCION, tg.ID
+   /* $tipoGasto = DB::select("select tg.DESCRIPCION, tg.ID
                                   from liq_liquidacion as l inner join pre_presupuesto as p on p.USUARIORUTA_ID = l.USUARIORUTA_ID
                                                                inner join pre_detpresupuesto as dp on dp.PRESUPUESTO_ID = p.ID
                                                                inner join cat_tipogasto as tg on tg.ID = dp.TIPOGASTO_ID
@@ -106,10 +106,12 @@ dd($resultado);
 
          $fechaFactura = null;
 
+         $tipoDocumento = TipoDocumento::lists('DESCRIPCION', 'ID')->toArray();
+
         // $factura->CANTIDAD_PORCENTAJE_CUSTOM = null;
 
 
-         return view('facturas.create', compact('liquidacion_id', 'tipoGasto', 'proveedor', 'moneda', 'fechaFactura', 'tipoProveedor'));
+         return view('facturas.create', compact('liquidacion_id', 'tipoGasto', 'proveedor', 'moneda', 'fechaFactura', 'tipoProveedor', 'tipoDocumento'));
      }
 
     /**
@@ -167,7 +169,7 @@ dd($resultado);
         $factura->NUMERO = $request->NUMERO;
         $factura->FECHA_FACTURA = $request->FECHA_FACTURA;
         $factura->CANTIDAD_PORCENTAJE_CUSTOM = $request->CANTIDAD_PORCENTAJE;
-        $factura->TIPODOCUMENTO_ID = $request->TIPODOCUMENTO;
+        $factura->TIPODOCUMENTO_ID = $request->TIPODOCUMENTO_ID;
         $factura->KILOMETRAJE_INICIAL = $request->KM_INICIO;
         $factura->KILOMETRAJE_FINAL = $request->KM_FINAL;
         $factura->COMENTARIO_PAGO = $request->COMENTARIO_PAGO;
@@ -235,7 +237,9 @@ dd($resultado);
 
         $factura->EMAIL = Auth::user()->email;
 
-        return view('facturas.edit', compact('factura', 'tipoGasto', 'proveedor', 'moneda', 'fechaFactura', 'tipoProveedor', 'liquidacion_id'));
+        $tipoDocumento = TipoDocumento::lists('DESCRIPCION', 'ID')->toArray();
+
+        return view('facturas.edit', compact('factura', 'tipoGasto', 'proveedor', 'moneda', 'fechaFactura', 'tipoProveedor', 'liquidacion_id', 'tipoDocumento'));
     }
 
     /**

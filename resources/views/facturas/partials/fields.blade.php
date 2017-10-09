@@ -27,15 +27,16 @@
     </div>
 
     <div class="row form-group">
-      <div class="col-md-2 col-md-offset-1">
-          {!! Form::label('TIPODOCUMENTO', 'Tipo de Documento') !!}
-      </div>
-      <div class="col-md-2">
-          {!! Form::radio('TIPODOCUMENTO', 1, true); !!}  Factura
-      </div>
-      <div class="col-md-1">
-          {!! Form::radio('TIPODOCUMENTO', 2); !!} Recibo
-      </div>
+        <div class="col-md-2 col-md-offset-1">
+            {!! Form::label('FMONEDA_ID', 'Moneda') !!}
+        </div>
+        <div class="col-md-2">
+            {!! Form::radio('FMONEDA_ID', $moneda->ID, true); !!}  {{ $moneda->DESCRIPCION }}
+        </div>
+        <div class="col-md-1">
+            {!! Form::radio('FMONEDA_ID', 2); !!}  Dólar
+        </div>
+
       <div class="col-md-2">
             {!! Form::label('NOMBRE_PROVEEDOR', 'Nombre Proveedor') !!}
       </div>
@@ -47,15 +48,12 @@
 
 
     <div class="row form-group">
-      <div class="col-md-2 col-md-offset-1">
-        {!! Form::label('FMONEDA_ID', 'Moneda') !!}
-      </div>
-      <div class="col-md-2">
-        {!! Form::radio('FMONEDA_ID', $moneda->ID, true); !!}  {{ $moneda->DESCRIPCION }}
-      </div>
-      <div class="col-md-1">
-        {!! Form::radio('FMONEDA_ID', 2); !!}  Dólar
-      </div>
+        <div class="col-md-2 col-md-offset-1">
+            {!! Form::label('TIPODOCUMENTO_ID', 'Tipo de Documento') !!}
+        </div>
+        <div class="col-md-3" id="proveedorTemporal" style="display: block">
+            {!! Form::select('TIPODOCUMENTO_ID', $tipoDocumento, null, ['class' => 'form-control', 'placeholder' => 'Seleccione Tipo de Documento', 'id' => 'nit']); !!}
+        </div>
 
         <div class="col-md-2 ">
             {!! Form::label('FOTO', 'Imagen Factura') !!}
