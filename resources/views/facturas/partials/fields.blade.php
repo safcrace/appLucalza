@@ -8,10 +8,10 @@
   <div class="panel-body">
     <div class="row form-group">
       <div class="col-md-2 col-md-offset-1">
-            {!! Form::label('TIPOGASTO_ID', 'Tipo de Gasto') !!}
+            {!! Form::label('TIPOGASTO_ID', 'Categoría Gasto') !!}
       </div>
       <div class="col-md-3">
-          {!! Form::select('TIPOGASTO_ID', $tipoGasto, null, ['class' => 'form-control', 'placeholder' => 'Seleccione Tipo de Gasto', 'id' => 'tipoGasto']); !!}
+          {!! Form::select('TIPOGASTO_ID', $tipoGasto, null, ['class' => 'form-control', 'placeholder' => 'Seleccione Categoria de Gasto', 'id' => 'tipoGasto']); !!}
       </div>
 
       <div class="col-md-2">
@@ -28,13 +28,10 @@
 
     <div class="row form-group">
         <div class="col-md-2 col-md-offset-1">
-            {!! Form::label('FMONEDA_ID', 'Moneda') !!}
+            {!! Form::label('SUBCATEGORIATIPOGASTO_ID', 'Tipo de Gasto') !!}
         </div>
-        <div class="col-md-2">
-            {!! Form::radio('FMONEDA_ID', $moneda->ID, true); !!}  {{ $moneda->DESCRIPCION }}
-        </div>
-        <div class="col-md-1">
-            {!! Form::radio('FMONEDA_ID', 2); !!}  Dólar
+        <div class="col-md-3">
+            {!! Form::select('SUBCATEGORIATIPOGASTO_ID', $subcategoria, null, ['class' => 'form-control', 'placeholder' => 'Seleccione Tipo de Gasto', 'id' => 'subcategoriaTipoGasto']); !!}
         </div>
 
       <div class="col-md-2">
@@ -49,10 +46,13 @@
 
     <div class="row form-group">
         <div class="col-md-2 col-md-offset-1">
-            {!! Form::label('TIPODOCUMENTO_ID', 'Tipo de Documento') !!}
+            {!! Form::label('FMONEDA_ID', 'Moneda') !!}
         </div>
-        <div class="col-md-3" id="proveedorTemporal" style="display: block">
-            {!! Form::select('TIPODOCUMENTO_ID', $tipoDocumento, null, ['class' => 'form-control', 'placeholder' => 'Seleccione Tipo de Documento', 'id' => 'nit']); !!}
+        <div class="col-md-2">
+            {!! Form::radio('FMONEDA_ID', $moneda->ID, true); !!}  {{ $moneda->DESCRIPCION }}
+        </div>
+        <div class="col-md-1">
+            {!! Form::radio('FMONEDA_ID', 2); !!}  Dólar
         </div>
 
         <div class="col-md-2 ">
@@ -74,6 +74,16 @@
 
     <div class="row form-group">
         <div class="col-md-2 col-md-offset-1">
+            {!! Form::label('TIPODOCUMENTO_ID', 'Tipo de Documento') !!}
+        </div>
+        <div class="col-md-3" id="proveedorTemporal" style="display: block">
+            {!! Form::select('TIPODOCUMENTO_ID', $tipoDocumento, null, ['class' => 'form-control', 'placeholder' => 'Seleccione Tipo de Documento', 'id' => 'nit']); !!}
+        </div>
+
+    </div>
+
+    <div class="row form-group">
+        <div class="col-md-2 col-md-offset-1">
             {!! Form::label('FECHA_FACTURA', 'Fecha de la Factura') !!}
         </div>
         <div class="col-md-2">
@@ -83,7 +93,6 @@
                 {!! Form::date('FECHA_FACTURA', null, ['class' => 'form-control']); !!}
             @endif
         </div>
-
     </div>
 
     <div class="row form-group">
@@ -93,6 +102,7 @@
         <div class="col-md-3">
             {!! Form::text('SERIE', null, ['class' => 'form-control', 'placeholder' => 'Serie Factura']); !!}
         </div>
+
     </div>
 
     <div class="row form-group">
@@ -103,7 +113,6 @@
             {!! Form::text('NUMERO', null, ['class' => 'form-control', 'placeholder' => 'Número Factura']); !!}
         </div>
     </div>
-
     <div class="row form-group">
         <div class="col-md-2 col-md-offset-1">
             {!! Form::label('TOTAL', 'Total') !!}
@@ -122,30 +131,30 @@
         <div class="col-md-4">
             {!! Form::textarea('COMENTARIO_PAGO', null, ['class' => 'form-control', 'rows' => '3', 'cols' => '500', 'placeholder' => 'Observaciones y/o Comentarios']); !!}
         </div>
-        <div class="col-md-1">
-            <div id="etiqueta" style="font-weight: 700"></div>
+        <div class="col-md-1 combus" style="display: none">
+            <div id="etiqueta" style="font-weight: 700">Cantidad Galones</div>
         </div>
-        <div class="col-md-1" id="cantidadPorcentaje" style="display: block">
+        <div class="col-md-1 combus" style="display: none">
             @if(isset($factura->CANTIDAD_PORCENTAJE_CUSTOM))
                 {!! Form::text('CANTIDAD_PORCENTAJE', $factura->CANTIDAD_PORCENTAJE_CUSTOM, ['class' => 'form-control', 'placeholder' => 'Cantidad']); !!}
             @else
                 {!! Form::text('CANTIDAD_PORCENTAJE', null, ['class' => 'form-control', 'placeholder' => 'Cantidad']); !!}
             @endif
         </div>
-        <div class="col-md-1">
-            {!! Form::label('KM_INICIO', 'Km Inicial') !!}
+        <div class="col-md-1 combus" style="display: none">
+            {!! Form::label('KM_INICIO', 'Km Inicio') !!}
         </div>
-        <div class="col-md-1">
+        <div class="col-md-1 combus" style="display: none">
             @if(isset($factura->KILOMETRAJE_INICIAL))
                 {!! Form::text('KM_INICIO', $factura->KILOMETRAJE_INICIAL, ['class' => 'form-control', 'placeholder' => 'Inicio']); !!}
             @else
                 {!! Form::text('KM_INICIO', null, ['class' => 'form-control', 'placeholder' => 'Inicio']); !!}
             @endif
         </div>
-        <div class="col-md-1">
+        <div class="col-md-1 combus" style="display: none">
                 {!! Form::label('KM_FINAL', 'Km Final') !!}
         </div>
-        <div class="col-md-1">
+        <div class="col-md-1 combus" style="display: none">
             @if(isset($factura->KILOMETRAJE_FINAL))
                 {!! Form::text('KM_FINAL', $factura->KILOMETRAJE_FINAL, ['class' => 'form-control', 'placeholder' => 'Final']); !!}
             @else
@@ -216,6 +225,14 @@
 <script type="text/javascript">
     $(document).ready(function () {
 
+        $.fn.populateSelect = function (values) {
+            var options = ''
+            $.each(values, function (key, row) {
+                options += '<option value = "' + row.ID + '">' + row.DESCRIPCION + '</option>'
+            })
+            $(this).html(options)
+        }
+        /*
         var tipo = $('#tipoGasto').val();
         if (tipo != null) {
             //alert('Bien!!')
@@ -232,11 +249,12 @@
                     }
                 }
             });
-        }
+        }*/
 
         $('#tipoGasto').change(function () {
             var tipo = $('#tipoGasto').val();
-            vurl = '{{ route('tipoGasto') }}'
+            var categoria = $('#tipoGasto option:selected').text()
+            /*vurl = '{{ route('tipoGasto') }}'
             vurl = vurl.replace('%7Bid%7D', tipo);
 
             $.ajax({
@@ -248,7 +266,23 @@
                         $('#cantidadPorcentaje').show();
                     }
                 }
-            });
+            });*/
+
+            if (tipo == '') {
+
+                $('#subcategoriaTipoGasto').empty()
+            } else {
+                $.getJSON('/lucalza/public/tipoGasto/subcategoria/' + tipo, null, function (values) {
+                    $('#subcategoriaTipoGasto').populateSelect(values)
+                })
+            }
+
+            if (categoria == 'Combustible') {
+                $('.combus').show()
+            } else {
+                $('.combus').hide()
+            }
+
         });
 
         var nit = $('#nit').val();

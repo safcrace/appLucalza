@@ -10,26 +10,48 @@
   <div class="panel-body">
     <div class="row form-group">
       <div class="col-md-2 col-md-offset-1">
-            {!! Form::label('TIPOGASTO_ID', 'Tipo de Gasto') !!}
+            {!! Form::label('TIPOGASTO_ID', 'Categoria Gasto') !!}
       </div>
       <div class="col-md-3">
-          {!! Form::select('TIPOGASTO_ID', $tipoGasto, null, ['class' => 'form-control', 'placeholder' => 'Seleccione Tipo de Gasto', 'id' => 'tipo']); !!}
+          {!! Form::select('TIPOGASTO_ID', $tipoGasto, null, ['class' => 'form-control', 'placeholder' => 'Seleccione Opción', 'id' => 'tipo']); !!}
       </div>
-      <div class="col-md-2 asignacion" style="display: none">
-        {!! Form::label('TIPOASIGNACION_ID', 'Tipo de Asignación') !!}
-      </div>
-      <div class="col-md-3 asignacion" style="display: none">
-        {!! Form::select('TIPOASIGNACION_ID', $tipoAsignacion, 1, ['class' => 'form-control', 'placeholder' => 'Seleccione Tipo de Asignación', 'id' => 'tipoAsignacion']); !!}
-      </div>
+
     </div>
+
+      {{--
+      <div class="row form-group">
+          <div class="col-md-2 col-md-offset-1">
+              {!! Form::label('TIPOGASTO_ID', 'Subcategoria Gasto') !!}
+          </div>
+          <div class="col-md-3">
+              {!! Form::select('TIPOGASTO_ID', $subTipoGasto, null, ['class' => 'form-control', 'placeholder' => 'Seleccione Opción', 'id' => 'tipo']); !!}
+          </div>
+      </div>
+      --}}
+
+      <div class="row form-group asignacion" style="display: none">
+          <div class="col-md-2 col-md-offset-1">
+              {!! Form::label('ASIGNACIONPRESUPUESTO_ID', 'Tipo Asignación') !!}
+          </div>
+          <div class="col-md-2">
+              {!! Form::radio('ASIGNACIONPRESUPUESTO_ID', 1, true, ['id' => 'dinero']); !!}  DINERO
+          </div>
+          <div class="col-md-2">
+              {!! Form::radio('ASIGNACIONPRESUPUESTO_ID', 2, false, ['id' => 'unidad']); !!}  UNIDAD
+          </div>
+      </div>
 
     <div class="row form-group">
       <div class="col-md-2 col-md-offset-1">
             {!! Form::label('MONTO', 'Asignación', ['id' => 'monto']) !!}
       </div>
       <div class="col-md-3">
-          {!! Form::text('MONTO', null, ['class' => 'form-control', 'placeholder' => 'Asignación']); !!}
+          {!! Form::text('MONTO', null, ['class' => 'form-control', 'placeholder' => 'Ingrese Asignación']); !!}
       </div>
+        <div class="col-md-3" style="display: none" id="unidades">
+            <div class="form-control" id="tipoAsignacion"></div>
+
+        </div>
     </div>
 
     <div class="row form-group">
@@ -140,28 +162,41 @@
         var tipo = $('#tipo').val()
         if(tipo != null) {
             if ((tipo == 2) || (tipo == 3) || (tipo == 6)) {
-                $('.asignacion').show()
+                $('#unidades').show()
             } else {
-                $('.asignacion').hide()
+                $('#unidades').hide()
             }
         }
-        $('#tipo').change(function () {
-            var tipo = $('#tipo').val()
-            if ((tipo == 2) || (tipo == 3) || (tipo == 6)) {
-                $('.asignacion').show()
+       $('#tipo').change(function () {
+            var tipo = $('#tipo option:selected').text()
+
+            if ((tipo == 'Combustible')) {
+
+                var tipo_id = $('#tipo').val()
+                vurl = '{{ route('detallePresupuestos.show')}}'
+                vurl = vurl.replace('%7BdetallePresupuestos%7D', tipo_id);
+                $.ajax({
+                    type: 'get',
+                    url: vurl,
+                    success: function (data) {
+
+                        $('#tipoAsignacion').html(data);
+                        $('#unidades').show()
+                        alert(data)
+                    }
+                })
             } else {
-                $('.asignacion').hide()
+                $('#unidades').hide()
             }
         });
-        $('#tipoAsignacion').change(function() {
-            var tipoAsignacion = $('#tipoAsignacion').val()
-            if (tipoAsignacion == '2') {
-                $('#monto').html('Asignación Galones')
-            } else if (tipoAsignacion == '3') {
-                $('#monto').html('Asignación Kilometros')
-            } else {
-                $('#monto').html('Asignación')
-            }
+
+        $('#unidad').click(function() {
+            $('#unidades').show()
+            $('#monto').html('Asignación Galones')
+        })
+        $('#dinero').click(function() {
+            $('#unidades').hide()
+            $('#monto').html('Asignación')
         })
 
         $('#centro_1').click(function() {

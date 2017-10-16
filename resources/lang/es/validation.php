@@ -177,6 +177,7 @@ return [
         'TOTAL'                 => 'Total',
         'FOTO'                  => 'Imagen Factura',
         'PRESUPUESTO_ID'        => 'No. Presupuesto',
+        'EMPRESA'               => 'Empresa',
     ],
 
 ];

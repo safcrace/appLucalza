@@ -33,8 +33,10 @@ class RutaController extends Controller
          $param = explode('-', $id);
          $empresa_id = $param[0];
          $descripcion = $param[1];
+
          $rutas = Ruta::select('*')
                              ->where('cat_ruta.EMPRESA_ID', '=', $empresa_id)
+                             ->where('cat_ruta.TIPO_GASTO', '=', $descripcion)
                              ->where('cat_ruta.ANULADO', '=', 0)
                              ->paginate(10);
          $empresa_id = $empresa_id;
@@ -50,7 +52,10 @@ class RutaController extends Controller
       */
       public function indexRutasUsuario($id)
       {
-          $usuario_id = $id;
+          $param = explode('-', $id);
+          $usuario_id = $param[0];
+          $descripcion = $param[1];
+
           $empresa_id = Session::get('empresa');
 
           $user =  User::select('nombre')->where('id', '=', $usuario_id)->first();
@@ -60,6 +65,7 @@ class RutaController extends Controller
                               ->join('users', 'users.id', '=', 'cat_usuarioruta.USER_ID')
                               ->where('users.id', '=', $usuario_id)
                               ->where('cat_ruta.EMPRESA_ID', '=', $empresa_id)
+                              ->where('cat_ruta.TIPO_GASTO', '=', $descripcion)
                               ->where('cat_usuarioruta.ANULADO', '=', 0)
                               ->paginate(10);
 
@@ -70,7 +76,7 @@ class RutaController extends Controller
                                 ->first();
           //dd($usuario->nombre);
 
-          return view('rutas.indexRutasUsuario', compact('rutas', 'empresa_id', 'usuario_id', 'user'));
+          return view('rutas.indexRutasUsuario', compact('rutas', 'empresa_id', 'usuario_id', 'user', 'descripcion'));
       }
 
      /**
@@ -81,8 +87,11 @@ class RutaController extends Controller
       */
      public function empresaCreateRuta($id)
      {
-         $empresa_id = $id;
-         return view('rutas.create', compact('empresa_id'));
+         $param = explode('-', $id);
+         $empresa_id = $param[0];
+         $descripcion = $param[1];
+
+         return view('rutas.create', compact('empresa_id', 'descripcion'));
      }
 
      /**
@@ -96,7 +105,8 @@ class RutaController extends Controller
          $param = explode('-', $id);
          $empresa_id = $param[0];
          $usuario_id = $param[1];
-
+         $descripcion = $param[2];
+//dd($descripcion);
 
          $seleccionadas = Ruta::join('cat_usuarioruta', 'cat_usuarioruta.RUTA_ID', '=', 'cat_ruta.ID')
                              ->join('users', 'users.id', '=', 'cat_usuarioruta.USER_ID')
@@ -110,12 +120,13 @@ class RutaController extends Controller
          $rutas = Ruta::join('cat_empresa', 'cat_empresa.ID', '=', 'cat_ruta.EMPRESA_ID')
                              ->where('cat_empresa.ID', '=', $empresa_id)
                              ->where('cat_ruta.ANULADO', '=', 0)
+                             ->where('cat_ruta.TIPO_GASTO', '=', $descripcion)
                              ->whereNotIn('cat_ruta.ID', $seleccionadas)
                              ->lists('cat_ruta.DESCRIPCION', 'cat_ruta.ID')
                              ->toArray();
 
 //
-         return view('rutas.createUsuarioRuta', compact('rutas','usuario_id', 'empresa_id'));
+         return view('rutas.createUsuarioRuta', compact('rutas','usuario_id', 'empresa_id', 'descripcion'));
      }
 
     /**
@@ -142,6 +153,7 @@ class RutaController extends Controller
 
         $ruta->EMPRESA_ID = $empresa_id;
         $ruta->CLAVE = $request->CLAVE;
+        $ruta->TIPO_GASTO = $request->TIPO_GASTO;
         $ruta->DESCRIPCION = $request->DESCRIPCION;
         $ruta->ANULADO = $request->ANULADO;
 
@@ -151,7 +163,7 @@ class RutaController extends Controller
 
         $ruta->save();
 
-        return redirect::to('empresa/ruta/' . $empresa_id);
+        return redirect::to('empresa/ruta/' . $empresa_id . '-' . $ruta->TIPO_GASTO);
     }
 
     /**
@@ -168,6 +180,7 @@ class RutaController extends Controller
         $empresa_id = $param[0];
         $usuario_id = $param[1];
         $ruta_id = $request->RUTA_ID;
+
         //dd('esta es la empresa: ' . $empresa_id . ' este es el usuario: ' . $usuario_id . ' y esta es la ruta: ' . $ruta_id);
 
         $existe = UsuarioRuta::select('ID')
@@ -186,7 +199,7 @@ class RutaController extends Controller
         }
 
 
-        return redirect('rutas/usuario/' . $usuario_id);
+        return redirect('rutas/usuario/' . $usuario_id . '-' . $request->TIPO_GASTO);
     }
 
     /**
@@ -208,9 +221,13 @@ class RutaController extends Controller
      */
     public function edit($id)
     {
-        $ruta = Ruta::findOrFail($id);
+        $param = explode('-', $id);
+        $ruta_id = $param[0];
+        $descripcion = $param[1];
 
-        return view('rutas.edit', compact('ruta'));
+        $ruta = Ruta::findOrFail($ruta_id);
+
+        return view('rutas.edit', compact('ruta', 'descripcion'));
     }
 
     /**
@@ -225,12 +242,13 @@ class RutaController extends Controller
         $empresa_id = $param[0];
         $usuario_id = $param[1];
         $ruta_id = $param[2];
+        $descripcion = $param[3];
 
         $usuarioRuta = UsuarioRuta::select('*')
                                     ->where('USER_ID', '=', $usuario_id)
                                     ->where('RUTA_ID', '=', $ruta_id)
                                     ->first();
-
+        //dd($usuarioRuta);
         $seleccionadas = Ruta::join('cat_usuarioruta', 'cat_usuarioruta.RUTA_ID', '=', 'cat_ruta.ID')
                                     ->join('users', 'users.id', '=', 'cat_usuarioruta.USER_ID')
                                     ->where('users.id', '=', $usuario_id)
@@ -239,17 +257,35 @@ class RutaController extends Controller
                                     ->lists('cat_ruta.ID')
                                     ->toArray();
 
+//dd($seleccionadas);
+        $rutaActual = $usuarioRuta->RUTA_ID;
+        $claveActual = array_filter($seleccionadas, function($v) use ($rutaActual) {
+            //dd($rutaActual);
+            return $v == $rutaActual;
+        }, ARRAY_FILTER_USE_BOTH);
 
+        foreach ($claveActual as $clave=>$valor) {
+           $valorSeleccionado = $valor;
+        }
+
+        $valorSeleccionado = Ruta::select('DESCRIPCION')->where('ID', '=', $valorSeleccionado)->first();
+
+        //dd($valorSeleccionado->DESCRIPCION);
         $rutas = Ruta::join('cat_usuarioruta', 'cat_usuarioruta.RUTA_ID', '=', 'cat_ruta.ID')
                                     ->where('cat_ruta.EMPRESA_ID', '=', $empresa_id)
                                     ->where('cat_ruta.ANULADO', '=', 0)
+                                    ->where('cat_ruta.TIPO_GASTO', '=', $descripcion)
                                     ->whereNotIn('cat_ruta.ID', $seleccionadas)
                                     ->lists('cat_ruta.DESCRIPCION', 'cat_ruta.ID')
                                     ->toArray();
 
+        //array_push($rutas, $valorSeleccionado->DESCRIPCION);
+        //dd($rutas);
+        //$combo_id = count($rutas) - 1;
+        //dd($combo_id);
 
 
-        return view('rutas.editUsuarioRuta', compact('usuarioRuta', 'rutas', 'usuario_id', 'empresa_id'));
+        return view('rutas.editUsuarioRuta', compact('usuarioRuta', 'rutas', 'usuario_id', 'empresa_id', 'descripcion'));
     }
 
     /**
@@ -272,7 +308,7 @@ class RutaController extends Controller
         Ruta::where('ID', $ruta->ID)
                 ->update(['CLAVE' => $request->CLAVE, 'DESCRIPCION' => $request->DESCRIPCION, 'ANULADO' => $request->ANULADO]);
 
-        return redirect::to('empresa/ruta/' . $empresa_id);
+        return redirect::to('empresa/ruta/' . $empresa_id . '-' . $ruta->TIPO_GASTO);
     }
 
     /**
@@ -309,6 +345,7 @@ class RutaController extends Controller
                                     ->first();
 
         if ($existe === null) {
+            //dd('entro');
             $usuarioRuta->USER_ID = $request->USUARIO_ID;
             $usuarioRuta->RUTA_ID = $request->RUTA_ID;
             $usuarioRuta->ANULADO = 0;

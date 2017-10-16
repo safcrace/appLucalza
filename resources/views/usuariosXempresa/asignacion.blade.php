@@ -62,6 +62,10 @@
              });
          }
 
+        $('#usuario').select2({
+            placeholder: 'Seleccione un Proveedor'
+        })
+
          $('#imagen').click(function() {
              alert('Hola Sender');
         });

@@ -24,7 +24,7 @@ class CreateRutaRequest extends Request
     public function rules()
     {
         return [
-            'CLAVE'    => 'required|unique:cat_ruta|max:3',
+            'CLAVE'    => 'required|max:3',
             'DESCRIPCION'    => 'required',
         ];
     }

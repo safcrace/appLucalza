@@ -58,12 +58,26 @@
                         </ul>
                       </li>
                     @endif
+
                     {{-- @if (auth()->user()->hasRole('superAdmin')) --}}
                         @can('ver presupuestos')
-                      <li class=""><a href="{{ route('presupuestos.index') }}" data-toggle="tooltip" data-placement="top" title="Presupuestos"><span class="glyphicon glyphicon-usd" aria-hidden="true" style="font-size:32px; color: #ffffff;"></span></a></li>
+                            <li class="dropdown">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" data-toggle="tooltip" data-placement="top" title="Presupuestos"><span class="glyphicon glyphicon-usd" aria-hidden="true" style="font-size:32px; color: #ffffff;"></span> <span class="caret" style="color: #ffffff;"></span></a>
+                                <ul class="dropdown-menu">
+                                    <li><a href="{{ route('presupuestos.index') }}">Presupuestos Rutas</a></li>
+                                    <li><a href="{{ route('indexPresupuestoOtrosGastos')}}">Presupuestos Otros Gastos</a></li>
+                                </ul>
+                            </li>
+
                         @endcan
                         @can('ver liquidaciones')
-                      <li class=""><a href="{{ route('liquidaciones.index') }}" data-toggle="tooltip" data-placement="top" title="Liquidaciones"><span class="glyphicon glyphicon-list-alt" aria-hidden="true" style="font-size:32px; color: #ffffff;"></span></a></li>
+                            <li class="dropdown">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" data-toggle="tooltip" data-placement="top" title="Liquidaciones"><span class="glyphicon glyphicon-list-alt" aria-hidden="true" style="font-size:32px; color: #ffffff;"></span> <span class="caret" style="color: #ffffff;"></span></a>
+                                <ul class="dropdown-menu">
+                                    <li><a href="{{ route('indexGeneral', 'Rutas') }}">Liquidaciones Rutas</a></li>
+                                    <li><a href="{{ route('indexGeneral', 'Otros Gastos')}}">Liquidaciones Otros Gastos</a></li>
+                                </ul>
+                            </li>
                         @endcan
                         @can('ver supervision')
                       <li class=""><a href="{{ route('supervisor') }}" data-toggle="tooltip" data-placement="top" title="Revisión Supervisor"><span class="glyphicon glyphicon-inbox" aria-hidden="true" style="font-size:32px; color: #ffffff;"></span></a></li>

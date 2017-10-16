@@ -12,6 +12,8 @@
       @endif
   </div>
 
+    {!! Form::hidden('TIPO_GASTO', $tipoGasto, ['id' => 'tipo']) !!}
+
   <div class="col-md-2 col-md-offset-2">
         {!! Form::label('MONEDA_ID', 'Moneda') !!}
   </div>
@@ -25,13 +27,13 @@
 
 <div class="row form-group">
   <div class="col-md-1 col-md-offset-1">
-        {!! Form::label('RUTA_ID', 'Ruta') !!}
+        {!! Form::label('RUTA_ID', $tipoGasto) !!}
   </div>
   <div class="col-md-3">
       @if (isset($ruta_id))
-          {!! Form::select('RUTA_ID', $rutas, $ruta_id, ['class' => 'form-control', 'placeholder' => 'Seleccione una Ruta']); !!}
+          {!! Form::select('RUTA_ID', $rutas, $ruta_id, ['class' => 'form-control', 'placeholder' => 'Seleccione una Opción', 'id' => 'ruta']); !!}
       @else
-          {!! Form::select('RUTA_ID', $rutas, null, ['class' => 'form-control', 'placeholder' => 'Seleccione una Ruta']); !!}
+          {!! Form::select('RUTA_ID', $rutas, null, ['class' => 'form-control', 'placeholder' => 'Seleccione una Opción', 'id' => 'ruta']); !!}
       @endif
 
   </div>
@@ -49,6 +51,7 @@
 
   </div>
 </div>
+
 
 <div class="row form-group">
   <div class="col-md-1 col-md-offset-1">
@@ -73,20 +76,48 @@
   </div>
 </div>
 
+<div class="row form-group" id="asignacion" style="display: none">
+    <div class="col-md-2 col-md-offset-1">
+        {!! Form::label('ASIGNACION_MENSUAL', 'Asignación Mensual', ['id' => 'monto']) !!}
+    </div>
+    <div class="col-md-3">
+        {!! Form::text('ASIGNACION_MENSUAL', null, ['class' => 'form-control', 'placeholder' => 'Ingrese Asignación']); !!}
+    </div>
+</div>
+
 @push('scripts')
 <script type="text/javascript">
     $(document).ready(function () {
         var role = $('#role').val();
+        var tipo = $('#ruta option:selected').text()
+        tipo = tipo.toLowerCase(tipo)
 
+        if (tipo.indexOf('depre') != -1) {
+            $('#asignacion').show()
+        }else{
+
+        }
 
         $('#usuario').change(function () {
             var usuario = $('#usuario').val();
-            vurl = '{{ route('presupuestos.show') }}' + usuario;
+            var tipoGasto = $('#tipo').val();
+            vurl = '{{ route('presupuestos.show') }}' + usuario + '-' + tipoGasto;
             vurl = vurl.replace('%7Bpresupuestos%7D', '');
-
             location.href = vurl;
         });
 
+        $('#ruta').change(function () {
+            var tipo = $('#ruta option:selected').text()
+            tipo = tipo.toLowerCase(tipo)
+
+            if (tipo.indexOf('depre') != -1) {
+                $('#asignacion').show()
+            }else{
+                alert('No se encuentra el texto buscado')
+            }
+
+
+        });
 
         $('#supervisor').select2();
         placeholder: 'Seleccione un Supervisor';

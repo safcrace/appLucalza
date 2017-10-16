@@ -37,7 +37,7 @@
                   {!! Form::label('codigoProveedorSap', 'Código Proveedor SAP') !!}
               </div>
               <div class="col-md-3" id="cod_pro">
-                  {!! Form::text('codigoProveedorSap', null, ['class' => 'form-control', 'placeholder' => 'Código Proveedor SAP']); !!}
+                  {!! Form::text('codigoProveedorSap', null, ['class' => 'form-control', 'placeholder' => 'Código Proveedor SAP', 'disabled']); !!}
 
               </div>
               <div class="col-md-3" id="pro_sap" style="display: none">

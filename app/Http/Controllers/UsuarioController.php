@@ -204,7 +204,7 @@ class UsuarioController extends Controller
 
     public function createUsuarioEmpresa(Request $request)
     {
-        $usuarios = User::where('anulado', '=', 0)->lists('nombre','id')->toArray();
+        $usuarios = User::orderBy('nombre')->where('anulado', '=', 0)->lists('nombre','id')->toArray();
         $empresas = Empresa::where('ANULADO', '=', 0)->lists('DESCRIPCION', 'ID')->toArray();
         return view('usuariosXempresa.asignacion', compact('usuarios', 'empresas'));
     }

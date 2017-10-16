@@ -183,6 +183,20 @@ class TipoGastoController extends Controller
       return redirect::to('empresa/tipoGasto/' . $tipoGasto->EMPRESA_ID);
     }
 
+    public function getTipoGasto($id)
+    {
+        return TipoGasto::select('ID', 'DESCRIPCION')
+                                ->where('ID', '=', $id)
+                                ->get();
+    }
+
+    public function getSubcategoriaTipoGasto($id)
+    {
+        return SubcategoriaTipoGasto::select('ID', 'DESCRIPCION')
+            ->where('TIPOGASTO_ID', '=', $id)
+            ->get();
+    }
+
     /**
      * Remove the specified resource from storage.
      *

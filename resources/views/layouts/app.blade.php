@@ -30,7 +30,13 @@
 
         <div class="container">
             @include('partials.messages')
+            @if(Session::has('info'))
+                <div class="alert alert-danger" role="alert">
+                    <b>{{ Session('info') }}</b>
+                </div>
+            @endif
         </div>
+
 
         @yield('content')
     </div>

@@ -42,7 +42,8 @@
                                    </td>
                                    @can('ver rutas')
                                      <td class="text-center">
-                                       <a href="{{ route('indexRutasUsuario', $user->id) }}"><button type="button" class="btn btn-primary btn-sm">Rutas</button></a>
+                                       <a href="{{ route('indexRutasUsuario', $user->id . '-Rutas') }}"><button type="button" class="btn btn-primary btn-sm">Rutas</button></a>
+                                       <a href="{{ route('indexRutasUsuario', $user->id . '-Otros Gastos') }}"><button type="button" class="btn btn-primary btn-sm">Otros Gastos</button></a>
                                      </td>
                                    @endcan
                                </tr>

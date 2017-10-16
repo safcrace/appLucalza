@@ -8,7 +8,7 @@
               <div class="panel panel-primary">
                   <div class="panel-heading panel-title" style="height: 65px">Control de Liquidaciones
                       <button type="button" class="btn btn-default" style="border-color: white; float: right"><a href="{{ route('home') }}" title="Cerrar"><span class="glyphicon glyphicon-remove-sign" aria-hidden="true" style="font-size:32px; color: black"></span></a></button>
-                      <button type="button" class="btn btn-default" style="border-color: white; float: right"><a href="{{ route('liquidaciones.create') }}" title="Agregar"><span class="glyphicon glyphicon-plus-sign" aria-hidden="true" style="font-size:32px; color: black"></span></a></button>
+                      <button type="button" class="btn btn-default" style="border-color: white; float: right"><a href="{{ route('liquidacionCreate', $tipoLiquidacion ) }}" title="Agregar"><span class="glyphicon glyphicon-plus-sign" aria-hidden="true" style="font-size:32px; color: black"></span></a></button>
                   </div>
 
                   <div class="panel-body">
@@ -18,7 +18,7 @@
                          <th class="text-center">No.</th>
                          <th class="text-center">Fecha Inicio</th>
                          <th class="text-center">Fecha Final</th>
-                         <th class="text-center">Ruta</th>
+                         <th class="text-center">{{ $tipoLiquidacion }}</th>
                          <th class="text-center">Monto</th>
                          <th class="text-center">Estatus</th>
                          <th class="text-center">Anular</th>
@@ -27,15 +27,15 @@
 
                            @foreach ($liquidaciones as $liquidacion)
                                <tr data-id="{{  $liquidacion->ID }}">
-                                   <td><a href="{{ route('liquidaciones.edit', $liquidacion->ID) }}">{{ $liquidacion->ID }}</td>
-                                   <td><a href="{{ route('liquidaciones.edit', $liquidacion->ID) }}">{{ $liquidacion->FECHA_INICIO->format('d-m-Y') }}</td>
-                                   <td><a href="{{ route('liquidaciones.edit', $liquidacion->ID) }}">{{ $liquidacion->FECHA_FINAL->format('d-m-Y') }}</td>
-                                   <td><a href="{{ route('liquidaciones.edit', $liquidacion->ID) }}">{{ $liquidacion->RUTA }}</td>
-                                   <td><a href="{{ route('liquidaciones.edit', $liquidacion->ID) }}">{{ 'Q.' . App\Factura::where('LIQUIDACION_ID', '=', $liquidacion->ID)->sum('TOTAL')}}</td>
+                                   <td><a href="{{ route('liquidaciones.edit', $liquidacion->ID . '-' . $tipoLiquidacion) }}">{{ $liquidacion->ID }}</td>
+                                   <td><a href="{{ route('liquidaciones.edit', $liquidacion->ID . '-' . $tipoLiquidacion) }}">{{ $liquidacion->FECHA_INICIO->format('d-m-Y') }}</td>
+                                   <td><a href="{{ route('liquidaciones.edit', $liquidacion->ID . '-' . $tipoLiquidacion) }}">{{ $liquidacion->FECHA_FINAL->format('d-m-Y') }}</td>
+                                   <td><a href="{{ route('liquidaciones.edit', $liquidacion->ID . '-' . $tipoLiquidacion) }}">{{ $liquidacion->RUTA }}</td>
+                                   <td><a href="{{ route('liquidaciones.edit', $liquidacion->ID . '-' . $tipoLiquidacion) }}">{{ 'Q.' . App\Factura::where('LIQUIDACION_ID', '=', $liquidacion->ID)->sum('TOTAL')}}</td>
                                    @if($liquidacion->DESCRIPCION == 'En Corrección')
-                                        <td style="background-color: red; color: #ffffff;"><a href="{{ route('liquidaciones.edit', $liquidacion->ID) }}" style="text-decoration:none; color: white;">{{ $liquidacion->DESCRIPCION }}</td>
+                                        <td style="background-color: red; color: #ffffff;"><a href="{{ route('liquidaciones.edit', $liquidacion->ID . '-' . $tipoLiquidacion) }}" style="text-decoration:none; color: white;">{{ $liquidacion->DESCRIPCION }}</td>
                                    @else
-                                        <td><a href="{{ route('liquidaciones.edit', $liquidacion->ID) }}">{{ $liquidacion->DESCRIPCION }}</td>
+                                        <td><a href="{{ route('liquidaciones.edit', $liquidacion->ID . '-' . $tipoLiquidacion) }}">{{ $liquidacion->DESCRIPCION }}</td>
                                    @endif
                                    <td class="text-center">
                                      <a href="{{ route('anularLiquidacion', $liquidacion->ID) }}" class="btn-delete"><span class="glyphicon glyphicon-ban-circle" aria-hidden="true" style="font-size:20px; color: black"></span></a>

@@ -32,12 +32,12 @@
       @if(isset($subcategoriaTipoGastos->MONTO_A_APLICAR_CANTIDAD))
         {!! Form::text('MONTO_A_APLICAR_CANTIDAD', $subcategoriaTipoGastos->MONTO_A_APLICAR_CANTIDAD, ['class' => 'form-control', 'placeholder' => 'Cantidad']); !!}
       @else
-        {!! Form::text('MONTO_A_APLICAR_CANTIDAD', null, ['class' => 'form-control', 'placeholder' => 'Cantidad']); !!}
+        {!! Form::text('MONTO_A_APLICAR_CANTIDAD', 0, ['class' => 'form-control', 'placeholder' => 'Cantidad']); !!}
       @endif
   </div>
-  <div class="col-md-2 ph_cantidad" style="display: none" >
-      {!! Form::text('UNIDAD_MEDIDA', null, ['class' => 'form-control', 'placeholder' => 'Unidad de Medida']); !!}
-  </div>
+    <div class="col-md-3 ph_cantidad" style="display: none" >
+        {!! Form::select('UNIDAD_MEDIDA_ID', $tipoAsignacion, null, ['class' => 'form-control', 'placeholder' => 'Seleccione Tipo de Asignación', 'id' => 'tipoAsignacion']); !!}
+    </div>
 
 </div>
 
@@ -50,7 +50,7 @@
       @if(isset($subcategoriaTipoGastos->MONTO_A_APLICAR_PORCENTAJE))
         {!! Form::text('MONTO_A_APLICAR_PORCENTAJE', $subcategoriaTipoGastos->MONTO_A_APLICAR_PORCENTAJE, ['class' => 'form-control', 'placeholder' => 'Porcentaje']); !!}
       @else
-        {!! Form::text('MONTO_A_APLICAR_PORCENTAJE', null, ['class' => 'form-control', 'placeholder' => 'Porcentaje']); !!}
+        {!! Form::text('MONTO_A_APLICAR_PORCENTAJE', 0, ['class' => 'form-control', 'placeholder' => 'Porcentaje']); !!}
       @endif
   </div>
 

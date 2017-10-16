@@ -11,19 +11,14 @@
   </div>
 
   <div class="col-md-1">
-      {!! Form::label('RUTA_ID', 'Ruta') !!}
+      {!! Form::label('RUTA_ID', $tipoLiquidacion) !!}
   </div>
-  <div class="col-md-2">
+  <div class="col-md-3">
       {!! Form::select('RUTA_ID', $rutas, $combo->RUTA, ['class' => 'form-control', 'placeholder' => 'Seleccione una Ruta']); !!}
   </div>
 
-    <div class="col-md-1">
-        {!! Form::label('PRESUPUESTO_ID', 'No. Presupuesto') !!}
-    </div>
-    <div class="col-md-1">
-        {!! Form::text('PRESUPUESTO_ID', null, ['class' => 'form-control']); !!}
-    </div>
-  <div class="col-md-1">
+
+  <div class="col-md-1 col-md-offset-1">
       <button type="button" class="btn btn-default"><span class="glyphicon glyphicon-print" aria-hidden="true" style="font-size:32px; color: black" data-toggle="tooltip" data-placement="top" title="Imprimr"></button>
   </div>
 </div>

@@ -2,12 +2,21 @@
     <input id="USUARIO_ID" name="USUARIO_ID" type="hidden" value="{{ $usuario_id }}">
 @endif
 
+{!! Form::hidden('TIPO_GASTO', $descripcion); !!}
 <div class="row form-group">
   <div class="col-md-1 col-md-offset-1">
-        {!! Form::label('RUTA_ID', 'Ruta') !!}
+        @if($descripcion == 'Rutas')
+          {!! Form::label('RUTA_ID', 'Ruta') !!}
+        @else
+          {!! Form::label('RUTA_ID', 'Otros Gastos') !!}
+        @endif
   </div>
   <div class="col-md-3">
-      {!! Form::select('RUTA_ID', $rutas, null, ['class' => 'form-control', 'placeholder' => 'Seleccione una Ruta']); !!}
+      {{--@if(isset($combo_id))
+        {!! Form::select('RUTA_ID', $rutas, 0, ['class' => 'form-control', 'placeholder' => 'Seleccione una Opción']); !!}
+      @else--}}
+        {!! Form::select('RUTA_ID', $rutas, null, ['class' => 'form-control', 'placeholder' => 'Seleccione una Opción']); !!}
+      {{--@endif--}}
   </div>
 </div>
 

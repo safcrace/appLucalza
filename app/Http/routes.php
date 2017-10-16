@@ -95,7 +95,8 @@ Route::resource('proveedores', 'ProveedorController');
 Route::get('tipoGasto/anular/{id}', ['uses' => 'TipoGastoController@anular', 'as' => 'anularTipoGasto']);
 Route::get('empresa/{id}/create/tipoGasto',  ['uses' => 'tipoGastoController@empresaCreateTipoGasto', 'as' => 'createTipoGasto']);
 Route::get('empresa/tipoGasto/{id}', ['uses' => 'TipoGastoController@indexTipoGasto', 'as' => 'indexTipoGasto']);
-
+Route::get('tipoGasto/{id}', ['uses' => 'TipoGastoController@getTipoGasto', 'as' => 'getTipoGasto']);
+Route::get('tipoGasto/subcategoria/{id}', ['uses' => 'TipoGastoController@getSubcategoriaTipoGasto', 'as' => 'getSubcategoriaTipoGasto']);
 Route::resource('tipoGastos', 'TipoGastoController');
 
 // Subcategoria Tipo Gasto routes...
@@ -106,6 +107,7 @@ Route::resource('subcategoriaTipoGastos', 'SubcategoriaTipoGastoController');
 // Presupuesto routes
 Route::get('presupuesto/anular/{id}', ['uses' => 'PresupuestoController@anular', 'as' => 'anularPresupuesto']);
 Route::get('presupuesto/create/{id}', ['uses' => 'PresupuestoController@presupuestoCreate', 'as' => 'presupuestoCreate']);
+Route::get('presupuesto/otrosgastos', ['uses' => 'PresupuestoController@indexOtrosGastos', 'as' => 'indexPresupuestoOtrosGastos']);
 Route::resource('presupuestos', 'PresupuestoController');
 
 // Detalle Presupuestos routes
@@ -121,6 +123,8 @@ Route::patch('liquidacion/{id}/update/aprobacion', ['uses' => 'LiquidacionContro
 Route::patch('liquidacion/{id}/update/contabilidad', ['uses' => 'LiquidacionController@updateLiquidacionCorreccionContabilidad', 'as' => 'correccionLiquidacionContabilidad']);
 Route::get('liquidacion/anular/{id}', ['uses' => 'LiquidacionController@anular', 'as' => 'anularLiquidacion']);
 //Route::get('liquidacion/enviar/{id}', ['uses' => 'LiquidacionController@show', 'as' => 'enviarLiquidacion']);
+Route::get('liquidacion/create/{id}', ['uses' => 'LiquidacionController@liquidacionCreate', 'as' => 'liquidacionCreate']);
+Route::get('liquidaciones/tipo/{id}', ['uses' => 'LiquidacionController@IndexGeneral', 'as' => 'indexGeneral']);
 Route::resource('liquidaciones', 'LiquidacionController');
 
 // Facturas routes

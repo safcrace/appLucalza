@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\SubcategoriaTipoGasto;
+use App\TipoAsignacion;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
@@ -28,8 +29,11 @@ class SubcategoriaTipoGastoController extends Controller
      */
     public function createSubcategoria($id)
     {
+
         $tipoGasto_id = $id;
-        return view('tipoGastos.categorias.create', compact('tipoGasto_id'));
+        $tipoAsignacion = TipoAsignacion::lists('DESCRIPCION', 'ID')
+            ->toArray();
+        return view('tipoGastos.categorias.create', compact('tipoGasto_id', 'tipoAsignacion'));
     }
 
     /**
@@ -50,7 +54,7 @@ class SubcategoriaTipoGastoController extends Controller
         $subcategoriaTipoGasto->EXENTO = $request->EXENTO;
         $subcategoriaTipoGasto->MONTO_A_APLICAR = ($request->MONTO_A_APLICAR_CANTIDAD) ? $request->MONTO_A_APLICAR_CANTIDAD : $request->MONTO_A_APLICAR_PORCENTAJE;
         $subcategoriaTipoGasto->CAUSAEXENCION_ID = $request->CAUSAEXENCION_ID;
-        $subcategoriaTipoGasto->UNIDAD_MEDIDA = $request->UNIDAD_MEDIDA;
+        $subcategoriaTipoGasto->UNIDAD_MEDIDA_ID = ($request->UNIDAD_MEDIDA_ID) ? $request->UNIDAD_MEDIDA_ID : 1;
         $subcategoriaTipoGasto->ANULADO = $request->ANULADO;
 
         if ($subcategoriaTipoGasto->ANULADO === null) {
@@ -88,8 +92,11 @@ class SubcategoriaTipoGastoController extends Controller
         } else {
             $subcategoriaTipoGastos->MONTO_A_APLICAR_PORCENTAJE = $subcategoriaTipoGastos->MONTO_A_APLICAR;
         }
+
+        $tipoAsignacion = TipoAsignacion::lists('DESCRIPCION', 'ID')
+            ->toArray();
 //dd($subcategoriaTipoGastos);
-        return view('tipoGastos.categorias.edit', compact('subcategoriaTipoGastos'));
+        return view('tipoGastos.categorias.edit', compact('subcategoriaTipoGastos', 'tipoAsignacion'));
     }
 
     /**
@@ -111,7 +118,7 @@ class SubcategoriaTipoGastoController extends Controller
 
         SubcategoriaTipoGasto::where('ID', $id)
             ->update(['DESCRIPCION' => $request->DESCRIPCION, 'EXENTO' => $request->EXENTO, 'MONTO_A_APLICAR' => $montoAplicar,
-                'CAUSAEXENCION_ID' => $request->CAUSAEXENCION_ID, 'UNIDAD_MEDIDA' => $request->UNIDAD_MEDIDA,  'ANULADO' => $request->ANULADO
+                'CAUSAEXENCION_ID' => $request->CAUSAEXENCION_ID, 'UNIDAD_MEDIDA_ID' => $request->UNIDAD_MEDIDA_ID,  'ANULADO' => $request->ANULADO
             ]);
 
         return redirect::to('tipoGastos/' . $subcategoriaTipoGastos->TIPOGASTO_ID . '/edit');

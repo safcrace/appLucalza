@@ -8,6 +8,7 @@
             <div class="panel panel-primary">
                 <div class="panel-heading">{{ trans('validation.attributes.login') }}</div>
                 <div class="panel-body">
+
                     <form class="form-horizontal" role="form" method="POST" action="{{ route('login') }}">
                         {{ csrf_field() }}
 

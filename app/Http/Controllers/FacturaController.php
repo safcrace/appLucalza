@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Empresa;
+use App\SubcategoriaTipoGasto;
 use App\TipoDocumento;
 use App\TipoProveedor;
 use Carbon\Carbon;
@@ -56,7 +57,9 @@ class FacturaController extends Controller
      */
      public function liquidacionCreateFactura($id)
      {
-         $liquidacion_id = $id;
+         $param = explode('-', $id);
+         $liquidacion_id = $param[0];
+         $tipoLiquidacion = $param[1];
    /* $tipoGasto = DB::select("select tg.DESCRIPCION, tg.ID
                                   from liq_liquidacion as l inner join pre_presupuesto as p on p.USUARIORUTA_ID = l.USUARIORUTA_ID
                                                                inner join pre_detpresupuesto as dp on dp.PRESUPUESTO_ID = p.ID
@@ -67,6 +70,7 @@ class FacturaController extends Controller
          dd($tipoGasto[0],[1]);
 dd($resultado);
 */
+         $subcategoria = SubcategoriaTipoGasto::where('ANULADO', '=', 0)->lists('DESCRIPCION', 'ID')->toArray();
          $fechas =  Liquidacion::select('liq_liquidacion.FECHA_INICIO', 'liq_liquidacion.FECHA_FINAL')
                                         ->where('liq_liquidacion.ID', '=', $liquidacion_id)
                                         ->first();
@@ -75,14 +79,7 @@ dd($resultado);
          $fechaInicio = $fechas->FECHA_INICIO;
          $fechaFinal = $fechas->FECHA_FINAL;
 
-         $tipoGasto = Liquidacion::join('pre_presupuesto', 'pre_presupuesto.ID', '=', 'liq_liquidacion.PRESUPUESTO_ID')
-                                     ->join('pre_detpresupuesto', 'pre_detpresupuesto.PRESUPUESTO_ID', '=', 'pre_presupuesto.ID' )
-                                     ->join('cat_tipogasto', 'cat_tipogasto.ID', '=', 'pre_detpresupuesto.TIPOGASTO_ID')
-                                     ->where('liq_liquidacion.ID', '=', $liquidacion_id)
-                                     ->lists('cat_tipogasto.DESCRIPCION', 'cat_tipogasto.ID')
-                                     ->toArray();
 
-         /** Esta es la consulta original!!
          $tipoGasto =  Liquidacion::join('pre_presupuesto', 'pre_presupuesto.USUARIORUTA_ID', '=', 'liq_liquidacion.USUARIORUTA_ID')
                                   ->join('pre_detpresupuesto', 'pre_detpresupuesto.PRESUPUESTO_ID', '=', 'pre_presupuesto.ID' )
                                   ->join('cat_tipogasto', 'cat_tipogasto.ID', '=', 'pre_detpresupuesto.TIPOGASTO_ID')
@@ -91,7 +88,7 @@ dd($resultado);
                                   ->where('liq_liquidacion.ID', '=', $liquidacion_id)
                                   ->lists('cat_tipogasto.DESCRIPCION', 'cat_tipogasto.ID')
                                   ->toArray();
-         **/
+
          $proveedor = Proveedor::lists('IDENTIFICADOR_TRIBUTARIO', 'ID')
                                          ->toArray();
 
@@ -111,7 +108,7 @@ dd($resultado);
         // $factura->CANTIDAD_PORCENTAJE_CUSTOM = null;
 
 
-         return view('facturas.create', compact('liquidacion_id', 'tipoGasto', 'proveedor', 'moneda', 'fechaFactura', 'tipoProveedor', 'tipoDocumento'));
+         return view('facturas.create', compact('liquidacion_id', 'tipoGasto', 'proveedor', 'moneda', 'fechaFactura', 'tipoProveedor', 'tipoDocumento', 'tipoLiquidacion', 'subcategoria'));
      }
 
     /**
@@ -214,7 +211,10 @@ dd($resultado);
      */
     public function edit($id)
     {
-        $factura = Factura::findOrFail($id);
+        $param = explode('-', $id);
+        $factura_id = $param[0];
+        $tipoLiquidacion = $param[1];
+        $factura = Factura::findOrFail($factura_id);
 
         $liquidacion_id = $factura->LIQUIDACION_ID;
 
@@ -239,7 +239,7 @@ dd($resultado);
 
         $tipoDocumento = TipoDocumento::lists('DESCRIPCION', 'ID')->toArray();
 
-        return view('facturas.edit', compact('factura', 'tipoGasto', 'proveedor', 'moneda', 'fechaFactura', 'tipoProveedor', 'liquidacion_id', 'tipoDocumento'));
+        return view('facturas.edit', compact('factura', 'tipoGasto', 'proveedor', 'moneda', 'fechaFactura', 'tipoProveedor', 'liquidacion_id', 'tipoDocumento', 'tipoLiquidacion'));
     }
 
     /**

@@ -11,7 +11,7 @@ class TipoAsignacion extends Model
      *
      * @var string
      */
-    protected $table = 'cat_tipoasignacion';
+    protected $table = 'cat_unidadmedida';
 
     /**
      * The attributes that are mass assignable.

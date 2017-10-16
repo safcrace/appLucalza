@@ -9,7 +9,7 @@
               {!! Form::open(['route' => 'facturas.store', 'method' => 'POST', 'enctype' => 'multipart/form-data', 'id' => 'form-save']) !!}
               <div class="panel panel-primary">
                   <div class="panel-heading panel-title" style="height: 65px">Ingreso Facturas de Liquidación {{$liquidacion_id}}
-                      <button type="button" class="btn btn-default" style="border-color: white; float: right"><a href="{{ route('liquidaciones.edit', $liquidacion_id) }}" title="Cerrar"><span class="glyphicon glyphicon-remove-sign" aria-hidden="true" style="font-size:32px; color: black"></span></a></button>
+                      <button type="button" class="btn btn-default" style="border-color: white; float: right"><a href="{{ route('liquidaciones.edit', $liquidacion_id . '-' . $tipoLiquidacion) }}" title="Cerrar"><span class="glyphicon glyphicon-remove-sign" aria-hidden="true" style="font-size:32px; color: black"></span></a></button>
                       <button type="submit" class="btn btn-default" style="border-color: white; float: right"><span class="glyphicon glyphicon-ok-sign" aria-hidden="true" style="font-size:32px; color: black;" data-toggle="tooltip" data-placement="top" title="Grabar"></button>
                   </div>
 

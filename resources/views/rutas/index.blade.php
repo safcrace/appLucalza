@@ -23,8 +23,8 @@
 
                            @foreach ($rutas as $ruta)
                                <tr data-id="{{ $ruta->ID . '-' . $empresa_id }}">
-                                   <td><a href="{{ route('rutas.edit', $ruta->ID) }}">{{ $ruta->CLAVE}}</a></td>
-                                   <td><a href="{{ route('rutas.edit', $ruta->ID) }}">{{ $ruta->DESCRIPCION}}</a></td>
+                                   <td><a href="{{ route('rutas.edit', $ruta->ID . '-' . $descripcion) }}">{{ $ruta->CLAVE}}</a></td>
+                                   <td><a href="{{ route('rutas.edit', $ruta->ID . '-' . $descripcion) }}">{{ $ruta->DESCRIPCION}}</a></td>
                                    <td class="text-center">
                                      <a href="{{ route('anularRuta', $ruta->ID . '-' . $empresa_id) }}" class="btn-delete"><span class="glyphicon glyphicon-ban-circle" aria-hidden="true" style="font-size:20px; color: black"></span></a>
                                    </td>

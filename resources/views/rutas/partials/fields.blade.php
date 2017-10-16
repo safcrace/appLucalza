@@ -6,12 +6,14 @@
     <input id="EMPRESA_ID" name="EMPRESA_ID" type="hidden" value="{{ $ruta->EMPRESA_ID }}">
 @endif
 
+{!! Form::hidden('TIPO_GASTO', $descripcion); !!}
+
 <div class="row form-group">
   <div class="col-md-1 col-md-offset-1">
         {!! Form::label('CLAVE', 'Código') !!}
   </div>
   <div class="col-md-2">
-      {!! Form::text('CLAVE', null, ['class' => 'form-control', 'placeholder' => 'Código de Ruta']); !!}
+      {!! Form::text('CLAVE', null, ['class' => 'form-control', 'placeholder' => 'Código de ' . substr($descripcion, 0, -1)]); !!}
   </div>
 </div>
 
@@ -20,9 +22,23 @@
         {!! Form::label('DESCRIPCION', 'Nombre') !!}
   </div>
   <div class="col-md-4">
-      {!! Form::text('DESCRIPCION', null, ['class' => 'form-control', 'placeholder' => 'Nombre de Ruta']); !!}
+      {!! Form::text('DESCRIPCION', null, ['class' => 'form-control', 'placeholder' => 'Nombre de ' . substr($descripcion, 0, -1) ]); !!}
   </div>
 </div>
+
+@IF($descripcion != 'Rutas')
+  <div class="row form-group" >
+    <div class="col-md-1 col-md-offset-1">
+      {!! Form::label('ASIGNACIONPRESUPUESTO_ID', 'Tipo Gasto') !!}
+    </div>
+    <div class="col-md-3">
+      {!! Form::radio('ASIGNACIONPRESUPUESTO_ID', 1, true, ['id' => 'dinero']); !!}  ADMINISTRATIVO
+    </div>
+    <div class="col-md-2">
+      {!! Form::radio('ASIGNACIONPRESUPUESTO_ID', 2, false, ['id' => 'unidad']); !!}  DEPRECIACION
+    </div>
+  </div>
+@endif
 
 <div class="row form-group">
   <div class="col-md-1 col-md-offset-1">

@@ -6,6 +6,7 @@ use App\Http\Requests\Request;
 use App\User;
 use App\Empresa;
 use App\UsuarioEmpresa;
+use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Session;
 use Validator;
 use App\Http\Controllers\Controller;
@@ -52,6 +53,7 @@ class AuthController extends Controller
         return Validator::make($data, [
             'name' => 'required|max:255',
             'email' => 'required|email|max:255|unique:users',
+            'EMPRESA' => 'required',
             'password' => 'required|confirmed|min:6',
         ]);
     }
@@ -89,8 +91,11 @@ class AuthController extends Controller
      */
     public function redirectPath()
     {
+
         $loginEmpresa = Session::get('loginEmpresa');
+
         if ($loginEmpresa != null) {
+
             $user_id = Auth::user()->id;
             $usuarioEmpresa = UsuarioEmpresa::select('ID')
                                                 ->where('USER_ID', '=', $user_id)
@@ -99,6 +104,7 @@ class AuthController extends Controller
             if ($usuarioEmpresa){
                 Session::put('empresa', $loginEmpresa);;
             } else {
+
                 $user_id = Auth::user()->id;
                 $EMPRESA = Empresa::select('cat_empresa.ID', 'cat_empresa.DESCRIPCION')
                     ->join('cat_usuarioempresa', 'cat_usuarioempresa.EMPRESA_ID', '=', 'cat_empresa.ID')
@@ -119,8 +125,6 @@ class AuthController extends Controller
 
             Session::put('empresa', $EMPRESA->ID);
         }
-
-
 
         return route('home');
     }

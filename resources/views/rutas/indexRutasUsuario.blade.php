@@ -6,9 +6,9 @@
       <div class="row">
           <div class="col-md-12 ">
               <div class="panel panel-primary">
-                  <div class="panel-heading panel-title" style="height: 65px">Rutas de: <span style="font-weight: 700"> {{ $user->nombre }} </span>
+                  <div class="panel-heading panel-title" style="height: 65px">{{ $descripcion }} de: <span style="font-weight: 700"> {{ $user->nombre }} </span>
                       <button type="button" class="btn btn-default" style="border-color: white; float: right"><a href="{{ route('usuarios.index') }}" title="Cerrar"><span class="glyphicon glyphicon-remove-sign" aria-hidden="true" style="font-size:32px; color: black"></span></a></button>
-                      <button type="button" class="btn btn-default" style="border-color: white; float: right"><a href="{{ route('createRutaUsuario', $empresa_id. '-'  . $usuario_id) }}" title="Agregar"><span class="glyphicon glyphicon-plus-sign" aria-hidden="true" style="font-size:32px; color: black"></span></a></button>
+                      <button type="button" class="btn btn-default" style="border-color: white; float: right"><a href="{{ route('createRutaUsuario', $empresa_id. '-'  . $usuario_id . '-' . $descripcion) }}" title="Agregar"><span class="glyphicon glyphicon-plus-sign" aria-hidden="true" style="font-size:32px; color: black"></span></a></button>
                   </div>
 
                   <div class="panel-body">
@@ -16,15 +16,15 @@
                      <table class="table table-bordered table-striped table-hover">
                        <thead>
                          <th class="text-center">Código</th>
-                         <th class="text-center">Ruta</th>
+                         <th class="text-center">{{ $descripcion  }}</th>
                          <th class="text-center">Anular</th>
                        </thead>
                        <tbody>
 
                            @foreach ($rutas as $ruta)
                                <tr data-id="{{ $ruta->ID . '-' . $usuario_id . '-' . $empresa_id }}">
-                                   <td><a href="{{ route('editUsuarioRuta', $empresa_id . '-'  . $usuario_id . '-' . $ruta->ID) }}">{{ $ruta->CLAVE}}</a></td>
-                                   <td><a href="{{ route('editUsuarioRuta', $empresa_id . '-'  . $usuario_id . '-' . $ruta->ID) }}">{{ $ruta->DESCRIPCION}}</a></td>
+                                   <td><a href="{{ route('editUsuarioRuta', $empresa_id . '-'  . $usuario_id . '-' . $ruta->ID . '-' . $descripcion) }}">{{ $ruta->CLAVE}}</a></td>
+                                   <td><a href="{{ route('editUsuarioRuta', $empresa_id . '-'  . $usuario_id . '-' . $ruta->ID . '-' . $descripcion) }}">{{ $ruta->DESCRIPCION}}</a></td>
                                    <td class="text-center">
                                      <a href="{{ route('anularRutaUsuario', $ruta->ID . '-' . $usuario_id . '-' . $empresa_id) }}" class="btn-delete"><span class="glyphicon glyphicon-ban-circle" aria-hidden="true" style="font-size:20px; color: black"></span></a>
                                    </td>

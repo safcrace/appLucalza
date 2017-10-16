@@ -8,7 +8,7 @@
           <div class="col-md-12 ">
               {!! Form::open(['route' => 'rutas.store', 'method' => 'POST']) !!}
               <div class="panel panel-primary">
-                  <div class="panel-heading panel-title" style="height: 65px">Ingreso de Rutas
+                  <div class="panel-heading panel-title" style="height: 65px">Ingreso de {{ substr($descripcion, 0, -1) }}
                       <button type="button" class="btn btn-default" style="border-color: white; float: right"><a href="{{ route('indexRuta', $empresa_id. '-Rutas') }}" title="Cerrar"><span class="glyphicon glyphicon-remove-sign" aria-hidden="true" style="font-size:32px; color: black"></span></a></button>
                       <button type="submit" class="btn btn-default" style="border-color: white; float: right"><span class="glyphicon glyphicon-ok-sign" aria-hidden="true" style="font-size:32px; color: black;" data-toggle="tooltip" data-placement="top" title="Grabar"></button>
                   </div>

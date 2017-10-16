@@ -10,7 +10,7 @@
             <div class="panel panel-primary">
                  <div class="panel-heading panel-title" style="height: 65px">
                     Editar Presupuesto {{ $presupuesto->ID }}
-                     <button type="button" class="btn btn-default" style="border-color: white; float: right"><a href="{{ route('presupuestos.index') }}" title="Cerrar"><span class="glyphicon glyphicon-remove-sign" aria-hidden="true" style="font-size:32px; color: black"></span></a></button>
+                     <button type="button" class="btn btn-default" style="border-color: white; float: right"><a href="{{ route($rutaPresupuesto) }}" title="Cerrar"><span class="glyphicon glyphicon-remove-sign" aria-hidden="true" style="font-size:32px; color: black"></span></a></button>
                      <button type="submit" class="btn btn-default" style="border-color: white; float: right"><span class="glyphicon glyphicon-ok-sign" aria-hidden="true" style="font-size:32px; color: black;" data-toggle="tooltip" data-placement="top" title="Grabar"></button>
                   </div>
                  <div class="panel-body">
@@ -20,10 +20,11 @@
                   {!! Form::close() !!}
                  </div>
                </div>
+              @if($presupuesto->ASIGNACION_MENSUAL == null)
 
                <div class="panel panel-primary">
                    <div class="panel-heading panel-title" style="height: 65px">Detalle Presupuesto
-                       <button type="button" class="btn btn-default" style="border-color: white; float: right"><a href="{{ route('createDetalle', $presupuesto->ID) }}" title="Agregar"><span class="glyphicon glyphicon-plus-sign" aria-hidden="true" style="font-size:32px; color: black"></span></a></button>
+                       <button type="button" class="btn btn-default" style="border-color: white; float: right"><a href="{{ route('createDetalle', $presupuesto->ID . '-' . $tipoGasto) }}" title="Agregar"><span class="glyphicon glyphicon-plus-sign" aria-hidden="true" style="font-size:32px; color: black"></span></a></button>
                    </div>
 
                    <div class="panel-body">
@@ -39,9 +40,9 @@
 
                             @foreach ($detallePresupuestos as $detallePresupuesto)
                                 <tr data-id="{{ $detallePresupuesto->ID . '-' . $presupuesto->ID }}">
-                                    <td><a href="{{ route('detallePresupuestos.edit', $detallePresupuesto->ID) }}">{{ $detallePresupuesto->TIPOGASTO}}</a></td>
-                                    <td><a href="{{ route('detallePresupuestos.edit', $detallePresupuesto->ID) }}">{{ $detallePresupuesto->FRECUENCIA}}</a></td>
-                                    <td><a href="{{ route('detallePresupuestos.edit', $detallePresupuesto->ID) }}">{{ $detallePresupuesto->MONTO}}</a></td>
+                                    <td><a href="{{ route('detallePresupuestos.edit', $detallePresupuesto->ID . '-' . $tipoGasto) }}">{{ $detallePresupuesto->TIPOGASTO}}</a></td>
+                                    <td><a href="{{ route('detallePresupuestos.edit', $detallePresupuesto->ID . '-' . $tipoGasto) }}">{{ $detallePresupuesto->FRECUENCIA}}</a></td>
+                                    <td><a href="{{ route('detallePresupuestos.edit', $detallePresupuesto->ID . '-' . $tipoGasto) }}">{{ $detallePresupuesto->MONTO}}</a></td>
                                     <td class="text-center">
                                       <a href="{{ route('anularDetallePresupuesto', $detallePresupuesto->ID . '-' . $presupuesto->ID) }}" class="btn-delete"><span class="glyphicon glyphicon-ban-circle" aria-hidden="true" style="font-size:20px; color: black"></span></a>
                                     </td>
@@ -61,6 +62,7 @@
                    </div>
 
               </div>
+          @endif
         </div>
 
       @include('partials.anular')

@@ -10,7 +10,7 @@
             <div class="panel panel-primary">
                  <div class="panel-heading panel-title" style="height: 65px">
                     Editar Liquidación {{ $liquidacion->ID }}
-                     <button type="button" class="btn btn-default" style="border-color: white; float: right"><a href="{{ route('liquidaciones.index') }}" title="Cerrar"><span class="glyphicon glyphicon-remove-sign" aria-hidden="true" style="font-size:32px; color: black"></span></a></button>
+                     <button type="button" class="btn btn-default" style="border-color: white; float: right"><a href="{{ route('indexGeneral', $tipoLiquidacion) }}" title="Cerrar"><span class="glyphicon glyphicon-remove-sign" aria-hidden="true" style="font-size:32px; color: black"></span></a></button>
                      <button type="submit" class="btn btn-default" style="border-color: white; float: right"><span class="glyphicon glyphicon-ok-sign" aria-hidden="true" style="font-size:32px; color: black;" data-toggle="tooltip" data-placement="top" title="Grabar"></button>
                   </div>
                  <div class="panel-body">
@@ -23,7 +23,7 @@
 
                <div class="panel panel-primary">
                    <div class="panel-heading panel-title" style="height: 65px">Control de Facturas
-                       <button type="button" class="btn btn-default" style="border-color: white; float: right"><a href="{{ route('createFactura', $liquidacion->ID) }}" title="Agregar"><span class="glyphicon glyphicon-plus-sign" aria-hidden="true" style="font-size:32px; color: black"></span></a></button>
+                       <button type="button" class="btn btn-default" style="border-color: white; float: right"><a href="{{ route('createFactura', $liquidacion->ID . '-' . $tipoLiquidacion) }}" title="Agregar"><span class="glyphicon glyphicon-plus-sign" aria-hidden="true" style="font-size:32px; color: black"></span></a></button>
                    </div>
 
                    <div class="panel-body">
@@ -42,16 +42,16 @@
 
                             @foreach ($facturas as $factura)
                                 <tr data-id="{{ $factura->ID }}">
-                                    <td><a href="{{ route('facturas.edit', $factura->ID) }}">{{ $factura->FECHA_FACTURA->format('d-m-Y') }}</a></td>
-                                    <td><a href="{{ route('facturas.edit', $factura->ID) }}">{{ $factura->NOMBRE}}</a></td>
-                                    <td><a href="{{ route('facturas.edit', $factura->ID) }}">{{ $factura->SERIE}}</a></td>
+                                    <td><a href="{{ route('facturas.edit', $factura->ID . '-' . $tipoLiquidacion) }}">{{ $factura->FECHA_FACTURA->format('d-m-Y') }}</a></td>
+                                    <td><a href="{{ route('facturas.edit', $factura->ID . '-' . $tipoLiquidacion) }}">{{ $factura->NOMBRE}}</a></td>
+                                    <td><a href="{{ route('facturas.edit', $factura->ID . '-' . $tipoLiquidacion) }}">{{ $factura->SERIE}}</a></td>
                                     @if($factura->RECHAZO)
-                                        <td style="background-color: red;"><a href="{{ route('facturas.edit', $factura->ID) }}" style="text-decoration: none; color: #FFF">{{ $factura->NUMERO}}</a></td>
+                                        <td style="background-color: red;"><a href="{{ route('facturas.edit', $factura->ID . '-' . $tipoLiquidacion) }}" style="text-decoration: none; color: #FFF">{{ $factura->NUMERO}}</a></td>
                                     @else
-                                        <td><a href="{{ route('facturas.edit', $factura->ID) }}">{{ $factura->NUMERO}}</a></td>
+                                        <td><a href="{{ route('facturas.edit', $factura->ID . '-' . $tipoLiquidacion) }}">{{ $factura->NUMERO}}</a></td>
                                     @endif
-                                    <td><a href="{{ route('facturas.edit', $factura->ID) }}">{{ $factura->TIPOGASTO}}</a></td>
-                                    <td><a href="{{ route('facturas.edit', $factura->ID) }}">{{ $factura->TOTAL}}</a></td>
+                                    <td><a href="{{ route('facturas.edit', $factura->ID . '-' . $tipoLiquidacion) }}">{{ $factura->TIPOGASTO}}</a></td>
+                                    <td><a href="{{ route('facturas.edit', $factura->ID . '-' . $tipoLiquidacion) }}">{{ $factura->TOTAL}}</a></td>
                                     <td class="text-center">
                                       <a href="{{ route('anularFactura', $factura->ID) }}" class="btn-delete"><span class="glyphicon glyphicon-ban-circle" aria-hidden="true" style="font-size:20px; color: black"></span></a>
                                     </td>

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\CreateDetallePresupuestoRequest;
+use App\SubcategoriaTipoGasto;
 use App\TipoAsignacion;
 use Illuminate\Http\Request;
 
@@ -37,21 +38,33 @@ class DetallePresupuestoController extends Controller
      */
      public function presupuestoCreateDetalle($id)
      {
-         $presupuesto_id = $id;
+         $param = explode('-', $id);
+         $presupuesto_id = $param[0];
+         $tipo = $param[1];
+
 
          $empresa_id = Session::get('empresa');
 
-         $frecuencia = FrecuenciaTiempo::lists('DESCRIPCION', 'ID')
+         $frecuencia = FrecuenciaTiempo::where('ANULADO', 0)->lists('DESCRIPCION', 'ID')
                                          ->toArray();
 
          $tipoGasto = TipoGasto::where('EMPRESA_ID', '=', $empresa_id)
                                         ->lists('DESCRIPCION', 'ID')
                                         ->toArray();
 
+         $subTipoGasto = SubcategoriaTipoGasto::lists('DESCRIPCION', 'ID')
+             ->toArray();
+
          $tipoAsignacion = TipoAsignacion::lists('DESCRIPCION', 'ID')
              ->toArray();
 
-         return view('detallePresupuestos.create', compact('presupuesto_id', 'tipoGasto', 'frecuencia', 'tipoAsignacion'));
+         if ($tipo == 'Rutas') {
+             $rutaPresupuesto = 'presupuestos.edit';
+         } else {
+             $rutaPresupuesto = 'presupuestos.edit';
+         }
+
+         return view('detallePresupuestos.create', compact('presupuesto_id', 'tipoGasto', 'frecuencia', 'tipoAsignacion', 'subTipoGasto', 'tipo', 'rutaPresupuesto'));
      }
 
     /**
@@ -61,11 +74,11 @@ class DetallePresupuestoController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(CreateDetallePresupuestoRequest $request)
-    {
+    {   dd($request->all());
         $detallePresupuesto = new DetallePresupuesto();
         $detallePresupuesto->PRESUPUESTO_ID = $request->PRESUPUESTO_ID;
         $detallePresupuesto->TIPOGASTO_ID = $request->TIPOGASTO_ID;
-        $detallePresupuesto->TIPOASIGNACION_ID = $request->TIPOASIGNACION_ID;
+        //$detallePresupuesto->TIPOASIGNACION_ID = $request->TIPOASIGNACION_ID;
         $detallePresupuesto->MONTO = $request->MONTO;
         $detallePresupuesto->FRECUENCIATIEMPO_ID = $request->FRECUENCIATIEMPO_ID;
         $detallePresupuesto->CENTROCOSTO1 = $request->CENTROCOSTO1;
@@ -92,7 +105,13 @@ class DetallePresupuestoController extends Controller
      */
     public function show($id)
     {
-        //
+        $unidad = TipoGasto::select('cat_unidadmedida.DESCRIPCION', 'cat_')
+                             ->join('cat_subcategoria_tipogasto', 'cat_subcategoria_tipogasto.TIPOGASTO_ID', '=', 'cat_tipogasto.ID' )
+                             ->join('cat_unidadmedida', 'cat_unidadmedida.ID', '=', 'cat_subcategoria_tipogasto.UNIDAD_MEDIDA_ID')
+                             ->where('cat_tipogasto.ID', '=', $id)
+                             ->first();
+        //dd($unidad->DESCRIPCION);
+        return $unidad->DESCRIPCION;
     }
 
     /**
@@ -103,7 +122,11 @@ class DetallePresupuestoController extends Controller
      */
     public function edit($id)
     {
-        $detallePresupuesto = DetallePresupuesto::findOrFail($id);
+        $param = explode('-', $id);
+        $presupuesto_id = $param[0];
+        $tipo = $param[1];
+
+        $detallePresupuesto = DetallePresupuesto::findOrFail($presupuesto_id);
 
         $frecuencia = FrecuenciaTiempo::lists('DESCRIPCION', 'ID')
                                         ->toArray();
@@ -114,7 +137,13 @@ class DetallePresupuestoController extends Controller
         $tipoAsignacion = TipoAsignacion::lists('DESCRIPCION', 'ID')
             ->toArray();
 
-        return view('detallePresupuestos.edit', compact('detallePresupuesto', 'frecuencia', 'tipoGasto', 'tipoAsignacion'));
+        if ($tipo == 'Rutas') {
+            $rutaPresupuesto = 'presupuestos.edit';
+        } else {
+            $rutaPresupuesto = 'presupuestos.edit';
+        }
+
+        return view('detallePresupuestos.edit', compact('detallePresupuesto', 'frecuencia', 'tipoGasto', 'tipoAsignacion', 'rutaPresupuesto', 'tipo'));
     }
 
     /**
@@ -132,7 +161,7 @@ class DetallePresupuestoController extends Controller
         DetallePresupuesto::where('ID', $id)
                 ->update(['PRESUPUESTO_ID' => $request->PRESUPUESTO_ID, 'TIPOGASTO_ID' => $request->TIPOGASTO_ID, 'FRECUENCIATIEMPO_ID' => $request->FRECUENCIATIEMPO_ID,
                           'MONTO' => $request->MONTO, 'CENTROCOSTO1' => $request->CENTROCOSTO1, 'CENTROCOSTO2' => $request->CESTROCOSTO2, 'CENTROCOSTO3' => $request->CENTROCOSTO3,
-                          'CENTROCOSTO4' => $request->CENTROCOSTO4, 'CENTROCOSTO5' => $request->CESTROCOSTO5, 'TIPOASIGNACION_ID' => $request->TIPOASIGNACION_ID, 'ANULADO' => $request->ANULADO]);
+                          'CENTROCOSTO4' => $request->CENTROCOSTO4, 'CENTROCOSTO5' => $request->CESTROCOSTO5,  'ANULADO' => $request->ANULADO]);
 
         return Redirect::to('presupuestos/' . $request->PRESUPUESTO_ID . '/edit' );
     }
