@@ -3,6 +3,10 @@
     <input id="LIQUIDACION_ID" name="LIQUIDACION_ID" type="hidden" value="{{ $liquidacion_id }}">
 @endif
 
+{!! Form::hidden('PRESUPUESTO_ID', $presupuesto->ID) !!}
+{!! Form::hidden('TIPO_LIQUIDACION', $tipoLiquidacion) !!}
+{!! Form::hidden('CATEGORIA_GASTO', 'Parametro', ['id' => 'categoriaGasto']) !!}
+
 <div class="panel panel-primary">
   <div class="panel-heading">Datos de la Factura </div>
   <div class="panel-body">
@@ -136,9 +140,9 @@
         </div>
         <div class="col-md-1 combus" style="display: none">
             @if(isset($factura->CANTIDAD_PORCENTAJE_CUSTOM))
-                {!! Form::text('CANTIDAD_PORCENTAJE', $factura->CANTIDAD_PORCENTAJE_CUSTOM, ['class' => 'form-control', 'placeholder' => 'Cantidad']); !!}
+                {!! Form::text('CANTIDAD_PORCENTAJE_CUSTOM', $factura->CANTIDAD_PORCENTAJE_CUSTOM, ['class' => 'form-control', 'placeholder' => 'Cantidad']); !!}
             @else
-                {!! Form::text('CANTIDAD_PORCENTAJE', null, ['class' => 'form-control', 'placeholder' => 'Cantidad']); !!}
+                {!! Form::text('CANTIDAD_PORCENTAJE_CUSTOM', null, ['class' => 'form-control', 'placeholder' => 'Cantidad']); !!}
             @endif
         </div>
         <div class="col-md-1 combus" style="display: none">
@@ -278,6 +282,7 @@
             }
 
             if (categoria == 'Combustible') {
+                $('#categoriaGasto').val('combustible')
                 $('.combus').show()
             } else {
                 $('.combus').hide()

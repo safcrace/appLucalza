@@ -42,16 +42,16 @@
 
                             @foreach ($facturas as $factura)
                                 <tr data-id="{{ $factura->ID }}">
-                                    <td><a href="{{ route('facturas.edit', $factura->ID . '-' . $tipoLiquidacion) }}">{{ $factura->FECHA_FACTURA->format('d-m-Y') }}</a></td>
-                                    <td><a href="{{ route('facturas.edit', $factura->ID . '-' . $tipoLiquidacion) }}">{{ $factura->NOMBRE}}</a></td>
-                                    <td><a href="{{ route('facturas.edit', $factura->ID . '-' . $tipoLiquidacion) }}">{{ $factura->SERIE}}</a></td>
+                                    <td><a href="{{ route('facturas.edit', $liquidacion->ID . '-' . $factura->ID . '-' . $tipoLiquidacion) }}">{{ $factura->FECHA_FACTURA->format('d-m-Y') }}</a></td>
+                                    <td><a href="{{ route('facturas.edit', $liquidacion->ID . '-' . $factura->ID . '-' . $tipoLiquidacion) }}">{{ $factura->NOMBRE}}</a></td>
+                                    <td><a href="{{ route('facturas.edit', $liquidacion->ID . '-' . $factura->ID . '-' . $tipoLiquidacion) }}">{{ $factura->SERIE}}</a></td>
                                     @if($factura->RECHAZO)
-                                        <td style="background-color: red;"><a href="{{ route('facturas.edit', $factura->ID . '-' . $tipoLiquidacion) }}" style="text-decoration: none; color: #FFF">{{ $factura->NUMERO}}</a></td>
+                                        <td style="background-color: red;"><a href="{{ route('facturas.edit', $liquidacion->ID . '-' . $factura->ID . '-' . $tipoLiquidacion) }}" style="text-decoration: none; color: #FFF">{{ $factura->NUMERO}}</a></td>
                                     @else
-                                        <td><a href="{{ route('facturas.edit', $factura->ID . '-' . $tipoLiquidacion) }}">{{ $factura->NUMERO}}</a></td>
+                                        <td><a href="{{ route('facturas.edit', $liquidacion->ID . '-' . $factura->ID . '-' . $tipoLiquidacion) }}">{{ $factura->NUMERO}}</a></td>
                                     @endif
-                                    <td><a href="{{ route('facturas.edit', $factura->ID . '-' . $tipoLiquidacion) }}">{{ $factura->TIPOGASTO}}</a></td>
-                                    <td><a href="{{ route('facturas.edit', $factura->ID . '-' . $tipoLiquidacion) }}">{{ $factura->TOTAL}}</a></td>
+                                    <td><a href="{{ route('facturas.edit', $liquidacion->ID . '-' . $factura->ID . '-' . $tipoLiquidacion) }}">{{ $factura->TIPOGASTO}}</a></td>
+                                    <td><a href="{{ route('facturas.edit', $liquidacion->ID . '-' . $factura->ID . '-' . $tipoLiquidacion) }}">{{ $factura->TOTAL}}</a></td>
                                     <td class="text-center">
                                       <a href="{{ route('anularFactura', $factura->ID) }}" class="btn-delete"><span class="glyphicon glyphicon-ban-circle" aria-hidden="true" style="font-size:20px; color: black"></span></a>
                                     </td>

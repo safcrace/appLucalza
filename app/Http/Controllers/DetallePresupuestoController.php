@@ -74,7 +74,7 @@ class DetallePresupuestoController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(CreateDetallePresupuestoRequest $request)
-    {   dd($request->all());
+    {           
         $detallePresupuesto = new DetallePresupuesto();
         $detallePresupuesto->PRESUPUESTO_ID = $request->PRESUPUESTO_ID;
         $detallePresupuesto->TIPOGASTO_ID = $request->TIPOGASTO_ID;
@@ -93,7 +93,7 @@ class DetallePresupuestoController extends Controller
 
         $detallePresupuesto->save();
 
-        return Redirect::to('presupuestos/' . $request->PRESUPUESTO_ID . '/edit' );
+        return Redirect::to('presupuestos/' . $request->PRESUPUESTO_ID . '-' . $request->TIPO_GASTO . '/edit' );
 
     }
 
@@ -105,7 +105,7 @@ class DetallePresupuestoController extends Controller
      */
     public function show($id)
     {
-        $unidad = TipoGasto::select('cat_unidadmedida.DESCRIPCION', 'cat_')
+        $unidad = TipoGasto::select('cat_unidadmedida.DESCRIPCION')
                              ->join('cat_subcategoria_tipogasto', 'cat_subcategoria_tipogasto.TIPOGASTO_ID', '=', 'cat_tipogasto.ID' )
                              ->join('cat_unidadmedida', 'cat_unidadmedida.ID', '=', 'cat_subcategoria_tipogasto.UNIDAD_MEDIDA_ID')
                              ->where('cat_tipogasto.ID', '=', $id)

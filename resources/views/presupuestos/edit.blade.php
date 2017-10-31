@@ -20,7 +20,8 @@
                   {!! Form::close() !!}
                  </div>
                </div>
-              @if($presupuesto->ASIGNACION_MENSUAL == null)
+               
+              @if($presupuesto->ASIGNACION_MENSUAL == null || $presupuesto->ASIGNACION_MENSUAL == 0 )
 
                <div class="panel panel-primary">
                    <div class="panel-heading panel-title" style="height: 65px">Detalle Presupuesto
@@ -33,7 +34,7 @@
                         <thead>
                           <th class="text-center">Tipo Gasto</th>
                           <th class="text-center">Frecuencia</th>
-                          <th class="text-center">Monto</th>                        
+                          <th class="text-center">Asignación</th>                        
                           <th class="text-center">Anular</th>
                         </thead>
                         <tbody>

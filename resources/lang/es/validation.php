@@ -178,6 +178,8 @@ return [
         'FOTO'                  => 'Imagen Factura',
         'PRESUPUESTO_ID'        => 'No. Presupuesto',
         'EMPRESA'               => 'Empresa',
+        'TIEMPOATRASO_RUTAS'    => 'Días de Atraso Facturación Rutas',
+        'TIEMPOATRASO_OTROSGASTOS' => 'Días de Atraso Facturación Otros Gastos',
     ],
 
 ];

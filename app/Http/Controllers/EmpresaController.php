@@ -88,6 +88,9 @@ class EmpresaController extends Controller
         $empresa->PASSSQL = bcrypt($request->PASSSQL);
         $empresa->SERVIDORSQL = $request->SERVIDORSQL;
         $empresa->ID_DATASERVERTYPE = $request->ID_DATASERVERTYPE;
+        $empresa->TIEMPOATRASO_RUTAS = $request->TIEMPOATRASO_RUTAS;
+        $empresa->TIEMPOATRASO_OTROSGASTOS = $request->TIEMPOATRASO_OTROSGASTOS;
+
 
         $empresa->save();
 
@@ -138,8 +141,9 @@ class EmpresaController extends Controller
 
         Empresa::where('ID', $empresa->ID)
           ->update(['CLAVE' => $request->CLAVE, 'DESCRIPCION' => $request->DESCRIPCION, 'ANULADO' => $request->ANULADO, 'LICENSESERVER' => $request->LICENSESERVER,
-                    'USERSAP' => $request->USERSAP, 'PASSSAP' => bcrypt($request->PASSSAP), 'DBSAP' => $request->DBSAP, 'USERSQL' => $request->USERSQL,
-                    'PASSSQL' => bcrypt($request->ANULADO), 'SERVIDORSQL' => $request->SERVIDORSQL, 'ID_DATASERVERTYPE' => $request->ID_DATASERVERTYPE, 'MONEDA_ID' => $request->MONEDA_ID]);
+                    'TIEMPOATRASO_RUTAS' => $request->TIEMPOATRASO_RUTAS, 'TIEMPOATRASO_OTROSGASTOS' => $request->TIEMPOATRASO_OTROSGASTOS, 'USERSAP' => $request->USERSAP,
+                    'PASSSAP' => bcrypt($request->PASSSAP), 'DBSAP' => $request->DBSAP, 'USERSQL' => $request->USERSQL, 'PASSSQL' => bcrypt($request->ANULADO),
+                    'SERVIDORSQL' => $request->SERVIDORSQL, 'ID_DATASERVERTYPE' => $request->ID_DATASERVERTYPE, 'MONEDA_ID' => $request->MONEDA_ID]);
 
         return Redirect::to('empresas');
     }

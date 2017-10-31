@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\DetallePresupuesto;
 use App\Empresa;
 use App\SubcategoriaTipoGasto;
 use App\TipoDocumento;
@@ -79,6 +80,7 @@ dd($resultado);
          $fechaInicio = $fechas->FECHA_INICIO;
          $fechaFinal = $fechas->FECHA_FINAL;
 
+        /*** Tipo de Gasto Permitdos en Presupuesto ***/
 
          $tipoGasto =  Liquidacion::join('pre_presupuesto', 'pre_presupuesto.USUARIORUTA_ID', '=', 'liq_liquidacion.USUARIORUTA_ID')
                                   ->join('pre_detpresupuesto', 'pre_detpresupuesto.PRESUPUESTO_ID', '=', 'pre_presupuesto.ID' )
@@ -88,6 +90,16 @@ dd($resultado);
                                   ->where('liq_liquidacion.ID', '=', $liquidacion_id)
                                   ->lists('cat_tipogasto.DESCRIPCION', 'cat_tipogasto.ID')
                                   ->toArray();
+
+         /*** Se determina a que Presupuesto pertenece la Liquidación **/
+
+         $presupuesto =  Liquidacion::join('pre_presupuesto', 'pre_presupuesto.USUARIORUTA_ID', '=', 'liq_liquidacion.USUARIORUTA_ID')
+                                                 ->whereDate('pre_presupuesto.VIGENCIA_INICIO', '=', $fechaInicio)
+                                                 ->whereDate('pre_presupuesto.VIGENCIA_FINAL', '=', $fechaFinal)
+                                                 ->where('liq_liquidacion.ID', '=', $liquidacion_id)
+                                                 ->select('pre_presupuesto.ID')
+                                                 ->first();
+
 
          $proveedor = Proveedor::lists('IDENTIFICADOR_TRIBUTARIO', 'ID')
                                          ->toArray();
@@ -108,7 +120,8 @@ dd($resultado);
         // $factura->CANTIDAD_PORCENTAJE_CUSTOM = null;
 
 
-         return view('facturas.create', compact('liquidacion_id', 'tipoGasto', 'proveedor', 'moneda', 'fechaFactura', 'tipoProveedor', 'tipoDocumento', 'tipoLiquidacion', 'subcategoria'));
+         return view('facturas.create', compact('liquidacion_id', 'tipoGasto', 'proveedor', 'moneda', 'fechaFactura', 'tipoProveedor',
+                    'tipoDocumento', 'tipoLiquidacion', 'subcategoria', 'presupuesto'));
      }
 
     /**
@@ -118,9 +131,7 @@ dd($resultado);
      * @return \Illuminate\Http\Response
      */
     public function store(CreateFacturaRequest $request)
-    {
-
-
+    {   
         $factura = new Factura();
 
         $file = $request->file('FOTO');
@@ -134,6 +145,47 @@ dd($resultado);
             mkdir($path, 0700);
         }
         $file->move($path,$name);
+
+        //Se valida que fecha no sea anterior a X días programados por la empresa y dentro de Período de Liquidación
+
+        $empresa = Session::get('loginEmpresa');
+
+        if($request->TIPO_LIQUIDACION == 'Rutas') {            
+            $restriccionDias = Empresa::select('TIEMPOATRASO_RUTAS')->where('ID', '=', $empresa)->first();
+            $limite = Liquidacion::select('FECHA_INICIO', 'FECHA_FINAL')->where('ID', '=', $request->LIQUIDACION_ID)->first();
+            //dd($limite->FECHA_INICIO->format('d-m-Y'));
+            //dd($restriccionDias);
+            $fechaFactura = date_create($request->FECHA_FACTURA);
+            if ($fechaFactura->format('Y-m-d') < $limite->FECHA_INICIO->subDays($restriccionDias->TIEMPOATRASO_RUTAS)->format('Y-m-d')) {
+                return back()->withInput()->with('info', 'La Fecha de esta Factura se encuentra fuera del Rango Permitido!');            
+            }
+            if ($fechaFactura->format('Y-m-d') > $limite->FECHA_FINAL->format('Y-m-d')) {
+                return back()->withInput()->with('info', 'La Fecha de esta Factura se encuentra fuera del Rango Permitido!');            
+            }    
+        } else {
+            $restriccionDias = Empresa::select('TIEMPOATRASO_OTROSGASTOS')->where('ID', '=', $empresa)->first();
+            $limite = Liquidacion::select('FECHA_INICIO', 'FECHA_FINAL')->where('ID', '=', $request->LIQUIDACION_ID)->first();
+            $fechaFactura = date_create($request->FECHA_FACTURA);
+            if ($fechaFactura->format('Y-m-d') < $limite->FECHA_INICIO->subDays($restriccionDias->TIEMPOATRASO_OTROSGASTOS)->format('Y-m-d')) {
+                return back()->withInput()->with('info', 'La Fecha de esta Factura se encuentra fuera del Rango Permitido!');            
+            }
+            if ($fechaFactura->format('Y-m-d') > $limite->FECHA_FINAL->format('Y-m-d')) {
+                return back()->withInput()->with('info', 'La Fecha de esta Factura se encuentra fuera del Rango Permitido!');            
+            }                
+        }
+
+        
+
+        //dd('Esta es la fecha de la factura ' . $fechaFactura->format('Y-m-d') . ' y esta la de limite ' . $limite->FECHA_INICIO->subDays($restriccionDias->TIEMPOATRASO_RUTAS)->format('Y-m-d'));
+        
+          
+
+        
+
+
+        
+        //dd($limite->FECHA_INICIO->subDays($restriccionDias->TIEMPOATRASO_RUTAS)->format('d-m-Y'));
+       
 
 /*
         $detPresupuestoId = Liquidacion::select('liq_liquidacion.USUARIORUTA_ID')
@@ -156,16 +208,111 @@ dd($resultado);
 				and dp.TIPOGASTO_ID = @tipogastoId
 	where ur.ID = @usuarioRutaId;*/
 
+//dd('PRIMER DATO:  ' . $request->PRESUPUESTO_ID . ' SEGUNDO DATO: ' . $request->TIPOGASTO_ID);
+
+        /** Se obtiene No. de Detalle Presupuesto al que Corresponde **/
+        $detallePresupuesto = DetallePresupuesto::select('ID', 'MONTO')
+            ->where('PRESUPUESTO_ID', '=', $request->PRESUPUESTO_ID)
+            ->where('TIPOGASTO_ID', '=', $request->TIPOGASTO_ID)
+            ->first();
+
+        /** Se obtiene monto gastado hasta el momento por tipo de gasto **/
+        if ($request->CATEGORIA_GASTO == 'combustible') {
+            $montoAcumulado = Factura::where('LIQUIDACION_ID', '=', $request->LIQUIDACION_ID)
+            ->where('TIPOGASTO_ID', '=', $request->TIPOGASTO_ID)
+            ->sum('CANTIDAD_PORCENTAJE_CUSTOM');
+            
+        } else {
+            $montoAcumulado = Factura::where('LIQUIDACION_ID', '=', $request->LIQUIDACION_ID)
+            ->where('TIPOGASTO_ID', '=', $request->TIPOGASTO_ID)
+            ->sum('TOTAL');
+        }
+        
+
+        $saldo = $detallePresupuesto->MONTO - $montoAcumulado;
+
+        
+        //Se determina si tiene presupuesto para cubrir el gasto o si existe remanente
+
+        if ($request->CATEGORIA_GASTO == 'combustible') {
+            
+            $idp = SubcategoriaTipoGasto::select('MONTO_A_APLICAR')->where('ID', '=', $request->SUBCATEGORIATIPOGASTO_ID)->first();
+            
+            if ($saldo > 0) {
+                $saldoFactura = $saldo - $request->CANTIDAD_PORCENTAJE_CUSTOM;
+                
+                if ($saldoFactura > 0) {
+                    $factura->APROBACION_PAGO = 1;
+    
+                    /** Operaciones de Calculo **/
+                    $factura->MONTO_EXENTO = round(($request->CANTIDAD_PORCENTAJE_CUSTOM * $idp->MONTO_A_APLICAR), 2);
+                    
+                    $factura->MONTO_AFECTO = round((($request->TOTAL - $factura->MONTO_EXENTO) / (1 + 0.12)),2); //Se calcula monto afecto
+                    
+                    $factura->MONTO_IVA = round(($factura->MONTO_AFECTO * 0.12 ), 2); //Se calcula monto de impuesto
+                    
+                } else {
+                    dd('vamos bien');
+                    $saldoParcial = $saldo;
+                    $remanente = $request->TOTAL - $saldoParcial;                
+                    $factura->APROBACION_PAGO = 1;
+                }
+    
+            } else {            
+                $factura->APROBACION_PAGO = 0;
+                
+                /** Operaciónes de Calculo **/
+                $factura->MONTO_REMANENTE = $request->TOTAL;            
+            }
+            
+        } else {
+            if ($saldo > 0) {
+                $saldoFactura = $saldo - $request->TOTAL;
+                if ($saldoFactura > 0) {
+                    $factura->APROBACION_PAGO = 1;
+    
+                    /** Operaciones de Calculo **/
+    
+                    $factura->MONTO_AFECTO = round(($request->TOTAL / (1 + 0.12)),2); //Se calcula monto afecto
+            
+                    $factura->MONTO_IVA = round(($factura->MONTO_AFECTO * 0.12 ), 2); //Se calcula monto de impuesto
+    
+                } else {
+                    dd('vamos bien');
+                    $saldoParcial = $saldo;
+                    $remanente = $request->TOTAL - $saldoParcial;                
+                    $factura->APROBACION_PAGO = 1;
+                }
+    
+            } else {            
+                $factura->APROBACION_PAGO = 0;
+                
+                /** Operaciónes de Calculo **/
+                $factura->MONTO_REMANENTE = $request->TOTAL;            
+            }
+        }
+        
+
+        if ($request->CANTIDAD_PORCENTAJE == '') {
+            $request->CANTIDAD_PORCENTAJE = 0.00;
+        } 
+
+        //dd('Este es el Pago Parcial: ' . $saldoParcial . ' y este el Remanente: ' . $remanente);
+
+        
+
+        //dd('vamos mal o punto de control');
+
         $factura->LIQUIDACION_ID = $request->LIQUIDACION_ID;
         $factura->TIPOGASTO_ID = $request->TIPOGASTO_ID;
-        $factura->DETPRESUPUESTO_ID = 1;
+        $factura->DETPRESUPUESTO_ID = $detallePresupuesto->ID;
         $factura->MONEDA_ID = $request->MONEDA_ID;
         $factura->PROVEEDOR_ID = $request->PROVEEDOR_ID;
         $factura->CAUSAEXENCION_ID = 1;
         $factura->SERIE = $request->SERIE;
         $factura->NUMERO = $request->NUMERO;
         $factura->FECHA_FACTURA = $request->FECHA_FACTURA;
-        $factura->CANTIDAD_PORCENTAJE_CUSTOM = $request->CANTIDAD_PORCENTAJE;
+        $factura->CANTIDAD_PORCENTAJE_CUSTOM = $request->CANTIDAD_PORCENTAJE_CUSTOM;
         $factura->TIPODOCUMENTO_ID = $request->TIPODOCUMENTO_ID;
         $factura->KILOMETRAJE_INICIAL = $request->KM_INICIO;
         $factura->KILOMETRAJE_FINAL = $request->KM_FINAL;
@@ -176,7 +323,7 @@ dd($resultado);
 
         $factura->save();
 
-        return Redirect::to('liquidaciones/' . $request->LIQUIDACION_ID . '/edit');
+        return Redirect::to('liquidaciones/' . $request->LIQUIDACION_ID . '-' . $request->TIPO_LIQUIDACION . '/edit');
     }
 
     /**
@@ -212,9 +359,20 @@ dd($resultado);
     public function edit($id)
     {
         $param = explode('-', $id);
-        $factura_id = $param[0];
-        $tipoLiquidacion = $param[1];
+        $liquidacion_id = $param[0];
+        $factura_id = $param[1];
+        $tipoLiquidacion = $param[2];
         $factura = Factura::findOrFail($factura_id);
+
+
+        $subcategoria = SubcategoriaTipoGasto::where('ANULADO', '=', 0)->lists('DESCRIPCION', 'ID')->toArray();
+        $fechas =  Liquidacion::select('liq_liquidacion.FECHA_INICIO', 'liq_liquidacion.FECHA_FINAL')
+            ->where('liq_liquidacion.ID', '=', $liquidacion_id)
+            ->first();
+
+
+        $fechaInicio = $fechas->FECHA_INICIO;
+        $fechaFinal = $fechas->FECHA_FINAL;
 
         $liquidacion_id = $factura->LIQUIDACION_ID;
 
@@ -239,7 +397,17 @@ dd($resultado);
 
         $tipoDocumento = TipoDocumento::lists('DESCRIPCION', 'ID')->toArray();
 
-        return view('facturas.edit', compact('factura', 'tipoGasto', 'proveedor', 'moneda', 'fechaFactura', 'tipoProveedor', 'liquidacion_id', 'tipoDocumento', 'tipoLiquidacion'));
+        /*** Se determina a que Presupuesto pertenece la Liquidación **/
+
+        $presupuesto =  Liquidacion::join('pre_presupuesto', 'pre_presupuesto.USUARIORUTA_ID', '=', 'liq_liquidacion.USUARIORUTA_ID')
+            ->whereDate('pre_presupuesto.VIGENCIA_INICIO', '=', $fechaInicio)
+            ->whereDate('pre_presupuesto.VIGENCIA_FINAL', '=', $fechaFinal)
+            ->where('liq_liquidacion.ID', '=', $liquidacion_id)
+            ->select('pre_presupuesto.ID')
+            ->first();
+
+        return view('facturas.edit', compact('factura', 'tipoGasto', 'proveedor', 'moneda', 'fechaFactura', 'tipoProveedor', 'liquidacion_id', 'tipoDocumento',
+                    'tipoLiquidacion', 'presupuesto', 'subcategoria'));
     }
 
     /**

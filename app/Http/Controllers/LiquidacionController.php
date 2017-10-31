@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\CreateLiquidacionRequest;
+use App\Presupuesto;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
@@ -76,11 +77,39 @@ class LiquidacionController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(CreateLiquidacionRequest $request)
-    {  dd($request->all());
+    {   
         $usuarioRuta = UsuarioRuta::select('ID')
                         ->where('USER_ID', '=', $request->USUARIO_ID)
                         ->where('RUTA_ID', '=', $request->RUTA_ID)
                         ->first();
+
+        /** Se valida si periodo de Liquidación existe en Presupuesto **/
+
+        $fechaInicio = $request->FECHA_INICIO;
+        $fechaFinal = $request->FECHA_FINAL;
+
+        $presupuestoRuta = Presupuesto::select('ID', 'VIGENCIA_INICIO', 'VIGENCIA_FINAL')
+                                            ->where('USUARIORUTA_ID', '=', $usuarioRuta->ID)
+                                            ->where('VIGENCIA_INICIO', '<=', $fechaInicio)
+                                            ->where('VIGENCIA_FINAL', '>=', $fechaFinal)
+                                            ->first();
+
+        if ($presupuestoRuta == null) {
+            return back()->withInput()->with('info', 'El Período de la Liquidación no pertenece a un Presupuesto Válido.  Por favor verifique Ruta y Rango de Fechas!');
+        }
+
+        /** Se Valida que no existe una Liquidación para el mismo periodo **/
+
+        $yaExiste = Liquidacion::select('ID')
+                                    ->where('USUARIORUTA_ID', '=', $usuarioRuta->ID)
+                                    ->where('FECHA_INICIO', '=', $fechaInicio)
+                                    ->where('FECHA_FINAL', '=', $fechaFinal)
+                                    ->first();
+
+        if ($yaExiste) {
+            return back()->withInput()->with('info', 'Ya existe una Liquidación para este período!');
+        } 
+
 
         $liquidacion = new Liquidacion();
 
@@ -93,10 +122,10 @@ class LiquidacionController extends Controller
         $liquidacion->SUPERVISOR_AUTORIZACION = 0;
         $liquidacion->CONTABILIDAD_AUTORIZACION = 0;
         $liquidacion->ANULADO = 0;
-
+        
         $liquidacion->save();
 
-        return redirect::to('liquidaciones/' . $liquidacion->id . '/edit');
+        return redirect::to('liquidaciones/' . $liquidacion->id . '-' . $request->TIPO_LIQUIDACION . '/edit');
     }
 
     /**

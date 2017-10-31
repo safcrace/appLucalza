@@ -113,7 +113,7 @@
             if (tipo.indexOf('depre') != -1) {
                 $('#asignacion').show()
             }else{
-                alert('No se encuentra el texto buscado')
+
             }
 
 

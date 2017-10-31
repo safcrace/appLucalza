@@ -28,12 +28,14 @@ class CreateEmpresaRequest extends Request
             'DESCRIPCION'    => 'required',
             'LICENSESERVER'    => 'required',
             'USERSAP'    => 'required',
-            'PASSSAP'    => 'required',
+            //'PASSSAP'    => 'required',
             'DBSAP'    => 'required',
             'USERSQL'    => 'required',
-            'PASSSQL'    => 'required',
+            //'PASSSQL'    => 'required',
             'SERVIDORSQL'    => 'required',
             'ID_DATASERVERTYPE'    => 'required',
+            'TIEMPOATRASO_RUTAS'    => 'required',
+            'TIEMPOATRASO_OTROSGASTOS'    => 'required',
         ];
     }
 

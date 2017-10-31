@@ -222,11 +222,30 @@ class PresupuestoController extends Controller
      */
     public function store(CreatePresupuestoRequest $request)
     {
+        if ($request->TIPO_GASTO == 'Rutas') {
+            $texto = ' de esta Ruta';
+        } else {
+            $texto = ' de este Gasto';
+        }
+
         $usuarioRuta_id = UsuarioRuta::select('ID')
                         ->where('USER_ID', '=', $request->USUARIO_ID)
                         ->where('RUTA_ID', '=', $request->RUTA_ID)
                         ->first();
-        //dd($usuarioRuta_id->ID);
+
+        $presupuestosRuta = Presupuesto::select('ID', 'VIGENCIA_INICIO', 'VIGENCIA_FINAL')
+                                                ->where('USUARIORUTA_ID', '=', $usuarioRuta_id->ID)
+                                                ->get();
+
+        //dd($presupuestosRuta);
+        foreach ($presupuestosRuta as $presupuestoRuta) {
+            if ($request->VIGENCIA_INICIO <= $presupuestoRuta->VIGENCIA_FINAL) {
+                return back()->withInput()->with('info', 'Por Favor Revise el Rango de Fecha, ya que se Traslapa con otro presupuesto' . $texto);
+            }
+        }
+
+        //dd('pasamos porue no existe condicion!' . $presupuestosRuta);
+
         $presupuesto = new Presupuesto();
 
         $presupuesto->USUARIORUTA_ID = $usuarioRuta_id->ID;

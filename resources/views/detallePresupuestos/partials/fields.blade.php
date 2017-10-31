@@ -5,6 +5,8 @@
     <input id="PRESUPUESTO_ID" name="PRESUPUESTO_ID" type="hidden" value="{{ $presupuesto_id }}">
 @endif
 
+{!! Form::hidden('TIPO_GASTO', $tipo) !!}
+
 <div class="panel panel-primary">
   <div class="panel-heading">Detalle Presupuesto </div>
   <div class="panel-body">
@@ -69,13 +71,13 @@
             {!! Form::label('CENTROCOSTO1', 'Centro de Costo1') !!}
       </div>
       <div class="col-md-3" id="cc_1">
-          {!! Form::text('CENTROCOSTO1', null, ['class' => 'form-control', 'placeholder' => 'Centro de Costo 1']); !!}
+          {!! Form::text('CENTROCOSTO1', null, ['class' => 'form-control', 'placeholder' => 'Centro de Costo 1', 'disabled']); !!}
       </div>
       <div class="col-md-3" id="cc1_sap" style="display: none">
 
       </div>
       <div class="col-md-1">
-        <span class="glyphicon glyphicon-import" aria-hidden="true" id="centro_1"></span>
+        <span class="glyphicon glyphicon-import" aria-hidden="true" id="centro_1" style="cursor: pointer"></span>
       </div>
     </div>
 
@@ -84,14 +86,14 @@
             {!! Form::label('CENTROCOSTO2', 'Centro de Costo2') !!}
       </div>
       <div class="col-md-3" id="cc_2">
-          {!! Form::text('CENTROCOSTO2', null, ['class' => 'form-control', 'placeholder' => 'Centro de Costo 2']); !!}
+          {!! Form::text('CENTROCOSTO2', null, ['class' => 'form-control', 'placeholder' => 'Centro de Costo 2', 'disabled']); !!}
       </div>
 
       <div class="col-md-3" id="cc2_sap" style="display: none">
 
       </div>
       <div class="col-md-1">
-        <span class="glyphicon glyphicon-import" aria-hidden="true" id="centro_2"></span>
+        <span class="glyphicon glyphicon-import" aria-hidden="true" id="centro_2" style="cursor: pointer"></span>
       </div>
     </div>
 
@@ -100,13 +102,13 @@
             {!! Form::label('CENTROCOSTO3', 'Centro de Costo3') !!}
       </div>
       <div class="col-md-3" id="cc_3">
-          {!! Form::text('CENTROCOSTO3', null, ['class' => 'form-control', 'placeholder' => 'Centro de Costo 3']); !!}
+          {!! Form::text('CENTROCOSTO3', null, ['class' => 'form-control', 'placeholder' => 'Centro de Costo 3', 'disabled']); !!}
       </div>
       <div class="col-md-3" id="cc3_sap" style="display: none">
 
       </div>
       <div class="col-md-1">
-        <span class="glyphicon glyphicon-import" aria-hidden="true" id="centro_3"></span>
+        <span class="glyphicon glyphicon-import" aria-hidden="true" id="centro_3" style="cursor: pointer"></span>
       </div>
     </div>
 
@@ -115,14 +117,14 @@
             {!! Form::label('CENTROCOSTO4', 'Centro de Costo4') !!}
       </div>
       <div class="col-md-3" id="cc_4">
-          {!! Form::text('CENTROCOSTO4', null, ['class' => 'form-control', 'placeholder' => 'Centro de Costo 4']); !!}
+          {!! Form::text('CENTROCOSTO4', null, ['class' => 'form-control', 'placeholder' => 'Centro de Costo 4', 'disabled']); !!}
       </div>
 
       <div class="col-md-3" id="cc4_sap" style="display: none">
 
       </div>
       <div class="col-md-1">
-        <span class="glyphicon glyphicon-import" aria-hidden="true" id="centro_4"></span>
+        <span class="glyphicon glyphicon-import" aria-hidden="true" id="centro_4" style="cursor: pointer"></span>
       </div>
     </div>
 
@@ -131,14 +133,14 @@
             {!! Form::label('CENTROCOSTO5', 'Centro de Costo5') !!}
       </div>
       <div class="col-md-3" id="cc_5">
-          {!! Form::text('CENTROCOSTO5', null, ['class' => 'form-control', 'placeholder' => 'Centro de Costo 5']); !!}
+          {!! Form::text('CENTROCOSTO5', null, ['class' => 'form-control', 'placeholder' => 'Centro de Costo 5', 'disabled']); !!}
       </div>
 
       <div class="col-md-3" id="cc5_sap" style="display: none">
 
       </div>
       <div class="col-md-1">
-        <span class="glyphicon glyphicon-import" aria-hidden="true" id="centro_5"></span>
+        <span class="glyphicon glyphicon-import" aria-hidden="true" id="centro_5" style="cursor: pointer"></span>
       </div>
     </div>
 
@@ -182,7 +184,7 @@
 
                         $('#tipoAsignacion').html(data);
                         $('#unidades').show()
-                        alert(data)
+
                     }
                 })
             } else {

@@ -40,7 +40,7 @@ class WebServiceController extends Controller
 
 
         $filas = $data['nrows'];
-        $combo = '<select id="codigoProveedorSap" name="codigoProveedorSap">';
+        $combo = '<select class="form-control" id="codigoProveedorSap" name="codigoProveedorSap">';
         foreach ($data['data'] as $a => $b) {
             $combo .=  '<option value="' . $b['code'] . '">' . $b['name'] . '</option>';
         }
@@ -109,7 +109,7 @@ class WebServiceController extends Controller
 
 
         $filas = $data['nrows'];
-        $combo = '<select id="cuentaContableAfecta" name="cuentaContableAfecta">';
+        $combo = '<select class="form-control" id="cuentaContableAfecta" name="cuentaContableAfecta">';
         foreach ($data['data'] as $a => $b) {
             $combo .=  '<option value="' . $b['code'] . '">' . $b['name'] . '</option>';
         }
@@ -142,7 +142,7 @@ class WebServiceController extends Controller
 
 
         $filas = $data['nrows'];
-        $combo = '<select id="cuentaContableRemanente" name="cuentaContableAfecta">';
+        $combo = '<select class="form-control" id="cuentaContableRemanente" name="cuentaContableAfecta">';
         foreach ($data['data'] as $a => $b) {
             $combo .=  '<option value="' . $b['code'] . '">' . $b['name'] . '</option>';
         }
@@ -175,7 +175,7 @@ class WebServiceController extends Controller
 
 
         $filas = $data['nrows'];
-        $combo = '<select id="codigoImpuestoExento" name="codigoImpuestoExento">';
+        $combo = '<select class="form-control" id="codigoImpuestoExento" name="codigoImpuestoExento">';
         foreach ($data['data'] as $a => $b) {
             $combo .=  '<option value="' . $b['code'] . '">' . $b['name'] . '</option>';
         }
@@ -208,7 +208,7 @@ class WebServiceController extends Controller
 
 
         $filas = $data['nrows'];
-        $combo = '<select id="codigoImpuestoAfecto" name="codigoImpuestoAfecto">';
+        $combo = '<select class="form-control" id="codigoImpuestoAfecto" name="codigoImpuestoAfecto">';
         foreach ($data['data'] as $a => $b) {
             $combo .=  '<option value="' . $b['code'] . '">' . $b['name'] . '</option>';
         }
@@ -241,7 +241,7 @@ class WebServiceController extends Controller
 
 
         $filas = $data['nrows'];
-        $combo = '<select id="codigoImpuestoRemanente" name="codigoImpuestoRemanente">';
+        $combo = '<select class="form-control" id="codigoImpuestoRemanente" name="codigoImpuestoRemanente">';
         foreach ($data['data'] as $a => $b) {
             $combo .=  '<option value="' . $b['code'] . '">' . $b['name'] . '</option>';
         }
@@ -274,7 +274,7 @@ class WebServiceController extends Controller
 
 
         $filas = $data['nrows'];
-        $combo = '<select id="CENTROCOSTO1" name="CENTROCOSTO1">';
+        $combo = '<select class="form-control" id="CENTROCOSTO1" name="CENTROCOSTO1">';
         foreach ($data['data'] as $a => $b) {
             $combo .=  '<option value="' . $b['code'] . '">' . $b['name'] . '</option>';
         }
@@ -307,7 +307,7 @@ class WebServiceController extends Controller
 
 
         $filas = $data['nrows'];
-        $combo = '<select id="CENTROCOSTO2" name="CENTROCOSTO2">';
+        $combo = '<select class="form-control" id="CENTROCOSTO2" name="CENTROCOSTO2">';
         foreach ($data['data'] as $a => $b) {
             $combo .=  '<option value="' . $b['code'] . '">' . $b['name'] . '</option>';
         }
@@ -340,7 +340,7 @@ class WebServiceController extends Controller
 
 
         $filas = $data['nrows'];
-        $combo = '<select id="CENTROCOSTO3" name="CENTROCOSTO3">';
+        $combo = '<select class="form-control" id="CENTROCOSTO3" name="CENTROCOSTO3">';
         foreach ($data['data'] as $a => $b) {
             $combo .=  '<option value="' . $b['code'] . '">' . $b['name'] . '</option>';
         }
@@ -373,7 +373,7 @@ class WebServiceController extends Controller
 
 
         $filas = $data['nrows'];
-        $combo = '<select id="CENTROCOSTO4" name="CENTROCOSTO4">';
+        $combo = '<select class="form-control" id="CENTROCOSTO4" name="CENTROCOSTO4">';
         foreach ($data['data'] as $a => $b) {
             $combo .=  '<option value="' . $b['code'] . '">' . $b['name'] . '</option>';
         }
@@ -406,7 +406,7 @@ class WebServiceController extends Controller
 
 
         $filas = $data['nrows'];
-        $combo = '<select id="CENTROCOSTO5" name="CENTROCOSTO5">';
+        $combo = '<select class="form-control" id="CENTROCOSTO5" name="CENTROCOSTO5">';
         foreach ($data['data'] as $a => $b) {
             $combo .=  '<option value="' . $b['code'] . '">' . $b['name'] . '</option>';
         }

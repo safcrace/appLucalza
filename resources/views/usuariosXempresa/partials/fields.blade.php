@@ -45,7 +45,7 @@
               </div>
 
               <div class="col-md-1 col-md-offset-1">
-                  <span class="glyphicon glyphicon-import" aria-hidden="true" id="proveedorSap"></span>
+                  <span class="glyphicon glyphicon-import" aria-hidden="true" id="proveedorSap" style="cursor: pointer"></span>
               </div>
           </div>
           {!! Form::hidden('DESCRIPCION_PROVEEDORSAP', null, ['class' => 'form-control', 'id' => 'descripcion_proveedorsap']); !!}
