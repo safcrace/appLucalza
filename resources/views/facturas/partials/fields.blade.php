@@ -6,6 +6,7 @@
 {!! Form::hidden('PRESUPUESTO_ID', $presupuesto->ID) !!}
 {!! Form::hidden('TIPO_LIQUIDACION', $tipoLiquidacion) !!}
 {!! Form::hidden('CATEGORIA_GASTO', 'Parametro', ['id' => 'categoriaGasto']) !!}
+{!! Form::hidden('SUBCATEGORIA_GASTO', 'Parametro', ['id' => 'subCategoriaGasto']) !!}
 
 <div class="panel panel-primary">
   <div class="panel-heading">Datos de la Factura </div>
@@ -81,14 +82,14 @@
             {!! Form::label('TIPODOCUMENTO_ID', 'Tipo de Documento') !!}
         </div>
         <div class="col-md-3" id="proveedorTemporal" style="display: block">
-            {!! Form::select('TIPODOCUMENTO_ID', $tipoDocumento, null, ['class' => 'form-control', 'placeholder' => 'Seleccione Tipo de Documento', 'id' => 'nit']); !!}
+            {!! Form::select('TIPODOCUMENTO_ID', $tipoDocumento, null, ['class' => 'form-control', 'placeholder' => 'Seleccione Tipo de Documento', 'id' => 'tipoDocumento']); !!}
         </div>
 
     </div>
 
     <div class="row form-group">
         <div class="col-md-2 col-md-offset-1">
-            {!! Form::label('FECHA_FACTURA', 'Fecha de la Factura') !!}
+            {!! Form::label('FECHA_FACTURA', 'Fecha') !!}
         </div>
         <div class="col-md-2">
             @if($fechaFactura)
@@ -99,22 +100,22 @@
         </div>
     </div>
 
-    <div class="row form-group">
+    <div class="row form-group numero">
         <div class="col-md-2 col-md-offset-1">
-            {!! Form::label('SERIE', 'Serie Factura') !!}
+            {!! Form::label('SERIE', 'Serie') !!}
         </div>
         <div class="col-md-3">
-            {!! Form::text('SERIE', null, ['class' => 'form-control', 'placeholder' => 'Serie Factura']); !!}
+            {!! Form::text('SERIE', null, ['class' => 'form-control', 'placeholder' => 'Serie']); !!}
         </div>
 
     </div>
 
     <div class="row form-group">
         <div class="col-md-2 col-md-offset-1">
-            {!! Form::label('NUMERO', 'Número Factura') !!}
+            {!! Form::label('NUMERO', 'Número') !!}
         </div>
         <div class="col-md-3">
-            {!! Form::text('NUMERO', null, ['class' => 'form-control', 'placeholder' => 'Número Factura']); !!}
+            {!! Form::text('NUMERO', null, ['class' => 'form-control', 'placeholder' => 'Número']); !!}
         </div>
     </div>
     <div class="row form-group">
@@ -122,7 +123,7 @@
             {!! Form::label('TOTAL', 'Total') !!}
         </div>
         <div class="col-md-2">
-            {!! Form::text('TOTAL', null, ['class' => 'form-control', 'placeholder' => 'Total Factura']); !!}
+            {!! Form::text('TOTAL', null, ['class' => 'form-control', 'placeholder' => 'Total']); !!}
         </div>
     </div>
 
@@ -254,6 +255,27 @@
                 }
             });
         }*/
+        var tipo = $('#tipoGasto').val()
+        if (tipo != null) {
+            var categoria = $('#tipoGasto option:selected').text()
+            vurl = '{{ route('getSubcategoriaTipoGasto') }}'
+            vurl = vurl.replace('%7Bid%7D', tipo);
+                
+            $.getJSON(vurl, null, function (values) {
+                $('#subcategoriaTipoGasto').populateSelect(values)
+            })
+
+            if (categoria == 'Combustible') {
+                $('#categoriaGasto').val('combustible')
+                $('.combus').show()
+            } else if (categoria == 'Depreciación') {
+                $('#categoriaGasto').val('depreciación')
+                $('.combus').show()
+            } else {
+                $('.combus').hide()
+            }
+        }
+
 
         $('#tipoGasto').change(function () {
             var tipo = $('#tipoGasto').val();
@@ -276,7 +298,10 @@
 
                 $('#subcategoriaTipoGasto').empty()
             } else {
-                $.getJSON('/lucalza/public/tipoGasto/subcategoria/' + tipo, null, function (values) {
+                vurl = '{{ route('getSubcategoriaTipoGasto') }}'
+                vurl = vurl.replace('%7Bid%7D', tipo);
+                
+                $.getJSON(vurl, null, function (values) {
                     $('#subcategoriaTipoGasto').populateSelect(values)
                 })
             }
@@ -284,11 +309,28 @@
             if (categoria == 'Combustible') {
                 $('#categoriaGasto').val('combustible')
                 $('.combus').show()
+            } else if (categoria == 'Depreciación') {
+                $('#categoriaGasto').val('depreciación')
+                $('.combus').show()
             } else {
                 $('.combus').hide()
             }
 
         });
+
+        $('#tipoDocumento').change(function() {
+            var subcategoria = $('#subcategoriaTipoGasto option:selected').text()
+            $('#subCategoriaGasto').val(subcategoria)
+            var tipoDocumento = $('#tipoDocumento option:selected').text()
+            var patron = 'factura'
+            //tipoDocumento = tipoDocumento.toLowerCase()
+            if(tipoDocumento.toLowerCase().indexOf('factura') != -1) {                
+                $('.numero').show()
+            } else {
+                $('.numero').hide()                
+            }
+            //alert(tipoDocumento)
+        })
 
         var nit = $('#nit').val();
         if (nit != null) {

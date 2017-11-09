@@ -117,14 +117,24 @@
         </div>
         <div class="row form-group text-center">
                 {!! Form::hidden('CUENTA_CONTABLE_EXENTO', null, ['class' => 'form-control', 'id' => 'cuenta_contable_exenta']); !!}
-                {!! Form::text('DESCRIPCION_CUENTA_EXENTO', null, ['class' => 'form-control', 'placeholder' => 'Cuenta Contable', 'id' => 'descripcion_cuenta_ce', 'disabled']); !!}
+                {!! Form::text('DESCRIPCION_CUENTA_EXENTO', null, ['class' => 'form-control descripcion_cuenta_ce text-center', 'placeholder' => 'Cuenta Contable', 'disabled', 'id' => 'cuenta_exenta']); !!}
+                @if(isset($tipoGasto->DESCRIPCION_CUENTA_EXENTO))
+                  {!! Form::hidden('CUENTA_EXENTO', $tipoGasto->DESCRIPCION_CUENTA_EXENTO, ['class' => 'form-control descripcion_cuenta_ce', 'placeholder' => 'Cuenta Contable']); !!}
+                @else
+                  {!! Form::hidden('CUENTA_EXENTO', null, ['class' => 'form-control descripcion_cuenta_ce', 'placeholder' => 'Cuenta Contable']); !!}
+                @endif
         </div>
         <div class="row form-group text-center">
                 {!! Form::label('CODIGO_IMPUESTO_EXENTO', 'Código Impuesto') !!} &nbsp; &nbsp; <span class="glyphicon glyphicon-import" aria-hidden="true" id="ci_exento" style="cursor: pointer"></span>
         </div>
         <div class="row form-group text-center">
                 {!! Form::hidden('CODIGO_IMPUESTO_EXENTO', null, ['class' => 'form-control', 'id' => 'codigo_impuesto_exento']); !!}
-                {!! Form::text('DESCRIPCION_IMPUESTO_EXENTO', null, ['class' => 'form-control', 'placeholder' => 'Cuenta Contable', 'id' => 'descripcion_codigo_ie', 'disabled']); !!}
+                {!! Form::text('DESCRIPCION_IMPUESTO_EXENTO', null, ['class' => 'form-control descripcion_codigo_ie text-center', 'placeholder' => 'Codigo Impuesto', 'disabled']); !!}
+                @if(isset($tipoGasto->DESCRIPCION_IMPUESTO_EXENTO))
+                  {!! Form::hidden('IMPUESTO_EXENTO', $tipoGasto->DESCRIPCION_IMPUESTO_EXENTO, ['class' => 'form-control descripcion_codigo_ie', 'placeholder' => 'Cuenta Contable']); !!}
+                @else
+                  {!! Form::hidden('IMPUESTO_EXENTO', null, ['class' => 'form-control descripcion_codigo_ie', 'placeholder' => 'Cuenta Contable']); !!}
+                @endif
         </div>
       </div>
     </div>
@@ -141,14 +151,24 @@
         </div>
         <div class="row form-group text-center">
                 {!! Form::hidden('CUENTA_CONTABLE_AFECTO', null, ['class' => 'form-control', 'id' => 'cuenta_contable_afecta']); !!}
-                {!! Form::text('DESCRIPCION_CUENTA_AFECTO', null, ['class' => 'form-control', 'placeholder' => 'Cuenta Contable', 'id' => 'descripcion_cuenta_ca', 'disabled']); !!}
+                {!! Form::text('DESCRIPCION_CUENTA_AFECTO', null, ['class' => 'form-control descripcion_cuenta_ca text-center', 'placeholder' => 'Cuenta Contable', 'disabled']); !!}
+                @if(isset($tipoGasto->DESCRIPCION_CUENTA_AFECTO))
+                  {!! Form::hidden('CUENTA_AFECTO', $tipoGasto->DESCRIPCION_CUENTA_AFECTO, ['class' => 'form-control descripcion_cuenta_ca text-center', 'placeholder' => 'Cuenta Contable']); !!}
+                @else
+                  {!! Form::hidden('CUENTA_AFECTO', null, ['class' => 'form-control descripcion_cuenta_ca', 'placeholder' => 'Cuenta Contable']); !!}
+                @endif
         </div>
         <div class="row form-group text-center">
                 {!! Form::label('CODIGO_IMPUESTO_AFECTO', 'Código Impuesto') !!} &nbsp; &nbsp; <span class="glyphicon glyphicon-import" aria-hidden="true" id="ci_afecto" style="cursor: pointer"></span>
         </div>
         <div class="row form-group text-center">
                 {!! Form::hidden('CODIGO_IMPUESTO_AFECTO', null, ['class' => 'form-control', 'id' => 'codigo_impuesto_afecto']); !!}
-                {!! Form::text('DESCRIPCION_IMPUESTO_AFECTO', null, ['class' => 'form-control', 'placeholder' => 'Cuenta Contable', 'id' => 'descripcion_codigo_ia', 'disabled']); !!}
+                {!! Form::text('DESCRIPCION_IMPUESTO_AFECTO', null, ['class' => 'form-control descripcion_codigo_ia text-center', 'placeholder' => 'Cuenta Contable', 'disabled']); !!}
+                @if(isset($tipoGasto->DESCRIPCION_IMPUESTO_AFECTO))
+                  {!! Form::hidden('IMPUESTO_AFECTO', $tipoGasto->DESCRIPCION_IMPUESTO_AFECTO, ['class' => 'form-control descripcion_codigo_ia', 'placeholder' => 'Cuenta Contable']); !!}
+                @else
+                  {!! Form::hidden('IMPUESTO_AFECTO', null, ['class' => 'form-control descripcion_codigo_ia', 'placeholder' => 'Cuenta Contable']); !!}
+                @endif
         </div>
       </div>
     </div>
@@ -165,14 +185,24 @@
         </div>
         <div class="row form-group text-center">
                 {!! Form::hidden('CUENTA_CONTABLE_REMANENTE', null, ['class' => 'form-control', 'id' => 'cuenta_contable_remanente']); !!}
-                {!! Form::text('DESCRIPCION_CUENTA_REMANENTE', null, ['class' => 'form-control', 'placeholder' => 'Cuenta Contable', 'id' => 'descripcion_cuenta_cr', 'disabled']); !!}
+                {!! Form::text('DESCRIPCION_CUENTA_REMANENTE', null, ['class' => 'form-control descripcion_cuenta_cr text-center', 'placeholder' => 'Cuenta Contable', 'disabled']); !!}
+                @if(isset($tipoGasto->DESCRIPCION_CUENTA_REMANENTE))
+                  {!! Form::hidden('CUENTA_REMANENTE', $tipoGasto->DESCRIPCION_CUENTA_REMANENTE, ['class' => 'form-control descripcion_cuenta_cr', 'placeholder' => 'Cuenta Contable']); !!}
+                @else
+                  {!! Form::hidden('CUENTA_REMANENTE', null, ['class' => 'form-control descripcion_cuenta_cr', 'placeholder' => 'Cuenta Contable']); !!}
+                @endif
         </div>
         <div class="row form-group text-center">
                 {!! Form::label('CODIGO_IMPUESTO_REMANENTE', 'Código Impuesto') !!} &nbsp; &nbsp; <span class="glyphicon glyphicon-import" aria-hidden="true" id="ci_remanente" style="cursor: pointer"></span>
         </div>
         <div class="row form-group text-center">
                 {!! Form::hidden('CODIGO_IMPUESTO_REMANENTE', null, ['class' => 'form-control', 'id' => 'codigo_impuesto_remanente']); !!}
-                {!! Form::text('DESCRIPCION_IMPUESTO_REMANENTE', null, ['class' => 'form-control', 'placeholder' => 'Cuenta Contable', 'id' => 'descripcion_codigo_ir', 'disabled']); !!}
+                {!! Form::text('DESCRIPCION_IMPUESTO_REMANENTE', null, ['class' => 'form-control descripcion_codigo_ir text-center', 'placeholder' => 'Cuenta Contable', 'disabled']); !!}
+                @if(isset($tipoGasto->DESCRIPCION_IMPUESTO_REMANENTE))
+                  {!! Form::hidden('IMPUESTO_REMANENTE', $tipoGasto->DESCRIPCION_IMPUESTO_REMANENTE, ['class' => 'form-control descripcion_codigo_ir', 'placeholder' => 'Cuenta Contable']); !!}
+                @else
+                  {!! Form::hidden('IMPUESTO_REMANENTE', null, ['class' => 'form-control descripcion_codigo_ir', 'placeholder' => 'Cuenta Contable']); !!}
+                @endif
         </div>
       </div>
     </div>
@@ -368,7 +398,7 @@
               var codigo_exenta = $('#cuentaContableExenta').val()
               var descripcion_exenta = $('#cuentaContableExenta option:selected').text()
               $('#cuenta_contable_exenta').val(codigo_exenta)
-              $('#descripcion_cuenta_ce').val(descripcion_exenta)
+              $('.descripcion_cuenta_ce').val(descripcion_exenta)
               $('#myModalCe').modal('hide')
           })
 
@@ -390,7 +420,7 @@
               var codigo_afecta = $('#cuentaContableAfecta').val()
               var descripcion_afecta = $('#cuentaContableAfecta option:selected').text()
               $('#cuenta_contable_afecta').val(codigo_afecta)
-              $('#descripcion_cuenta_ca').val(descripcion_afecta)
+              $('.descripcion_cuenta_ca').val(descripcion_afecta)
               $('#myModalCa').modal('hide')
           })
 
@@ -412,7 +442,7 @@
               var codigo_remanente = $('#cuentaContableRemanente').val()
               var descripcion_remanente = $('#cuentaContableRemanente option:selected').text()
               $('#cuenta_contable_remanente').val(codigo_remanente)
-              $('#descripcion_cuenta_cr').val(descripcion_remanente)
+              $('.descripcion_cuenta_cr').val(descripcion_remanente)
               $('#myModalCr').modal('hide')
           })
 
@@ -437,7 +467,7 @@
               var codigo_impuesto_exento = $('#codigoImpuestoExento').val()
               var descripcion_codigo_ie = $('#codigoImpuestoExento option:selected').text()
               $('#codigo_impuesto_exento').val(codigo_impuesto_exento)
-              $('#descripcion_codigo_ie').val(descripcion_codigo_ie)
+              $('.descripcion_codigo_ie').val(descripcion_codigo_ie)
               $('#myModalIe').modal('hide')
           })
 
@@ -461,7 +491,7 @@
               var codigo_impuesto_afecto = $('#codigoImpuestoAfecto').val()
               var descripcion_codigo_ia = $('#codigoImpuestoAfecto option:selected').text()
               $('#codigo_impuesto_afecto').val(codigo_impuesto_afecto)
-              $('#descripcion_codigo_ia').val(descripcion_codigo_ia)
+              $('.descripcion_codigo_ia').val(descripcion_codigo_ia)
               $('#myModalIa').modal('hide')
           })
 
@@ -485,7 +515,7 @@
               var codigo_impuesto_remanente = $('#codigoImpuestoRemanente').val()
               var descripcion_codigo_ir = $('#codigoImpuestoRemanente option:selected').text()
               $('#codigo_impuesto_remanente').val(codigo_impuesto_remanente)
-              $('#descripcion_codigo_ir').val(descripcion_codigo_ir)
+              $('.descripcion_codigo_ir').val(descripcion_codigo_ir)
               $('#myModalIr').modal('hide')
           })
 

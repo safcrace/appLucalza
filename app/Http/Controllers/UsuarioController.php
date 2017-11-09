@@ -19,7 +19,7 @@ class UsuarioController extends Controller
 
     public function __construct()
     {
-        $this->middleware('auth');
+        $this->middleware('auth',  ['except' => ['getEmpresas']]);
     }
     /**
      * Display a listing of the resource.
@@ -27,24 +27,48 @@ class UsuarioController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index()
-    {
-        if (auth()->user()->hasRole('superAdmin', 'master')) {
-            $users = User::select('*')
-                ->where('users.anulado', '=', 0)
-                ->paginate(10);
+    {          
+        $users = User::select('users.id', 'users.nombre', 'users.email')
+                            ->where('users.anulado', '=', 0)
+                            ->paginate(10);
+                    
+        return view('usuarios.index', compact('users'));
+        
+    }
 
-            return view('usuarios.index', compact('users'));
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function indexEmpresas(Request $request)
+    { 
+        $fullUrl = $request->fullUrl();
+        $id_empresa = substr($fullUrl, -1);
+      
+        
+        if (auth()->user()->hasRole('superAdmin')) {
+            if ($id_empresa != 's' ) {                
+                $users = User::select('users.id', 'users.nombre', 'users.email')
+                                    ->join('cat_usuarioempresa', 'cat_usuarioempresa.USER_ID', '=', 'users.id')
+                                    ->join('cat_empresa', 'cat_empresa.ID', '=', 'cat_usuarioempresa.EMPRESA_ID')
+                                    ->where('users.anulado', '=', 0)
+                                    ->where('cat_usuarioempresa.ANULADO', '=', 0)
+                                    ->where('cat_empresa.ID', '=', $id_empresa)
+                                    ->paginate(10);
+                                    
+            } 
         } else {
             $empresa_id = Session::get('empresa');
-            $users = User::select('users.id', 'users.nombre', 'users.email', 'cat_usuarioempresa.EMPRESA_ID')
-                                ->join('cat_usuarioempresa', 'cat_usuarioempresa.USER_ID', '=', 'users.id')
-                                ->where('users.anulado', '=', 0)
-                                ->where('cat_usuarioempresa.EMPRESA_ID', '=', $empresa_id)
-                                ->paginate(10);
-
-
-            return view('usuarios.index', compact('users'));
+            $users = User::select('users.id', 'users.nombre', 'users.email')
+                            ->join('cat_usuarioempresa', 'cat_usuarioempresa.USER_ID', '=', 'users.id')
+                            ->join('cat_empresa', 'cat_empresa.ID', '=', 'cat_usuarioempresa.EMPRESA_ID')
+                            ->where('users.anulado', '=', 0)
+                            ->where('cat_usuarioempresa.ANULADO', '=', 0)
+                            ->where('cat_usuarioempresa.EMPRESA_ID', '=', $empresa_id)
+                            ->paginate(10);                            
         }
+            return view('usuarios.index', compact('users'));
     }
 
 
@@ -87,7 +111,7 @@ class UsuarioController extends Controller
      */
     public function asignaEquipo($id)
     {
-        $empresa_id = $id;
+        $empresa_id = $id; 
 
         $supervisores = User::join('cat_usuarioempresa', 'cat_usuarioempresa.USER_ID', '=', 'users.id')
                               ->join('cat_empresa', 'cat_empresa.ID', '=', 'cat_usuarioempresa.EMPRESA_ID')
@@ -179,7 +203,7 @@ class UsuarioController extends Controller
 
         $supervisorId = $request->SUPERVISOR_ID;
 
-        $empresa_id = $request->EMPRESA_ID;
+        $empresa_id = Session::get('empresa');
 
         $supervisores = User::join('cat_usuarioempresa', 'cat_usuarioempresa.USER_ID', '=', 'users.id')
             ->join('cat_empresa', 'cat_empresa.ID', '=', 'cat_usuarioempresa.EMPRESA_ID')
@@ -202,11 +226,18 @@ class UsuarioController extends Controller
         return view('equipos.asignacion', compact( 'supervisores', 'vendedores', 'supervisorId', 'empresa_id'));
     }
 
-    public function createUsuarioEmpresa(Request $request)
+    public function createUsuarioEmpresa($id = 00)
     {
+        
+        if($id > 0) {
+            $usuarioAsignado = User::select('id')->where('id', '=', $id)->first();
+            $usuarioAsignado = $usuarioAsignado->id;
+            //dd($usuarioAsignado->id);
+        } 
+
         $usuarios = User::orderBy('nombre')->where('anulado', '=', 0)->lists('nombre','id')->toArray();
         $empresas = Empresa::where('ANULADO', '=', 0)->lists('DESCRIPCION', 'ID')->toArray();
-        return view('usuariosXempresa.asignacion', compact('usuarios', 'empresas'));
+        return view('usuariosXempresa.asignacion', compact('usuarios', 'empresas', 'usuarioAsignado'));
     }
 
     /**
@@ -227,8 +258,7 @@ class UsuarioController extends Controller
     }
 
     public function storeUsuarioEmpresa(Request $request)
-    {
-
+    {      
         if(($request->EMPRESA_ID === '') || ($request->codigoProveedorSap === '')) {
             Session::flash('validaUsuarioEmpresa', '¡Los campos Empresa y Código Proveedor SAP son Obligatorios!');
             return back()->withInput();
@@ -236,24 +266,34 @@ class UsuarioController extends Controller
 
         $usuarioEmpresa = new UsuarioEmpresa();
 
-        $existe = UsuarioEmpresa::where('USER_ID', '=', $request->USUARIO_ID)->where('EMPRESA_ID', '=', $request->EMPRESA_ID)->first();
+        $existe = UsuarioEmpresa::where('USER_ID', '=', $request->USUARIO_ID)
+                                        ->where('EMPRESA_ID', '=', $request->EMPRESA_ID)
+                                        ->where('CODIGO_PROVEEDOR_SAP', '=', $request->codigoProveedorSap)->first();
+        
 
-        if($existe) {
-
+        if($existe) { 
+                     
             UsuarioEmpresa::where('USER_ID', '=', $request->USUARIO_ID)->where('EMPRESA_ID', '=', $request->EMPRESA_ID)
-                                ->update(['ANULADO' => 0]);
-
+                                ->update(['ANULADO' => 0, 'CODIGO_PROVEEDOR_SAP' => $request->codigoProveedorSap, 'DESCRIPCION_PROVEEDORSAP' => $request->DESCRIPCION_PROVEEDORSAP]);
+                                   
         } else {
+            
+            $existeCodigo = UsuarioEmpresa::where('CODIGO_PROVEEDOR_SAP', '=', $request->codigoProveedorSap)->first();
+            if ($existeCodigo) {
+                Session::flash('validaUsuarioEmpresa', '¡El código Proveedor ya existe. Consulte con el Administrador!');                
+            } else {
+                $usuarioEmpresa->USER_ID = $request->USUARIO_ID;
+                $usuarioEmpresa->EMPRESA_ID = $request->EMPRESA_ID;
+                $usuarioEmpresa->CODIGO_PROVEEDOR_SAP = $request->codigoProveedorSap;
+                $usuarioEmpresa->DESCRIPCION_PROVEEDORSAP = $request->DESCRIPCION_PROVEEDORSAP;
+                $usuarioEmpresa->ANULADO = 0;
+    
+                $usuarioEmpresa->save();
+            }
 
-            $usuarioEmpresa->USER_ID = $request->USUARIO_ID;
-            $usuarioEmpresa->EMPRESA_ID = $request->EMPRESA_ID;
-            $usuarioEmpresa->CODIGO_PROVEEDOR_SAP = $request->codigoProveedorSap;
-            $usuarioEmpresa->DESCRIPCION_PROVEEDORSAP = $request->DESCRIPCION_PROVEEDORSAP;
-            $usuarioEmpresa->ANULADO = 0;
-
-            $usuarioEmpresa->save();
+            
         }
-
+        //dd('UsuarioEmpresa');
 
 
 
@@ -270,6 +310,32 @@ class UsuarioController extends Controller
     public function show($id)
     {
         //
+    }
+
+     /**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function getEmpresas($id)
+    {
+        $email = $id;
+        $empresas = User::select('cat_empresa.ID', 'cat_empresa.DESCRIPCION')
+                                ->join('cat_usuarioempresa', 'cat_usuarioempresa.USER_ID', '=', 'users.id')
+                                ->join('cat_empresa', 'cat_empresa.ID', '=', 'cat_usuarioempresa.EMPRESA_ID')
+                                ->where('users.email', '=', $email)                                
+                                ->get()
+                                ->toArray();
+                           
+       if (count($empresas) > 0) {
+            array_unshift($empresas, ['ID' => '', 'DESCRIPCION' => 'Seleccione una Empresa']);
+        } else {
+            array_unshift($empresas, ['ID' => '', 'DESCRIPCION' => 'Usuario no Asignado a Empresa']);
+            //dd('vacio'); 
+        }
+
+        return $empresas;
     }
 
     /**
@@ -345,7 +411,7 @@ class UsuarioController extends Controller
 
         $usuarios = User::where('anulado', '=', 0)->lists('nombre','id')->toArray();
         $empresas = Empresa::where('ANULADO', '=', 0)->lists('DESCRIPCION', 'ID')->toArray();
-        return view('usuariosXempresa.asignacion', compact('usuarios', 'empresas', 'usuario_id'));
+        return Redirect::to('usuario/empresa/' . $usuario_id);//view('usuariosXempresa.asignacion', compact('usuarios', 'empresas'));
 
         //return redirect::back()->withInput();//return 1;//Redirect::to('empresa/usuario/' . $empresa_id);
     }

@@ -72,7 +72,7 @@
 
     <div class="row form-group">
       <div class="col-md-2 col-md-offset-1">
-            {!! Form::label('LICENSESERVER', 'License Server') !!}
+            {!! Form::label('LICENSESERVER', 'Licencia de Servidor') !!}
       </div>
       <div class="col-md-2">
           {!! Form::text('LICENSESERVER', null, ['class' => 'form-control', 'placeholder' => 'License Server SAP']); !!}
@@ -129,7 +129,7 @@
 
     <div class="row form-group">
       <div class="col-md-2 col-md-offset-1">
-            {!! Form::label('PASSSQL', 'Constraseñ SQL') !!}
+            {!! Form::label('PASSSQL', 'Contraseña SQL') !!}
       </div>
       <div class="col-md-3">
           {!! Form::password('PASSSQL', ['class' => 'form-control awesome', 'placeholder' => 'Contraseña SQL']); !!}

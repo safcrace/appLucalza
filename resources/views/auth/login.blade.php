@@ -44,8 +44,8 @@
                           <div class="col-md-4 control-label">
                                 {!! Form::label('EMPRESA', 'Empresa') !!}
                           </div>
-                          <div class="col-md-4">
-                              {!! Form::select('EMPRESA', App\Empresa::lists('DESCRIPCION', 'ID')->toArray(), null, ['class' => 'form-control', 'placeholder' => 'Seleccione una Empresa']); !!}
+                          <div class="col-md-5">
+                              {!! Form::select('EMPRESA', App\Empresa::lists('DESCRIPCION', 'ID')->toArray(), null, ['class' => 'form-control', 'placeholder' => 'Seleccione una Empresa', 'id' => 'empresas']); !!}
                           </div>
                         </div>
                         {{--
@@ -76,3 +76,35 @@
     </div>
 </div>
 @endsection
+
+@push('scripts')
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        $.fn.populateSelect = function (values) {
+            var options = ''
+            $.each(values, function (key, row) {
+                options += '<option value = "' + row.ID + '">' + row.DESCRIPCION + '</option>'
+            })
+            $(this).html(options)
+        }
+        
+
+        $('#email').blur(function () {
+            
+            var usuario = $('#email').val();
+                       
+            vurl = '{{ route('getEmpresas') }}'
+            vurl = vurl.replace('%7Bid%7D', usuario);
+
+            $.getJSON(vurl, null, function (values) {
+                    $('#empresas').populateSelect(values)
+            })
+
+
+
+
+        });
+    });
+</script>
+@endpush

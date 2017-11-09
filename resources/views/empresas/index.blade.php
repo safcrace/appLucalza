@@ -8,7 +8,9 @@
               <div class="panel panel-primary">
                   <div class="panel-heading panel-title" style="height: 65px">Control de Empresas
                       <button type="button" class="btn btn-default" style="border-color: white; float: right"><a href="{{ route('home') }}" title="Cerrar"><span class="glyphicon glyphicon-remove-sign" aria-hidden="true" style="font-size:32px; color: black"></span></a></button>
-                      <button type="button" class="btn btn-default" style="border-color: white; float: right"><a href="{{ route('empresas.create') }}" title="Agregar"><span class="glyphicon glyphicon-plus-sign" aria-hidden="true" style="font-size:32px; color: black"></span></a></button>
+                      @can('crear usuario')
+                        <button type="button" class="btn btn-default" style="border-color: white; float: right"><a href="{{ route('empresas.create') }}" title="Agregar"><span class="glyphicon glyphicon-plus-sign" aria-hidden="true" style="font-size:32px; color: black"></span></a></button>
+                      @endcan
                   </div>
 
 
@@ -33,18 +35,18 @@
                                    <td class="text-center">
                                      <a href="{{ route('anularEmpresa', $empresa->ID) }}" class="btn-delete"><span class="glyphicon glyphicon-ban-circle" aria-hidden="true" style="font-size:20px; color: black"></span></a>
                                    </td>
-                                   <td class="text-center">
-                                     @can('ver usuarios')
-                                       <a href="{{ route('usuarios.index', $empresa->ID) }}"><button type="button" class="btn btn-primary btn-sm">Usuarios</button></a>
-                                     @endcan
+                                   <td class="text-center">                                     
                                      @can('ver tipo gasto')
-                                       <a href="{{ route('indexTipoGasto', $empresa->ID) }}"><button type="button" class="btn btn-primary btn-sm">Tipo de Gasto</button></a>
+                                       <a href="{{ route('indexTipoGasto', $empresa->ID) }}"><button type="button" class="btn btn-primary btn-sm">Categoría de Gasto</button></a>
                                      @endcan
                                      @can('ver rutas')
                                        <a href="{{ route('indexRuta', $empresa->ID . '-Rutas') }}"><button type="button" class="btn btn-primary btn-sm">Rutas</button></a>
                                        <a href="{{ route('indexRuta', $empresa->ID . '-Otros Gastos') }}"><button type="button" class="btn btn-primary btn-sm">Otros Gastos</button></a>
                                        <a href="{{ route('indexProveedor', $empresa->ID) }}"><button type="button" class="btn btn-primary btn-sm">Proveedores</button></a>
-                                       <a href="{{ route('asignaEquipo', $empresa->ID) }}"><button type="button" class="btn btn-primary btn-sm">Equipos</button></a>
+                                       <a href="{{ route('asignaEquipo', $empresa->ID) }}"><button type="button" class="btn btn-primary btn-sm">Equipos</button></a>                                       
+                                     @endcan
+                                     @can('ver usuarios')
+                                       <a href="{{ route('indexEmpresas', $empresa->ID) }}"><button type="button" class="btn btn-primary btn-sm">Usuarios</button></a>
                                      @endcan
                                    </td>
                                </tr>

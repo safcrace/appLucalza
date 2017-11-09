@@ -22,11 +22,13 @@ Route::get('empresa/vendedores/supervisor/{id}', ['uses' => 'UsuarioController@v
 Route::post('empresa/usuarios/crea/equipo', ['uses' => 'UsuarioController@creaEquipo', 'as' => 'creaEquipo']);
 Route::get('empresa/usuarios/{id}/equipo', ['uses' => 'UsuarioController@asignaEquipo', 'as' => 'asignaEquipo']);
 Route::get('usuario/anular/{id}', ['uses' => 'UsuarioController@anular', 'as' => 'anularUsuario']);
-Route::get('usuario/empresa', ['uses' => 'UsuarioController@createUsuarioEmpresa', 'as' => 'createUsuarioEmpresa']);
+Route::get('usuario/empresa/{id?}', ['uses' => 'UsuarioController@createUsuarioEmpresa', 'as' => 'createUsuarioEmpresa']);
 Route::post('usuario/empresa', ['uses' => 'UsuarioController@storeUsuarioEmpresa', 'as' => 'storeUsuarioEmpresa']);
 Route::get('usuario/{id}/asignacion/empresa', ['uses' => 'UsuarioController@usuariosAsignadosEmpresa', 'as' => 'usuariosEmpresa']);
 Route::get('empresa/usuarioEmpresa/anular/{id}', ['uses' => 'UsuarioController@anularUsuarioEmpresa', 'as' => 'anularUsuarioEmpresa']);
 Route::get('equipos/vendedorSupervisor/anular/{id}', ['uses' => 'UsuarioController@anularVendedorSupervisor', 'as' => 'anularVendedorSupervisor']);
+Route::get('empresa/usuarios/{id}', ['uses' => 'UsuarioController@indexEmpresas', 'as' => 'indexEmpresas']);
+Route::get('usuario/empresas/{id}', ['uses' => 'UsuarioController@getEmpresas', 'as' => 'getEmpresas']);
 //Route::get('empresa/usuario/{id}', ['uses' => 'UsuarioController@indexUsuario', 'as' => 'indexUsuario']);
 Route::resource('usuarios', 'UsuarioController');
 

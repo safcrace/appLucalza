@@ -49,12 +49,12 @@
         {!! Form::label('TOTAL', 'TOTAL') !!}
     </div>
     <div class="col-md-2">
-        {!! Form::text('TOTAL', 'Q.' . App\Factura::where('LIQUIDACION_ID', '=', $liquidacion->ID)->sum('TOTAL'), ['class' => 'form-control', 'disabled' => 'true']); !!}
+        {!! Form::text('TOTAL', number_format(App\Factura::where('LIQUIDACION_ID', '=', $liquidacion->ID)->where('ANULADO', '=', 0)->sum('TOTAL'), 2), ['class' => 'form-control', 'disabled' => 'true', 'id' => 'totalLiquidacion']); !!}
     </div>
 
   <div class="col-md-1">
 
-      <a href="{{ route('enviarLiquidacion', $liquidacion->ID) }}">
+      <a href="{{ route('enviarLiquidacion', $liquidacion->ID . '-' . $tipoLiquidacion) }}">
         <button type="button" class="btn btn-default" ><span class="glyphicon glyphicon-floppy-saved" aria-hidden="true" style="font-size:32px; color: black" data-toggle="tooltip" data-placement="top" title="Enviar"></button>
       </a>
   </div>

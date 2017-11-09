@@ -27,7 +27,7 @@
                    </div>
 
                    <div class="panel-body">
-
+  
                       <table class="table table-bordered table-striped table-hover">
                         <thead>
                           <th class="text-center">Fecha</th>
@@ -41,7 +41,7 @@
                         <tbody>
 
                             @foreach ($facturas as $factura)
-                                <tr data-id="{{ $factura->ID }}">
+                                <tr data-id="{{ $factura->ID }}" data-monto="{{ $factura->TOTAL }}">
                                     <td><a href="{{ route('facturas.edit', $liquidacion->ID . '-' . $factura->ID . '-' . $tipoLiquidacion) }}">{{ $factura->FECHA_FACTURA->format('d-m-Y') }}</a></td>
                                     <td><a href="{{ route('facturas.edit', $liquidacion->ID . '-' . $factura->ID . '-' . $tipoLiquidacion) }}">{{ $factura->NOMBRE}}</a></td>
                                     <td><a href="{{ route('facturas.edit', $liquidacion->ID . '-' . $factura->ID . '-' . $tipoLiquidacion) }}">{{ $factura->SERIE}}</a></td>
@@ -81,10 +81,11 @@
 @push('scripts')
 <script type="text/javascript">
     $(document).ready(function () {
-        $('.btn-delete').click(function (e) {
+        $('.btn-delete').click(function (e) {            
             e.preventDefault();
             var row = $(this).parents('tr');
             var id = row.data('id');
+            var totalFactura = row.data('monto')           
             vurl = '{{ route('anularFactura') }}';
             vurl = vurl.replace('%7Bid%7D', id);
             row.fadeOut();
@@ -94,6 +95,15 @@
             });
             $('#anular').click(function () {
                 $('#myModal').modal('hide');
+                var totalLiquidacion =  $('#totalLiquidacion').val()
+                totalLiquidacion = totalLiquidacion.replace(',', '') 
+                //totalFactura = totalFactura.replace(',', '')
+                //alert(totalLiquidacion)
+                //alert(totalFactura)
+                var newTotal = totalLiquidacion - totalFactura
+                newTotal = new Intl.NumberFormat("en-IN").format(newTotal);
+                $('#totalLiquidacion').val(newTotal)
+                //alert(newTotal)
                 $.ajax({
                     type: 'get',
                     url: vurl,

@@ -18,6 +18,6 @@
         {!! Form::select('VENDEDOR_ID', $vendedores, null, ['class' => 'form-control', 'placeholder' => 'Seleccione un Vendedor', 'id' => 'vendedor']); !!}
   </div>
   <div class="col-md-1">
-    {!! Form::text('EMPRESA_ID', $empresa_id, ['class' => 'form-control', 'id' => 'empresa']); !!}
+    {!! Form::hidden('EMPRESA_ID', $empresa_id, ['class' => 'form-control', 'id' => 'empresa']); !!}
   </div>
 </div>

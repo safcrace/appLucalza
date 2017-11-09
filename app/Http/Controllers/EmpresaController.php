@@ -79,6 +79,7 @@ class EmpresaController extends Controller
         $empresa->CLAVE = $request->CLAVE;
         $empresa->DESCRIPCION = $request->DESCRIPCION;
         $empresa->MONEDA_ID = $request->MONEDA_ID;
+        $empresa->IMPUESTO = $request->IMPUESTO;
         $empresa->ANULADO = $request->ANULADO;
         $empresa->LICENSESERVER = $request->LICENSESERVER;
         $empresa->USERSAP = $request->USERSAP;
@@ -143,7 +144,7 @@ class EmpresaController extends Controller
           ->update(['CLAVE' => $request->CLAVE, 'DESCRIPCION' => $request->DESCRIPCION, 'ANULADO' => $request->ANULADO, 'LICENSESERVER' => $request->LICENSESERVER,
                     'TIEMPOATRASO_RUTAS' => $request->TIEMPOATRASO_RUTAS, 'TIEMPOATRASO_OTROSGASTOS' => $request->TIEMPOATRASO_OTROSGASTOS, 'USERSAP' => $request->USERSAP,
                     'PASSSAP' => bcrypt($request->PASSSAP), 'DBSAP' => $request->DBSAP, 'USERSQL' => $request->USERSQL, 'PASSSQL' => bcrypt($request->ANULADO),
-                    'SERVIDORSQL' => $request->SERVIDORSQL, 'ID_DATASERVERTYPE' => $request->ID_DATASERVERTYPE, 'MONEDA_ID' => $request->MONEDA_ID]);
+                    'SERVIDORSQL' => $request->SERVIDORSQL, 'ID_DATASERVERTYPE' => $request->ID_DATASERVERTYPE, 'MONEDA_ID' => $request->MONEDA_ID, 'IMPUESTO' => $request->IMPUESTO]);
 
         return Redirect::to('empresas');
     }

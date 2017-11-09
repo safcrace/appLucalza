@@ -21,6 +21,8 @@ use App\Proveedor;
 use App\Moneda;
 use App\Factura;
 use App\Liquidacion;
+use App\UsuarioRuta;
+use App\Presupuesto;
 use Illuminate\Support\Facades\Session;
 
 class FacturaController extends Controller
@@ -57,7 +59,7 @@ class FacturaController extends Controller
      * @return \Illuminate\Http\Response
      */
      public function liquidacionCreateFactura($id)
-     {
+     { 
          $param = explode('-', $id);
          $liquidacion_id = $param[0];
          $tipoLiquidacion = $param[1];
@@ -72,7 +74,7 @@ class FacturaController extends Controller
 dd($resultado);
 */
          $subcategoria = SubcategoriaTipoGasto::where('ANULADO', '=', 0)->lists('DESCRIPCION', 'ID')->toArray();
-         $fechas =  Liquidacion::select('liq_liquidacion.FECHA_INICIO', 'liq_liquidacion.FECHA_FINAL')
+         $fechas =  Liquidacion::select('liq_liquidacion.FECHA_INICIO', 'liq_liquidacion.FECHA_FINAL', 'USUARIORUTA_ID' )
                                         ->where('liq_liquidacion.ID', '=', $liquidacion_id)
                                         ->first();
 
@@ -80,27 +82,48 @@ dd($resultado);
          $fechaInicio = $fechas->FECHA_INICIO;
          $fechaFinal = $fechas->FECHA_FINAL;
 
+         $ruta = UsuarioRuta::select('cat_ruta.DESCRIPCION')
+                                    ->join('cat_ruta', 'cat_ruta.ID', '=', 'cat_usuarioruta.RUTA_ID')
+                                    ->where('cat_usuarioruta.ID', '=', $fechas->USUARIORUTA_ID)
+                                    ->first();
+                  
+
         /*** Tipo de Gasto Permitdos en Presupuesto ***/
 
-         $tipoGasto =  Liquidacion::join('pre_presupuesto', 'pre_presupuesto.USUARIORUTA_ID', '=', 'liq_liquidacion.USUARIORUTA_ID')
-                                  ->join('pre_detpresupuesto', 'pre_detpresupuesto.PRESUPUESTO_ID', '=', 'pre_presupuesto.ID' )
-                                  ->join('cat_tipogasto', 'cat_tipogasto.ID', '=', 'pre_detpresupuesto.TIPOGASTO_ID')
-                                  ->whereDate('pre_presupuesto.VIGENCIA_INICIO', '=', $fechaInicio)
-                                  ->whereDate('pre_presupuesto.VIGENCIA_FINAL', '=', $fechaFinal)
-                                  ->where('liq_liquidacion.ID', '=', $liquidacion_id)
-                                  ->lists('cat_tipogasto.DESCRIPCION', 'cat_tipogasto.ID')
-                                  ->toArray();
+        if(($tipoLiquidacion == 'Otros Gastos') && ($ruta->DESCRIPCION == 'Depreciacion'))  {
+            //dd('ahi vamos');
+            $tipoGasto =  //Liquidacion::join('pre_presupuesto', 'pre_presupuesto.USUARIORUTA_ID', '=', 'liq_liquidacion.USUARIORUTA_ID')
+            //->join('pre_detpresupuesto', 'pre_detpresupuesto.PRESUPUESTO_ID', '=', 'pre_presupuesto.ID' )
+            //->join('cat_tipogasto', 'cat_tipogasto.ID', '=', 'pre_detpresupuesto.TIPOGASTO_ID')
+            //->whereDate('pre_presupuesto.VIGENCIA_INICIO', '=', $fechaInicio)
+            //->whereDate('pre_presupuesto.VIGENCIA_FINAL', '=', $fechaFinal)
+            TipoGasto::where('DESCRIPCION', 'like', '%eprecia%')
+            ->lists('DESCRIPCION', 'ID')
+            ->toArray();           
+        } else {
+            //dd('entro aqui!!');
+            $tipoGasto =  Liquidacion::join('pre_presupuesto', 'pre_presupuesto.USUARIORUTA_ID', '=', 'liq_liquidacion.USUARIORUTA_ID')
+            ->join('pre_detpresupuesto', 'pre_detpresupuesto.PRESUPUESTO_ID', '=', 'pre_presupuesto.ID' )
+            ->join('cat_tipogasto', 'cat_tipogasto.ID', '=', 'pre_detpresupuesto.TIPOGASTO_ID')
+            ->whereDate('pre_presupuesto.VIGENCIA_INICIO', '<=', $fechaInicio)
+            ->whereDate('pre_presupuesto.VIGENCIA_FINAL', '>=', $fechaFinal)
+            ->where('liq_liquidacion.ID', '=', $liquidacion_id)
+            ->lists('cat_tipogasto.DESCRIPCION', 'cat_tipogasto.ID')
+            ->toArray();
+        }
+//dd('punto de control');
+         
 
          /*** Se determina a que Presupuesto pertenece la Liquidación **/
 
          $presupuesto =  Liquidacion::join('pre_presupuesto', 'pre_presupuesto.USUARIORUTA_ID', '=', 'liq_liquidacion.USUARIORUTA_ID')
-                                                 ->whereDate('pre_presupuesto.VIGENCIA_INICIO', '=', $fechaInicio)
-                                                 ->whereDate('pre_presupuesto.VIGENCIA_FINAL', '=', $fechaFinal)
+                                                 ->whereDate('pre_presupuesto.VIGENCIA_INICIO', '<=', $fechaInicio)
+                                                 ->whereDate('pre_presupuesto.VIGENCIA_FINAL', '>=', $fechaFinal)
                                                  ->where('liq_liquidacion.ID', '=', $liquidacion_id)
                                                  ->select('pre_presupuesto.ID')
                                                  ->first();
 
-
+//dd($presupuesto);
          $proveedor = Proveedor::lists('IDENTIFICADOR_TRIBUTARIO', 'ID')
                                          ->toArray();
 
@@ -133,6 +156,8 @@ dd($resultado);
     public function store(CreateFacturaRequest $request)
     {   
         $factura = new Factura();
+
+        /** Procesa Imagen **/
 
         $file = $request->file('FOTO');
         $name = $request->LIQUIDACION_ID . '-' . $request->NUMERO . '-' . time() . '-' . $file->getClientOriginalName();
@@ -211,10 +236,24 @@ dd($resultado);
 //dd('PRIMER DATO:  ' . $request->PRESUPUESTO_ID . ' SEGUNDO DATO: ' . $request->TIPOGASTO_ID);
 
         /** Se obtiene No. de Detalle Presupuesto al que Corresponde **/
-        $detallePresupuesto = DetallePresupuesto::select('ID', 'MONTO')
-            ->where('PRESUPUESTO_ID', '=', $request->PRESUPUESTO_ID)
-            ->where('TIPOGASTO_ID', '=', $request->TIPOGASTO_ID)
-            ->first();
+
+        if($request->CATEGORIA_GASTO =='depreciación' ) {
+            $detallePresupuesto = Presupuesto::select('ID', 'ASIGNACION_MENSUAL as MONTO')->where('ID', '=', $request->PRESUPUESTO_ID)->first();
+            //dd('ahi vamos...' . $detallePresupuesto->MONTO);
+        } else {
+            $detallePresupuesto = DetallePresupuesto::select('ID', 'MONTO')
+                                                        ->where('PRESUPUESTO_ID', '=', $request->PRESUPUESTO_ID)
+                                                        ->where('TIPOGASTO_ID', '=', $request->TIPOGASTO_ID)
+                                                        ->first();
+        }
+
+        /**  Se valida si es combustible que se ingrese la cantidad correspondiente de galones  **/
+        if ($request->CATEGORIA_GASTO == 'combustible') {
+            if($request->CANTIDAD_PORCENTAJE_CUSTOM === '') {
+                return back()->withInput()->with('info', 'Es obligatorio que ingrese la cantidad de galones facturados!');
+            } 
+        }              
+       
 
         /** Se obtiene monto gastado hasta el momento por tipo de gasto **/
         if ($request->CATEGORIA_GASTO == 'combustible') {
@@ -252,10 +291,23 @@ dd($resultado);
                     $factura->MONTO_IVA = round(($factura->MONTO_AFECTO * 0.12 ), 2); //Se calcula monto de impuesto
                     
                 } else {
-                    dd('vamos bien');
+                    
                     $saldoParcial = $saldo;
-                    $remanente = $request->TOTAL - $saldoParcial;                
+                    
+                    $remanente = $request->CANTIDAD_PORCENTAJE_CUSTOM - $saldoParcial; //Ojo aca puede ser util                
+
+                    $precioGalon = round(($request->TOTAL / $request->CANTIDAD_PORCENTAJE_CUSTOM), 2);
+
+                    $factura->MONTO_EXENTO = round(($request->CANTIDAD_PORCENTAJE_CUSTOM * $idp->MONTO_A_APLICAR), 2);
+                    
+                    $factura->MONTO_AFECTO = round((($request->TOTAL - $factura->MONTO_EXENTO) / (1 + 0.12)),2); //Se calcula monto afecto
+                    
+                    $factura->MONTO_IVA = round(($factura->MONTO_AFECTO * 0.12 ), 2); //Se calcula monto de impuesto
+
+                    //$factura->MONTO_EXENTO = $reembolsable * $precioGalon *  
+                    $factura->MONTO_REMANENTE = round(($remanente * $precioGalon), 2);    
                     $factura->APROBACION_PAGO = 1;
+                    
                 }
     
             } else {            
@@ -265,23 +317,42 @@ dd($resultado);
                 $factura->MONTO_REMANENTE = $request->TOTAL;            
             }
             
-        } else {
+        } else if ($request->CATEGORIA_GASTO == 'depreciación') {
+            
+            $idp = SubcategoriaTipoGasto::select('MONTO_A_APLICAR')->where('ID', '=', $request->SUBCATEGORIATIPOGASTO_ID)->first();
+            
             if ($saldo > 0) {
                 $saldoFactura = $saldo - $request->TOTAL;
+                
                 if ($saldoFactura > 0) {
                     $factura->APROBACION_PAGO = 1;
     
                     /** Operaciones de Calculo **/
-    
-                    $factura->MONTO_AFECTO = round(($request->TOTAL / (1 + 0.12)),2); //Se calcula monto afecto
-            
+                    $factura->MONTO_EXENTO = round(($request->CANTIDAD_PORCENTAJE_CUSTOM * $idp->MONTO_A_APLICAR), 2);
+                    
+                    $factura->MONTO_AFECTO = round((($request->TOTAL - $factura->MONTO_EXENTO) / (1 + 0.12)),2); //Se calcula monto afecto
+                    
                     $factura->MONTO_IVA = round(($factura->MONTO_AFECTO * 0.12 ), 2); //Se calcula monto de impuesto
-    
+                   
                 } else {
-                    dd('vamos bien');
+                    
                     $saldoParcial = $saldo;
-                    $remanente = $request->TOTAL - $saldoParcial;                
+                    
+                    $remanente = $request->TOTAL - $saldoParcial; //Ojo aca puede ser util                
+
+                    //$precioGalon = round(($request->TOTAL / $request->CANTIDAD_PORCENTAJE_CUSTOM), 2);
+
+                    $factura->MONTO_EXENTO = round(($request->CANTIDAD_PORCENTAJE_CUSTOM * $idp->MONTO_A_APLICAR), 2);
+                    
+                    $factura->MONTO_AFECTO = round((($request->TOTAL - $factura->MONTO_EXENTO) / (1 + 0.12)),2); //Se calcula monto afecto
+                    
+                    $factura->MONTO_IVA = round(($factura->MONTO_AFECTO * 0.12 ), 2); //Se calcula monto de impuesto
+
+                    //$factura->MONTO_EXENTO = $reembolsable * $precioGalon *  
+                    //$factura->MONTO_REMANENTE = round(($remanente * $precioGalon), 2);    
+                    $factura->MONTO_REMANENTE = round($remanente, 2);
                     $factura->APROBACION_PAGO = 1;
+                    
                 }
     
             } else {            
@@ -290,16 +361,95 @@ dd($resultado);
                 /** Operaciónes de Calculo **/
                 $factura->MONTO_REMANENTE = $request->TOTAL;            
             }
+        } else {
+           
+            $findMe = 'con';
+            $impuestoHotel = strpos(strtolower($request->SUBCATEGORIA_GASTO), $findMe); 
+            if($impuestoHotel !== false)            
+            {   
+                $impuesto = SubcategoriaTipoGasto::select('MONTO_A_APLICAR')->where('ID', '=', $request->SUBCATEGORIATIPOGASTO_ID)->first();
+                $factura->CANTIDAD_PORCENTAJE_CUSTOM = $impuesto->MONTO_A_APLICAR;
+                if ($saldo > 0) {
+                    $saldoFactura = $saldo - $request->TOTAL;
+                    
+                    if ($saldoFactura > 0) {
+                        $factura->APROBACION_PAGO = 1;
+        
+                        /** Operaciones de Calculo **/                                               
+                        $factura->MONTO_AFECTO = round((($request->TOTAL - $factura->MONTO_EXENTO) / (1 + 0.12 + $impuesto->MONTO_A_APLICAR)),2); //Se calcula monto afecto
+
+                        $factura->MONTO_EXENTO = round(($factura->MONTO_AFECTO * $impuesto->MONTO_A_APLICAR), 2);
+                        
+                        $factura->MONTO_IVA = round(($factura->MONTO_AFECTO * 0.12 ), 2); //Se calcula monto de impuesto
+                        
+                    } else {
+                        
+                        $saldoParcial = $saldo;
+                        
+                        $remanente = $request->TOTAL - $saldoParcial; //Ojo aca puede ser util
+    
+                        $factura->MONTO_AFECTO = round((($request->TOTAL - $factura->MONTO_EXENTO) / (1 + 0.12 + $impuesto->MONTO_A_APLICAR)),2); //Se calcula monto afecto
+                        
+                        $factura->MONTO_EXENTO = round(($factura->MONTO_AFECTO * $impuesto->MONTO_A_APLICAR), 2);
+                        
+                        $factura->MONTO_IVA = round(($factura->MONTO_AFECTO * 0.12 ), 2); //Se calcula monto de impuesto
+
+                        $factura->MONTO_REMANENTE = round($remanente, 2);
+                            
+                        $factura->APROBACION_PAGO = 1;
+                        
+                    }
+        
+                } else {            
+                    $factura->APROBACION_PAGO = 0;
+                    
+                    /** Operaciónes de Calculo **/
+                    $factura->MONTO_REMANENTE = $request->TOTAL;            
+                }                
+
+                
+            } else {
+                if ($saldo > 0) {
+                    $saldoFactura = $saldo - $request->TOTAL;
+                    if ($saldoFactura > 0) {
+                        $factura->APROBACION_PAGO = 1;
+        
+                        /** Operaciones de Calculo **/
+        
+                        $factura->MONTO_AFECTO = round(($request->TOTAL / (1 + 0.12)),2); //Se calcula monto afecto
+                
+                        $factura->MONTO_IVA = round(($factura->MONTO_AFECTO * 0.12 ), 2); //Se calcula monto de impuesto
+        
+                    } else {                        
+                        $saldoParcial = $saldo;
+
+                        $factura->MONTO_AFECTO = round(($request->TOTAL / (1 + 0.12)),2); //Se calcula monto afecto
+                        
+                        $factura->MONTO_IVA = round(($factura->MONTO_AFECTO * 0.12 ), 2); //Se calcula monto de impuesto
+                        $factura->MONTO_EXENTO = 0;
+                        
+                        $factura->MONTO_REMANENTE = $request->TOTAL - $saldoParcial;                
+                        
+                        $factura->APROBACION_PAGO = 1;
+                    }
+        
+                } else {            
+                    $factura->APROBACION_PAGO = 0;
+                
+                    /** Operaciónes de Calculo **/
+                    $factura->MONTO_REMANENTE = $request->TOTAL;            
+                }
+
+            }
+            
         }
         
 
-        if ($request->CANTIDAD_PORCENTAJE == '') {
-            $request->CANTIDAD_PORCENTAJE = 0.00;
+        if ($request->CANTIDAD_PORCENTAJE_CUSTOM == '') {
+            $request->CANTIDAD_PORCENTAJE_CUSTOM = 0.00;
         } 
 
         //dd('Este es el Pago Parcial: ' . $saldoParcial . ' y este el Remanente: ' . $remanente);
-
-        
 
         //dd('vamos mal o punto de control');
 
@@ -400,11 +550,12 @@ dd($resultado);
         /*** Se determina a que Presupuesto pertenece la Liquidación **/
 
         $presupuesto =  Liquidacion::join('pre_presupuesto', 'pre_presupuesto.USUARIORUTA_ID', '=', 'liq_liquidacion.USUARIORUTA_ID')
-            ->whereDate('pre_presupuesto.VIGENCIA_INICIO', '=', $fechaInicio)
-            ->whereDate('pre_presupuesto.VIGENCIA_FINAL', '=', $fechaFinal)
+            ->whereDate('pre_presupuesto.VIGENCIA_INICIO', '<=', $fechaInicio)
+            ->whereDate('pre_presupuesto.VIGENCIA_FINAL', '>=', $fechaFinal)
             ->where('liq_liquidacion.ID', '=', $liquidacion_id)
             ->select('pre_presupuesto.ID')
             ->first();
+            
 
         return view('facturas.edit', compact('factura', 'tipoGasto', 'proveedor', 'moneda', 'fechaFactura', 'tipoProveedor', 'liquidacion_id', 'tipoDocumento',
                     'tipoLiquidacion', 'presupuesto', 'subcategoria'));

@@ -42,6 +42,9 @@
                             <li><a href="{{ route('empresas.index') }}">Empresas</a></li>
                           @endcan
                           @can('ver usuarios por empresa')
+                          <li><a href="{{ route('usuarios.index') }}">Usuarios</a></li>
+                          <li><a href="{{ route('asignaRoleUsuario') }}">Roles por Usuario</a></li>
+                          
                             <li><a href="{{ route('createUsuarioEmpresa') }}">Usuarios por Empresa</a></li>
                           @endcan
                           @can('ver seguridad')
@@ -51,9 +54,9 @@
                                 <li><a href="{{ route('permisos.index') }}">Permisos</a></li>
                           @endcan
                           <li><a href="{{ route('roles.index') }}">Roles</a></li>
-                          <li><a href="{{ route('usuarios.index') }}">Usuarios</a></li>
+                          
                           <li><a href="{{ route('asignaPermisosRole') }}">Permisos por Rol</a></li>
-                          <li><a href="{{ route('asignaRoleUsuario') }}">Roles por Usuario</a></li>
+                          
                           @endcan
                         </ul>
                       </li>

@@ -75,7 +75,7 @@
 <script type="text/javascript">
     $(document).ready(function () {
         $('.btn-delete').click(function (e) {
-            e.preventDefault();
+            e.preventDefault();           
             var row = $(this).parents('tr');
             var id = row.data('id');
             vurl = '{{ route('anularDetallePresupuesto') }}';
@@ -85,7 +85,7 @@
             $('#revertir').click(function () {
                 row.show();
             });
-            $('#anular').click(function () {
+            $('#anular').click(function () {                 
                 $('#myModal').modal('hide');
                 $.ajax({
                     type: 'get',

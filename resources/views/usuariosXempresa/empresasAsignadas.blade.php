@@ -38,10 +38,10 @@
 
 @push('scripts')
 <script type="text/javascript">
-    $(document).ready(function () {
-
+    $(document).ready(function () {       
 
         $('.btn-delete').click(function (e) {
+            alert('si');
             e.preventDefault();
             var row = $(this).parents('tr');
             var id = row.data('id');
@@ -60,6 +60,7 @@
                     success: function (data) {
                         if(data == 1) {
                             console.log('La Empresa se Desvinculo Exitosamente!!!.');
+                            window.location.href = "/usuario/empresa";
                         } else {
                             alert('La Empresa no fue Desvinculada!!!');
                         }

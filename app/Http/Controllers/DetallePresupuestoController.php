@@ -37,7 +37,7 @@ class DetallePresupuestoController extends Controller
      * @return \Illuminate\Http\Response
      */
      public function presupuestoCreateDetalle($id)
-     {
+     {  
          $param = explode('-', $id);
          $presupuesto_id = $param[0];
          $tipo = $param[1];
@@ -49,7 +49,8 @@ class DetallePresupuestoController extends Controller
                                          ->toArray();
 
          $tipoGasto = TipoGasto::where('EMPRESA_ID', '=', $empresa_id)
-                                        ->lists('DESCRIPCION', 'ID')
+                                        ->where('ANULADO', '=', 0)
+                                        ->lists('DESCRIPCION', 'ID')                                        
                                         ->toArray();
 
          $subTipoGasto = SubcategoriaTipoGasto::lists('DESCRIPCION', 'ID')

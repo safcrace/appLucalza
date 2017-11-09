@@ -1,12 +1,12 @@
-{!! Form::open(['route' => ['correccionLiquidacion'], 'method' => 'POST']) !!}
+{{--{!! Form::open(['route' => ['correccionLiquidacion'], 'method' => 'POST']) !!} --}}
 
 <div class="row form-group">
   <div class="col-md-1 col-md-offset-1">
         {!! Form::label('USUARIO_ID', 'Usuario') !!}
   </div>
   <div class="col-md-3">
-      @if(isset($usuario_id))
-        {!! Form::select('USUARIO_ID', $usuarios, $usuario_id, ['class' => 'form-control', 'placeholder' => 'Seleccione un Usuario', 'id' => 'usuario']); !!}
+      @if(isset($usuarioAsignado))
+        {!! Form::select('USUARIO_ID', $usuarios, $usuarioAsignado, ['class' => 'form-control', 'placeholder' => 'Seleccione un Usuario', 'id' => 'usuario']); !!}
       @else
         {!! Form::select('USUARIO_ID', $usuarios, null, ['class' => 'form-control', 'placeholder' => 'Seleccione un Usuario', 'id' => 'usuario']); !!}
       @endif
@@ -37,7 +37,7 @@
                   {!! Form::label('codigoProveedorSap', 'Código Proveedor SAP') !!}
               </div>
               <div class="col-md-3" id="cod_pro">
-                  {!! Form::text('codigoProveedorSap', null, ['class' => 'form-control', 'placeholder' => 'Código Proveedor SAP', 'disabled']); !!}
+                  {!! Form::text('ProveedorSap', null, ['class' => 'form-control', 'placeholder' => 'Código Proveedor SAP', 'id' => 'codigoProveedorSap', 'disabled']); !!}
 
               </div>
               <div class="col-md-3" id="pro_sap" style="display: none">
@@ -56,7 +56,7 @@
         <button type="button" class="btn btn-default" data-dismiss="modal"><span class="glyphicon glyphicon-remove-sign" aria-hidden="true" style="font-size:32px; color: black"></span></button>
         <button type="submit" class="btn btn-default" style="border-color: white"><span class="glyphicon glyphicon-ok-sign" aria-hidden="true" style="font-size:32px; color: black;"></button>
       </div>
-      {!! Form::close() !!}
+      {{--{!! Form::close() !!}--}}
     </div>
   </div>
 </div>

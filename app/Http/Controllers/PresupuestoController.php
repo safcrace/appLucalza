@@ -392,7 +392,7 @@ class PresupuestoController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function update(CreatePresupuestoRequest $request, $id)
-    {
+    {   
         $usuarioRuta_id = UsuarioRuta::select('ID')
                         ->where('USER_ID', '=', $request->USUARIO_ID)
                         ->where('RUTA_ID', '=', $request->RUTA_ID)
@@ -408,7 +408,13 @@ class PresupuestoController extends Controller
                 ->update(['USUARIORUTA_ID' => $usuarioRuta_id->ID, 'MONEDA_ID' => $request->MONEDA_ID, 'VIGENCIA_INICIO' => $request->VIGENCIA_INICIO,
                           'VIGENCIA_FINAL' => $request->VIGENCIA_FINAL, 'ANULADO' => $request->ANULADO]);
 
-        return Redirect::to('presupuesto/otrosgastos');
+        if ($request->TIPO_GASTO == 'Rutas') {            
+            $rutaPresupuesto = 'presupuestos';
+        } else {
+            $rutaPresupuesto = 'presupuesto/otrosgastos';            
+        }
+
+        return Redirect::to($rutaPresupuesto);
     }
 
     /**

@@ -40,7 +40,8 @@ class WebServiceController extends Controller
 
 
         $filas = $data['nrows'];
-        $combo = '<select class="form-control" id="codigoProveedorSap" name="codigoProveedorSap">';
+        $combo = '<select class="form-control" id="codigoProveedorSap" name="codigoProveedorSap", disable=false>';
+        $combo .='<option value="0">Seleccione una opción</option>';
         foreach ($data['data'] as $a => $b) {
             $combo .=  '<option value="' . $b['code'] . '">' . $b['name'] . '</option>';
         }

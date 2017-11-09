@@ -218,9 +218,13 @@ class LiquidacionController extends Controller
      */
     public function updateEnviarLiquidacion(Request $request, $id)
     {
-        Liquidacion::where('ID', $id)
+        $param = explode('-', $id);
+        $liquidacion_id = $param[0];
+        $tipoLiquidacion = $param[1];
+
+        Liquidacion::where('ID', $liquidacion_id)
             ->update(['ESTADOLIQUIDACION_ID' => 2]);
-        return Redirect::to('liquidaciones');
+        return Redirect::to('liquidaciones/tipo/' . $tipoLiquidacion);
     }
 
     /**
