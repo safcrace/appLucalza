@@ -75,6 +75,14 @@ class EmpresaController extends Controller
      */
     public function store(CreateEmpresaRequest $request)
     {
+        /** Se verifica que no exista Codigo de Empresa */
+        $existeCodigo = Empresa::select('ID')->where('CLAVE', '=', $request->CLAVE)->first();
+        
+        if ($existeCodigo) {
+            return back()->withInput()->with('info', 'El Código ya existe en la Base de Datos.');
+        }
+
+
         $empresa = new Empresa();
         $empresa->CLAVE = $request->CLAVE;
         $empresa->DESCRIPCION = $request->DESCRIPCION;

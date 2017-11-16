@@ -45,11 +45,11 @@
   <script type="text/javascript">
       $(document).ready(function () {
           var supervisor = $('#supervisor').val();
-          var empresa = $('#empresa').val();
+          var empresa = $('#empresa').val();          
 
           if (supervisor != "") {
               vurl = '{{ route('vendedoresSupervisor')}}'
-              vurl = vurl.replace('%7Bid%7D', supervisor + '-' + empresa);
+              vurl = vurl.replace('%7Bid%7D', supervisor + '-' + empresa);              
 
               $.ajax({
                   type: 'get',

@@ -21,7 +21,7 @@
                  </div>
                </div>
 
-               <div class="panel panel-danger">
+               <div class="panel panel-primary">
                    <div class="panel-heading panel-title">Detalle de Facturación</div>
 
 
@@ -91,7 +91,7 @@
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
         <h4 class="modal-title" id="myModalLabel"></h4>
       </div>
-      {!! Form::model($factura, ['route' => ['comentarioSupervisor', ':FACTURA_ID'], 'method' => 'PATCH', 'id' => 'form-update']) !!}
+      {!! Form::model($facturas, ['route' => ['comentarioSupervisor', ':FACTURA_ID'], 'method' => 'PATCH', 'id' => 'form-update']) !!}
       <div class="modal-body">
 
           <textarea name="COMENTARIO_SUPERVISOR" class="form-control" rows="3"></textarea>
@@ -152,8 +152,7 @@
           var url = form.attr('action').replace(':FACTURA_ID', id);
           var data = form.serialize();
 
-          $.post(url, data, function (result){
-            alert(result);
+          $.post(url, data, function (result){           
             $('#myModal').modal('hide');
             location.reload();
           })

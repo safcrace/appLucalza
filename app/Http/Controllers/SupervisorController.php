@@ -37,9 +37,9 @@ class SupervisorController extends Controller
                                   ->join('cat_usuarioempresa', 'cat_usuarioempresa.USER_ID', '=', 'users.id')
                                   ->join('cat_empresa', 'cat_empresa.ID', '=', 'cat_usuarioempresa.EMPRESA_ID')
                                   ->join('cat_supervisor_vendedor', 'cat_supervisor_vendedor.VENDEDOR_ID_USUARIO', '=', 'users.id')
-                                  //->where('cat_supervisor_vendedor.SUPERVISOR_ID_USUARIO', '=', $usuario_id )
-                                  //->where('cat_empresa.ID', '=', $empresa_id)
-                                  //->where('liq_liquidacion.ESTADOLIQUIDACION_ID', '=', 2)
+                                  ->where('cat_supervisor_vendedor.SUPERVISOR_ID_USUARIO', '=', $usuario_id )
+                                  ->where('cat_empresa.ID', '=', $empresa_id)
+                                  ->where('liq_liquidacion.ESTADOLIQUIDACION_ID', '=', 2)
                                   ->paginate(10);
 
                                       /*$totales = \DB::select("select SUM(liq_factura.TOTAL)
@@ -77,7 +77,7 @@ class SupervisorController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function show($id)
-    {
+    {   
         $liquidacion = Liquidacion::select('liq_liquidacion.ID', 'liq_liquidacion.FECHA_INICIO', 'users.nombre as USUARIO', 'cat_ruta.DESCRIPCION as RUTA',
                                            'liq_liquidacion.SUPERVISOR_COMENTARIO', 'liq_liquidacion.CONTABILIDAD_COMENTARIO' )
                                   ->join('cat_usuarioruta', 'cat_usuarioruta.ID', '=', 'liq_liquidacion.USUARIORUTA_ID')
@@ -97,6 +97,7 @@ class SupervisorController extends Controller
                                                   ->join('users', 'users.id', '=', 'cat_usuarioruta.USER_ID')
                                                   //->join('cat_frecuenciatiempo', 'cat_frecuenciatiempo.ID', '=', 'pre_detpresupuesto.FRECUENCIATIEMPO_ID')
                                                   ->where('liq_factura.LIQUIDACION_ID', '=', $id)
+                                                  ->where('liq_factura.ANULADO', '=', 0)                                                  
                                                   ->paginate();
 
         $corregirFactura = array();

@@ -146,7 +146,7 @@ class LiquidacionController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
-    {
+    {   
         $param = explode('-', $id);
         $liquidacion_id = $param[0];
         $tipoLiquidacion = $param[1];
@@ -176,14 +176,14 @@ class LiquidacionController extends Controller
                                       ->first();
 //dd($liquidacion->SUPERVISOR_COMENTARIO);
         $facturas = Factura::select('liq_factura.ID', 'cat_proveedor.NOMBRE', 'liq_factura.SERIE as SERIE', 'liq_factura.NUMERO as NUMERO', 'liq_factura.TOTAL as TOTAL',
-                                    'liq_factura.FECHA_FACTURA', 'cat_tipogasto.DESCRIPCION as TIPOGASTO', 'liq_factura.COMENTARIO_SUPERVISOR AS RECHAZO')
+                                    'liq_factura.FECHA_FACTURA', 'cat_tipogasto.DESCRIPCION as TIPOGASTO', 'liq_factura.COMENTARIO_SUPERVISOR AS RECHAZO', 'liq_factura.COMENTARIO_CONTABILIDAD AS RECHAZOC')
                                                   ->join('cat_proveedor', 'cat_proveedor.ID', '=', 'liq_factura.PROVEEDOR_ID')
                                                   ->join('cat_tipogasto', 'cat_tipogasto.ID', '=', 'liq_factura.TIPOGASTO_ID')
                                                   //->join('cat_frecuenciatiempo', 'cat_frecuenciatiempo.ID', '=', 'pre_detpresupuesto.FRECUENCIATIEMPO_ID')
                                                   ->where('liq_factura.LIQUIDACION_ID', '=', $liquidacion_id)
                                                   ->where('liq_factura.ANULADO', '=', 0)
                                                   ->paginate();
-
+                                                  
         return view('liquidaciones.edit', compact('liquidacion', 'usuario', 'usuario_id', 'rutas', 'combo', 'facturas', 'tipoLiquidacion'));
     }
 
@@ -195,7 +195,8 @@ class LiquidacionController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function update(CreateLiquidacionRequest $request, $id)
-    {
+    {          
+
         $usuarioRuta_id = UsuarioRuta::select('ID')
                         ->where('USER_ID', '=', $request->USUARIO_ID)
                         ->where('RUTA_ID', '=', $request->RUTA_ID)
@@ -206,7 +207,7 @@ class LiquidacionController extends Controller
                 ->update(['USUARIORUTA_ID' => $usuarioRuta_id->ID, 'FECHA_INICIO' => $request->FECHA_INICIO, 'FECHA_FINAL' => $request->FECHA_FINAL,
                           'COMENTARIO_PAGO' => $request->COMENTARIO_PAGO]);
 
-        return Redirect::to('liquidaciones');
+        return Redirect::to('liquidaciones/tipo/' . $request->TIPO_LIQUIDACION);
     }
 
     /**

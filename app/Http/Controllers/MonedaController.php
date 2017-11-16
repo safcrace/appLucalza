@@ -53,6 +53,13 @@ class MonedaController extends Controller
      */
     public function store(CreateMonedaRequest $request)
     {
+         /** Se verifica que no exista Codigo de Empresa */
+         $existeCodigo = Moneda::select('ID')->where('CLAVE', '=', $request->CLAVE)->first();
+         
+        if ($existeCodigo) {
+            return back()->withInput()->with('info', 'El Código ya existe en la Base de Datos.');
+        }
+
         $moneda = new Moneda();
         $moneda->CLAVE = $request->CLAVE;
         $moneda->DESCRIPCION = $request->DESCRIPCION;

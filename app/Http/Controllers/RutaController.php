@@ -149,6 +149,12 @@ class RutaController extends Controller
     {
         $empresa_id = $request->EMPRESA_ID;
 
+        $existeCodigo = Ruta::select('ID')->where('CLAVE', '=', $request->CLAVE)->first();
+
+        if ($existeCodigo) {
+            return back()->withInput()->with('info', 'El Código ya existe en la Base de Datos.');
+        }
+
         $ruta = new Ruta();
 
         $ruta->EMPRESA_ID = $empresa_id;

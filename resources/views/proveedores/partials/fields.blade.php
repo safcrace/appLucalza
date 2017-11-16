@@ -47,7 +47,11 @@
     {!! Form::label('TIPOPROVEDOR_ID', 'Tipo Proveedor') !!}
   </div>
   <div class="col-md-3">
-    {!! Form::select('TIPOPROVEEDOR_ID', $tipoProveedor, 1, ['class' => 'form-control', 'placeholder' => 'Seleccione Tipo Proveedor', 'id' => 'tipoproveedor_id']); !!}
+    @if(isset($proveedor->TIPOPROVEEDOR_ID))
+      {!! Form::select('TIPOPROVEEDOR_ID', $tipoProveedor,$proveedor->TIPOPROVEEDOR_ID, ['class' => 'form-control', 'placeholder' => 'Seleccione Tipo Proveedor', 'id' => 'tipoproveedor_id']); !!}
+    @else
+      {!! Form::select('TIPOPROVEEDOR_ID', $tipoProveedor, 1, ['class' => 'form-control', 'placeholder' => 'Seleccione Tipo Proveedor', 'id' => 'tipoproveedor_id']); !!}
+    @endif 
   </div>
 </div>
 

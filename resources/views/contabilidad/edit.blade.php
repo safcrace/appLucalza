@@ -187,8 +187,7 @@
           var url = form.attr('action').replace(':FACTURA_ID', id);
           var data = form.serialize();
 
-          $.post(url, data, function (result){
-            alert(result);
+          $.post(url, data, function (result){            
             $('#myModal').modal('hide');
             location.reload();
           })

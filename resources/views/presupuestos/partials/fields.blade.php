@@ -81,7 +81,12 @@
         {!! Form::label('ASIGNACION_MENSUAL', 'Asignación Mensual', ['id' => 'monto']) !!}
     </div>
     <div class="col-md-3">
-        {!! Form::text('ASIGNACION_MENSUAL', null, ['class' => 'form-control', 'placeholder' => 'Ingrese Asignación']); !!}
+        @if(isset($presupuesto->ASIGNACION_MENSUAL))
+            {!! Form::text('ASIGNACION_MENSUAL', $presupuesto->ASIGNACION_MENSUAL, ['class' => 'form-control', 'placeholder' => 'Ingrese Asignación']); !!}    
+        @else
+            {!! Form::text('ASIGNACION_MENSUAL', 0, ['class' => 'form-control', 'placeholder' => 'Ingrese Asignación']); !!}    
+        @endif
+        
     </div>
 </div>
 

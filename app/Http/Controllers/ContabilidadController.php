@@ -32,7 +32,7 @@ class ContabilidadController extends Controller
                                   ->join('cat_ruta', 'cat_ruta.ID', '=', 'cat_usuarioruta.RUTA_ID')
                                   ->join('cat_usuarioempresa', 'cat_usuarioempresa.USER_ID', '=', 'users.id')
                                   ->join('cat_empresa', 'cat_empresa.ID', '=', 'cat_usuarioempresa.EMPRESA_ID')
-                                  //quitar esto ->where('cat_empresa.ID', '=', $empresa_id)
+                                  ->where('cat_empresa.ID', '=', $empresa_id)
                                   ->where('liq_liquidacion.ESTADOLIQUIDACION_ID', '=', 3)
                                   ->paginate(10);
 
@@ -86,13 +86,49 @@ class ContabilidadController extends Controller
                                                 ->join('cat_usuarioruta', 'cat_usuarioruta.ID', '=', 'liq_liquidacion.USUARIORUTA_ID')
                                                 ->join('users', 'users.id', '=', 'cat_usuarioruta.USER_ID')
                                                   //->join('cat_frecuenciatiempo', 'cat_frecuenciatiempo.ID', '=', 'pre_detpresupuesto.FRECUENCIATIEMPO_ID')
-                                                  ->where('liq_factura.LIQUIDACION_ID', '=', $id)
-                                                  ->paginate();
+                                                ->where('liq_factura.LIQUIDACION_ID', '=', $id)
+                                                ->where('liq_factura.ANULADO', '=', 0) 
+                                                ->paginate();
         $corregirFactura = array();
 
         $tipoProveedor = TipoProveedor::lists('DESCRIPCION', 'ID')->toArray();
 
         return view('contabilidad.edit', compact('liquidacion', 'facturas', 'corregirFactura', 'tipoProveedor'));
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function report($id) 
+    {
+        $liquidacion = Liquidacion::select('liq_liquidacion.ID', 'liq_liquidacion.FECHA_INICIO', 'users.nombre as USUARIO', 'cat_ruta.DESCRIPCION as RUTA',
+                                           'liq_liquidacion.FECHA_FINAL')
+                                        ->join('cat_usuarioruta', 'cat_usuarioruta.ID', '=', 'liq_liquidacion.USUARIORUTA_ID')
+                                        ->join('users', 'users.id', '=', 'cat_usuarioruta.USER_ID')
+                                        ->join('cat_ruta', 'cat_ruta.ID', '=', 'cat_usuarioruta.RUTA_ID')
+                                        ->where('liq_liquidacion.id', '=', $id)
+                                        ->first();
+
+        $facturas = Factura::select('liq_factura.ID', 'cat_proveedor.ID as PROVEEDORID', 'cat_proveedor.NOMBRE', 'liq_factura.SERIE as SERIE',
+                                    'liq_factura.NUMERO as NUMERO', 'liq_factura.TOTAL as TOTAL', 'liq_factura.FECHA_FACTURA', 'liq_factura.MONTO_IVA',
+                                    'cat_tipogasto.DESCRIPCION as TIPOGASTO', 'liq_factura.APROBACION_PAGO', 'cat_tipodocumento.DESCRIPCION as DOCUMENTO',
+                                    'users.email as EMAIL', 'liq_factura.FOTO as FOTO', 'cat_proveedor.TIPOPROVEEDOR_ID', 'liq_factura.MONTO_AFECTO',
+                                    'MONTO_EXENTO', 'liq_factura.MONTO_REMANENTE')
+                                        ->join('cat_proveedor', 'cat_proveedor.ID', '=', 'liq_factura.PROVEEDOR_ID')
+                                        ->join('cat_tipogasto', 'cat_tipogasto.ID', '=', 'liq_factura.TIPOGASTO_ID')
+                                        ->join('liq_liquidacion', 'liq_liquidacion.ID', '=', 'liq_factura.LIQUIDACION_ID')
+                                        ->join('cat_usuarioruta', 'cat_usuarioruta.ID', '=', 'liq_liquidacion.USUARIORUTA_ID')
+                                        ->join('cat_tipodocumento', 'cat_tipodocumento.ID', '=', 'liq_factura.TIPODOCUMENTO_ID')
+                                        ->join('users', 'users.id', '=', 'cat_usuarioruta.USER_ID')
+                                        //->join('cat_frecuenciatiempo', 'cat_frecuenciatiempo.ID', '=', 'pre_detpresupuesto.FRECUENCIATIEMPO_ID')
+                                        ->where('liq_factura.LIQUIDACION_ID', '=', $id)
+                                        ->where('liq_factura.ANULADO', '=', 0) 
+                                        ->paginate();       
+
+        return view('contabilidad.report', compact('liquidacion', 'facturas'));
     }
 
     /**

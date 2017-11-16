@@ -7,6 +7,8 @@
 {!! Form::hidden('TIPO_LIQUIDACION', $tipoLiquidacion) !!}
 {!! Form::hidden('CATEGORIA_GASTO', 'Parametro', ['id' => 'categoriaGasto']) !!}
 {!! Form::hidden('SUBCATEGORIA_GASTO', 'Parametro', ['id' => 'subCategoriaGasto']) !!}
+{!! Form::hidden('URL_IMAGEN_FACTURA', $factura->EMAIL . '/' . $factura->FOTO, ['id' => 'urlImagenFactura']) !!}
+{!! Form::hidden('ID_FACTURA', $factura->ID, ['id' => 'idFactura']) !!}
 
 <div class="panel panel-primary">
   <div class="panel-heading">Datos de la Factura </div>
@@ -75,6 +77,10 @@
                     {!! Form::file('FOTO'); !!}
                 </div>
             @endif
+
+            <div class="col-md-2 col-md-offset-1">
+                <a href="#" title="Reemplazar Factura" data-toggle="modal" data-target="#myModalS"><span class="glyphicon glyphicon-refresh" aria-hidden="true" style="font-size:24px; color: black"></span></a>
+            </div>
     </div>
 
     <div class="row form-group">
@@ -226,9 +232,16 @@
 </div>
 
 
+
+
 @push('scripts')
 <script type="text/javascript">
     $(document).ready(function () {
+
+        var urlImagen = $('#urlImagenFactura').val(),
+            idFactura = $('#idFactura').val()
+        $('#facturaUrl').val(urlImagen)
+        $('#id_factura').val(idFactura)
 
         $.fn.populateSelect = function (values) {
             var options = ''
@@ -371,14 +384,30 @@
             var form = $('#form-save')
             var url = '{{ route('proveedores.store') }}'
             var data = form.serialize()
+            alert(data);
 
             $.post(url, data, function (data) {
-                alert(data[2])
+                //alert(data[2])
                 $('#nit').html("<option value='" + data[2] + "'>" + data[0] + "</option>")
                 //$('#nit').html(data[0])
                 $('#proveedorNuevo').val(data[2])
                 $('#nombreProveedor').val(data[1])
                 $('#myModalA').modal('hide')
+            })
+        });
+
+        $('#sustituirImagen').click(function () {
+            var form = $('#form-update')
+            var url = '{{ route('sustituirFactura') }}'
+            var data = form.serialize()
+//alert(data)/*
+            $.post(url, data, function (data) {               
+                 alert(data)
+                //$('#nit').html("<option value='" + data[2] + "'>" + data[0] + "</option>")
+                //$('#nit').html(data[0])
+                //$('#proveedorNuevo').val(data[2])
+                //$('#nombreProveedor').val(data[1])
+                //$('#myModalA').modal('hide')
             })
         });
 

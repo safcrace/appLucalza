@@ -20,7 +20,7 @@
                   {!! Form::close() !!}
                  </div>
                </div>
-               
+              
               @if($presupuesto->ASIGNACION_MENSUAL == null || $presupuesto->ASIGNACION_MENSUAL == 0 )
 
                <div class="panel panel-primary">

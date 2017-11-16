@@ -48,6 +48,7 @@ class PresupuestoController extends Controller
             ->join('cat_empresa', 'cat_empresa.ID', '=', 'cat_usuarioempresa.EMPRESA_ID')
             ->where('pre_presupuesto.ANULADO', '=', 0)
             ->where('cat_empresa.ID', '=', $empresa_id)
+            ->where('cat_ruta.TIPO_GASTO', '=', $tipoGasto)
             ->paginate(10);
 
         /*"select p.ID, u.nombre, r.DESCRIPCION, e.DESCRIPCION
@@ -116,7 +117,10 @@ class PresupuestoController extends Controller
 
         $usuarios = User::join('cat_usuarioempresa', 'cat_usuarioempresa.USER_ID', '=', 'users.id')
             ->join('cat_empresa', 'cat_empresa.ID', '=', 'cat_usuarioempresa.EMPRESA_ID')
+            ->join('cat_usuarioruta', 'cat_usuarioruta.USER_ID', '=', 'users.id')
+            ->join('cat_ruta', 'cat_ruta.ID', '=', 'cat_usuarioruta.RUTA_ID')
             ->where('cat_usuarioempresa.EMPRESA_ID', '=', $empresa_id)
+            ->where('cat_ruta.TIPO_GASTO', '=', $tipoGasto)
             ->lists('users.nombre', 'users.id')
             ->toArray();
 
@@ -235,9 +239,10 @@ class PresupuestoController extends Controller
 
         $presupuestosRuta = Presupuesto::select('ID', 'VIGENCIA_INICIO', 'VIGENCIA_FINAL')
                                                 ->where('USUARIORUTA_ID', '=', $usuarioRuta_id->ID)
+                                                ->where('ANULADO', '=', 0)
                                                 ->get();
 
-        //dd($presupuestosRuta);
+        //dd($request->all());
         foreach ($presupuestosRuta as $presupuestoRuta) {
             if ($request->VIGENCIA_INICIO <= $presupuestoRuta->VIGENCIA_FINAL) {
                 return back()->withInput()->with('info', 'Por Favor Revise el Rango de Fecha, ya que se Traslapa con otro presupuesto' . $texto);
@@ -258,7 +263,12 @@ class PresupuestoController extends Controller
 
         $presupuesto->save();
 
-        return redirect::to('presupuestos/' . $presupuesto->id . '-' . $request->TIPO_GASTO . '/edit')->withInput();
+        if ($request->ASIGNACION_MENSUAL > 0 ) {
+            return redirect::to('presupuesto/otrosgastos');
+        } else {
+            return redirect::to('presupuestos/' . $presupuesto->id . '-' . $request->TIPO_GASTO . '/edit')->withInput();
+        }      
+        
     }
 
     /**

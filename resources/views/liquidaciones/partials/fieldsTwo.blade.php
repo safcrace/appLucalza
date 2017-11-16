@@ -1,6 +1,8 @@
 @if (isset($usuario_id))
     <input id="USUARIO_ID" name="USUARIO_ID" type="hidden" value="{{ $usuario_id }}">
 @endif
+
+{!! Form::hidden('TIPO_LIQUIDACION', $tipoLiquidacion) !!}
 <hr>
 <div class="row form-group">
   <div class="col-md-1 col-md-offset-1">

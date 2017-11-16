@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\CreateFacturaRequest;
+use App\Http\Requests\EditFacturaRequest;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
@@ -568,16 +569,312 @@ dd($resultado);
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(CreateFacturaRequest $request, $id)
+    public function update(EditFacturaRequest $request, $id)
     {
+
+        $factura = Factura::findOrFail($id);
+        //Se valida que fecha no sea anterior a X días programados por la empresa y dentro de Período de Liquidación
+
+        $empresa = Session::get('loginEmpresa');
+        
+                if($request->TIPO_LIQUIDACION == 'Rutas') {            
+                    $restriccionDias = Empresa::select('TIEMPOATRASO_RUTAS')->where('ID', '=', $empresa)->first();
+                    $limite = Liquidacion::select('FECHA_INICIO', 'FECHA_FINAL')->where('ID', '=', $request->LIQUIDACION_ID)->first();
+                    //dd($limite->FECHA_INICIO->format('d-m-Y'));
+                    //dd($restriccionDias);
+                    $fechaFactura = date_create($request->FECHA_FACTURA);
+                    if ($fechaFactura->format('Y-m-d') < $limite->FECHA_INICIO->subDays($restriccionDias->TIEMPOATRASO_RUTAS)->format('Y-m-d')) {
+                        return back()->withInput()->with('info', 'La Fecha de esta Factura se encuentra fuera del Rango Permitido!');            
+                    }
+                    if ($fechaFactura->format('Y-m-d') > $limite->FECHA_FINAL->format('Y-m-d')) {
+                        return back()->withInput()->with('info', 'La Fecha de esta Factura se encuentra fuera del Rango Permitido!');            
+                    }    
+                } else {
+                    $restriccionDias = Empresa::select('TIEMPOATRASO_OTROSGASTOS')->where('ID', '=', $empresa)->first();
+                    $limite = Liquidacion::select('FECHA_INICIO', 'FECHA_FINAL')->where('ID', '=', $request->LIQUIDACION_ID)->first();
+                    $fechaFactura = date_create($request->FECHA_FACTURA);
+                    if ($fechaFactura->format('Y-m-d') < $limite->FECHA_INICIO->subDays($restriccionDias->TIEMPOATRASO_OTROSGASTOS)->format('Y-m-d')) {
+                        return back()->withInput()->with('info', 'La Fecha de esta Factura se encuentra fuera del Rango Permitido!');            
+                    }
+                    if ($fechaFactura->format('Y-m-d') > $limite->FECHA_FINAL->format('Y-m-d')) {
+                        return back()->withInput()->with('info', 'La Fecha de esta Factura se encuentra fuera del Rango Permitido!');            
+                    }                
+                }
+               
+        
+                /** Se obtiene No. de Detalle Presupuesto al que Corresponde **/
+        
+                if($request->CATEGORIA_GASTO =='depreciación' ) {
+                    $detallePresupuesto = Presupuesto::select('ID', 'ASIGNACION_MENSUAL as MONTO')->where('ID', '=', $request->PRESUPUESTO_ID)->first();
+                    //dd('ahi vamos...' . $detallePresupuesto->MONTO);
+                } else {
+                    $detallePresupuesto = DetallePresupuesto::select('ID', 'MONTO')
+                                                                ->where('PRESUPUESTO_ID', '=', $request->PRESUPUESTO_ID)
+                                                                ->where('TIPOGASTO_ID', '=', $request->TIPOGASTO_ID)
+                                                                ->first();
+                }
+        
+                /**  Se valida si es combustible que se ingrese la cantidad correspondiente de galones  **/
+                if ($request->CATEGORIA_GASTO == 'combustible') {
+                    if($request->CANTIDAD_PORCENTAJE_CUSTOM === '') {
+                        return back()->withInput()->with('info', 'Es obligatorio que ingrese la cantidad de galones facturados!');
+                    } 
+                }              
+               
+        
+                /** Se obtiene monto gastado hasta el momento por tipo de gasto **/
+                if ($request->CATEGORIA_GASTO == 'combustible') {
+                    $montoAcumulado = Factura::where('LIQUIDACION_ID', '=', $request->LIQUIDACION_ID)
+                    ->where('TIPOGASTO_ID', '=', $request->TIPOGASTO_ID)
+                    ->sum('CANTIDAD_PORCENTAJE_CUSTOM');
+                    
+                } else {
+                    $montoAcumulado = Factura::where('LIQUIDACION_ID', '=', $request->LIQUIDACION_ID)
+                    ->where('TIPOGASTO_ID', '=', $request->TIPOGASTO_ID)
+                    ->sum('TOTAL');
+                }
+                
+                //dd($factura->APROBACION_PAGO);
+                //dd('Presupuesto: ' . $detallePresupuesto->MONTO . ' Y el monto acumulado es :' . $montoAcumulado . ' y factura: ' . $factura->TOTAL);
+                $montoAcumulado -= $factura->TOTAL;
+               
+                $saldo = $detallePresupuesto->MONTO - $montoAcumulado;        
+                //dd($saldo);
+
+                //Se determina si tiene presupuesto para cubrir el gasto o si existe remanente
+        
+                if ($request->CATEGORIA_GASTO == 'combustible') {
+                    
+                    $idp = SubcategoriaTipoGasto::select('MONTO_A_APLICAR')->where('ID', '=', $request->SUBCATEGORIATIPOGASTO_ID)->first();
+                    
+                    if ($saldo > 0) {
+                        $saldoFactura = $saldo - $request->CANTIDAD_PORCENTAJE_CUSTOM;
+                        
+                        if ($saldoFactura > 0) {
+                            $factura->APROBACION_PAGO = 1;
+            
+                            /** Operaciones de Calculo **/
+                            $factura->MONTO_EXENTO = round(($request->CANTIDAD_PORCENTAJE_CUSTOM * $idp->MONTO_A_APLICAR), 2);
+                            
+                            $factura->MONTO_AFECTO = round((($request->TOTAL - $factura->MONTO_EXENTO) / (1 + 0.12)),2); //Se calcula monto afecto
+                            
+                            $factura->MONTO_IVA = round(($factura->MONTO_AFECTO * 0.12 ), 2); //Se calcula monto de impuesto
+
+                            $factura->MONTO_REMANENTE = 0;
+                            
+                        } else {
+                            
+                            $saldoParcial = $saldo;
+                            
+                            $remanente = $request->CANTIDAD_PORCENTAJE_CUSTOM - $saldoParcial; //Ojo aca puede ser util                
+        
+                            $precioGalon = round(($request->TOTAL / $request->CANTIDAD_PORCENTAJE_CUSTOM), 2);
+        
+                            $factura->MONTO_EXENTO = round(($request->CANTIDAD_PORCENTAJE_CUSTOM * $idp->MONTO_A_APLICAR), 2);
+                            
+                            $factura->MONTO_AFECTO = round((($request->TOTAL - $factura->MONTO_EXENTO) / (1 + 0.12)),2); //Se calcula monto afecto
+                            
+                            $factura->MONTO_IVA = round(($factura->MONTO_AFECTO * 0.12 ), 2); //Se calcula monto de impuesto
+        
+                            //$factura->MONTO_EXENTO = $reembolsable * $precioGalon *  
+                            $factura->MONTO_REMANENTE = round(($remanente * $precioGalon), 2);    
+                            $factura->APROBACION_PAGO = 1;
+                            
+                        }
+            
+                    } else {            
+                        $factura->APROBACION_PAGO = 0;
+                        
+                        /** Operaciónes de Calculo **/
+                        $factura->MONTO_REMANENTE = $request->TOTAL;            
+                    }
+                    
+                } else if ($request->CATEGORIA_GASTO == 'depreciación') {
+                    
+                    $idp = SubcategoriaTipoGasto::select('MONTO_A_APLICAR')->where('ID', '=', $request->SUBCATEGORIATIPOGASTO_ID)->first();
+                    
+                    if ($saldo > 0) {
+                        $saldoFactura = $saldo - $request->TOTAL;
+                        
+                        if ($saldoFactura > 0) {
+                            $factura->APROBACION_PAGO = 1;
+            
+                            /** Operaciones de Calculo **/
+                            $factura->MONTO_EXENTO = round(($request->CANTIDAD_PORCENTAJE_CUSTOM * $idp->MONTO_A_APLICAR), 2);
+                            
+                            $factura->MONTO_AFECTO = round((($request->TOTAL - $factura->MONTO_EXENTO) / (1 + 0.12)),2); //Se calcula monto afecto
+                            
+                            $factura->MONTO_IVA = round(($factura->MONTO_AFECTO * 0.12 ), 2); //Se calcula monto de impuesto
+
+                            $factura->MONTO_REMANENTE = 0;
+                           
+                        } else {
+                            
+                            $saldoParcial = $saldo;
+                            
+                            $remanente = $request->TOTAL - $saldoParcial; //Ojo aca puede ser util                
+        
+                            //$precioGalon = round(($request->TOTAL / $request->CANTIDAD_PORCENTAJE_CUSTOM), 2);
+        
+                            $factura->MONTO_EXENTO = round(($request->CANTIDAD_PORCENTAJE_CUSTOM * $idp->MONTO_A_APLICAR), 2);
+                            
+                            $factura->MONTO_AFECTO = round((($request->TOTAL - $factura->MONTO_EXENTO) / (1 + 0.12)),2); //Se calcula monto afecto
+                            
+                            $factura->MONTO_IVA = round(($factura->MONTO_AFECTO * 0.12 ), 2); //Se calcula monto de impuesto
+        
+                            //$factura->MONTO_EXENTO = $reembolsable * $precioGalon *  
+                            //$factura->MONTO_REMANENTE = round(($remanente * $precioGalon), 2);    
+                            $factura->MONTO_REMANENTE = round($remanente, 2);
+                            $factura->APROBACION_PAGO = 1;
+                            
+                        }
+            
+                    } else {            
+                        $factura->APROBACION_PAGO = 0;
+                        
+                        /** Operaciónes de Calculo **/
+                        $factura->MONTO_REMANENTE = $request->TOTAL;            
+                    }
+                } else {                
+                    
+                    $findMe = 'con';
+                    $impuestoHotel = strpos(strtolower($request->SUBCATEGORIA_GASTO), $findMe); 
+                    if($impuestoHotel !== false)            
+                    {   
+                        $impuesto = SubcategoriaTipoGasto::select('MONTO_A_APLICAR')->where('ID', '=', $request->SUBCATEGORIATIPOGASTO_ID)->first();
+                        $factura->CANTIDAD_PORCENTAJE_CUSTOM = $impuesto->MONTO_A_APLICAR;
+                        if ($saldo > 0) {
+                            $saldoFactura = $saldo - $request->TOTAL;
+                            
+                            if ($saldoFactura > 0) {
+                                $factura->APROBACION_PAGO = 1;
+                
+                                /** Operaciones de Calculo **/                                               
+                                $factura->MONTO_AFECTO = round((($request->TOTAL - $factura->MONTO_EXENTO) / (1 + 0.12 + $impuesto->MONTO_A_APLICAR)),2); //Se calcula monto afecto
+        
+                                $factura->MONTO_EXENTO = round(($factura->MONTO_AFECTO * $impuesto->MONTO_A_APLICAR), 2);
+                                
+                                $factura->MONTO_IVA = round(($factura->MONTO_AFECTO * 0.12 ), 2); //Se calcula monto de impuesto
+
+                                $factura->MONTO_REMANENTE = 0;
+                                
+                            } else {
+                               // dd('detenerse aqui!!!')   ;        
+                                $saldoParcial = $saldo;
+                                
+                                $remanente = $request->TOTAL - $saldoParcial; //Ojo aca puede ser util
+            
+                                $factura->MONTO_AFECTO = round((($request->TOTAL - $factura->MONTO_EXENTO) / (1 + 0.12 + $impuesto->MONTO_A_APLICAR)),2); //Se calcula monto afecto
+                                
+                                $factura->MONTO_EXENTO = round(($factura->MONTO_AFECTO * $impuesto->MONTO_A_APLICAR), 2);
+                                
+                                $factura->MONTO_IVA = round(($factura->MONTO_AFECTO * 0.12 ), 2); //Se calcula monto de impuesto
+        
+                                $factura->MONTO_REMANENTE = round($remanente, 2);
+                                    
+                                $factura->APROBACION_PAGO = 1;
+                                
+                            }
+                
+                        } else {            
+                            $factura->APROBACION_PAGO = 0;
+                            
+                            /** Operaciónes de Calculo **/
+                            $factura->MONTO_REMANENTE = $request->TOTAL;            
+                        }                
+        
+                        
+                    } else {                       
+                        if ($saldo > 0) {
+                            $saldoFactura = $saldo - $request->TOTAL;
+                            if ($saldoFactura > 0) {
+                                $factura->APROBACION_PAGO = 1;
+                
+                                /** Operaciones de Calculo **/
+                
+                                $factura->MONTO_AFECTO = round(($request->TOTAL / (1 + 0.12)),2); //Se calcula monto afecto
+                        
+                                $factura->MONTO_IVA = round(($factura->MONTO_AFECTO * 0.12 ), 2); //Se calcula monto de impuesto
+
+                                $factura->MONTO_REMANENTE = 0;
+                
+                            } else {                        
+                                $saldoParcial = $saldo;
+        
+                                $factura->MONTO_AFECTO = round(($request->TOTAL / (1 + 0.12)),2); //Se calcula monto afecto
+                                
+                                $factura->MONTO_IVA = round(($factura->MONTO_AFECTO * 0.12 ), 2); //Se calcula monto de impuesto
+                                $factura->MONTO_EXENTO = 0;
+                                
+                                $factura->MONTO_REMANENTE = $request->TOTAL - $saldoParcial;                
+                                
+                                $factura->APROBACION_PAGO = 1;
+                            }
+                
+                        } else {            
+                            $factura->APROBACION_PAGO = 0;
+                        
+                            /** Operaciónes de Calculo **/
+                            $factura->MONTO_REMANENTE = $request->TOTAL;            
+                        }
+        
+                    }
+                    
+                }
+                
+        
+                if ($request->CANTIDAD_PORCENTAJE_CUSTOM == '') {
+                    $request->CANTIDAD_PORCENTAJE_CUSTOM = 0.00;
+                } 
+        
         Factura::where('ID', $id)
-                ->update(['TIPOGASTO_ID' => $request->TIPOGASTO_ID, 'MONEDA_ID' => $request->MONEDA_ID, 'PROVEEDOR_ID' => $request->PROVEEDOR_ID, 'COMENTARIO_PAGO' => $request->COMENTARIO_PAGO,
-                          'TIPODOCUMENTO_ID' => $request->TIPODOCUMENTO, 'KILOMETRAJE_INICIAL' => $request->KM_INICIO, 'KILOMETRAJE_FINAL' => $request->KM_FINAL,
-                          'SERIE' => $request->SERIE, 'NUMERO' => $request->NUMERO, 'FECHA_FACTURA' => $request->FECHA_FACTURA, 'TOTAL' => $request->TOTAL]);
+                ->update(['TIPOGASTO_ID' => $request->TIPOGASTO_ID, 'MONEDA_ID' => $request->MONEDA_ID, 'PROVEEDOR_ID' => $request->PROVEEDOR_ID, 
+                          'KILOMETRAJE_INICIAL' => $request->KM_INICIO, 'KILOMETRAJE_FINAL' => $request->KM_FINAL,
+                          'SERIE' => $request->SERIE, 'NUMERO' => $request->NUMERO, 'FECHA_FACTURA' => $request->FECHA_FACTURA, 'TOTAL' => $request->TOTAL, 
+                          'CANTIDAD_PORCENTAJE_CUSTOM' => $request->CANTIDAD_PORCENTAJE_CUSTOM, 'COMENTARIO_PAGO' => $request->COMENTARIO_PAGO, 
+                          'APROBACION_PAGO' => $factura->APROBACION_PAGO, 'MONTO_AFECTO' => $factura->MONTO_AFECTO, 'MONTO_EXENTO' => $factura->MONTO_EXENTO,
+                          'MONTO_IVA' => $factura->MONTO_IVA, 'MONTO_REMANENTE' => $factura->MONTO_REMANENTE, 'TIPODOCUMENTO_ID' => $request->TIPODOCUMENTO_ID,]);
 
 
+        return Redirect::to('liquidaciones/' . $request->LIQUIDACION_ID . '-' . $request->TIPO_LIQUIDACION . '/edit');
+    }
 
-        return Redirect::to('liquidaciones/' . $request->LIQUIDACION_ID . '/edit');
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function sustituirFactura(Request $request)
+    {   
+        /** Se elimina fisicamente el archivo del disco duro */
+        $urlFile = public_path() . '/images/' . $request->URL_IMAGENFACTURA;
+        chmod($urlFile, 0777);
+        if (!unlink($urlFile)) {
+            dd('Archivo NO fue Eliminado');
+        }
+
+        /** Se Procesa el nuevo archivo  */
+        $file = $request->file('FOTO');        
+
+        $name = $request->LIQUIDACION_ID . '-' . $request->NUMERO . '-' . time() . '-' . $file->getClientOriginalName();
+
+        $path = public_path() . '/images/' .  Auth::user()->email ;
+
+        if (file_exists($path)) {
+
+        } else {
+            mkdir($path, 0700);
+        }
+
+        $file->move($path,$name);
+
+        Factura::where('ID', $request->ID_FACTURA)
+        ->update(['FOTO' => $name]);
+        
+
+        return back()();
     }
 
     /**

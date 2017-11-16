@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use App\Http\Requests\Request;
 
-class CreateFacturaRequest extends Request
+class EditFacturaRequest extends Request
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -28,8 +28,7 @@ class CreateFacturaRequest extends Request
             'TIPOGASTO_ID' => 'required',
             'FECHA_FACTURA' => 'required',            
             'NUMERO' => 'required',
-            'TOTAL' => 'required',
-            'FOTO'    => 'required',
+            'TOTAL' => 'required',            
         ];
     }
 }

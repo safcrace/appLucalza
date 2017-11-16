@@ -27,7 +27,7 @@ class UsuarioController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index()
-    {          
+    {   
         $users = User::select('users.id', 'users.nombre', 'users.email')
                             ->where('users.anulado', '=', 0)
                             ->paginate(10);
@@ -44,19 +44,19 @@ class UsuarioController extends Controller
     public function indexEmpresas(Request $request)
     { 
         $fullUrl = $request->fullUrl();
-        $id_empresa = substr($fullUrl, -1);
-      
+        $id_empresa = substr($fullUrl, -1);     
         
         if (auth()->user()->hasRole('superAdmin')) {
             if ($id_empresa != 's' ) {                
                 $users = User::select('users.id', 'users.nombre', 'users.email')
+                                    ->orderBy('users.id')
                                     ->join('cat_usuarioempresa', 'cat_usuarioempresa.USER_ID', '=', 'users.id')
                                     ->join('cat_empresa', 'cat_empresa.ID', '=', 'cat_usuarioempresa.EMPRESA_ID')
                                     ->where('users.anulado', '=', 0)
                                     ->where('cat_usuarioempresa.ANULADO', '=', 0)
                                     ->where('cat_empresa.ID', '=', $id_empresa)
                                     ->paginate(10);
-                                    
+               // dd($users);                    
             } 
         } else {
             $empresa_id = Session::get('empresa');
@@ -68,7 +68,7 @@ class UsuarioController extends Controller
                             ->where('cat_usuarioempresa.EMPRESA_ID', '=', $empresa_id)
                             ->paginate(10);                            
         }
-            return view('usuarios.index', compact('users'));
+            return view('usuarios.index', compact('users', 'id_empresa'));
     }
 
 
@@ -113,23 +113,30 @@ class UsuarioController extends Controller
     {
         $empresa_id = $id; 
 
-        $supervisores = User::join('cat_usuarioempresa', 'cat_usuarioempresa.USER_ID', '=', 'users.id')
-                              ->join('cat_empresa', 'cat_empresa.ID', '=', 'cat_usuarioempresa.EMPRESA_ID')
-                              ->join('users_roles', 'users_roles.user_id', '=', 'users.id')
-                              ->where('cat_empresa.ID', '=', $id)
-                              ->where('users_roles.role_id', '=', 5)
-                              ->lists('users.nombre', 'users.id')
-                              ->toArray();
+        if($empresa_id !='crea') {
+            $supervisores = User::join('cat_usuarioempresa', 'cat_usuarioempresa.USER_ID', '=', 'users.id')
+            ->join('cat_empresa', 'cat_empresa.ID', '=', 'cat_usuarioempresa.EMPRESA_ID')
+            ->join('users_roles', 'users_roles.user_id', '=', 'users.id')
+            ->where('cat_empresa.ID', '=', $empresa_id)
+            ->where('users_roles.role_id', '=', 5)
+            ->lists('users.nombre', 'users.id')
+            ->toArray();
 
-        $vendedores = User::join('cat_usuarioempresa', 'cat_usuarioempresa.USER_ID', '=', 'users.id')
-                              ->join('cat_empresa', 'cat_empresa.ID', '=', 'cat_usuarioempresa.EMPRESA_ID')
-                              ->join('users_roles', 'users_roles.user_id', '=', 'users.id')
-                              ->where('cat_empresa.ID', '=', $id)
-                              ->where('users_roles.role_id', '=', 7)
-                              ->lists('users.nombre', 'users.id')
-                              ->toArray();
+            $vendedores = User::join('cat_usuarioempresa', 'cat_usuarioempresa.USER_ID', '=', 'users.id')
+            ->join('cat_empresa', 'cat_empresa.ID', '=', 'cat_usuarioempresa.EMPRESA_ID')
+            ->join('users_roles', 'users_roles.user_id', '=', 'users.id')
+            ->where('cat_empresa.ID', '=', $empresa_id)
+            ->where('users_roles.role_id', '=', 7)
+            ->lists('users.nombre', 'users.id')
+            ->toArray();
 
-        return view('equipos.asignacion', compact('empresa_id', 'supervisores', 'vendedores'));
+            return view('equipos.asignacion', compact('empresa_id', 'supervisores', 'vendedores'));
+        } else {
+            return redirect::to('empresas');
+        }
+
+
+        
     }
 
 
@@ -187,8 +194,7 @@ class UsuarioController extends Controller
 
         $existe = SupervisorVendedor::where('SUPERVISOR_ID_USUARIO', '=', $request->SUPERVISOR_ID)->where('VENDEDOR_ID_USUARIO', '=', $request->VENDEDOR_ID)->first();
 
-        if($existe) {
-
+        if($existe) {            
             SupervisorVendedor::where('ID_SUPERVISION', '=', $existe->ID_SUPERVISION)
                 ->update(['ANULADO' => 0]);
 
@@ -204,6 +210,7 @@ class UsuarioController extends Controller
         $supervisorId = $request->SUPERVISOR_ID;
 
         $empresa_id = Session::get('empresa');
+        //dd($empresa_id);
 
         $supervisores = User::join('cat_usuarioempresa', 'cat_usuarioempresa.USER_ID', '=', 'users.id')
             ->join('cat_empresa', 'cat_empresa.ID', '=', 'cat_usuarioempresa.EMPRESA_ID')
@@ -367,8 +374,16 @@ class UsuarioController extends Controller
             $request->anulado = 0;
         }
 
+        if ($request->password == null) {
+            $password = User::where('id', '=', $id)->pluck('password');
+            
+        } else {
+            $password = bcrypt($request->password);
+        }
+
+
         User::where('ID', $usuario_id)
-                ->update(['nombre' => $request->nombre, 'email' => $request->email, 'tel_codpais' => $request->tel_codpais, 'password' => bcrypt($request->password),
+                ->update(['nombre' => $request->nombre, 'email' => $request->email, 'tel_codpais' => $request->tel_codpais, 'password' => $password,
                           'telefono' => $request->telefono, 'activo' => $request->activo, 'anulado' => $request->anulado]);
 
         return redirect::to('usuarios');

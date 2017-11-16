@@ -85,6 +85,13 @@ class ProveedorController extends Controller
             $empresa_id = Session::get('empresa');
         }
 
+        /** Se verifica que no exista Codigo de Empresa */
+        $existeCodigo = Proveedor::select('ID')->where('EMPRESA_ID', '=', $empresa_id)->where('IDENTIFICADOR_TRIBUTARIO', '=', $request->IDENTIFICADOR_TRIBUTARIO)->first();
+        
+       if ($existeCodigo) {
+           return back()->withInput()->with('info', 'El Identificador Tributario ya existe para esta empresa.');
+       }
+
         $proveedor = new Proveedor();
 
         $proveedor->EMPRESA_ID = $empresa_id;
@@ -93,6 +100,7 @@ class ProveedorController extends Controller
         $proveedor->NOMBRE = $request->NOMBRE;
         $proveedor->DOMICILIO = $request->DOMICILIO;
         $proveedor->ANULADO = $request->ANULADO;
+        $proveedor->TIPOPROVEEDOR_ID = $request->TIPOPROVEEDOR_ID;
 
         if ($proveedor->ANULADO === null) {
             $proveedor->ANULADO = 0;
@@ -164,7 +172,7 @@ class ProveedorController extends Controller
 
         Proveedor::where('ID', $proveedor->ID)
                 ->update(['MONEDA_ID' => $request->MONEDA_ID, 'IDENTIFICADOR_TRIBUTARIO' => $request->IDENTIFICADOR_TRIBUTARIO, 'NOMBRE' => $request->NOMBRE,
-                          'DOMICILIO' => $request->DOMICILIO, 'ANULADO' => $request->ANULADO]);
+                          'DOMICILIO' => $request->DOMICILIO, 'TIPOPROVEEDOR_ID' => $request->TIPOPROVEEDOR_ID, 'ANULADO' => $request->ANULADO]);
 
         return redirect::to('empresa/proveedor/' . $proveedor->EMPRESA_ID);
     }

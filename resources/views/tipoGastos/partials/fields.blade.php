@@ -117,7 +117,7 @@
         </div>
         <div class="row form-group text-center">
                 {!! Form::hidden('CUENTA_CONTABLE_EXENTO', null, ['class' => 'form-control', 'id' => 'cuenta_contable_exenta']); !!}
-                {!! Form::text('DESCRIPCION_CUENTA_EXENTO', null, ['class' => 'form-control descripcion_cuenta_ce text-center', 'placeholder' => 'Cuenta Contable', 'disabled', 'id' => 'cuenta_exenta']); !!}
+                {!! Form::text('DESCRIPCION_CUENTA_EXENTO', null, ['class' => 'form-control descripcion_cuenta_ce text-center', 'placeholder' => 'Cuenta Contable', 'disabled']); !!}
                 @if(isset($tipoGasto->DESCRIPCION_CUENTA_EXENTO))
                   {!! Form::hidden('CUENTA_EXENTO', $tipoGasto->DESCRIPCION_CUENTA_EXENTO, ['class' => 'form-control descripcion_cuenta_ce', 'placeholder' => 'Cuenta Contable']); !!}
                 @else
@@ -376,14 +376,14 @@
           $('.ph_cantidad').hide();
         })
 
-        $('#cc_exento').click(function() {
+        $('#cc_exento').click(function() {              
               vurl = '{{ route('cuentaContableExenta')}}'
               vurl = vurl.replace('%7Bid%7D', 1);
               //alert(vurl)
               $.ajax({
                   type: 'get',
                   url: vurl,
-                  success: function (data) {
+                  success: function (data) {                    
                       $('#cuenta_exenta').html(data);
                       $('#myModalCe').modal('show')
                   }

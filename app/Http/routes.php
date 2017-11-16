@@ -135,6 +135,7 @@ Route::patch('update/factura/{id}/supervisor/comentario', ['uses' => 'FacturaCon
 Route::patch('update/factura/{id}/contabilidad/comentario', ['uses' => 'FacturaController@updateComentarioContabilidadFactura', 'as' => 'comentarioContabilidad']);
 Route::get('factura/tipoGasto/{id}', ['uses' => 'FacturaController@tipoGasto', 'as' => 'tipoGasto']);
 Route::get('factura/anular/{id}', ['uses' => 'FacturaController@anular', 'as' => 'anularFactura']);
+Route::post('factura/imagen/reemplazar', ['uses' => 'FacturaController@sustituirFactura', 'as' => 'sustituirFactura']);
 Route::resource('facturas', 'FacturaController');
 
 //Supervisor routes
@@ -143,6 +144,7 @@ Route::get('supervisor', ['uses' => 'SupervisorController@index', 'as' => 'super
 Route::get('supervisor/show/{id}', ['uses' => 'SupervisorController@show', 'as' => 'showLiquidacion']);
 
 //Contabilidad routes
+Route::get('contabilidad/reporte/{id}', ['uses' => 'ContabilidadController@report', 'as' => 'reporteContabilidad']);
 Route::get('contabilidad', ['uses' => 'ContabilidadController@index', 'as' => 'contabilidad']);
 Route::get('contabilidad/show/{id}', ['uses' => 'ContabilidadController@show', 'as' => 'showLiquidacionRev']);
 

@@ -34,7 +34,7 @@
                                      <td><a href="{{ route('showLiquidacionRev', $liquidacion->ID) }}">{{ $liquidacion->USUARIO }}</a></td>
                                      <td><a href="{{ route('showLiquidacionRev', $liquidacion->ID) }}">{{ $liquidacion->RUTA }}</a></td>
                                      <TD><a href="{{ route('showLiquidacionRev', $liquidacion->ID) }}">
-                                       {{ App\Factura::where('LIQUIDACION_ID', '=', $liquidacion->ID)->sum('TOTAL')}}</a></td>
+                                       {{ App\Factura::where('LIQUIDACION_ID', '=', $liquidacion->ID)->where('ANULADO', '=', 0)->sum('TOTAL')}}</a></td>
                                </tr>
 
                             @endforeach
