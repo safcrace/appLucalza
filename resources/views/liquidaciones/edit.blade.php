@@ -45,7 +45,7 @@
                                     <td><a href="{{ route('facturas.edit', $liquidacion->ID . '-' . $factura->ID . '-' . $tipoLiquidacion) }}">{{ $factura->FECHA_FACTURA->format('d-m-Y') }}</a></td>
                                     <td><a href="{{ route('facturas.edit', $liquidacion->ID . '-' . $factura->ID . '-' . $tipoLiquidacion) }}">{{ $factura->NOMBRE}}</a></td>
                                     <td><a href="{{ route('facturas.edit', $liquidacion->ID . '-' . $factura->ID . '-' . $tipoLiquidacion) }}">{{ $factura->SERIE}}</a></td>
-                                    @if($factura->RECHAZO || $factura->RECHAZOC)
+                                    @if($factura->CORRECCION == 1)
                                         <td style="background-color: red;"><a href="{{ route('facturas.edit', $liquidacion->ID . '-' . $factura->ID . '-' . $tipoLiquidacion) }}" style="text-decoration: none; color: #FFF">{{ $factura->NUMERO}}</a></td>
                                     @else
                                         <td><a href="{{ route('facturas.edit', $liquidacion->ID . '-' . $factura->ID . '-' . $tipoLiquidacion) }}">{{ $factura->NUMERO}}</a></td>

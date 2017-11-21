@@ -829,7 +829,7 @@ dd($resultado);
         
         Factura::where('ID', $id)
                 ->update(['TIPOGASTO_ID' => $request->TIPOGASTO_ID, 'MONEDA_ID' => $request->MONEDA_ID, 'PROVEEDOR_ID' => $request->PROVEEDOR_ID, 
-                          'KILOMETRAJE_INICIAL' => $request->KM_INICIO, 'KILOMETRAJE_FINAL' => $request->KM_FINAL,
+                          'KILOMETRAJE_INICIAL' => $request->KM_INICIO, 'KILOMETRAJE_FINAL' => $request->KM_FINAL, 'CORRECCION' => 0,
                           'SERIE' => $request->SERIE, 'NUMERO' => $request->NUMERO, 'FECHA_FACTURA' => $request->FECHA_FACTURA, 'TOTAL' => $request->TOTAL, 
                           'CANTIDAD_PORCENTAJE_CUSTOM' => $request->CANTIDAD_PORCENTAJE_CUSTOM, 'COMENTARIO_PAGO' => $request->COMENTARIO_PAGO, 
                           'APROBACION_PAGO' => $factura->APROBACION_PAGO, 'MONTO_AFECTO' => $factura->MONTO_AFECTO, 'MONTO_EXENTO' => $factura->MONTO_EXENTO,
@@ -874,7 +874,7 @@ dd($resultado);
         ->update(['FOTO' => $name]);
         
 
-        return back()();
+        return back();
     }
 
     /**
@@ -889,7 +889,7 @@ dd($resultado);
         $comentarioActual = Factura::select('COMENTARIO_SUPERVISOR')->where('ID', '=', $id)->first();
         $nuevoComentario = $comentarioActual->COMENTARIO_SUPERVISOR . ' ' . $request->COMENTARIO_SUPERVISOR;
         Factura::where('ID', $id)
-                ->update(['COMENTARIO_SUPERVISOR' => $nuevoComentario]);
+                ->update(['COMENTARIO_SUPERVISOR' => $nuevoComentario, 'CORRECCION' => 1]);
 
         return $request->COMENTARIO_SUPERVISOR;
 
@@ -909,7 +909,7 @@ dd($resultado);
         $nuevoComentario = $comentarioActual->COMENTARIO_CONTABILIDAD . ' ' . $request->COMENTARIO_CONTABILIDAD;
 
         Factura::where('ID', $id)
-                ->update(['COMENTARIO_CONTABILIDAD' => $nuevoComentario]);
+                ->update(['COMENTARIO_CONTABILIDAD' => $nuevoComentario, 'CORRECCION' => 1]);
 
         return $nuevoComentario;
 

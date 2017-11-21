@@ -61,6 +61,7 @@ class UsuarioController extends Controller
         } else {
             $empresa_id = Session::get('empresa');
             $users = User::select('users.id', 'users.nombre', 'users.email')
+                            ->orderBy('users.id')
                             ->join('cat_usuarioempresa', 'cat_usuarioempresa.USER_ID', '=', 'users.id')
                             ->join('cat_empresa', 'cat_empresa.ID', '=', 'cat_usuarioempresa.EMPRESA_ID')
                             ->where('users.anulado', '=', 0)

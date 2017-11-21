@@ -41,7 +41,7 @@ class RoleController extends Controller
      */
     public function asignaRoleUsuario()
     {
-        $usuarios = User::lists('nombre', 'id')
+        $usuarios = User::where('anulado', '=', 0)->lists('nombre', 'id')
             ->toArray();
 
         $roles = Role::lists('name', 'id')

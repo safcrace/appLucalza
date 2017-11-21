@@ -263,7 +263,8 @@ class PresupuestoController extends Controller
 
         $presupuesto->save();
 
-        if ($request->ASIGNACION_MENSUAL > 0 ) {
+        if ($presupuesto->ASIGNACION_MENSUAL > 0 ) {
+            
             return redirect::to('presupuesto/otrosgastos');
         } else {
             return redirect::to('presupuestos/' . $presupuesto->id . '-' . $request->TIPO_GASTO . '/edit')->withInput();

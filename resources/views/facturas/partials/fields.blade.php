@@ -7,8 +7,10 @@
 {!! Form::hidden('TIPO_LIQUIDACION', $tipoLiquidacion) !!}
 {!! Form::hidden('CATEGORIA_GASTO', 'Parametro', ['id' => 'categoriaGasto']) !!}
 {!! Form::hidden('SUBCATEGORIA_GASTO', 'Parametro', ['id' => 'subCategoriaGasto']) !!}
-{!! Form::hidden('URL_IMAGEN_FACTURA', $factura->EMAIL . '/' . $factura->FOTO, ['id' => 'urlImagenFactura']) !!}
-{!! Form::hidden('ID_FACTURA', $factura->ID, ['id' => 'idFactura']) !!}
+@if (isset($factura))
+    {!! Form::hidden('URL_IMAGEN_FACTURA', $factura->EMAIL . '/' . $factura->FOTO, ['id' => 'urlImagenFactura']) !!}
+    {!! Form::hidden('ID_FACTURA', $factura->ID, ['id' => 'idFactura']) !!}
+@endif
 
 <div class="panel panel-primary">
   <div class="panel-heading">Datos de la Factura </div>
@@ -72,15 +74,16 @@
                     <img src='{{ asset("images/$factura->EMAIL/$factura->FOTO") }}' height="32px">
                 </a>
             </div>
+            <div class="col-md-2 col-md-offset-1">
+                <a href="#" title="Reemplazar Factura" data-toggle="modal" data-target="#myModalS"><span class="glyphicon glyphicon-refresh" aria-hidden="true" style="font-size:24px; color: black"></span></a>
+            </div>
             @else
                 <div class="col-md-2">
                     {!! Form::file('FOTO'); !!}
                 </div>
             @endif
 
-            <div class="col-md-2 col-md-offset-1">
-                <a href="#" title="Reemplazar Factura" data-toggle="modal" data-target="#myModalS"><span class="glyphicon glyphicon-refresh" aria-hidden="true" style="font-size:24px; color: black"></span></a>
-            </div>
+            
     </div>
 
     <div class="row form-group">
@@ -111,7 +114,7 @@
             {!! Form::label('SERIE', 'Serie') !!}
         </div>
         <div class="col-md-3">
-            {!! Form::text('SERIE', null, ['class' => 'form-control', 'placeholder' => 'Serie']); !!}
+            {!! Form::text('SERIE', null, ['class' => 'form-control', 'placeholder' => 'Serie', 'id' => 'numSerie']); !!}
         </div>
 
     </div>
@@ -331,15 +334,21 @@
 
         });
 
+        var tipoDocumento = $('#tipoDocumento option:selected').text()
+        if(tipoDocumento.toLowerCase() == 'recibo') {
+            $('.numero').hide()
+        }
+
         $('#tipoDocumento').change(function() {
             var subcategoria = $('#subcategoriaTipoGasto option:selected').text()
             $('#subCategoriaGasto').val(subcategoria)
             var tipoDocumento = $('#tipoDocumento option:selected').text()
             var patron = 'factura'
             //tipoDocumento = tipoDocumento.toLowerCase()
-            if(tipoDocumento.toLowerCase().indexOf('factura') != -1) {                
+            if(tipoDocumento.toLowerCase().indexOf('factura') != -1) {                   
                 $('.numero').show()
-            } else {
+            } else {                        
+                $('#numSerie').val('')
                 $('.numero').hide()                
             }
             //alert(tipoDocumento)
