@@ -147,6 +147,7 @@ Route::get('supervisor/show/{id}', ['uses' => 'SupervisorController@show', 'as' 
 Route::get('contabilidad/reporte/{id}', ['uses' => 'ContabilidadController@report', 'as' => 'reporteContabilidad']);
 Route::get('contabilidad', ['uses' => 'ContabilidadController@index', 'as' => 'contabilidad']);
 Route::get('contabilidad/show/{id}', ['uses' => 'ContabilidadController@show', 'as' => 'showLiquidacionRev']);
+Route::get('contabilidad/sap/{id}', ['uses' => 'ContabilidadController@envioSap', 'as' => 'envioSap']);
 
 //Permisos routes
 Route::get('permisos/role', ['uses' => 'PermisoController@asignaPermisosRole', 'as' => 'asignaPermisosRole']);

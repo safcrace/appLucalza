@@ -7,7 +7,12 @@
       <div class="row">
           <div class="col-md-12 ">
 
-            <div class="text-center" style="margin-bottom: 50px; color: #1D0068;">
+            <div class="text-center">
+                <button type="button" class="btn btn-default" style="border-color: white; float: right"><a href="{{ route('showLiquidacionRev', $liquidacion->ID )  }}" title="Cerrar"><span class="glyphicon glyphicon-remove-sign" aria-hidden="true" style="font-size:32px; color: black"></span></a></button>
+                <button type="submit" class="btn btn-default" style="border-color: white; float: right"><a href="{{ route('envioSap', $liquidacion->ID) }}" title="Envíar a SAP"><span class="glyphicon glyphicon-ok-sign" aria-hidden="true" style="font-size:32px; color: black;"></span></a></button>
+            </div>
+
+            <div class="text-center" style="margin-bottom: 50px; margin-top: 80px; color: #1D0068;">
                 <h2>REPORTE LIQUIDACION No.{{ $liquidacion->ID }} </h1>        
                 <h3>{{ $liquidacion->USUARIO }} - Ruta: {{ $liquidacion->RUTA }}</h3>
                 <h3>Del {{ $liquidacion->FECHA_INICIO->format('d-m-Y') }} Al {{ $liquidacion->FECHA_FINAL->format('d-m-Y') }}</h3>
@@ -49,7 +54,7 @@
                     </tr>
                 @endforeach
             </tbody>
-            </table>         
+            </table>                   
 
         </div>
     </div>

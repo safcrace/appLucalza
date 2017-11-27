@@ -38,9 +38,11 @@
       <button type="button" class="btn btn-default" data-toggle="modal" data-target="#myModalTwo"><span class="glyphicon glyphicon-floppy-remove" aria-hidden="true" style="font-size:32px; color: black" data-toggle="tooltip" data-placement="top" title="Corregir"></span></button>
   </div>
   <div class="col-md-1">
-    {!! Form::model($liquidacion, ['route' => ['aprobacionLiquidacion', $liquidacion->ID], 'method' => 'PATCH']) !!}
-      <button type="submit" class="btn btn-default"><span class="glyphicon glyphicon-floppy-saved" aria-hidden="true" style="font-size:32px; color: black" data-toggle="tooltip" data-placement="top" title="Enviar a SAP"></button>
-    {!! Form::close() !!}
+    {{--  {!! Form::model($liquidacion, ['route' => ['aprobacionLiquidacion', $liquidacion->ID], 'method' => 'PATCH']) !!}  --}}
+      <a href="{{ route('reporteContabilidad', $liquidacion->ID) }}">
+        <button type="submit" class="btn btn-default"><span class="glyphicon glyphicon-floppy-saved" aria-hidden="true" style="font-size:32px; color: black" data-toggle="tooltip" data-placement="top" title="Enviar a SAP"></button>
+      </a>
+    {{--  {!! Form::close() !!}  --}}
   </div>
   <div class="col-md-1">
       <a href="{{ route('reporteContabilidad', $liquidacion->ID) }}">

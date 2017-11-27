@@ -2,14 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use App\TipoProveedor;
-use Illuminate\Http\Request;
-
-use App\Http\Requests;
-use App\Http\Controllers\Controller;
-use App\Liquidacion;
 use App\Factura;
+use App\Liquidacion;
+
+use App\TipoProveedor;
+use App\Http\Requests;
+use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Redirect;
 
 class ContabilidadController extends Controller
 {
@@ -140,6 +141,21 @@ class ContabilidadController extends Controller
     public function edit($id)
     {
         //
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function envioSap($id)
+    {        
+        Liquidacion::where('ID', $id)
+        ->update(['ESTADOLIQUIDACION_ID' => 4]);
+
+        return Redirect::to('contabilidad');
     }
 
     /**
