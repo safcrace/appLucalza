@@ -376,6 +376,40 @@ class RutaController extends Controller
     }
 
     /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function rutasPresupuestadas($id)
+    {
+        $param = explode('&', $id);
+        $fechaInicio = $param[0];
+        $fechaFinal = $param[1];
+        $tipoLiquidacion = $param[2];
+        $usuario_id = $param[3];
+
+        $rutas = Ruta::join('cat_usuarioruta', 'cat_usuarioruta.RUTA_ID', '=', 'cat_ruta.ID')
+                            ->join('users', 'users.id', '=', 'cat_usuarioruta.USER_ID')
+                            ->join('pre_presupuesto', 'pre_presupuesto.USUARIORUTA_ID', '=', 'cat_usuarioruta.ID')
+                            ->where('cat_ruta.TIPO_GASTO', '=', $tipoLiquidacion)
+                            ->where('cat_usuarioruta.USER_ID', '=', $usuario_id)
+                            ->where('pre_presupuesto.ANULADO', '=', 0)
+                            ->where('pre_presupuesto.VIGENCIA_INICIO', '<=', $fechaInicio)
+                            ->where('pre_presupuesto.VIGENCIA_FINAL', '>=', $fechaFinal)
+                            ->select('cat_ruta.ID', 'cat_ruta.DESCRIPCION')
+                            ->get()
+                            ->toArray();
+        if ($rutas) {
+            array_unshift($rutas, ['ID' => '', 'DESCRIPCION' => 'Seleccione una Opción']);
+        } else {
+            array_unshift($rutas, ['ID' => '', 'DESCRIPCION' => 'No existen rutas con Presupuesto']);
+        }        
+
+        return $rutas;
+
+    }
+
+    /**
      * Anule the specified resource from storage.
      *
      * @param  int  $id

@@ -28,8 +28,8 @@ class UsuarioController extends Controller
      */
     public function index()
     {   
-        $users = User::select('users.id', 'users.nombre', 'users.email')
-                            ->where('users.anulado', '=', 0)
+        $users = User::select('users.id', 'users.nombre', 'users.email', 'users.anulado')
+                            //->where('users.anulado', '=', 0)
                             ->paginate(10);
                     
         return view('usuarios.index', compact('users'));
@@ -87,6 +87,7 @@ class UsuarioController extends Controller
         $users = User::select('users.nombre', 'users.email', 'cat_supervisor_vendedor.ID_SUPERVISION')
                             ->join('cat_supervisor_vendedor', 'cat_supervisor_vendedor.VENDEDOR_ID_USUARIO', '=', 'users.id')
                             ->where('cat_supervisor_vendedor.ANULADO', '=', 0)
+                            ->where('users.anulado', '=', 0)
                             ->where('cat_supervisor_vendedor.SUPERVISOR_ID_USUARIO', '=', $supervisor_id)
                             ->paginate(10);
 
@@ -128,6 +129,7 @@ class UsuarioController extends Controller
             ->join('users_roles', 'users_roles.user_id', '=', 'users.id')
             ->where('cat_empresa.ID', '=', $empresa_id)
             ->where('users_roles.role_id', '=', 7)
+            ->where('users.anulado', '=', 0)
             ->lists('users.nombre', 'users.id')
             ->toArray();
 
@@ -409,11 +411,19 @@ class UsuarioController extends Controller
      */
     public function anular($id)
     {
+        $anulado = User::where('id', '=', $id)->pluck('anulado');
+       
+        if ($anulado == 1) {
+            User::where('id', $id)
+                        ->update(['ANULADO' => 0, 'ACTIVO' => 1]);
+            $anular = 'No';
+        } else {
+            User::where('id', $id)
+            ->update(['ANULADO' => 1, 'ACTIVO' => 0]);            
+            $anular = 'Si';
+        }        
 
-        User::where('id', $id)
-                ->update(['ANULADO' => 1]);
-
-        return 1;//Redirect::to('empresa/usuario/' . $empresa_id);
+        return $anular;//Redirect::to('empresa/usuario/' . $empresa_id);
     }
 
     public function anularUsuarioEmpresa($id)

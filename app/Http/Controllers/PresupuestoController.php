@@ -121,6 +121,7 @@ class PresupuestoController extends Controller
             ->join('cat_ruta', 'cat_ruta.ID', '=', 'cat_usuarioruta.RUTA_ID')
             ->where('cat_usuarioempresa.EMPRESA_ID', '=', $empresa_id)
             ->where('cat_ruta.TIPO_GASTO', '=', $tipoGasto)
+            ->where('users.anulado', '=', 0)
             ->lists('users.nombre', 'users.id')
             ->toArray();
 
@@ -197,6 +198,7 @@ class PresupuestoController extends Controller
         $usuarios = User::join('cat_usuarioempresa', 'cat_usuarioempresa.USER_ID', '=', 'users.id')
             ->join('cat_empresa', 'cat_empresa.ID', '=', 'cat_usuarioempresa.EMPRESA_ID')
             ->where('cat_usuarioempresa.EMPRESA_ID', '=', $empresa_id)
+            ->where('users.activo', '=', '1')
             ->lists('users.nombre', 'users.id')
             ->toArray();
 
@@ -288,10 +290,14 @@ class PresupuestoController extends Controller
         $empresa_id = Session::get('empresa');
 
         $usuarios = User::join('cat_usuarioempresa', 'cat_usuarioempresa.USER_ID', '=', 'users.id')
-            ->join('cat_empresa', 'cat_empresa.ID', '=', 'cat_usuarioempresa.EMPRESA_ID')
-            ->where('cat_usuarioempresa.EMPRESA_ID', '=', $empresa_id)
-            ->lists('users.nombre', 'users.id')
-            ->toArray();
+        ->join('cat_empresa', 'cat_empresa.ID', '=', 'cat_usuarioempresa.EMPRESA_ID')
+        ->join('cat_usuarioruta', 'cat_usuarioruta.USER_ID', '=', 'users.id')
+        ->join('cat_ruta', 'cat_ruta.ID', '=', 'cat_usuarioruta.RUTA_ID')
+        ->where('cat_usuarioempresa.EMPRESA_ID', '=', $empresa_id)
+        ->where('cat_ruta.TIPO_GASTO', '=', $tipoGasto)
+        ->where('users.anulado', '=', 0)
+        ->lists('users.nombre', 'users.id')
+        ->toArray();
 
         //dd($empresa_id);
         $rutas = User::join('cat_usuarioruta', 'cat_usuarioruta.USER_ID', '=', 'users.id')
@@ -300,6 +306,7 @@ class PresupuestoController extends Controller
             ->where('cat_ruta.TIPO_GASTO', '=', $tipoGasto)
             ->lists('cat_ruta.DESCRIPCION', 'cat_ruta.ID')
             ->toArray();
+           
 
         $moneda = Empresa::select('cat_moneda.ID', 'cat_moneda.DESCRIPCION')
             ->join('cat_moneda', 'cat_moneda.ID', '=', 'cat_empresa.MONEDA_ID')

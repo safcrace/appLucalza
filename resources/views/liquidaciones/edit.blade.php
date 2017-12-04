@@ -119,7 +119,7 @@
                     row.show();
                 });
             })
-        });
+        });        
     });
 </script>
 @endpush

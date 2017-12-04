@@ -29,6 +29,7 @@
                          <th class="text-center">Código</th>
                          <th class="text-center">Nombre</th>
                          <th class="text-center">Correo Electrónico</th>
+                         <th>Anulado</th>
                          <th class="text-center">Anular</th>
                          @can('ver rutas')
                            <th class="text-center">Módulo</th>
@@ -41,6 +42,9 @@
                                    <td><a href="{{ route('usuarios.edit', $user->id) }}">{{ $user->id}}</a></td>
                                    <td><a href="{{ route('usuarios.edit', $user->id) }}">{{ $user->nombre}}</a></td>
                                    <td><a href="{{ route('usuarios.edit', $user->id ) }}">{{ $user->email}}</a></td>
+                                    @if (auth()->user()->hasRole('superAdmin', 'master'))
+                                        <td class="text-center"><a href="{{ route('usuarios.edit', $user->id ) }}" id="anulado">{{ ($user->anulado)?'ANULADO':'' }}</a></td>
+                                    @endif
                                    <td class="text-center">
                                      <a href="{{ route('anularUsuario') }}" class="btn-delete"><span class="glyphicon glyphicon-ban-circle" aria-hidden="true" style="font-size:20px; color: black"></span></a>
                                    </td>
@@ -83,28 +87,23 @@
             var id = row.data('id');
             vurl = '{{ route('anularUsuario') }}';
             vurl = vurl.replace('%7Bid%7D', id);
-            row.fadeOut();
-            $('#myModal').modal('show');
-            $('#revertir').click(function () {
-                row.show();
-            });
-            $('#anular').click(function () {
-                $('#myModal').modal('hide');
+            //row.fadeOut();
+            //$('#myModal').modal('show');
+            //$('#revertir').click(function () {
+            //    row.show();
+            //});
+            //$('#anular').click(function () {
+            //    $('#myModal').modal('hide');
                 $.ajax({
                     type: 'get',
                     url: vurl,
-                    success: function (data) {
-                        if(data == 1) {
-                            console.log('El Usuario fue Eliminado Exitosamente!!!.');
-                        } else {
-                            alert('El Usuario no fue Eliminado!!!');
-                        }
+                    success: function (data) {                                               
+                        location.reload(); 
                     }
                 }).fail(function () {
-                    alert ('El Usuario no pudo ser Eliminado!!!');
-                    row.show();
+                    alert ('El Usuario no pudo ser Eliminado!!!');                    
                 });
-            })
+            //})
         });
     });
 </script>

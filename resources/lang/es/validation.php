@@ -180,6 +180,8 @@ return [
         'EMPRESA'               => 'Empresa',
         'TIEMPOATRASO_RUTAS'    => 'Días de Atraso Facturación Rutas',
         'TIEMPOATRASO_OTROSGASTOS' => 'Días de Atraso Facturación Otros Gastos',
+        'sendLink'               => 'Enviar enlace para reestablecer Contraseña',
+        'resetPassword'          => 'Restablecer Contraseña',
     ],
 
 ];

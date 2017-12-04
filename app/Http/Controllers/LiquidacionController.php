@@ -59,14 +59,17 @@ class LiquidacionController extends Controller
         $tipoLiquidacion = $id;
         $usuario = Auth::user()->nombre;
         $usuario_id = Auth::user()->id;
+        //dd($request->all());
 
         $rutas = Ruta::join('cat_usuarioruta', 'cat_usuarioruta.RUTA_ID', '=', 'cat_ruta.ID')
                               ->join('users', 'users.id', '=', 'cat_usuarioruta.USER_ID')
+                              ->join('pre_presupuesto', 'pre_presupuesto.USUARIORUTA_ID', '=', 'cat_usuarioruta.ID')
                               ->where('cat_ruta.TIPO_GASTO', '=', $tipoLiquidacion)
                               ->where('cat_usuarioruta.USER_ID', '=', $usuario_id)
+                              ->where('pre_presupuesto.ANULADO', '=', 0)
                               ->lists('cat_ruta.DESCRIPCION', 'cat_ruta.ID')
                               ->toArray();
-                             ;
+                             //dd($rutas);
         return view('liquidaciones.create', compact('usuario', 'usuario_id', 'rutas', 'tipoLiquidacion'));
     }
 
