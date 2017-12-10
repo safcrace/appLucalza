@@ -17,6 +17,7 @@ class TasaCambioController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
+        $this->middleware('roles:superAdmin,master');
     }
 
     public function createTasaCambio($id)

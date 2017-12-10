@@ -17,6 +17,7 @@ class ContabilidadController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
+        $this->middleware('roles:superAdmin,contabilidad');
     }
     /**
      * Display a listing of the resource.

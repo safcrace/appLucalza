@@ -12,6 +12,12 @@ use App\Role;
 
 class RoleController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+        $this->middleware('roles:superAdmin,master');
+    }
+    
     /**
      * Display a listing of the resource.
      *

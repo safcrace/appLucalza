@@ -23,6 +23,7 @@ class PresupuestoController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
+        $this->middleware('roles:superAdmin,administrador');
         Carbon::setLocale('es');
     }
 
@@ -105,7 +106,7 @@ class PresupuestoController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function presupuestoCreate($id)
-    {
+    {   
         $tipoGasto = $id;
 
         $empresa_id = Session::get('empresa');
@@ -125,11 +126,16 @@ class PresupuestoController extends Controller
             ->lists('users.nombre', 'users.id')
             ->toArray();
 
+            
+
         $rutas = Ruta::join('cat_usuarioruta', 'cat_usuarioruta.RUTA_ID', '=', 'cat_ruta.ID')
             ->join('users', 'users.id', '=', 'cat_usuarioruta.USER_ID')
+            ->where('cat_usuarioruta.ANULADO', '=', 0)
+            //->where('cat_ruta.DESCRIPCION', '=', 'Ruta Norte/2')
             ->where('cat_ruta.TIPO_GASTO', '=', $tipoGasto)
-            ->lists('cat_ruta.DESCRIPCION', 'cat_ruta.ID')
-            ->toArray();
+            //->where('cat_ruta.ANULADO', '=', 0)
+            ->select('cat_ruta.DESCRIPCION', 'cat_ruta.ID', 'cat_usuarioruta.ANULADO')
+            ->get();
 
         /*$combos = Presupuesto::select('pre_presupuesto.ID as ID', 'users.id as USUARIO', 'cat_ruta.ID as RUTA', 'cat_empresa.ID as EMPRESA')
                                       ->join('cat_usuarioruta', 'cat_usuarioruta.ID', '=', 'pre_presupuesto.USUARIORUTA_ID')
@@ -376,6 +382,8 @@ class PresupuestoController extends Controller
         $rutas = User::join('cat_usuarioruta', 'cat_usuarioruta.USER_ID', '=', 'users.id')
             ->join('cat_ruta', 'cat_ruta.ID', '=', 'cat_usuarioruta.RUTA_ID')
             ->where('cat_usuarioruta.USER_ID', '=', $usuario_id)
+            ->where('cat_ruta.ANULADO', '=', 0)
+            ->where('cat_usuarioruta.ANULADO', '=', 0)
             ->lists('cat_ruta.DESCRIPCION', 'cat_ruta.ID')
             ->toArray();
 

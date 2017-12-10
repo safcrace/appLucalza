@@ -69,7 +69,7 @@
               $.ajax({
                   type: 'get',
                   url: vurl,
-                  success: function (data) {
+                  success: function (data) {                     
                       $('#vendedores').empty().html(data);
                   }
               });

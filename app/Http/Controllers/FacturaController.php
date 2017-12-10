@@ -32,6 +32,7 @@ class FacturaController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
+        $this->middleware('roles:superAdmin,vendedor,supervisor,contabilidad');
     }
 
     /**
@@ -90,8 +91,8 @@ dd($resultado);
                   
 
         /*** Tipo de Gasto Permitdos en Presupuesto ***/
-
-        if(($tipoLiquidacion == 'Otros Gastos') && ($ruta->DESCRIPCION == 'Depreciacion'))  {
+        
+        if(($tipoLiquidacion == 'Otros Gastos') && ($ruta->DESCRIPCION == 'Depreciación') || ($ruta->DESCRIPCION == 'Depreciacion') )  {
             //dd('ahi vamos');
             $tipoGasto =  //Liquidacion::join('pre_presupuesto', 'pre_presupuesto.USUARIORUTA_ID', '=', 'liq_liquidacion.USUARIORUTA_ID')
             //->join('pre_detpresupuesto', 'pre_detpresupuesto.PRESUPUESTO_ID', '=', 'pre_presupuesto.ID' )
@@ -100,9 +101,10 @@ dd($resultado);
             //->whereDate('pre_presupuesto.VIGENCIA_FINAL', '=', $fechaFinal)
             TipoGasto::where('DESCRIPCION', 'like', '%eprecia%')
             ->lists('DESCRIPCION', 'ID')
-            ->toArray();           
+            ->toArray();   
+            
         } else {
-            //dd('entro aqui!!');
+            
             $tipoGasto =  Liquidacion::join('pre_presupuesto', 'pre_presupuesto.USUARIORUTA_ID', '=', 'liq_liquidacion.USUARIORUTA_ID')
             ->join('pre_detpresupuesto', 'pre_detpresupuesto.PRESUPUESTO_ID', '=', 'pre_presupuesto.ID' )
             ->join('cat_tipogasto', 'cat_tipogasto.ID', '=', 'pre_detpresupuesto.TIPOGASTO_ID')
@@ -159,7 +161,7 @@ dd($resultado);
         $factura = new Factura();
 
         /** Procesa Imagen **/
-
+//dd($request->all());
         $file = $request->file('FOTO');
         $name = $request->LIQUIDACION_ID . '-' . $request->NUMERO . '-' . time() . '-' . $file->getClientOriginalName();
 
@@ -172,14 +174,17 @@ dd($resultado);
         }
         $file->move($path,$name);
 
+        
+
         //Se valida que fecha no sea anterior a X días programados por la empresa y dentro de Período de Liquidación
 
         $empresa = Session::get('loginEmpresa');
-
+        
         if($request->TIPO_LIQUIDACION == 'Rutas') {            
             $restriccionDias = Empresa::select('TIEMPOATRASO_RUTAS')->where('ID', '=', $empresa)->first();
             $limite = Liquidacion::select('FECHA_INICIO', 'FECHA_FINAL')->where('ID', '=', $request->LIQUIDACION_ID)->first();
             //dd($limite->FECHA_INICIO->format('d-m-Y'));
+            //dd($restriccionDias);
             //dd($restriccionDias);
             $fechaFactura = date_create($request->FECHA_FACTURA);
             if ($fechaFactura->format('Y-m-d') < $limite->FECHA_INICIO->subDays($restriccionDias->TIEMPOATRASO_RUTAS)->format('Y-m-d')) {
@@ -199,7 +204,7 @@ dd($resultado);
                 return back()->withInput()->with('info', 'La Fecha de esta Factura se encuentra fuera del Rango Permitido!');            
             }                
         }
-
+        
         
 
         //dd('Esta es la fecha de la factura ' . $fechaFactura->format('Y-m-d') . ' y esta la de limite ' . $limite->FECHA_INICIO->subDays($restriccionDias->TIEMPOATRASO_RUTAS)->format('Y-m-d'));

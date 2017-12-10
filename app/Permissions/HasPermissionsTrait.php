@@ -45,6 +45,19 @@ trait HasPermissionsTrait
   {
     return $this->belongsToMany(Permission::class, 'users_permissions');
   }
+
+  public function hasRoles(array $roles)
+  {     
+    foreach ($roles as $role) {            
+      foreach ($this->roles as $userRole) {
+          if ($userRole->name === $role) {
+              return true;
+          }
+      }
+      
+    }        
+    return false; 
+  }
 }
 
  ?>

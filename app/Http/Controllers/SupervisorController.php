@@ -17,6 +17,7 @@ class SupervisorController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
+        $this->middleware('roles:superAdmin,supervisor');
     }
 
     /**
@@ -79,14 +80,14 @@ class SupervisorController extends Controller
     public function show($id)
     {   
         $liquidacion = Liquidacion::select('liq_liquidacion.ID', 'liq_liquidacion.FECHA_INICIO', 'users.nombre as USUARIO', 'cat_ruta.DESCRIPCION as RUTA',
-                                           'liq_liquidacion.SUPERVISOR_COMENTARIO', 'liq_liquidacion.CONTABILIDAD_COMENTARIO' )
+                                           'liq_liquidacion.SUPERVISOR_COMENTARIO', 'liq_liquidacion.CONTABILIDAD_COMENTARIO', 'cat_ruta.TIPO_GASTO' )
                                   ->join('cat_usuarioruta', 'cat_usuarioruta.ID', '=', 'liq_liquidacion.USUARIORUTA_ID')
                                   ->join('users', 'users.id', '=', 'cat_usuarioruta.USER_ID')
                                   ->join('cat_ruta', 'cat_ruta.ID', '=', 'cat_usuarioruta.RUTA_ID')
                                   ->where('liq_liquidacion.id', '=', $id)
                                  // ->where('liq_liquidacion.ESTADOLIQUIDACION_ID', '=', 2)
                                   ->first();
-//dd($liquidacion);
+
         $facturas = Factura::select('liq_factura.ID', 'cat_proveedor.NOMBRE', 'liq_factura.SERIE as SERIE', 'liq_factura.NUMERO as NUMERO', 'liq_factura.TOTAL as TOTAL',
                                     'liq_factura.FECHA_FACTURA', 'cat_tipogasto.DESCRIPCION as TIPOGASTO', 'liq_factura.COMENTARIO_SUPERVISOR', 'liq_factura.COMENTARIO_CONTABILIDAD',
                                     'users.email as EMAIL', 'liq_factura.FOTO as FOTO')

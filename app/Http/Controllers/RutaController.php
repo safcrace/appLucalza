@@ -21,6 +21,7 @@ class RutaController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
+        $this->middleware('roles:superAdmin,master,administrador');
     }
 
     /**
@@ -55,8 +56,7 @@ class RutaController extends Controller
           $param = explode('-', $id);
           $usuario_id = $param[0];
           $descripcion = $param[1];
-
-          $empresa_id = Session::get('empresa');
+          $empresa_id = $param[2];;
 
           $user =  User::select('nombre')->where('id', '=', $usuario_id)->first();
 
@@ -106,7 +106,7 @@ class RutaController extends Controller
          $empresa_id = $param[0];
          $usuario_id = $param[1];
          $descripcion = $param[2];
-//dd($descripcion);
+
 
          $seleccionadas = Ruta::join('cat_usuarioruta', 'cat_usuarioruta.RUTA_ID', '=', 'cat_ruta.ID')
                              ->join('users', 'users.id', '=', 'cat_usuarioruta.USER_ID')
@@ -205,7 +205,7 @@ class RutaController extends Controller
         }
 
 
-        return redirect('rutas/usuario/' . $usuario_id . '-' . $request->TIPO_GASTO);
+        return redirect('rutas/usuario/' . $usuario_id . '-' . $request->TIPO_GASTO . '-' . $empresa_id);
     }
 
     /**

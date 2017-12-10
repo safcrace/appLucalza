@@ -18,6 +18,7 @@ class TipoGastoController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
+        $this->middleware('roles:superAdmin,master,vendedor,administrador');
     }
     /**
      * Display a listing of the resource.
@@ -187,6 +188,7 @@ class TipoGastoController extends Controller
     {
         return TipoGasto::select('ID', 'DESCRIPCION')
                                 ->where('ID', '=', $id)
+                                ->where('ANULADO', '=', 0)
                                 ->get();
     }
 
@@ -194,6 +196,7 @@ class TipoGastoController extends Controller
     {
         return SubcategoriaTipoGasto::select('ID', 'DESCRIPCION')
             ->where('TIPOGASTO_ID', '=', $id)
+            ->where('ANULADO', '=', 0)
             ->get();
     }
 

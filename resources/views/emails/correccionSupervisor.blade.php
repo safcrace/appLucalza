@@ -1,4 +1,4 @@
-html<!doctype html>
+<!doctype html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
@@ -13,7 +13,9 @@ html<!doctype html>
 
     <p>Por este medio se le informa, que la Liquidación No. <b>{{$liquidacion->ID}}</b>, ha sido rechazada por Supervisión, por el siguiente motivo: {{$liquidacion->SUPERVISOR_COMENTARIO}}. </p>
 
-    Saludos,
+    <a href="{{ $mail->ruta }}">Ir a la Liquidación</a>
+
+    <p>Saludos,</p>
 
 </body>
 </html>

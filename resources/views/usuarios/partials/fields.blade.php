@@ -55,7 +55,10 @@
             {!! Form::label('password', 'Contraseña') !!}
       </div>
       <div class="col-md-3">
-          {!! Form::password('password', ['class' => 'form-control awesome', 'placeholder' => 'Contraseña']); !!}
+          {!! Form::password('password', ['class' => 'form-control awesome', 'placeholder' => 'Contraseña']); !!} 
+      </div>
+      <div class="col-md-1">
+          <span class="glyphicon glyphicon-eye-open" aria-hidden="true" style="color: black; cursor: pointer; font-size: 22px" data-toggle="tooltip" data-placement="top" title="Cambiar Vista" id="verPassword"></span>
       </div>
     </div>
 
@@ -64,11 +67,12 @@
       <div class="col-md-2 col-md-offset-1">
             {!! Form::label('activo', 'Estatus') !!}
       </div>
-      <div class="col-md-1">
-          {!! Form::radio('activo', 1); !!}  Activo
+      <div class="col-md-1">          
+           <input name="activo" type="radio" checked="cheked" >
+           Activo
       </div>
       <div class="col-md-2">
-          {!! Form::radio('activo', 0); !!}  Inactivo
+          <input name="activo"  type="radio" value="true" >  Inactivo
       </div>
     </div>
 
@@ -83,3 +87,17 @@
 
   </div>
 </div>
+@push('scripts')
+<script type="text/javascript">
+    $(document).ready(function () {       
+        $('#verPassword').click(function() {
+            tipoInput = $('#password').attr('type')
+            if (tipoInput == 'password') {
+              $('#password').attr("type", 'text')
+            } else {
+              $('#password').attr("type", 'password')
+            }            
+        })
+    });
+</script>
+@endpush

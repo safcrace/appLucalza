@@ -43,7 +43,7 @@ class WebServiceController extends Controller
         $combo = '<select class="form-control" id="codigoProveedorSap" name="codigoProveedorSap", disable=false>';
         $combo .='<option value="0">Seleccione una opción</option>';
         foreach ($data['data'] as $a => $b) {
-            $combo .=  '<option value="' . $b['code'] . '">' . $b['name'] . '</option>';
+            $combo .=  '<option value="' . $b['code'] . '">' . $b['code'].' - '.$b['name'] . '</option>';
         }
         $combo .= '</select>';
 

@@ -7,10 +7,11 @@
           <div class="col-md-12 ">
               <div class="panel panel-primary">
                   <div class="panel-heading panel-title" style="height: 65px">Control de Usuarios</span>
-                      @if (auth()->user()->hasRole('superAdmin', 'master'))
-                          <button type="button" class="btn btn-default" style="border-color: white; float: right"><a href="{{ route('home') }}" title="Cerrar"><span class="glyphicon glyphicon-remove-sign" aria-hidden="true" style="font-size:32px; color: black"></span></a></button>
-                      @else
+                      {{--  @if (auth()->user()->hasRole('superAdmin', 'master'))  --}}
+                      @if(isset($id_empresa))
                           <button type="button" class="btn btn-default" style="border-color: white; float: right"><a href="{{ route('empresas.index') }}" title="Cerrar"><span class="glyphicon glyphicon-remove-sign" aria-hidden="true" style="font-size:32px; color: black"></span></a></button>
+                      @else
+                          <button type="button" class="btn btn-default" style="border-color: white; float: right"><a href="{{ route('home') }}" title="Cerrar"><span class="glyphicon glyphicon-remove-sign" aria-hidden="true" style="font-size:32px; color: black"></span></a></button>
                       @endif
                       @can('crear usuario')
                         @if(isset($id_empresa))
@@ -31,9 +32,11 @@
                          <th class="text-center">Correo Electrónico</th>
                          <th>Anulado</th>
                          <th class="text-center">Anular</th>
-                         @can('ver rutas')
-                           <th class="text-center">Módulo</th>
-                         @endcan
+                         @if(isset($id_empresa))
+                            @can('ver rutas')
+                            <th class="text-center">Módulo</th>
+                            @endcan
+                         @endif
                        </thead>
                        <tbody>
 
@@ -42,18 +45,20 @@
                                    <td><a href="{{ route('usuarios.edit', $user->id) }}">{{ $user->id}}</a></td>
                                    <td><a href="{{ route('usuarios.edit', $user->id) }}">{{ $user->nombre}}</a></td>
                                    <td><a href="{{ route('usuarios.edit', $user->id ) }}">{{ $user->email}}</a></td>
-                                    @if (auth()->user()->hasRole('superAdmin', 'master'))
+                                    @if (auth()->user()->hasRole('superAdmin', 'master', 'administrador'))
                                         <td class="text-center"><a href="{{ route('usuarios.edit', $user->id ) }}" id="anulado">{{ ($user->anulado)?'ANULADO':'' }}</a></td>
                                     @endif
                                    <td class="text-center">
                                      <a href="{{ route('anularUsuario') }}" class="btn-delete"><span class="glyphicon glyphicon-ban-circle" aria-hidden="true" style="font-size:20px; color: black"></span></a>
                                    </td>
-                                   @can('ver rutas')
-                                     <td class="text-center">
-                                       <a href="{{ route('indexRutasUsuario', $user->id . '-Rutas') }}"><button type="button" class="btn btn-primary btn-sm">Rutas</button></a>
-                                       <a href="{{ route('indexRutasUsuario', $user->id . '-Otros Gastos') }}"><button type="button" class="btn btn-primary btn-sm">Otros Gastos</button></a>
-                                     </td>
-                                   @endcan
+                                   @if(isset($id_empresa))
+                                        @can('ver rutas')
+                                            <td class="text-center">
+                                            <a href="{{ route('indexRutasUsuario', $user->id . '-Rutas' . '-' . $id_empresa) }}"><button type="button" class="btn btn-primary btn-sm">Rutas</button></a>
+                                            <a href="{{ route('indexRutasUsuario', $user->id . '-Otros Gastos' . '-' . $id_empresa) }}"><button type="button" class="btn btn-primary btn-sm">Otros Gastos</button></a>
+                                            </td>
+                                        @endcan
+                                   @endif
                                </tr>
                            @endforeach
 
@@ -87,6 +92,7 @@
             var id = row.data('id');
             vurl = '{{ route('anularUsuario') }}';
             vurl = vurl.replace('%7Bid%7D', id);
+            
             //row.fadeOut();
             //$('#myModal').modal('show');
             //$('#revertir').click(function () {
@@ -105,6 +111,9 @@
                 });
             //})
         });
+        $('#verPassword').click(function() {
+            alert('Hola')
+        })
     });
 </script>
 @endpush

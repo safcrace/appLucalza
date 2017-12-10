@@ -92,8 +92,7 @@
         <h4 class="modal-title" id="myModalLabel"></h4>
       </div>
       {!! Form::model($facturas, ['route' => ['comentarioSupervisor', ':FACTURA_ID'], 'method' => 'PATCH', 'id' => 'form-update']) !!}
-      <div class="modal-body">
-
+      <div class="modal-body">          
           <textarea name="COMENTARIO_SUPERVISOR" class="form-control" rows="3"></textarea>
 
       </div>
@@ -113,11 +112,11 @@
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title" id="myModalLabelTwo">Comentario Liquidación No. {{ $liquidacion->ID }}</h4>
+        <h4 class="modal-title" id="myModalLabelTwo">Comentario Liquidación No. {{ $liquidacion->ID }} y {{$liquidacion->TIPO_GASTO}}</h4>
       </div>
       {!! Form::model($liquidacion, ['route' => ['correccionLiquidacion', $liquidacion->ID], 'method' => 'PATCH']) !!}
       <div class="modal-body">
-
+          {!! Form::hidden('TIPO_GASTO', $liquidacion->TIPO_GASTO) !!}
           <textarea name="SUPERVISOR_COMENTARIO" class="form-control" rows="3"></textarea>
 
       </div>

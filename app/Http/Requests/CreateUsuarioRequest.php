@@ -24,8 +24,7 @@ class CreateUsuarioRequest extends Request
     public function rules()
     {
         return [
-            'tel_codpais'    => 'digits_between:2,4',
-            'telefono'    => 'digits:8',
+            'tel_codpais'    => 'digits_between:2,4',            
             'email' => 'required|unique:users',
             'activo' => 'required',
             'password' => 'required',

@@ -16,7 +16,7 @@
             @foreach ($empresas as $empresa)
                 <tr>
                     <td>{{ $empresa->DESCRIPCION }}</td>
-                    <td>{{ $empresa->CODIGO_PROVEEDOR_SAP }}</td>
+                    <td>{{ $empresa->CODIGO_PROVEEDOR_SAP }} - {{ $empresa->DESCRIPCION_PROVEEDORSAP }}</td>
                     <td class="text-center">
                       <a href="{{route('anularUsuarioEmpresa', $empresa->ID . '-' . $empresa->USER_ID) }}" class="btn-delete"><span class="glyphicon glyphicon-ban-circle" aria-hidden="true" style="font-size:20px; color: black"></span></a>
                     </td>

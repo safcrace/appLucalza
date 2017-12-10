@@ -2,25 +2,27 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\CreateLiquidacionRequest;
+use App\Ruta;
+use App\Factura;
 use App\Presupuesto;
+use App\Liquidacion;
+use App\UsuarioRuta;
+use App\Http\Requests;
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Facades\Redirect;
-
-use App\Http\Requests;
 use App\Http\Controllers\Controller;
-use App\Liquidacion;
-use App\Ruta;
-use App\UsuarioRuta;
-use App\Factura;
+use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Redirect;
+use App\Http\Requests\CreateLiquidacionRequest;
 
 class LiquidacionController extends Controller
 {
     public function __construct()
     {
         $this->middleware('auth');
+        $this->middleware('roles:superAdmin,vendedor,supervisor,contabilidad');
     }
     /**
      * Display a listing of the resource.
@@ -29,24 +31,39 @@ class LiquidacionController extends Controller
      */
     public function indexGeneral($id)
     {
-
         $usuario_id = Auth::user()->id;
-
+        $empresa_id = Session::get('loginEmpresa');
         $tipoLiquidacion = $id;
 
-        $liquidaciones = Liquidacion::select('liq_liquidacion.ID as ID', 'liq_liquidacion.FECHA_INICIO', 'liq_liquidacion.FECHA_FINAL', 'cat_ruta.DESCRIPCION as RUTA', 'cat_estadoliquidacion.DESCRIPCION', 'users.nombre' )
-                                      ->orderBy('cat_estadoliquidacion.ID')
-                                      ->join('cat_usuarioruta', 'cat_usuarioruta.ID', '=', 'liq_liquidacion.USUARIORUTA_ID')
-                                      ->join('users', 'users.id', '=', 'cat_usuarioruta.USER_ID')
-                                      ->join('cat_ruta', 'cat_ruta.ID', '=', 'cat_usuarioruta.RUTA_ID')
-                                      ->join('cat_estadoliquidacion', 'cat_estadoliquidacion.ID', '=', 'liq_liquidacion.ESTADOLIQUIDACION_ID')
-                                      ->where('liq_liquidacion.ANULADO', '=', 0)
-                                      ->where('users.id','=', $usuario_id)
-                                      ->where('cat_ruta.TIPO_GASTO', '=', $tipoLiquidacion)
-                                      ->whereIn('liq_liquidacion.ESTADOLIQUIDACION_ID', [1,6])
-                                      ->paginate();
+        $codProveedor = Ruta::select('cat_usuarioempresa.CODIGO_PROVEEDOR_SAP')
+                                    ->join('cat_usuarioruta', 'cat_usuarioruta.ID', '=', 'cat_ruta.ID')
+                                    ->join('users', 'users.id', '=', 'cat_usuarioruta.USER_ID')
+                                    ->join('cat_usuarioempresa', 'cat_usuarioempresa.USER_ID', '=', 'users.id')
+                                    ->where('cat_usuarioempresa.EMPRESA_ID', '=', $empresa_id)
+                                    ->where('cat_usuarioempresa.USER_ID', '=', $usuario_id)
+                                    //->where('cat_usuarioempresa.CODIGO_PROVEEDOR_SAP', '<>', 'SIN CODIGO')
+                                    ->first();
 
-        return view('liquidaciones.index', compact('usuario_id', 'liquidaciones', 'tipoLiquidacion' ));
+        $liquidaciones = Liquidacion::select('liq_liquidacion.ID as ID', 'liq_liquidacion.FECHA_INICIO', 'liq_liquidacion.FECHA_FINAL', 'cat_ruta.DESCRIPCION as RUTA', 'cat_estadoliquidacion.DESCRIPCION', 'users.nombre' )
+                                    ->orderBy('cat_estadoliquidacion.ID')
+                                    ->join('cat_usuarioruta', 'cat_usuarioruta.ID', '=', 'liq_liquidacion.USUARIORUTA_ID')
+                                    ->join('users', 'users.id', '=', 'cat_usuarioruta.USER_ID')
+                                    ->join('cat_ruta', 'cat_ruta.ID', '=', 'cat_usuarioruta.RUTA_ID')
+                                    ->join('cat_estadoliquidacion', 'cat_estadoliquidacion.ID', '=', 'liq_liquidacion.ESTADOLIQUIDACION_ID')
+                                    ->where('liq_liquidacion.ANULADO', '=', 0)
+                                    ->where('users.id','=', $usuario_id)
+                                    ->where('cat_ruta.TIPO_GASTO', '=', $tipoLiquidacion)
+                                    ->whereIn('liq_liquidacion.ESTADOLIQUIDACION_ID', [1,6])
+                                    ->paginate();
+
+        if ($codProveedor->CODIGO_PROVEEDOR_SAP <> 'SIN CODIGO') {                   
+            
+                    return view('liquidaciones.index', compact('usuario_id', 'liquidaciones', 'tipoLiquidacion' ));
+        } else { 
+            Session::flash('info', 'No puede ingresar Liquidaciones al Sistema, ya que no cuenta con Código de Proveedeor');
+            return view('liquidaciones.index', compact('usuario_id', 'liquidaciones', 'tipoLiquidacion' ));
+        }
+        
     }
 
     /**
@@ -60,12 +77,16 @@ class LiquidacionController extends Controller
         $usuario = Auth::user()->nombre;
         $usuario_id = Auth::user()->id;
         //dd($request->all());
+        $empresa_id = Session::get('loginEmpresa');
 
         $rutas = Ruta::join('cat_usuarioruta', 'cat_usuarioruta.RUTA_ID', '=', 'cat_ruta.ID')
                               ->join('users', 'users.id', '=', 'cat_usuarioruta.USER_ID')
                               ->join('pre_presupuesto', 'pre_presupuesto.USUARIORUTA_ID', '=', 'cat_usuarioruta.ID')
+                              ->join('cat_usuarioempresa', 'cat_usuarioempresa.USER_ID', '=', 'users.id')
                               ->where('cat_ruta.TIPO_GASTO', '=', $tipoLiquidacion)
                               ->where('cat_usuarioruta.USER_ID', '=', $usuario_id)
+                              ->where('cat_usuarioempresa.EMPRESA_ID', '=', $empresa_id)
+                              ->where('cat_usuarioempresa.CODIGO_PROVEEDOR_SAP', '<>', 'SIN CODIGO')
                               ->where('pre_presupuesto.ANULADO', '=', 0)
                               ->lists('cat_ruta.DESCRIPCION', 'cat_ruta.ID')
                               ->toArray();
@@ -245,6 +266,9 @@ class LiquidacionController extends Controller
                                     ->join('users', 'users.id', '=', 'cat_usuarioruta.USER_ID')
                                     ->where('liq_liquidacion.ID', '=', $id)
                                     ->first();
+
+        $mail->ruta = $request->root() . "/liquidaciones/$id-" . trim($request->TIPO_GASTO) . '/edit';         
+                                    
 
         Liquidacion::where('ID', $id)
                 ->update(['SUPERVISOR_COMENTARIO' => $request->SUPERVISOR_COMENTARIO, 'ESTADOLIQUIDACION_ID' => 6]);

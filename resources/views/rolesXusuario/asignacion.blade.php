@@ -35,7 +35,8 @@
       $(document).ready(function () {
 
         var usuario = $('#usuario').val();
-
+        $('#usuario').select2()
+        });
 
         $('#usuario').change(function () {
 
@@ -45,9 +46,7 @@
           location.href = vurl;
         });
 
-        $('#supervisor').select2();
-            placeholder: 'Seleccione un Supervisor';
-        });
+        
 
         $('#permisos').select2({
           placeholder: "Seleccione un Permiso",

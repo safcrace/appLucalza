@@ -42,18 +42,20 @@
   </div>
 </div>
 
-<div class="row form-group">
-  <div class="col-md-2 col-md-offset-1">
-    {!! Form::label('TIPOPROVEDOR_ID', 'Tipo Proveedor') !!}
+@if (auth()->user()->hasRole('superAdmin', 'contabilidad'))
+  <div class="row form-group">
+    <div class="col-md-2 col-md-offset-1">
+      {!! Form::label('TIPOPROVEDOR_ID', 'Tipo Proveedor') !!}
+    </div>
+    <div class="col-md-3">
+      @if(isset($proveedor->TIPOPROVEEDOR_ID))
+        {!! Form::select('TIPOPROVEEDOR_ID', $tipoProveedor,$proveedor->TIPOPROVEEDOR_ID, ['class' => 'form-control', 'placeholder' => 'Seleccione Tipo Proveedor', 'id' => 'tipoproveedor_id']); !!}
+      @else
+        {!! Form::select('TIPOPROVEEDOR_ID', $tipoProveedor, 1, ['class' => 'form-control', 'placeholder' => 'Seleccione Tipo Proveedor', 'id' => 'tipoproveedor_id']); !!}
+      @endif 
+    </div>
   </div>
-  <div class="col-md-3">
-    @if(isset($proveedor->TIPOPROVEEDOR_ID))
-      {!! Form::select('TIPOPROVEEDOR_ID', $tipoProveedor,$proveedor->TIPOPROVEEDOR_ID, ['class' => 'form-control', 'placeholder' => 'Seleccione Tipo Proveedor', 'id' => 'tipoproveedor_id']); !!}
-    @else
-      {!! Form::select('TIPOPROVEEDOR_ID', $tipoProveedor, 1, ['class' => 'form-control', 'placeholder' => 'Seleccione Tipo Proveedor', 'id' => 'tipoproveedor_id']); !!}
-    @endif 
-  </div>
-</div>
+@endif
 
 <div class="row form-group">
   <div class="col-md-2 col-md-offset-1">

@@ -33,13 +33,13 @@
 
       <div class="row form-group asignacion" style="display: none">
           <div class="col-md-2 col-md-offset-1">
-              {!! Form::label('ASIGNACIONPRESUPUESTO_ID', 'Tipo Asignación') !!}
+              {!! Form::label('TIPOASIGNACION_ID', 'Tipo Asignación') !!}
+          </div>
+          <div class="col-md-2">              
+                {!! Form::radio('TIPOASIGNACION_ID', 1, true, ['id' => 'dinero']); !!}  DINERO
           </div>
           <div class="col-md-2">
-              {!! Form::radio('ASIGNACIONPRESUPUESTO_ID', 1, true, ['id' => 'dinero']); !!}  DINERO
-          </div>
-          <div class="col-md-2">
-              {!! Form::radio('ASIGNACIONPRESUPUESTO_ID', 2, false, ['id' => 'unidad']); !!}  UNIDAD
+              {!! Form::radio('TIPOASIGNACION_ID', 2, false, ['id' => 'unidad']); !!}  UNIDAD
           </div>
       </div>
 
@@ -52,7 +52,6 @@
       </div>
         <div class="col-md-3" style="display: none" id="unidades">
             <div class="form-control" id="tipoAsignacion"></div>
-
         </div>
     </div>
 
@@ -161,11 +160,31 @@
 @push('scripts')
 <script type="text/javascript">
     $(document).ready(function () {
-        var tipo = $('#tipo').val()
-        if(tipo != null) {
-            if ((tipo == 2) || (tipo == 3) || (tipo == 6)) {
-                $('#unidades').show()
+        var tipo = $('#tipo option:selected').text()
+        if(tipo != null) { 
+            if ((tipo == 'Combustible')) {
+                $('.asignacion').show()
+                
+                var tipo_id = $('#tipo').val()
+                vurl = '{{ route('detallePresupuestos.show')}}'
+                vurl = vurl.replace('%7BdetallePresupuestos%7D', tipo_id);
+                
+                $.ajax({
+                    type: 'get',
+                    url: vurl,                    
+                    success: function (data) {
+                        $('#tipoAsignacion').html(data);
+                        var tipoAsignacion = $('#dinero').is(':checked')                        
+                        if(tipoAsignacion == false) {                               
+                            $('#unidades').show()
+                        } else {
+                            $('#unidades').hide()
+                        }
+                    }
+                })
+                
             } else {
+                $('.asignacion').hide()
                 $('#unidades').hide()
             }
         }
@@ -173,7 +192,7 @@
             var tipo = $('#tipo option:selected').text()
 
             if ((tipo == 'Combustible')) {
-
+                $('.asignacion').show()
                 var tipo_id = $('#tipo').val()
                 vurl = '{{ route('detallePresupuestos.show')}}'
                 vurl = vurl.replace('%7BdetallePresupuestos%7D', tipo_id);
@@ -182,23 +201,21 @@
                     url: vurl,
                     success: function (data) {
 
-                        $('#tipoAsignacion').html(data);
-                        $('#unidades').show()
+                        $('#tipoAsignacion').html(data);                        
 
                     }
                 })
             } else {
+                $('.asignacion').hide()
                 $('#unidades').hide()
             }
         });
 
         $('#unidad').click(function() {
-            $('#unidades').show()
-            $('#monto').html('Asignación Galones')
+            $('#unidades').show()            
         })
         $('#dinero').click(function() {
-            $('#unidades').hide()
-            $('#monto').html('Asignación')
+            $('#unidades').hide()            
         })
 
         $('#centro_1').click(function() {

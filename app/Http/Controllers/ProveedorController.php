@@ -19,6 +19,7 @@ class ProveedorController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
+        $this->middleware('roles:superAdmin,administrador,vendedor,contabilidad');
     }
 
     /**

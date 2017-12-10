@@ -13,6 +13,12 @@ use App\User;
 
 class PermisoController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+        $this->middleware('roles:superAdmin');
+    }
+
     /**
      * Display a listing of the resource.
      *
