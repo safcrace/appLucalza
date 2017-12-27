@@ -79,14 +79,17 @@ class ProveedorController extends Controller
      */
     public function store(CreateProveedorRequest $request)
     {
-        //dd('esta llegando aqui');
+        if(! isset($request->TIPOPROVEDOR_ID)) {
+            $tipoProveedorId = 1;
+        }
+        
         if(isset($request->EMPRESA_ID)) {
             $empresa_id = $request->EMPRESA_ID;
         } else {
             $empresa_id = Session::get('empresa');
         }
 
-        /** Se verifica que no exista Codigo de Empresa */
+        /** Se verifica que no exista Identificador Tributario */
         $existeCodigo = Proveedor::select('ID')->where('EMPRESA_ID', '=', $empresa_id)->where('IDENTIFICADOR_TRIBUTARIO', '=', $request->IDENTIFICADOR_TRIBUTARIO)->first();
         
        if ($existeCodigo) {
@@ -101,7 +104,7 @@ class ProveedorController extends Controller
         $proveedor->NOMBRE = $request->NOMBRE;
         $proveedor->DOMICILIO = $request->DOMICILIO;
         $proveedor->ANULADO = $request->ANULADO;
-        $proveedor->TIPOPROVEEDOR_ID = $request->TIPOPROVEEDOR_ID;
+        $proveedor->TIPOPROVEEDOR_ID = $tipoProveedorId;
 
         if ($proveedor->ANULADO === null) {
             $proveedor->ANULADO = 0;

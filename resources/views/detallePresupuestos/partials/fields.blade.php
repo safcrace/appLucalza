@@ -220,7 +220,7 @@
 
         $('#centro_1').click(function() {
             vurl = '{{ route('codigoCentroCostoUno')}}'
-            vurl = vurl.replace('%7Bid%7D', 4);
+            vurl = vurl.replace('%7Bid%7D', 4 + '-' + 1);
 
             $.ajax({
                 type: 'get',
@@ -235,7 +235,7 @@
 
         $('#centro_2').click(function() {
             vurl = '{{ route('codigoCentroCostoDos')}}'
-            vurl = vurl.replace('%7Bid%7D', 4);
+            vurl = vurl.replace('%7Bid%7D', 4 + '-' + 2);
 
             $.ajax({
                 type: 'get',
@@ -250,7 +250,7 @@
 
         $('#centro_3').click(function() {
             vurl = '{{ route('codigoCentroCostoTres')}}'
-            vurl = vurl.replace('%7Bid%7D', 4);
+            vurl = vurl.replace('%7Bid%7D', 4 + '-' + 3);
 
             $.ajax({
                 type: 'get',
@@ -265,7 +265,7 @@
 
         $('#centro_4').click(function() {
             vurl = '{{ route('codigoCentroCostoCuatro')}}'
-            vurl = vurl.replace('%7Bid%7D', 4);
+            vurl = vurl.replace('%7Bid%7D', 4 + '-' + 4);
 
             $.ajax({
                 type: 'get',
@@ -280,7 +280,7 @@
 
         $('#centro_5').click(function() {
             vurl = '{{ route('codigoCentroCostoCinco')}}'
-            vurl = vurl.replace('%7Bid%7D', 4);
+            vurl = vurl.replace('%7Bid%7D', 4 + '-' + 5);
 
             $.ajax({
                 type: 'get',

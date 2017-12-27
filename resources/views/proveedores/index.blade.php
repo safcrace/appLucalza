@@ -81,6 +81,10 @@
                 });
             })
         });
+
+         $('#tipoproveedor_id').select2({
+            placeholder: 'Seleccione un Proveedor'
+        })
     });
 </script>
 @endpush

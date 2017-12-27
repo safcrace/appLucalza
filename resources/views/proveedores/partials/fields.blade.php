@@ -83,3 +83,15 @@
       {!! Form::checkbox('ANULADO', 1); !!}
   </div>
 </div>
+
+
+@push('scripts')
+<script type="text/javascript">
+    $(document).ready(function () {     
+
+         $('#tipoproveedor_id').select2({
+            placeholder: 'Seleccione un Proveedor'
+        })
+    });
+</script>
+@endpush

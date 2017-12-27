@@ -303,7 +303,7 @@ class LiquidacionController extends Controller
 
         $liquidacion = Liquidacion::where('ID', '=', $id)->first();
 
-        Mail::send('emails/correccionSupervisor', compact('mail','liquidacion'), function($m) use ($mail) {
+        Mail::send('emails/correccionContabilidad', compact('mail','liquidacion'), function($m) use ($mail) {
             $m->to($mail->email, $mail->nombre)->subject('Corección de Liquidación');
         });
 

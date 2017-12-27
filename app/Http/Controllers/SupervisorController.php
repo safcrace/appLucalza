@@ -103,6 +103,12 @@ class SupervisorController extends Controller
 
         $corregirFactura = array();
 
+        $correlativo = 1;
+        foreach ($facturas as $factura):
+            $factura->CORRELATIVO  = $correlativo;            
+            $correlativo = $correlativo + 1;            
+        endforeach;
+
         return view('supervisor.edit', compact('liquidacion', 'facturas', 'corregirFactura'));
     }
 

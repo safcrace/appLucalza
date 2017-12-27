@@ -68,11 +68,11 @@
             {!! Form::label('activo', 'Estatus') !!}
       </div>
       <div class="col-md-1">          
-           <input name="activo" type="radio" checked="cheked" >
+           <input name="activo" type="radio" value="1" checked="cheked" >
            Activo
       </div>
       <div class="col-md-2">
-          <input name="activo"  type="radio" value="true" >  Inactivo
+          <input name="activo"  type="radio" value="0" >  Inactivo
       </div>
     </div>
 

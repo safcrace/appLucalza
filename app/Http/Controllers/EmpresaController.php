@@ -94,6 +94,7 @@ class EmpresaController extends Controller
         $empresa->USERSAP = $request->USERSAP;
         $empresa->PASSSAP = bcrypt($request->PASSSAP);
         $empresa->DBSAP = $request->DBSAP;
+        $empresa->FILAS_NOTA_CREDITO = $request->FILAS_NOTA_CREDITO;
         $empresa->USERSQL = $request->USERSQL;
         $empresa->PASSSQL = bcrypt($request->PASSSQL);
         $empresa->SERVIDORSQL = $request->SERVIDORSQL;
@@ -153,7 +154,8 @@ class EmpresaController extends Controller
           ->update(['CLAVE' => $request->CLAVE, 'DESCRIPCION' => $request->DESCRIPCION, 'ANULADO' => $request->ANULADO, 'LICENSESERVER' => $request->LICENSESERVER,
                     'TIEMPOATRASO_RUTAS' => $request->TIEMPOATRASO_RUTAS, 'TIEMPOATRASO_OTROSGASTOS' => $request->TIEMPOATRASO_OTROSGASTOS, 'USERSAP' => $request->USERSAP,
                     'PASSSAP' => bcrypt($request->PASSSAP), 'DBSAP' => $request->DBSAP, 'USERSQL' => $request->USERSQL, 'PASSSQL' => bcrypt($request->ANULADO),
-                    'SERVIDORSQL' => $request->SERVIDORSQL, 'ID_DATASERVERTYPE' => $request->ID_DATASERVERTYPE, 'MONEDA_ID' => $request->MONEDA_ID, 'IMPUESTO' => $request->IMPUESTO]);
+                    'SERVIDORSQL' => $request->SERVIDORSQL, 'ID_DATASERVERTYPE' => $request->ID_DATASERVERTYPE, 'MONEDA_ID' => $request->MONEDA_ID,
+                    'IMPUESTO' => $request->IMPUESTO, 'FILAS_NOTA_CREDITO' => $request->FILAS_NOTA_CREDITO]);
 
         return Redirect::to('empresas');
     }

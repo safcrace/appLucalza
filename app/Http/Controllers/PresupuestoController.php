@@ -130,12 +130,11 @@ class PresupuestoController extends Controller
 
         $rutas = Ruta::join('cat_usuarioruta', 'cat_usuarioruta.RUTA_ID', '=', 'cat_ruta.ID')
             ->join('users', 'users.id', '=', 'cat_usuarioruta.USER_ID')
-            ->where('cat_usuarioruta.ANULADO', '=', 0)
-            //->where('cat_ruta.DESCRIPCION', '=', 'Ruta Norte/2')
+            ->where('cat_usuarioruta.ANULADO', '=', 0)            
             ->where('cat_ruta.TIPO_GASTO', '=', $tipoGasto)
             //->where('cat_ruta.ANULADO', '=', 0)
-            ->select('cat_ruta.DESCRIPCION', 'cat_ruta.ID', 'cat_usuarioruta.ANULADO')
-            ->get();
+            ->lists('cat_ruta.DESCRIPCION', 'cat_ruta.ID')
+            ->toArray();
 
         /*$combos = Presupuesto::select('pre_presupuesto.ID as ID', 'users.id as USUARIO', 'cat_ruta.ID as RUTA', 'cat_empresa.ID as EMPRESA')
                                       ->join('cat_usuarioruta', 'cat_usuarioruta.ID', '=', 'pre_presupuesto.USUARIORUTA_ID')
@@ -355,11 +354,15 @@ class PresupuestoController extends Controller
             ->first();
 
 
-        $usuarios = User::join('cat_usuarioempresa', 'cat_usuarioempresa.USER_ID', '=', 'users.id')
-                                ->join('cat_empresa', 'cat_empresa.ID', '=', 'cat_usuarioempresa.EMPRESA_ID')
-                                ->where('cat_usuarioempresa.EMPRESA_ID', '=', $empresa_id)
-                                ->lists('users.nombre', 'users.id')
-                                ->toArray();
+            $usuarios = User::join('cat_usuarioempresa', 'cat_usuarioempresa.USER_ID', '=', 'users.id')
+            ->join('cat_empresa', 'cat_empresa.ID', '=', 'cat_usuarioempresa.EMPRESA_ID')
+            ->join('cat_usuarioruta', 'cat_usuarioruta.USER_ID', '=', 'users.id')
+            ->join('cat_ruta', 'cat_ruta.ID', '=', 'cat_usuarioruta.RUTA_ID')
+            ->where('cat_usuarioempresa.EMPRESA_ID', '=', $empresa_id)
+            ->where('cat_ruta.TIPO_GASTO', '=', $tipoGasto)
+            ->where('users.anulado', '=', 0)
+            ->lists('users.nombre', 'users.id')
+            ->toArray();
 
         /*$frecuencia = FrecuenciaTiempo::lists('DESCRIPCION', 'ID')
                                         ->toArray();*/
@@ -379,14 +382,21 @@ class PresupuestoController extends Controller
         $vigenciaInicio = $presupuesto->VIGENCIA_INICIO;
         $vigenciaFinal = $presupuesto->VIGENCIA_FINAL;
 
-        $rutas = User::join('cat_usuarioruta', 'cat_usuarioruta.USER_ID', '=', 'users.id')
-            ->join('cat_ruta', 'cat_ruta.ID', '=', 'cat_usuarioruta.RUTA_ID')
+        // $rutas = User::join('cat_usuarioruta', 'cat_usuarioruta.USER_ID', '=', 'users.id')
+        //     ->join('cat_ruta', 'cat_ruta.ID', '=', 'cat_usuarioruta.RUTA_ID')
+        //     ->where('cat_usuarioruta.USER_ID', '=', $usuario_id)
+        //     ->where('cat_ruta.ANULADO', '=', 0)
+        //     ->where('cat_usuarioruta.ANULADO', '=', 0)
+        //     ->lists('cat_ruta.DESCRIPCION', 'cat_ruta.ID')
+        //     ->toArray();
+            $rutas = Ruta::join('cat_usuarioruta', 'cat_usuarioruta.RUTA_ID', '=', 'cat_ruta.ID')
+            ->join('users', 'users.id', '=', 'cat_usuarioruta.USER_ID')
             ->where('cat_usuarioruta.USER_ID', '=', $usuario_id)
+            ->where('cat_usuarioruta.ANULADO', '=', 0)            
+            ->where('cat_ruta.TIPO_GASTO', '=', $tipoGasto)
             ->where('cat_ruta.ANULADO', '=', 0)
-            ->where('cat_usuarioruta.ANULADO', '=', 0)
             ->lists('cat_ruta.DESCRIPCION', 'cat_ruta.ID')
             ->toArray();
-
 
         $detallePresupuestos = DetallePresupuesto::select('pre_detpresupuesto.ID', 'cat_tipogasto.DESCRIPCION as TIPOGASTO', 'pre_detpresupuesto.MONTO', 'cat_frecuenciatiempo.DESCRIPCION as FRECUENCIA')
                                                   ->join('cat_tipogasto', 'cat_tipogasto.ID', '=', 'pre_detpresupuesto.TIPOGASTO_ID')

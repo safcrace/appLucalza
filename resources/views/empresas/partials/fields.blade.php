@@ -92,6 +92,15 @@
       <div class="col-md-3">
           {!! Form::text('USERSAP', null, ['class' => 'form-control', 'placeholder' => 'Usuario SAP']); !!}
       </div>
+      <div class="col-md-2">
+            {!! Form::label('FILAS_NOTA_CREDITO', 'Salida Notas Crédito') !!}
+      </div>
+      <div class="col-md-1">
+          {!! Form::radio('FILAS_NOTA_CREDITO', 1, true); !!}  1 Fila
+      </div>
+      <div class="col-md-2">
+          {!! Form::radio('FILAS_NOTA_CREDITO', 2, false); !!}  2 Filas
+      </div>
     </div>
 
     <div class="row form-group">
@@ -101,6 +110,7 @@
       <div class="col-md-3">
           {!! Form::password('PASSSAP', ['class' => 'form-control awesome', 'placeholder' => 'Contraseña SAP']); !!}
       </div>
+      
     </div>
 
 

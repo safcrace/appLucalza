@@ -2,18 +2,19 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\CreateMonedaRequest;
-use Illuminate\Http\Request;
-
-use App\Http\Requests;
-use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Input;
-use Illuminate\Support\Facades\Redirect;
 use App\Moneda;
 use App\TasaCambio;
-use Illuminate\Support\Facades\Storage;
+
+use App\Http\Requests;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
 use Maatwebsite\Excel\Facades\Excel;
+use Illuminate\Support\Facades\Input;
+use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Redirect;
+use App\Http\Requests\CreateMonedaRequest;
 
 class MonedaController extends Controller
 {
@@ -168,29 +169,54 @@ class MonedaController extends Controller
     }
 
     public function cargaArchivo(Request $request, $id)
-    {
-        $file = $request->file('tasasCambio');
-        $originalName = 'Moneda-' . $id . '-' . $file->getClientOriginalName();
-        $almacenado = Storage::disk('tasasCambio')->put($originalName,  \File::get($file) );
-        $rutaAlmacenado = storage_path('tasasCambio') . '/' . $originalName;
+    {   
+        $moneda = Moneda::find($id);
 
-        if($almacenado) {
-            Excel::selectSheetsByIndex(0)->load($rutaAlmacenado, function($hoja) {
-                $hoja->each(function($fila) {
-                    $tasa = TasaCambio::where('FECHA', '=', $fila->fecha)->where('MONEDA_ID', '=', $fila->moneda_id)->where('COMPRA', '=', $fila->compra)->first();
-                    if(count($tasa) == 0) {
-                        $tasaCambio = new TasaCambio();
-                        $tasaCambio->MONEDA_ID = $fila->moneda_id;
-                        $tasaCambio->FECHA = $fila->fecha;
-                        $tasaCambio->COMPRA = $fila->compra;
-                        $tasaCambio->ANULADO = $fila->anulado;
+        $existe = TasaCambio::where('MONEDA_ID', '=', $id)->where('FECHA', '=', $request->fechaOrigen)->first();
 
-                        $tasaCambio->save();
-                    }
-                });
+        if($existe) {
+            Session::flash('info', '¡No se puede ingresar dos tipos de cambio con la misma fecha!');
+            return back()->withInput();
+        } else{
+            $tasaCambio = new TasaCambio();
 
-            });
+            $tasaCambio->moneda_id = $moneda->ID;
+
+            $tasaCambio->FECHA = $request->fechaOrigen;
+            $tasaCambio->COMPRA = $request->tasaCambio;
+
+            $tasaCambio->ANULADO = $request->ANULADOTC;
+            if ($tasaCambio->ANULADO === null) {
+                $tasaCambio->ANULADO = 0;
+            }
+
+            $tasaCambio->save();
+            
+            return redirect::to('monedas/' . $id . '/edit');
         }
-        return redirect::to('monedas/' . $id . '/edit');
     }
 }
+/** Proceso para importar desde Excel 
+ $file = $request->file('tasasCambio');
+$originalName = 'Moneda-' . $id . '-' . $file->getClientOriginalName();
+$almacenado = Storage::disk('tasasCambio')->put($originalName,  \File::get($file) );
+$rutaAlmacenado = storage_path('tasasCambio') . '/' . $originalName;
+
+if($almacenado) {
+    Excel::selectSheetsByIndex(0)->load($rutaAlmacenado, function($hoja) {
+        $hoja->each(function($fila) {
+            $tasa = TasaCambio::where('FECHA', '=', $fila->fecha)->where('MONEDA_ID', '=', $fila->moneda_id)->where('COMPRA', '=', $fila->compra)->first();
+            if(count($tasa) == 0) {
+                $tasaCambio = new TasaCambio();
+                $tasaCambio->MONEDA_ID = $fila->moneda_id;
+                $tasaCambio->FECHA = $fila->fecha;
+                $tasaCambio->COMPRA = $fila->compra;
+                $tasaCambio->ANULADO = $fila->anulado;
+
+                $tasaCambio->save();
+            }
+        });
+
+    });
+}
+**/

@@ -32,7 +32,8 @@
 
                       <table class="table table-bordered table-striped table-hover">
                         <thead>
-                          <th class="text-center">Fecha</th>
+                          <th class="text-center">No.</th>
+                          <th class="text-center">Fecha Documento</th>
                           <th class="text-center">Proveedor</th>
                           <th class="text-center">Serie</th>
                           <th class="text-center">Numero</th>
@@ -49,6 +50,8 @@
                             @foreach ($facturas as $factura)
 
                                 <tr data-id={{ $factura->ID }} data-factura={{ $factura->NUMERO }}>
+
+                                    <td>{{ $factura->CORRELATIVO}}</td>
                                     <td>{{ $factura->FECHA_FACTURA->format('d-m-Y') }}</td>
                                     <td>{{ $factura->NOMBRE}}</td>
                                     <td>{{ $factura->SERIE }}</td>

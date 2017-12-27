@@ -178,3 +178,4 @@ Route::get('webservice/codigo/centroCosto2/{id}', ['uses' => 'WebServiceControll
 Route::get('webservice/codigo/centroCosto3/{id}', ['uses' => 'WebServiceController@getCodigoCentroCostoTres', 'as' => 'codigoCentroCostoTres']);
 Route::get('webservice/codigo/centroCosto4/{id}', ['uses' => 'WebServiceController@getCodigoCentroCostoCuatro', 'as' => 'codigoCentroCostoCuatro']);
 Route::get('webservice/codigo/centroCosto5/{id}', ['uses' => 'WebServiceController@getCodigoCentroCostoCinco', 'as' => 'codigoCentroCostoCinco']);
+Route::get('webservice/tasaCambio/{id}', ['uses' => 'WebServiceController@getTasaCambio', 'as' => 'tasaCambio']);

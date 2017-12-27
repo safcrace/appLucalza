@@ -93,6 +93,15 @@
 @push('scripts')
 <script type="text/javascript">
     $(document).ready(function () {
+
+        $('#usuario').select2({
+            placeholder: 'Seleccione un usuario'
+        })
+
+        $('#ruta').select2({
+            placeholder: 'Seleccione una ruta'
+        })
+
         var role = $('#role').val();
         var tipo = $('#ruta option:selected').text()
         tipo = tipo.toLowerCase(tipo)

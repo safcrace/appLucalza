@@ -95,6 +95,12 @@ class ContabilidadController extends Controller
 
         $tipoProveedor = TipoProveedor::lists('DESCRIPCION', 'ID')->toArray();
 
+        $correlativo = 1;
+        foreach ($facturas as $factura):
+            $factura->CORRELATIVO  = $correlativo;            
+            $correlativo = $correlativo + 1;            
+        endforeach;
+//dd($factura);
         return view('contabilidad.edit', compact('liquidacion', 'facturas', 'corregirFactura', 'tipoProveedor'));
     }
 
@@ -106,6 +112,17 @@ class ContabilidadController extends Controller
      */
     public function report($id) 
     {
+        $proveedorNoClasificado = Factura::select('cat_proveedor.TIPOPROVEEDOR_ID')
+                                        ->join('cat_proveedor', 'cat_proveedor.ID', '=', 'liq_factura.PROVEEDOR_ID')
+                                        ->where('liq_factura.LIQUIDACION_ID', '=', $id)
+                                        ->where('cat_proveedor.TIPOPROVEEDOR_ID', '=', 1)
+                                        ->where('liq_factura.ANULADO', '=', 0)
+                                        ->get();
+
+        if($proveedorNoClasificado) {
+            return back()->with('info', 'Tiene pendiente revisar categoría(s) de Proveedor(es)!');
+        }
+        
         $liquidacion = Liquidacion::select('liq_liquidacion.ID', 'liq_liquidacion.FECHA_INICIO', 'users.nombre as USUARIO', 'cat_ruta.DESCRIPCION as RUTA',
                                            'liq_liquidacion.FECHA_FINAL')
                                         ->join('cat_usuarioruta', 'cat_usuarioruta.ID', '=', 'liq_liquidacion.USUARIORUTA_ID')

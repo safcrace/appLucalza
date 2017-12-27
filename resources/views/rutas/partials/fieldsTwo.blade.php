@@ -15,7 +15,7 @@
       {{--@if(isset($combo_id))
         {!! Form::select('RUTA_ID', $rutas, 0, ['class' => 'form-control', 'placeholder' => 'Seleccione una Opción']); !!}
       @else--}}
-        {!! Form::select('RUTA_ID', $rutas, null, ['class' => 'form-control', 'placeholder' => 'Seleccione una Opción']); !!}
+        {!! Form::select('RUTA_ID', $rutas, null, ['class' => 'form-control', 'placeholder' => 'Seleccione una Opción', 'id' => 'rutaUsuario']); !!}
       {{--@endif--}}
   </div>
 </div>
@@ -28,3 +28,14 @@
       {!! Form::checkbox('ANULADO', 1); !!}
   </div>
 </div>
+
+@push('scripts')
+<script type="text/javascript">
+    $(document).ready(function () {     
+
+         $('#rutaUsuario').select2({
+            placeholder: 'Seleccione un una Opción'
+        })
+    });
+</script>
+@endpush

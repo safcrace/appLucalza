@@ -81,6 +81,7 @@ class TipoGastoController extends Controller
         //$tipoGasto->CAUSAEXENCION_ID = $request->CAUSAEXENCION_ID;
         //$tipoGasto->UNIDAD_MEDIDA = $request->UNIDAD_MEDIDA;
         $tipoGasto->GRUPOTIPOGASTO_ID = $request->GRUPO_ID;
+        $tipoGasto->CONTROL_DEPRECIACION = $request->CONTROL_DEPRECIACION;
         $tipoGasto->OPCIONCOMBUSTIBLE_ID = $request->OPCIONCOMBUSTIBLE_ID;
         $tipoGasto->OPCIONKILOMETRAJE_ID = $request->OPCIONKILOMETRAJE_ID;
         //$tipoGasto->ASIGNACIONPRESUPUESTO_ID = $request->ASIGNACIONPRESUPUESTO_ID;
@@ -172,7 +173,7 @@ class TipoGastoController extends Controller
 
       $tipoGasto::where('ID', $tipoGasto->ID)
               ->update(['DESCRIPCION' => $request->DESCRIPCION, 'GRUPOTIPOGASTO_ID' => $request->GRUPO_ID, 'OPCIONCOMBUSTIBLE_ID' => $request->OPCIONCOMBUSTIBLE_ID,
-                        'OPCIONKILOMETRAJE_ID' => $request->OPCIONKILOMETRAJE_ID,
+                        'OPCIONKILOMETRAJE_ID' => $request->OPCIONKILOMETRAJE_ID, 'CONTROL_DEPRECIACION' => $request->CONTROL_DEPRECIACION,
                         'CUENTA_CONTABLE_EXENTO' => $request->CUENTA_CONTABLE_EXENTO,  'DESCRIPCION_CUENTA_EXENTO' => trim($request->CUENTA_EXENTO, "\t."),
                         'CODIGO_IMPUESTO_EXENTO' => $request->CODIGO_IMPUESTO_EXENTO, 'DESCRIPCION_IMPUESTO_EXENTO' => $request->IMPUESTO_EXENTO,
                         'CUENTA_CONTABLE_AFECTO' => $request->CUENTA_CONTABLE_AFECTO, 'DESCRIPCION_CUENTA_AFECTO' => trim($request->CUENTA_AFECTO, "\t."),

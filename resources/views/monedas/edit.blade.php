@@ -73,12 +73,12 @@
               <div class="modal-content">
                   <div class="modal-header">
                       <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                      <h4 class="modal-title" id="myModalLabel">Carga de Archivos Externos</h4>
+                      <h4 class="modal-title" id="myModalLabel">Carga de Tasa de Cambio</h4>
                   </div>
 
                   <div class="modal-body">
 
-                      {!! Form::open(['route' => ['cargaArchivo', $moneda->ID], 'method' => 'POST', 'enctype' => 'multipart/form-data']) !!}
+                      {!! Form::open(['route' => ['cargaArchivo', $moneda->ID], 'method' => 'POST']) !!}
                         @include('monedas.tasaCambio.field')
 
                   </div>
@@ -126,6 +126,20 @@
                 });
             })
         });
+
+        $('#cargaTasa').click(function() {            
+              vurl = '{{ route('tasaCambio')}}'
+              fecha = $('#fechaConsulta').val()              
+              vurl = vurl.replace('%7Bid%7D', fecha);
+              alert(vurl)
+              $.ajax({
+                  type: 'get',
+                  url: vurl,
+                  success: function (data) {
+                      $('#tasaCambio').val(data);                      
+                  }
+              });
+          })
     });
 </script>
 @endpush

@@ -32,6 +32,7 @@
 
                       <table class="table table-bordered table-striped table-hover">
                         <thead>
+                          <th class="text-center">No.</th>
                           <th class="text-center">Fecha Factura</th>
                           <th class="text-center">Proveedor</th>
                           <th class="text-center">Serie</th>
@@ -48,6 +49,7 @@
 
                             @foreach ($facturas as $factura)
                                 <tr data-id={{ $factura->ID }} data-factura={{ $factura->NUMERO }} data-proveedor={{ $factura->PROVEEDORID }}>
+                                    <td>{{ $factura->CORRELATIVO}}</td>
                                     <td>{{ $factura->FECHA_FACTURA->format('d-m-Y') }}</td>
                                     @if($factura->TIPOPROVEEDOR_ID == 1)
                                         <td style="background-color: red; color: white;" class="proveedor">{{ $factura->NOMBRE}} || {{ $factura->PROVEEDORID }}</td>

@@ -8,9 +8,9 @@
     </div>
     <div class="col-md-3">
         @if(isset($tipoGasto->GRUPOTIPOGASTO_ID))
-            {!! Form::select('GRUPO_ID', $grupo, $tipoGasto->GRUPOTIPOGASTO_ID, ['class' => 'form-control', 'placeholder' => 'Seleccione un Grupo']); !!}
+            {!! Form::select('GRUPO_ID', $grupo, $tipoGasto->GRUPOTIPOGASTO_ID, ['class' => 'form-control', 'placeholder' => 'Seleccione un Grupo', 'id' => 'grupoTipo']); !!}
         @else
-            {!! Form::select('GRUPO_ID', $grupo, null, ['class' => 'form-control', 'placeholder' => 'Seleccione un Grupo']); !!}
+            {!! Form::select('GRUPO_ID', $grupo, null, ['class' => 'form-control', 'placeholder' => 'Seleccione un Grupo', 'id' => 'grupoTipo']); !!}
         @endif
     </div>
 </div>
@@ -22,7 +22,18 @@
       {!! Form::text('DESCRIPCION', null, ['class' => 'form-control', 'placeholder' => 'Descripción Gasto']); !!}
   </div>
 </div>
+
     <div class="row form-group">
+        <div class="col-md-2 col-md-offset-1">
+            {!! Form::label('CONTROL_DEPRECIACION', 'Depreciación') !!}
+        </div>
+        <div class="col-md-1">
+            {!! Form::radio('CONTROL_DEPRECIACION', 1, false, ['id' => 'depre']); !!}  SI
+        </div>
+        <div class="col-md-1">
+            {!! Form::radio('CONTROL_DEPRECIACION', 0, true, ['id' => 'no_depre']); !!}  NO
+        </div>
+
         <div class="col-md-2 col-md-offset-1">
             {!! Form::label('OPCIONCOMBUSTIBLE_ID', 'Control Combustible') !!}
         </div>
@@ -34,8 +45,20 @@
         </div>
     </div>
 
+    {{--  <div class="row form-group">
+        <div class="col-md-2 col-md-offset-1">
+            {!! Form::label('OPCIONCOMBUSTIBLE_ID', 'Control Combustible') !!}
+        </div>
+        <div class="col-md-1">
+            {!! Form::radio('OPCIONCOMBUSTIBLE_ID', 1, false, ['id' => 'gas']); !!}  SI
+        </div>
+        <div class="col-md-1">
+            {!! Form::radio('OPCIONCOMBUSTIBLE_ID', 2, true, ['id' => 'no_gas']); !!}  NO
+        </div>
+    </div>  --}}
+
 <div class="row form-group" id="Kilometros" style="display: none">
-    <div class="col-md-2 col-md-offset-1">
+    <div class="col-md-2 col-md-offset-6">
         {!! Form::label('OPCIONKILOMETRAJE_ID', 'Control Kilometraje') !!}
     </div>
     <div class="col-md-1">
@@ -335,6 +358,10 @@
   <script type="text/javascript">
       $(document).ready(function () {
 
+          $('#grupoTipo').select2({
+            placeholder: 'Seleccione una opción'
+        })
+
           var exento = $("#gas").prop("checked") ? true : false;
           if (exento === true) {
               $('#Kilometros').show();
@@ -388,6 +415,17 @@
                       $('#myModalCe').modal('show')
                   }
               });
+          
+              $('#cuentaContableExenta').on('click', '#cc_exento', function() {                
+                var senderito = $('#cuentaContableExenta').find(':selected').attr('data-postable')
+                console.log(senderito)
+                      //var descripcion_exenta = $('#cuentaContableExenta option:selected').text()
+                      //var senderito = $('#cuentaContableExenta').find(':selected').attr('data-data-postable')
+                      //console.log(descripcion_exenta)
+
+                      //var descripcion_proveedorSap = $('#codigoProveedorSap option:selected').text()
+                //$('#descripcion_proveedorsap').val(descripcion_proveedorSap)
+              })     
 
            $('#cuentaContableExenta').select2({
                 placeholder: 'Seleccione un Proveedor'
@@ -396,10 +434,16 @@
 
           $('#ok_exenta').click(function() {
               var codigo_exenta = $('#cuentaContableExenta').val()
-              var descripcion_exenta = $('#cuentaContableExenta option:selected').text()
-              $('#cuenta_contable_exenta').val(codigo_exenta)
-              $('.descripcion_cuenta_ce').val(descripcion_exenta)
-              $('#myModalCe').modal('hide')
+              var descripcion_exenta = $('#cuentaContableExenta option:selected').text()            
+              //var $(this).find(':selected').data('id')
+              var postable = $('#cuentaContableExenta').find(':selected').attr('data-postable')
+              if(postable == 'Y') {
+                  $('#cuenta_contable_exenta').val(codigo_exenta)
+                  $('.descripcion_cuenta_ce').val(descripcion_exenta)
+                  $('#myModalCe').modal('hide')                
+              } else {
+                alert('No puede Seleccionar una Cuenta Padre')
+              }
           })
 
           $('#cc_afecta').click(function() {
@@ -419,9 +463,14 @@
           $('#ok_afecta').click(function() {
               var codigo_afecta = $('#cuentaContableAfecta').val()
               var descripcion_afecta = $('#cuentaContableAfecta option:selected').text()
-              $('#cuenta_contable_afecta').val(codigo_afecta)
-              $('.descripcion_cuenta_ca').val(descripcion_afecta)
-              $('#myModalCa').modal('hide')
+              var postable = $('#cuentaContableExenta').find(':selected').attr('data-postable')
+              if(postable == 'Y') {                  
+                  $('#cuenta_contable_afecta').val(codigo_afecta)
+                  $('.descripcion_cuenta_ca').val(descripcion_afecta)
+                  $('#myModalCa').modal('hide')                
+              } else {
+                alert('No puede Seleccionar una Cuenta Padre')
+              }              
           })
 
           $('#cc_remanente').click(function() {
@@ -441,9 +490,14 @@
           $('#ok_remanente').click(function() {
               var codigo_remanente = $('#cuentaContableRemanente').val()
               var descripcion_remanente = $('#cuentaContableRemanente option:selected').text()
-              $('#cuenta_contable_remanente').val(codigo_remanente)
-              $('.descripcion_cuenta_cr').val(descripcion_remanente)
-              $('#myModalCr').modal('hide')
+              var postable = $('#cuentaContableExenta').find(':selected').attr('data-postable')
+              if(postable == 'Y') {                  
+                  $('#cuenta_contable_remanente').val(codigo_remanente)
+                  $('.descripcion_cuenta_cr').val(descripcion_remanente)
+                  $('#myModalCr').modal('hide')
+              } else {
+                alert('No puede Seleccionar una Cuenta Padre')
+              }              
           })
 
 

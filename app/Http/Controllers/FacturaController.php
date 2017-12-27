@@ -99,7 +99,7 @@ dd($resultado);
             //->join('cat_tipogasto', 'cat_tipogasto.ID', '=', 'pre_detpresupuesto.TIPOGASTO_ID')
             //->whereDate('pre_presupuesto.VIGENCIA_INICIO', '=', $fechaInicio)
             //->whereDate('pre_presupuesto.VIGENCIA_FINAL', '=', $fechaFinal)
-            TipoGasto::where('DESCRIPCION', 'like', '%eprecia%')
+            TipoGasto::where('CONTROL_DEPRECIACION', '=', 1)
             ->lists('DESCRIPCION', 'ID')
             ->toArray();   
             

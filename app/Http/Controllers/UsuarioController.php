@@ -31,6 +31,8 @@ class UsuarioController extends Controller
         $users = User::select('users.id', 'users.nombre', 'users.email', 'users.anulado')
                             //->where('users.anulado', '=', 0)
                             ->paginate(10);
+
+                            
                     
         return view('usuarios.index', compact('users'));
         
@@ -142,6 +144,7 @@ class UsuarioController extends Controller
             ->where('cat_empresa.ID', '=', $empresa_id)
             ->where('users_roles.role_id', '=', 7)
             ->where('users.anulado', '=', 0)
+            ->where('cat_usuarioempresa.ANULADO', '=', 0)
             ->whereNotIn('users.id', $asignados)
             ->lists('users.nombre', 'users.id')
             ->toArray();
@@ -166,7 +169,7 @@ class UsuarioController extends Controller
     {
         $empresa_id = $request->EMPRESA_ID;
         $codigoProveedorSap = $request->codigoProveedorSap;
-        //dd($empresa_id);
+        //dd($request->all());
 
         $usuario = new User();
 
@@ -242,7 +245,7 @@ class UsuarioController extends Controller
             ->join('users_roles', 'users_roles.user_id', '=', 'users.id')
             //->where('users.id', '=', $usuario_id)
             ->where('cat_empresa.ID', '=', $empresa_id)
-            ->where('users_roles.role_id', '=', 7)
+            ->where('users_roles.role_id', '=', 7)            
             ->where('users.anulado', '=', 0)
             ->where('cat_supervisor_vendedor.ANULADO', '=', 0)
             ->lists('users.id')
@@ -253,6 +256,7 @@ class UsuarioController extends Controller
             ->join('users_roles', 'users_roles.user_id', '=', 'users.id')
             ->where('cat_empresa.ID', '=', $empresa_id)
             ->where('users_roles.role_id', '=', 7)
+            ->where('cat_usuarioempresa.ANULADO', '=', 0)
             ->whereNotIn('users.id', $asignados)
             ->lists('users.nombre', 'users.id')
             ->toArray();
@@ -296,18 +300,24 @@ class UsuarioController extends Controller
 
     public function storeUsuarioEmpresa(Request $request)
     {      
-        if(($request->EMPRESA_ID === '') || ($request->codigoProveedorSap === '')) {
+        //dd($request->all());
+        if(($request->EMPRESA_ID === '') || ($request->DESCRIPCION_PROVEEDORSAP === '')) {
             Session::flash('validaUsuarioEmpresa', '¡Los campos Empresa y Código Proveedor SAP son Obligatorios!');
             return back()->withInput();
         }
 
         $usuarioEmpresa = new UsuarioEmpresa();
 
-        $existe = UsuarioEmpresa::where('USER_ID', '=', $request->USUARIO_ID)
-                                        ->where('EMPRESA_ID', '=', $request->EMPRESA_ID)
-                                        ->where('CODIGO_PROVEEDOR_SAP', '=', $request->codigoProveedorSap)->first();
-        
+        // $existeEmpresa = UsuarioEmpresa::where('USER_ID', '=', $request->USUARIO_ID)
+        //                                 ->where('EMPRESA_ID', '=', $request->EMPRESA_ID)->first();
+        // if ($existeEmpresa) {
+        //     Session::flash('info', '¡Usuario ya asignado a empresa!');
+        //     return back()->withInput();
+        // }
 
+        $existe = UsuarioEmpresa::where('USER_ID', '=', $request->USUARIO_ID)
+                                        ->where('EMPRESA_ID', '=', $request->EMPRESA_ID)->first();
+        
         if($existe) { 
                      
             UsuarioEmpresa::where('USER_ID', '=', $request->USUARIO_ID)->where('EMPRESA_ID', '=', $request->EMPRESA_ID)
@@ -315,10 +325,10 @@ class UsuarioController extends Controller
                                    
         } else {
             
-            $existeCodigo = UsuarioEmpresa::where('CODIGO_PROVEEDOR_SAP', '=', $request->codigoProveedorSap)->first();
-            if ($existeCodigo) {
-                Session::flash('validaUsuarioEmpresa', '¡El código Proveedor ya existe. Consulte con el Administrador!');                
-            } else {
+            // $existeCodigo = UsuarioEmpresa::where('CODIGO_PROVEEDOR_SAP', '=', $request->codigoProveedorSap)->first();
+            // if ($existeCodigo) {
+            //     Session::flash('validaUsuarioEmpresa', '¡El código Proveedor ya existe. Consulte con el Administrador!');                
+            // } else {
                 $usuarioEmpresa->USER_ID = $request->USUARIO_ID;
                 $usuarioEmpresa->EMPRESA_ID = $request->EMPRESA_ID;
                 $usuarioEmpresa->CODIGO_PROVEEDOR_SAP = $request->codigoProveedorSap;
@@ -326,7 +336,7 @@ class UsuarioController extends Controller
                 $usuarioEmpresa->ANULADO = 0;
     
                 $usuarioEmpresa->save();
-            }
+            // }
 
             
         }
