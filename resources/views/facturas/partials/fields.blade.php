@@ -289,6 +289,7 @@
                 $('.combus').show()
             } else {
                 $('.combus').hide()
+                $('#categoriaGasto').val('otros')
             }
         }
 
@@ -329,7 +330,8 @@
                 $('#categoriaGasto').val('depreciación')
                 $('.combus').show()
             } else {
-                $('.combus').hide()
+                $('#categoriaGasto').val('otros')
+                $('.combus').hide()                
             }
 
         });
@@ -393,7 +395,7 @@
             var form = $('#form-save')
             var url = '{{ route('proveedores.store') }}'
             var data = form.serialize()
-            alert(data);
+            
 
             $.post(url, data, function (data) {
                 //alert(data[2])

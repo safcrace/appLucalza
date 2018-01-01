@@ -172,6 +172,12 @@ class MonedaController extends Controller
     {   
         $moneda = Moneda::find($id);
 
+        
+        if(($request->fechaOrigen === '') || ($request->tasaCambio === '')) {
+            Session::flash('info', '¡Los campos Fecha y Tasa de Cambio son Obligatorios!');
+            return back()->withInput();
+        }
+
         $existe = TasaCambio::where('MONEDA_ID', '=', $id)->where('FECHA', '=', $request->fechaOrigen)->first();
 
         if($existe) {

@@ -151,7 +151,7 @@ class ProveedorController extends Controller
         $moneda = Empresa::select('cat_moneda.ID', 'cat_moneda.DESCRIPCION')
             ->join('cat_moneda', 'cat_moneda.ID', '=', 'cat_empresa.MONEDA_ID')
             ->where('cat_empresa.ID', '=',  $proveedor->EMPRESA_ID)
-            ->first();
+            ->first();           
 
         $tipoProveedor = TipoProveedor::lists('DESCRIPCION', 'ID')->toArray();
 

@@ -8,27 +8,28 @@
     {!! Form::label('MONEDA_ID', 'Moneda') !!}
   </div>
   @if (isset($proveedor->MONEDA_ID))
-    @if($proveedor->MONEDA_ID == $moneda->ID)
+    @if($proveedor->MONEDA_ID == $moneda->ID)      
       <div class="col-md-2 ">
         {!! Form::radio('MONEDA_ID', $moneda->ID, true); !!}  {{ $moneda->DESCRIPCION }}
       </div>
       <div class="col-md-2">
-        {!! Form::radio('MONEDA_ID', 2); !!}  DOLAR
-      </div>
-    @else
+        {!! Form::radio('MONEDA_ID', 1, false); !!}  DOLAR
+      </div>      
+    @else      
       <div class="col-md-2 ">
-        {!! Form::radio('MONEDA_ID', $moneda->ID); !!}  {{ $moneda->DESCRIPCION }}
+        {!! Form::radio('MONEDA_ID', $moneda->ID, true); !!}  {{ $moneda->DESCRIPCION }}
       </div>
       <div class="col-md-2">
-        {!! Form::radio('MONEDA_ID', 2, true); !!}  DOLAR
+        {!! Form::radio('MONEDA_ID', 1, false); !!}  DOLAR
       </div>
     @endif
   @else
+      RAYOS
     <div class="col-md-2 ">
       {!! Form::radio('MONEDA_ID', $moneda->ID, true); !!}  {{ $moneda->DESCRIPCION }}
     </div>
     <div class="col-md-2">
-      {!! Form::radio('MONEDA_ID', 2); !!}  DOLAR
+      {!! Form::radio('MONEDA_ID', 1, false); !!}  DOLAR
     </div>
   @endif
 </div>

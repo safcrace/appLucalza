@@ -2,6 +2,11 @@
     <input id="USUARIO_ID" name="USUARIO_ID" type="hidden" value="{{ $usuario_id }}">
 @endif
 
+
+    <input id="EMPRESA_ID" name="EMPRESA_ID" type="hidden" value="{{ $empresa_id }}">
+    <input id="TIPOGASTO" name="TIPOGASTO" type="hidden" value="{{ $descripcion }}">
+
+
 {!! Form::hidden('TIPO_GASTO', $descripcion); !!}
 <div class="row form-group">
   <div class="col-md-1 col-md-offset-1">
@@ -12,11 +17,11 @@
         @endif
   </div>
   <div class="col-md-3">
-      {{--@if(isset($combo_id))
-        {!! Form::select('RUTA_ID', $rutas, 0, ['class' => 'form-control', 'placeholder' => 'Seleccione una Opción']); !!}
-      @else--}}
+      @if(isset($rutaActual))
+        {!! Form::select('RUTA_ID', $rutas, $rutaActual, ['class' => 'form-control']); !!}
+      @else
         {!! Form::select('RUTA_ID', $rutas, null, ['class' => 'form-control', 'placeholder' => 'Seleccione una Opción', 'id' => 'rutaUsuario']); !!}
-      {{--@endif--}}
+      @endif
   </div>
 </div>
 
@@ -34,7 +39,7 @@
     $(document).ready(function () {     
 
          $('#rutaUsuario').select2({
-            placeholder: 'Seleccione un una Opción'
+            placeholder: 'Seleccione una Opción'
         })
     });
 </script>

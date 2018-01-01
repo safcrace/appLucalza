@@ -167,8 +167,7 @@
                 
                 var tipo_id = $('#tipo').val()
                 vurl = '{{ route('detallePresupuestos.show')}}'
-                vurl = vurl.replace('%7BdetallePresupuestos%7D', tipo_id);
-                
+                vurl = vurl.replace('%7BdetallePresupuestos%7D', tipo_id);                
                 $.ajax({
                     type: 'get',
                     url: vurl,                    
@@ -200,7 +199,7 @@
                     type: 'get',
                     url: vurl,
                     success: function (data) {
-
+                        alert(data)
                         $('#tipoAsignacion').html(data);                        
 
                     }

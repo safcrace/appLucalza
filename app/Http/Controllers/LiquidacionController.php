@@ -56,11 +56,10 @@ class LiquidacionController extends Controller
                                     ->whereIn('liq_liquidacion.ESTADOLIQUIDACION_ID', [1,6])
                                     ->paginate();
 
-        if ($codProveedor->CODIGO_PROVEEDOR_SAP <> 'SIN CODIGO') {                   
-            
-                    return view('liquidaciones.index', compact('usuario_id', 'liquidaciones', 'tipoLiquidacion' ));
-        } else { 
+        if ($codProveedor->CODIGO_PROVEEDOR_SAP == 'V00000') {                               
             Session::flash('info', 'No puede ingresar Liquidaciones al Sistema, ya que no cuenta con Código de Proveedeor');
+            return back();
+        } else { 
             return view('liquidaciones.index', compact('usuario_id', 'liquidaciones', 'tipoLiquidacion' ));
         }
         

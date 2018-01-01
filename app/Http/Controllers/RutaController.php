@@ -179,7 +179,11 @@ class RutaController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function storeUsuarioRuta(Request $request, $id)
-    {
+    {   
+        $this->validate($request, [
+            'RUTA_ID' => 'required',            
+        ]);
+
         $usuarioRuta = new UsuarioRuta();
 
         $param = explode('-', $id);
@@ -255,28 +259,30 @@ class RutaController extends Controller
                                     ->where('RUTA_ID', '=', $ruta_id)
                                     ->first();
         //dd($usuarioRuta);
+        $rutaActual = $usuarioRuta->RUTA_ID;
         $seleccionadas = Ruta::join('cat_usuarioruta', 'cat_usuarioruta.RUTA_ID', '=', 'cat_ruta.ID')
                                     ->join('users', 'users.id', '=', 'cat_usuarioruta.USER_ID')
                                     ->where('users.id', '=', $usuario_id)
                                     ->where('cat_ruta.EMPRESA_ID', '=', $empresa_id)
                                     ->where('cat_usuarioruta.ANULADO', '=', 0)
+                                    ->where('cat_ruta.ID', '<>', $rutaActual)
                                     ->lists('cat_ruta.ID')
                                     ->toArray();
 
 //dd($seleccionadas);
-        $rutaActual = $usuarioRuta->RUTA_ID;
-        $claveActual = array_filter($seleccionadas, function($v) use ($rutaActual) {
-            //dd($rutaActual);
-            return $v == $rutaActual;
-        }, ARRAY_FILTER_USE_BOTH);
+        // $claveActual = array_filter($seleccionadas, function($v) use ($rutaActual) {
+        //     //dd($rutaActual);
+        //     return $v == $rutaActual;
+        // }, ARRAY_FILTER_USE_BOTH);
 
-        foreach ($claveActual as $clave=>$valor) {
-           $valorSeleccionado = $valor;
-        }
+        // foreach ($claveActual as $clave=>$valor) {
+        //    $valorSeleccionado = $valor;
+        // }
 
-        $valorSeleccionado = Ruta::select('DESCRIPCION')->where('ID', '=', $valorSeleccionado)->first();
+        // $valorSeleccionado = Ruta::select('DESCRIPCION', 'ID')->where('ID', '=', $valorSeleccionado)->first();
 
-        //dd($valorSeleccionado->DESCRIPCION);
+        //dd($valorSeleccionado->ID);
+        
         $rutas = Ruta::join('cat_usuarioruta', 'cat_usuarioruta.RUTA_ID', '=', 'cat_ruta.ID')
                                     ->where('cat_ruta.EMPRESA_ID', '=', $empresa_id)
                                     ->where('cat_ruta.ANULADO', '=', 0)
@@ -285,13 +291,13 @@ class RutaController extends Controller
                                     ->lists('cat_ruta.DESCRIPCION', 'cat_ruta.ID')
                                     ->toArray();
 
-        //array_push($rutas, $valorSeleccionado->DESCRIPCION);
+        //array_push($rutas, $rutaActual);
         //dd($rutas);
         //$combo_id = count($rutas) - 1;
         //dd($combo_id);
 
 
-        return view('rutas.editUsuarioRuta', compact('usuarioRuta', 'rutas', 'usuario_id', 'empresa_id', 'descripcion'));
+        return view('rutas.editUsuarioRuta', compact('usuarioRuta', 'rutas', 'usuario_id', 'empresa_id', 'descripcion', 'rutaActual'));
     }
 
     /**
@@ -333,9 +339,7 @@ class RutaController extends Controller
         $usuarioRuta_id = $param[1];
         $usuario_id = $param[2];
         $ruta_id = $param[0];
-        //echo ($id);
-
-        //dd($request->all());
+        //echo ($id);        
 
         if ($request->ANULADO === null) {
             $request->ANULADO = 0;
@@ -361,7 +365,7 @@ class RutaController extends Controller
                 ->update(['ANULADO' => 0]);
         }
 
-        return redirect('rutas/usuario/' . $usuario_id);
+        return redirect('rutas/usuario/' . $usuario_id . '-' . $request->TIPOGASTO . '-' . $request->EMPRESA_ID);
     }
 
     /**

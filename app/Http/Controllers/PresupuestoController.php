@@ -344,7 +344,7 @@ class PresupuestoController extends Controller
 
         $presupuesto = Presupuesto::findOrFail($presupuesto_id);
 
-        $usuario_id = Auth::user()->id;
+        //$usuario_id = Auth::user()->id;
 
         $empresa_id = Session::get('empresa');
 
@@ -378,7 +378,7 @@ class PresupuestoController extends Controller
         $usuario_id = $combos->USUARIO;
 
         $ruta_id = $combos->RUTA;
-        //dd($ruta_id);
+        
         $vigenciaInicio = $presupuesto->VIGENCIA_INICIO;
         $vigenciaFinal = $presupuesto->VIGENCIA_FINAL;
 
@@ -442,7 +442,7 @@ class PresupuestoController extends Controller
 
         Presupuesto::where('ID', $id)
                 ->update(['USUARIORUTA_ID' => $usuarioRuta_id->ID, 'MONEDA_ID' => $request->MONEDA_ID, 'VIGENCIA_INICIO' => $request->VIGENCIA_INICIO,
-                          'VIGENCIA_FINAL' => $request->VIGENCIA_FINAL, 'ANULADO' => $request->ANULADO]);
+                          'VIGENCIA_FINAL' => $request->VIGENCIA_FINAL, 'ASIGNACION_MENSUAL' =>  $request->ASIGNACION_MENSUAL, 'ANULADO' => $request->ANULADO]);
 
         if ($request->TIPO_GASTO == 'Rutas') {            
             $rutaPresupuesto = 'presupuestos';

@@ -21,7 +21,7 @@
     {!! Form::radio('MONEDA_ID', $moneda->ID, true); !!}  {{ $moneda->DESCRIPCION }}
   </div>
   <div class="col-md-2">
-    {!! Form::radio('MONEDA_ID', 2); !!}  DOLAR
+    {!! Form::radio('MONEDA_ID', 1); !!}  DOLAR
   </div>
 </div>
 

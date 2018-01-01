@@ -117,9 +117,9 @@ class ContabilidadController extends Controller
                                         ->where('liq_factura.LIQUIDACION_ID', '=', $id)
                                         ->where('cat_proveedor.TIPOPROVEEDOR_ID', '=', 1)
                                         ->where('liq_factura.ANULADO', '=', 0)
-                                        ->get();
-
-        if($proveedorNoClasificado) {
+                                        ->first();
+//dd($proveedorNoClasificado);
+        if($proveedorNoClasificado <> null) {
             return back()->with('info', 'Tiene pendiente revisar categoría(s) de Proveedor(es)!');
         }
         

@@ -111,6 +111,7 @@ class DetallePresupuestoController extends Controller
                              ->join('cat_subcategoria_tipogasto', 'cat_subcategoria_tipogasto.TIPOGASTO_ID', '=', 'cat_tipogasto.ID' )
                              ->join('cat_unidadmedida', 'cat_unidadmedida.ID', '=', 'cat_subcategoria_tipogasto.UNIDAD_MEDIDA_ID')
                              ->where('cat_tipogasto.ID', '=', $id)
+                             ->where('cat_unidadmedida.ANULADO', '=', 0)
                              ->first();
         //dd($unidad->DESCRIPCION);
         return $unidad->DESCRIPCION;

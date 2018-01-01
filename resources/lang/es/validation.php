@@ -164,7 +164,7 @@ return [
         'VIGENCIA_INICIO'      => 'Vigencia Del',
         'VIGENCIA_FINAL'        => 'Al',
         'USUARIO_ID'            => 'Usuario',
-        'RUTA_ID'               => 'Ruta',
+        'RUTA_ID'               => '',
         'TIPOGASTO_ID'          => 'Tipo de Gasto',
         'MONTO'                 => 'Asignación',
         'FRECUENCIA_ID'         => 'Frecuencia',
@@ -180,8 +180,9 @@ return [
         'EMPRESA'               => 'Empresa',
         'TIEMPOATRASO_RUTAS'    => 'Días de Atraso Facturación Rutas',
         'TIEMPOATRASO_OTROSGASTOS' => 'Días de Atraso Facturación Otros Gastos',
-        'sendLink'               => 'Enviar enlace para reestablecer Contraseña',
-        'resetPassword'          => 'Restablecer Contraseña',
+        'sendLink'              => 'Enviar enlace para reestablecer Contraseña',
+        'resetPassword'         => 'Restablecer Contraseña',
+        'COMPRA'                => 'Tasa de Cambio'
     ],
 
 ];

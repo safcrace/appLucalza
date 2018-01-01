@@ -3,12 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\User;
-use Illuminate\Http\Request;
+use App\Role;
 
 use App\Http\Requests;
+use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Redirect;
-use App\Role;
 
 class RoleController extends Controller
 {
@@ -65,6 +66,16 @@ class RoleController extends Controller
      */
     public function creaRolesUsuario(Request $request)
     {
+        if($request->usuario === '' ) {
+            Session::flash('info', 'Debe Seleccionar un Usuario!');
+            return back()->withInput();
+        }
+        if(! $request->roles_list) {
+            Session::flash('info', '¡Debe seleccionar al menos un role!');
+            return back()->withInput();
+        } 
+
+        
         $user_id = $request->usuario;
         $user = User::findOrFail($user_id);
 

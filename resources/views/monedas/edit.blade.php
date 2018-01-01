@@ -129,9 +129,11 @@
 
         $('#cargaTasa').click(function() {            
               vurl = '{{ route('tasaCambio')}}'
-              fecha = $('#fechaConsulta').val()              
-              vurl = vurl.replace('%7Bid%7D', fecha);
-              alert(vurl)
+              fecha = $('#fechaConsulta').val()  
+              if (fecha === '') {
+                  alert('Debe ingresar una fecha!')
+              }                           
+              vurl = vurl.replace('%7Bid%7D', fecha);              
               $.ajax({
                   type: 'get',
                   url: vurl,

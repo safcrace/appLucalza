@@ -75,7 +75,7 @@
             {!! Form::label('LICENSESERVER', 'Licencia de Servidor') !!}
       </div>
       <div class="col-md-2">
-          {!! Form::text('LICENSESERVER', null, ['class' => 'form-control', 'placeholder' => 'License Server SAP']); !!}
+          {!! Form::text('LICENSESERVER', null, ['class' => 'form-control', 'placeholder' => 'Licencia de Servidor SAP']); !!}
       </div>
       <div class="col-md-2 col-md-offset-1">
             {!! Form::label('DBSAP', 'Base de Datos SAP') !!}

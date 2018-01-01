@@ -76,6 +76,7 @@ class WebServiceController extends Controller
 
         $filas = $data['nrows'];
         $combo = '<select id="cuentaContableExenta" class="form-control" name="cuentaContableExenta">';
+        $combo .='<option value="0">Seleccione una opción</option>';
         foreach ($data['data'] as $a => $b) {
             $combo .=  '<option value="' . $b['code'] .'" '. ($b['postable'] == 'N' ? ' style="font-weight:bold; background-color:eee;"' : '') . ($b['postable'] == 'Y' ? ' data-postable="' . $b['postable'] . '"' : '') . '>' . str_replace(' ', '&nbsp;', $b['name']) . '</option>';
             //CuentasContables::insert(['code' => $b['code'], 'name' => $b['name'] ]);
@@ -112,6 +113,7 @@ class WebServiceController extends Controller
 
         $filas = $data['nrows'];
         $combo = '<select class="form-control" id="cuentaContableAfecta" name="cuentaContableAfecta">';
+        $combo .='<option value="0">Seleccione una opción</option>';
         foreach ($data['data'] as $a => $b) {
             $combo .=  '<option value="' . $b['code'] .'" '. ($b['postable'] == 'N' ? ' style="font-weight:bold; background-color:eee;"' : '') . ($b['postable'] == 'Y' ? ' data-postable="' . $b['postable'] . '"' : '') . '>' . str_replace(' ', '&nbsp;', $b['name']) . '</option>';
         }
@@ -144,7 +146,8 @@ class WebServiceController extends Controller
 
 
         $filas = $data['nrows'];
-        $combo = '<select class="form-control" id="cuentaContableRemanente" name="cuentaContableAfecta">';
+        $combo = '<select class="form-control" id="cuentaContableRemanente" name="cuentaContableRemanente">';
+        $combo .='<option value="0">Seleccione una opción</option>';
         foreach ($data['data'] as $a => $b) {
             $combo .=  '<option value="' . $b['code'] .'" '. ($b['postable'] == 'N' ? ' style="font-weight:bold; background-color:eee;"' : '') . ($b['postable'] == 'Y' ? ' data-postable="' . $b['postable'] . '"' : '') . '>' . str_replace(' ', '&nbsp;', $b['name']) . '</option>';
         }

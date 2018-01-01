@@ -161,7 +161,7 @@ dd($resultado);
         $factura = new Factura();
 
         /** Procesa Imagen **/
-//dd($request->all());
+
         $file = $request->file('FOTO');
         $name = $request->LIQUIDACION_ID . '-' . $request->NUMERO . '-' . time() . '-' . $file->getClientOriginalName();
 
@@ -242,8 +242,8 @@ dd($resultado);
 //dd('PRIMER DATO:  ' . $request->PRESUPUESTO_ID . ' SEGUNDO DATO: ' . $request->TIPOGASTO_ID);
 
         /** Se obtiene No. de Detalle Presupuesto al que Corresponde **/
-
-        if($request->CATEGORIA_GASTO =='depreciación' ) {
+//dd($request->all());
+        if(($request->TIPO_LIQUIDACION == 'Otros Gastos') && ($request->CATEGORIA_GASTO == 'combustible' )) {
             $detallePresupuesto = Presupuesto::select('ID', 'ASIGNACION_MENSUAL as MONTO')->where('ID', '=', $request->PRESUPUESTO_ID)->first();
             //dd('ahi vamos...' . $detallePresupuesto->MONTO);
         } else {

@@ -54,8 +54,8 @@ class UsuarioController extends Controller
                                     ->orderBy('users.id')
                                     ->join('cat_usuarioempresa', 'cat_usuarioempresa.USER_ID', '=', 'users.id')
                                     ->join('cat_empresa', 'cat_empresa.ID', '=', 'cat_usuarioempresa.EMPRESA_ID')
-                                    //->where('users.anulado', '=', 0)
-                                    //->where('cat_usuarioempresa.ANULADO', '=', 0)
+                                    ->where('users.anulado', '=', 0)
+                                    ->where('cat_usuarioempresa.ANULADO', '=', 0)
                                     ->where('cat_empresa.ID', '=', $id_empresa)
                                     ->paginate(10);
                // dd($users);                    

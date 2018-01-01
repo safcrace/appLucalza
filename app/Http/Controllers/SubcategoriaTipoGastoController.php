@@ -50,7 +50,11 @@ class SubcategoriaTipoGastoController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
-    {   //dd($request->all());
+    {   
+        $this->validate($request, [
+            'DESCRIPCION' => 'required',
+            'EXENTO'    => 'required'
+        ]);
         $tipoGasto = $request->TIPOGASTO_ID;
 
 
