@@ -20,6 +20,7 @@
                        <thead>
                          <th class="text-center">Código</th>
                          <th class="text-center">Nombre</th>
+                         <th class="text-center">Estado</th>
                          <th class="text-center">Anular</th>
                          <th class="text-center">Módulo</th>
                        </thead>
@@ -32,6 +33,7 @@
                                    {{--<td class="text-center">
                                      <a href="{{ route('empresas.edit', $empresa->ID) }}"><span class="glyphicon glyphicon-edit" aria-hidden="true" style="font-size:20px; color: black"></span></a>
                                    </td>--}}
+                                   <td class="text-center"><a href="{{ route('empresas.edit', $empresa->ID ) }}">{{ ($empresa->ANULADO)?'ANULADO':'' }}</a></td>
                                    <td class="text-center">
                                      <a href="{{ route('anularEmpresa', $empresa->ID) }}" class="btn-delete"><span class="glyphicon glyphicon-ban-circle" aria-hidden="true" style="font-size:20px; color: black"></span></a>
                                    </td>
@@ -82,27 +84,23 @@
             var id = row.data('id');
             vurl = '{{ route('anularEmpresa') }}';
             vurl = vurl.replace('%7Bid%7D', id);
-            row.fadeOut();
+            /*row.fadeOut();
             $('#myModal').modal('show');
             $('#revertir').click(function () {
                 row.show();
             });
             $('#anular').click(function () {
-                $('#myModal').modal('hide');
+                $('#myModal').modal('hide');*/
                 $.ajax({
                     type: 'get',
                     url: vurl,
                     success: function (data) {
-                        if(data == 1) {
-                            console.log('La Empresa fue Eliminada Exitosamente!!!.');
-                        } else {
-                            alert('La Empresa no fue Eliminada!!!');
-                        }
+                        location.reload();
                     }
                 }).fail(function () {
                     alert ('La Empresa no pudo ser Eliminada!!!');
                 });
-            })
+            //})
         });
     });
 </script>

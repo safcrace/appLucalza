@@ -20,6 +20,7 @@
                          <th class="text-center">{{ $tipoGasto }}</th>
                          <th class="text-center">Del</th>
                          <th class="text-center">Al</th>
+                         <th class="text-center">Estado</th>
                          <th class="text-center">Anular</th>
                        </thead>
                        <tbody>
@@ -31,6 +32,7 @@
                                    <td><a href="{{ route('presupuestos.edit', $presupuesto->ID . '-' . $tipoGasto) }}">{{ $presupuesto->RUTA }}</a></td>
                                    <td><a href="{{ route('presupuestos.edit', $presupuesto->ID . '-' . $tipoGasto) }}">{{ $presupuesto->VIGENCIA_INICIO->format('d-m-Y') }}</a></td>
                                    <td><a href="{{ route('presupuestos.edit', $presupuesto->ID . '-' . $tipoGasto) }}">{{ $presupuesto->VIGENCIA_FINAL->format('d-m-Y') }}</a></td>
+                                   <td class="text-center"><a href="{{ route('presupuestos.edit', $presupuesto->ID ) }}">{{ ($presupuesto->ANULADO)?'ANULADO':'' }}</a></td>
                                    <td class="text-center">
                                      <a href="{{ route('anularPresupuesto', $presupuesto->ID) }}" class="btn-delete"><span class="glyphicon glyphicon-ban-circle" aria-hidden="true" style="font-size:20px; color: black"></span></a>
                                    </td>
@@ -61,33 +63,29 @@
 <script type="text/javascript">
     $(document).ready(function () {
         $('.btn-delete').click(function (e) {
-            e.preventDefault();
+            e.preventDefault();           
             var row = $(this).parents('tr');
             var id = row.data('id');
             vurl = '{{ route('anularPresupuesto') }}';
-            vurl = vurl.replace('%7Bid%7D', id);
-            row.fadeOut();
+            vurl = vurl.replace('%7Bid%7D', id);            
+            /*row.fadeOut();
             $('#myModal').modal('show');
             $('#revertir').click(function () {
                 row.show();
             });
             $('#anular').click(function () {
-                $('#myModal').modal('hide');
+                $('#myModal').modal('hide');*/
                 $.ajax({
                     type: 'get',
                     url: vurl,
-                    success: function (data) {
-                        if(data == 1) {
-                            console.log('El Presupuesto fue Eliminado Exitosamente!!!.');
-                        } else {
-                            alert('El Presupuesto no fue Eliminado!!!');
-                        }
+                    success: function (data) {                        
+                        location.reload();
                     }
                 }).fail(function () {
                     alert ('El Presupuesto no pudo ser Eliminado!!!');
                     row.show();
                 });
-            })
+            //})
         });
     });
 </script>

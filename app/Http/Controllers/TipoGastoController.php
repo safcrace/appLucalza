@@ -28,8 +28,7 @@ class TipoGastoController extends Controller
      public function indexTipoGasto($id)
      {
          $tipoGastos = TipoGasto::select('*')
-                             ->where('cat_tipogasto.EMPRESA_ID', '=', $id)
-                             ->where('cat_tipogasto.ANULADO', '=', 0)
+                             ->where('cat_tipogasto.EMPRESA_ID', '=', $id)                             
                              ->paginate(10);
          $empresa_id = $id;
          $nombreEmpresa = Empresa::select('DESCRIPCION')->where('ID', '=', $id)->first();
@@ -130,8 +129,7 @@ class TipoGastoController extends Controller
       $tipoGasto = TipoGasto::findOrFail($id);
       //dd($tipoGasto);//->GRUPOTIPOGASTO_ID);
 
-      $subcategoriaTipoGasto = SubcategoriaTipoGasto::select('ID', 'DESCRIPCION', 'EXENTO')
-                                                            ->where('ANULADO', '=', 0)
+      $subcategoriaTipoGasto = SubcategoriaTipoGasto::select('ID', 'DESCRIPCION', 'EXENTO', 'ANULADO')                                                            
                                                             ->where('TIPOGASTO_ID', '=', $id)
                                                             ->paginate(10);
 
@@ -223,9 +221,18 @@ class TipoGastoController extends Controller
         $param = explode('-', $id);
         $id = $param[0];
         $empresa_id = $param[1];
-        TipoGasto::where('ID', $id)
-            ->update(['ANULADO' => 1]);
 
-        return 1; //Redirect::to('empresa/tipoGasto/' . $empresa_id);
+        $anulado = TipoGasto::where('id', '=', $id)->pluck('anulado');
+       
+        if ($anulado == 1) {
+            TipoGasto::where('id', $id)
+                        ->update(['ANULADO' => 0]);
+            $anular = 'No';
+        } else {
+            TipoGasto::where('id', $id)
+            ->update(['ANULADO' => 1]);            
+            $anular = 'Si';
+        }        
+        return $anular;             
     }
 }

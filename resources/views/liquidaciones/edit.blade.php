@@ -36,6 +36,7 @@
                           <th class="text-center">Numero</th>
                           <th class="text-center">Tipo de Gasto</th>
                           <th class="text-center">Total</th>
+                          <th class="text-center">Estado</th>
                           <th class="text-center">Anular</th>
                         </thead>
                         <tbody>
@@ -52,6 +53,7 @@
                                     @endif
                                     <td><a href="{{ route('facturas.edit', $liquidacion->ID . '-' . $factura->ID . '-' . $tipoLiquidacion) }}">{{ $factura->TIPOGASTO}}</a></td>
                                     <td><a href="{{ route('facturas.edit', $liquidacion->ID . '-' . $factura->ID . '-' . $tipoLiquidacion) }}">{{ $factura->TOTAL}}</a></td>
+                                    <td class="text-center"><a href="{{ route('facturas.edit', $factura->ID ) }}">{{ ($factura->ANULADO)?'SI':'' }}</a></td>
                                     <td class="text-center">
                                       <a href="{{ route('anularFactura', $factura->ID) }}" class="btn-delete"><span class="glyphicon glyphicon-ban-circle" aria-hidden="true" style="font-size:20px; color: black"></span></a>
                                     </td>
@@ -88,13 +90,13 @@
             var totalFactura = row.data('monto')           
             vurl = '{{ route('anularFactura') }}';
             vurl = vurl.replace('%7Bid%7D', id);
-            row.fadeOut();
+            /*row.fadeOut();
             $('#myModal').modal('show');
             $('#revertir').click(function () {
                 row.show();
             });
             $('#anular').click(function () {
-                $('#myModal').modal('hide');
+                $('#myModal').modal('hide');*/
                 var totalLiquidacion =  $('#totalLiquidacion').val()
                 totalLiquidacion = totalLiquidacion.replace(',', '') 
                 //totalFactura = totalFactura.replace(',', '')
@@ -108,17 +110,13 @@
                     type: 'get',
                     url: vurl,
                     success: function (data) {
-                        if(data == 1) {
-                            console.log('La Factura fue Eliminada Exitosamente!!!.');
-                        } else {
-                            alert('La Factura no fue Eliminada!!!');
-                        }
+                        location.reload();
                     }
                 }).fail(function () {
                     alert ('La Factura no pudo ser Eliminada!!!');
                     row.show();
                 });
-            })
+            //})
         });        
     });
 </script>

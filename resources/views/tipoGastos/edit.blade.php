@@ -39,6 +39,7 @@
                   <thead>
                   <th>Tipo de Gasto</th>
                   <th>Exento</th>
+                  <th>Estado</th>
                   <th>Anulado</th>
                   </thead>
                   <tbody>
@@ -47,6 +48,7 @@
                       <tr data-id="{{ $tipoCategoria->ID . '-' . $tipoGasto->ID }}">
                           <td><a href="{{ route('subcategoriaTipoGastos.edit', $tipoCategoria->ID) }}">{{ $tipoCategoria->DESCRIPCION }}</a></td>
                           <td><a href="{{ route('subcategoriaTipoGastos.edit', $tipoCategoria->ID) }}">{{ ($tipoCategoria->EXENTO) ? 'SI' : 'NO' }}</a></td>
+                          <td class="text-center"><a href="{{ route('subcategoriaTipoGastos.edit', $tipoCategoria->ID ) }}">{{ ($tipoCategoria->ANULADO)?'ANULADO':'' }}</a></td>  
                           <td>
                               <a href="{{ route('anularSubcategoriaTipoGasto', $tipoCategoria->ID . '-' . $tipoGasto->ID) }}" class="btn-delete"><span class="glyphicon glyphicon-ban-circle" aria-hidden="true" style="font-size:20px; color: black"></span></a>
                           </td>
@@ -83,27 +85,23 @@
             var id = row.data('id');
             vurl = '{{ route('anularSubcategoriaTipoGasto') }}';
             vurl = vurl.replace('%7Bid%7D', id);
-            row.fadeOut();
+            /*row.fadeOut();
             $('#myModal').modal('show');
             $('#revertir').click(function () {
                 row.show();
             });
             $('#anular').click(function () {
-                $('#myModal').modal('hide');
+                $('#myModal').modal('hide');*/
                 $.ajax({
                     type: 'get',
                     url: vurl,
                     success: function (data) {
-                        if(data == 1) {
-                            console.log('La Subcategoria fue Eliminada Exitosamente!!!.');
-                        } else {
-                            alert('La Subcategoria no fue Eliminada!!!');
-                        }
+                        location.reload();
                     }
                 }).fail(function () {
                     alert ('La Subcategoria no pudo ser Eliminada!!!');
                 });
-            })
+            //})
         });
     });
 </script>

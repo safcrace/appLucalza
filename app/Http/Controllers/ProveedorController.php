@@ -30,8 +30,7 @@ class ProveedorController extends Controller
      public function indexProveedor($id)
      {
          $proveedores = Proveedor::select('*')
-                             ->where('cat_proveedor.EMPRESA_ID', '=', $id)
-                             ->where('cat_proveedor.ANULADO', '=', 0)
+                             ->where('cat_proveedor.EMPRESA_ID', '=', $id)                             
                              ->paginate(10);
          $empresa_id = $id;
 
@@ -217,9 +216,18 @@ class ProveedorController extends Controller
         $param = explode('-', $id);
         $id = $param[0];
         $empresa_id = $param[1];
-        Proveedor::where('ID', $id)
-                ->update(['ANULADO' => 1]);
 
-        return 1; //Redirect::to('empresa/proveedor/' . $empresa_id);
+        $anulado = Proveedor::where('id', '=', $id)->pluck('anulado');
+       
+            if ($anulado == 1) {
+                Proveedor::where('id', $id)
+                            ->update(['ANULADO' => 0]);
+                $anular = 'No';
+            } else {
+                Proveedor::where('id', $id)
+                ->update(['ANULADO' => 1]);            
+                $anular = 'Si';
+            }        
+            return $anular;        
     }
 }

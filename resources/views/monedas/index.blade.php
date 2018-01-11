@@ -23,6 +23,7 @@
                          <th class="text-center">ID</th>
                          <th class="text-center">Clave</th>
                          <th class="text-center">Descripción</th>
+                         <th class="text-center">Estado</th>
                          <th class="text-center">Anular</th>
                        </thead>
                        <tbody>
@@ -32,6 +33,7 @@
                                    <td><a href="{{ route('monedas.edit', $moneda->ID) }}">{{ $moneda->ID}}</a></td>
                                    <td><a href="{{ route('monedas.edit', $moneda->ID) }}">{{ $moneda->CLAVE}}</a></td>
                                    <td><a href="{{ route('monedas.edit', $moneda->ID) }}">{{ $moneda->DESCRIPCION}}</a></td>
+                                   <td class="text-center"><a href="{{ route('monedas.edit', $moneda->id ) }}">{{ ($moneda->ANULADO)?'ANULADO':'' }}</a></td>
                                    <td class="text-center">
                                      <a href="{{ route('anular', $moneda->ID) }}" class="btn-delete"><span class="glyphicon glyphicon-ban-circle" aria-hidden="true" style="font-size:20px; color: black"></span></a>
                                    </td>
@@ -68,30 +70,29 @@
             var row = $(this).parents('tr');
             var id = row.data('id');
             vurl = '{{ route('anular')}}';
-            vurl = vurl.replace('%7Bid%7D', id);
-            row.fadeOut();
+            vurl = vurl.replace('%7Bid%7D', id);           
+            /*row.fadeOut();
             $('#myModal').modal('show');
             $('#revertir').click(function () {
                 row.show();
             });
             $('#anular').click(function () {
-                $('#myModal').modal('hide');
+                $('#myModal').modal('hide');*/
                 $.ajax({
                     type: 'get',
                     url: vurl,
                     success: function (data) {
-                        if(data == 'La Moneda no se puede eliminar, pertenece a una Empresa Activa.') {
-                            alert('La Moneda no se puede eliminar, pertenece a una Empresa Activa.')
+                        if(data == 'La Moneda no se puede anular, pertenece a una Empresa Activa.') {
+                            alert('La Moneda no se puede anular, pertenece a una Empresa Activa.')
                             row.show();
-                        } else {
-                            console.log('La Moneda fue Eliminada Exitosamente!!!');
+                        } else {                            
                             location.reload();
                         }
                     }
                 }).fail(function () {
                     alert ('La Moneda no fue Eliminada!!!');
                 });
-            })
+            //})
         });
     });
 </script>

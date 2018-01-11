@@ -93,11 +93,18 @@ class TasaCambioController extends Controller
         $tasa_id = $param[0];
         $moneda_id = $param[1];
 
-
-        TasaCambio::where('ID', $tasa_id)
-            ->update(['ANULADO' => 1]);
-
-        return 1; //Redirect::to('monedas/' . $moneda_id . '/edit');
+        $anulado = TasaCambio::where('id', '=', $tasa_id)->pluck('anulado');
+       
+        if ($anulado == 1) {
+            TasaCambio::where('id', $tasa_id)
+                        ->update(['ANULADO' => 0]);
+            $anular = 'No';
+        } else {
+            TasaCambio::where('id', $tasa_id)
+            ->update(['ANULADO' => 1]);            
+            $anular = 'Si';
+        }        
+        return $anular;        
     }
 
     public function verificaFecha($id)

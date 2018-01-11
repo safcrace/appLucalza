@@ -192,10 +192,23 @@ class DetallePresupuestoController extends Controller
         $param = explode('-', $id);
         $id = $param[0];
         $presupuesto_id = $param[1];
-        DetallePresupuesto::where('ID', $id)
+
+        $anulado = DetallePresupuesto::where('id', '=', $id)->pluck('anulado');
+       
+            if ($anulado == 1) {
+                DetallePresupuesto::where('id', $id)
+                            ->update(['ANULADO' => 0]);
+                $anular = 'No';
+            } else {
+                DetallePresupuesto::where('id', $id)
+                ->update(['ANULADO' => 1]);            
+                $anular = 'Si';
+            }        
+            return $anular;     
+        /*DetallePresupuesto::where('ID', $id)
             ->update(['ANULADO' => 1]);
 
-        return 1; //Redirect::to('presupuestos/' . $presupuesto_id . '/edit');
+        return 1; //Redirect::to('presupuestos/' . $presupuesto_id . '/edit');*/
     }
 
 }

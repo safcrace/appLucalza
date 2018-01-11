@@ -151,9 +151,17 @@ class SubcategoriaTipoGastoController extends Controller
         $param = explode('-', $id);
         $id = $param[0];
         //$empresa_id = $param[1];
-        SubcategoriaTipoGasto::where('ID', $id)
-            ->update(['ANULADO' => 1]);
-
-        return 1; //Redirect::to('empresa/tipoGasto/' . $empresa_id);
+        $anulado = SubcategoriaTipoGasto::where('id', '=', $id)->pluck('anulado');
+       
+        if ($anulado == 1) {
+            SubcategoriaTipoGasto::where('id', $id)
+                        ->update(['ANULADO' => 0]);
+            $anular = 'No';
+        } else {
+            SubcategoriaTipoGasto::where('id', $id)
+            ->update(['ANULADO' => 1]);            
+            $anular = 'Si';
+        }        
+        return $anular;         
     }
 }

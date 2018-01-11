@@ -37,6 +37,7 @@
                         <thead>
                           <th>Fecha</th>
                           <th>Tasa de Cambio</th>
+                          <th>Estado</th>
                           <th>Anulado</th>
                         </thead>
                         <tbody>
@@ -45,6 +46,7 @@
                                     <tr data-id="{{ $tasa->ID . '-' . $moneda->ID }}">
                                         <td><a href="{{ route('tasaCambio.edit', $tasa->ID) }}">{{ $tasa->FECHA->format('d-m-Y') }}</a></td>
                                         <td><a href="{{ route('tasaCambio.edit', $tasa->ID) }}">{{ $tasa->COMPRA }}</a></td>
+                                        <td class="text-center"><a href="{{ route('tasaCambio.edit', $tasa->ID ) }}">{{ ($tasa->ANULADO)?'ANULADO':'' }}</a></td>
                                         <td>
                                             <a href="{{ route('anularTasaCambio', $tasa->ID . '-' . $moneda->ID) }}" class="btn-delete"><span class="glyphicon glyphicon-ban-circle" aria-hidden="true" style="font-size:20px; color: black"></span></a>
                                         </td>
@@ -104,27 +106,23 @@
             var id = row.data('id');
             vurl = '{{ route('anularTasaCambio') }}';
             vurl = vurl.replace('%7Bid%7D', id);
-            row.fadeOut();
+            /*row.fadeOut();
             $('#myModal').modal('show');
             $('#revertir').click(function () {
                row.show();
             });
             $('#anular').click(function () {
-                $('#myModal').modal('hide');
+                $('#myModal').modal('hide');*/
                 $.ajax({
                     type: 'get',
                     url: vurl,
                     success: function (data) {
-                        if(data == 1) {
-                            console.log('La Tasa de Cambio fue Eliminada Exitosamente!!!.');
-                        } else {
-                            alert('La Tasa de Cambio fue Eliminada!!!');
-                        }
+                        location.reload();
                     }
                 }).fail(function () {
                     alert ('La Tasa de Cambio no pudo ser Eliminada!!!');
                 });
-            })
+            //})
         });
 
         $('#cargaTasa').click(function() {            

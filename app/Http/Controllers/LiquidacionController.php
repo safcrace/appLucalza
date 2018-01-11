@@ -44,13 +44,13 @@ class LiquidacionController extends Controller
                                     //->where('cat_usuarioempresa.CODIGO_PROVEEDOR_SAP', '<>', 'SIN CODIGO')
                                     ->first();
 
-        $liquidaciones = Liquidacion::select('liq_liquidacion.ID as ID', 'liq_liquidacion.FECHA_INICIO', 'liq_liquidacion.FECHA_FINAL', 'cat_ruta.DESCRIPCION as RUTA', 'cat_estadoliquidacion.DESCRIPCION', 'users.nombre' )
+        $liquidaciones = Liquidacion::select('liq_liquidacion.ID as ID', 'liq_liquidacion.FECHA_INICIO', 'liq_liquidacion.FECHA_FINAL', 'cat_ruta.DESCRIPCION as RUTA', 'cat_estadoliquidacion.DESCRIPCION', 'users.nombre', 'liq_liquidacion.ANULADO' )
                                     ->orderBy('cat_estadoliquidacion.ID')
                                     ->join('cat_usuarioruta', 'cat_usuarioruta.ID', '=', 'liq_liquidacion.USUARIORUTA_ID')
                                     ->join('users', 'users.id', '=', 'cat_usuarioruta.USER_ID')
                                     ->join('cat_ruta', 'cat_ruta.ID', '=', 'cat_usuarioruta.RUTA_ID')
                                     ->join('cat_estadoliquidacion', 'cat_estadoliquidacion.ID', '=', 'liq_liquidacion.ESTADOLIQUIDACION_ID')
-                                    ->where('liq_liquidacion.ANULADO', '=', 0)
+                                    //->where('liq_liquidacion.ANULADO', '=', 0)
                                     ->where('users.id','=', $usuario_id)
                                     ->where('cat_ruta.TIPO_GASTO', '=', $tipoLiquidacion)
                                     ->whereIn('liq_liquidacion.ESTADOLIQUIDACION_ID', [1,6])
@@ -199,13 +199,13 @@ class LiquidacionController extends Controller
                                       ->first();
 //dd($liquidacion->SUPERVISOR_COMENTARIO);
         $facturas = Factura::select('liq_factura.ID', 'cat_proveedor.NOMBRE', 'liq_factura.SERIE as SERIE', 'liq_factura.NUMERO as NUMERO', 'liq_factura.TOTAL as TOTAL',
-                                    'liq_factura.FECHA_FACTURA', 'cat_tipogasto.DESCRIPCION as TIPOGASTO', 'liq_factura.CORRECCION')
+                                    'liq_factura.FECHA_FACTURA', 'liq_factura.ANULADO', 'cat_tipogasto.DESCRIPCION as TIPOGASTO', 'liq_factura.CORRECCION')
                                                   ->join('cat_proveedor', 'cat_proveedor.ID', '=', 'liq_factura.PROVEEDOR_ID')
                                                   ->join('cat_tipogasto', 'cat_tipogasto.ID', '=', 'liq_factura.TIPOGASTO_ID')
                                                   //->join('cat_frecuenciatiempo', 'cat_frecuenciatiempo.ID', '=', 'pre_detpresupuesto.FRECUENCIATIEMPO_ID')
                                                   ->where('liq_factura.LIQUIDACION_ID', '=', $liquidacion_id)
-                                                  ->where('liq_factura.ANULADO', '=', 0)
-                                                  ->paginate();
+                                                  //->where('liq_factura.ANULADO', '=', 0)
+                                                  ->paginate(10);
                                                   
         return view('liquidaciones.edit', compact('liquidacion', 'usuario', 'usuario_id', 'rutas', 'combo', 'facturas', 'tipoLiquidacion'));
     }
@@ -344,9 +344,18 @@ class LiquidacionController extends Controller
      */
     public function anular($id)
     {
-        Liquidacion::where('ID', $id)
-            ->update(['ANULADO' => 1]);
-        return 1; //Redirect::to('liquidaciones');
+        $anulado = Liquidacion::where('id', '=', $id)->pluck('anulado');
+       
+            if ($anulado == 1) {
+                Liquidacion::where('id', $id)
+                            ->update(['ANULADO' => 0]);
+                $anular = 'No';
+            } else {
+                Liquidacion::where('id', $id)
+                ->update(['ANULADO' => 1]);            
+                $anular = 'Si';
+            }        
+            return $anular;            
     }
 
 }

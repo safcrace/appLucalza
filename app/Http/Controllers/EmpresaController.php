@@ -36,8 +36,7 @@ class EmpresaController extends Controller
 
         if (auth()->user()->hasRole('administrador')) {
             $empresa_id = Session::get('empresa');
-            $empresas = Empresa::select('*')
-                ->where('ANULADO', '=', 0)
+            $empresas = Empresa::select('*')                
                 ->where('ID', '=', $empresa_id)
                 ->paginate(10);
 
@@ -45,8 +44,7 @@ class EmpresaController extends Controller
 
         }
 
-        $empresas = Empresa::select('*')
-                            ->where('cat_empresa.ANULADO', '=', 0)
+        $empresas = Empresa::select('*')                            
                             ->paginate(10);
 
         return view('empresas.index', compact('empresas'));
@@ -179,10 +177,18 @@ class EmpresaController extends Controller
      */
     public function anular($id)
     {
-        Empresa::where('ID', $id)
-                ->update(['ANULADO' => 1]);
-
-        return 1;//Redirect::to('empresas');
+        $anulado = Empresa::where('id', '=', $id)->pluck('anulado');
+       
+        if ($anulado == 1) {
+            Empresa::where('id', $id)
+                        ->update(['ANULADO' => 0]);
+            $anular = 'No';
+        } else {
+            Empresa::where('id', $id)
+            ->update(['ANULADO' => 1]);            
+            $anular = 'Si';
+        }        
+        return $anular;             
     }
 
 }

@@ -23,6 +23,7 @@
                        <thead>
                          <th class="text-center">Código</th>
                          <th class="text-center">Nombre</th>
+                         <th class="text-center">Estado</th>
                          <th class="text-center">Anular</th>
                        </thead>
                        <tbody>
@@ -31,6 +32,7 @@
                                <tr data-id="{{ $tipoGasto->ID . '-' . $empresa_id }}">
                                    <td><a href="{{ route('tipoGastos.edit', $tipoGasto->ID) }}">{{ $tipoGasto->ID}}</a></td>
                                    <td><a href="{{ route('tipoGastos.edit', $tipoGasto->ID) }}">{{ $tipoGasto->DESCRIPCION}}</a></td>
+                                   <td class="text-center"><a href="{{ route('tipoGastos.edit', $tipoGasto->ID ) }}">{{ ($tipoGasto->ANULADO)?'ANULADO':'' }}</a></td>
                                    <td class="text-center">
                                      <a href="{{ route('anularTipoGasto', $tipoGasto->ID . '-' . $empresa_id) }}" class="btn-delete"><span class="glyphicon glyphicon-ban-circle" aria-hidden="true" style="font-size:20px; color: black"></span></a>
                                    </td>
@@ -67,28 +69,24 @@
             var id = row.data('id');
             vurl = '{{ route('anularTipoGasto') }}';
             vurl = vurl.replace('%7Bid%7D', id);
-            row.fadeOut();
+            /*row.fadeOut();
             $('#myModal').modal('show');
             $('#revertir').click(function () {
                 row.show();
             });
             $('#anular').click(function () {
-                $('#myModal').modal('hide');
+                $('#myModal').modal('hide');*/
                 $.ajax({
                     type: 'get',
                     url: vurl,
                     success: function (data) {
-                        if(data == 1) {
-                            console.log('El Tipo de Gasto fue Eliminado Exitosamente!!!.');
-                        } else {
-                            alert('El Tipo de Gasto no fue Eliminado!!!');
-                        }
+                        location.reload();
                     }
                 }).fail(function () {
                     alert ('El Tipo de Gasto no pudo ser Eliminado!!!');
                     row.show();
                 });
-            })
+            //})
         });
     });
 </script>

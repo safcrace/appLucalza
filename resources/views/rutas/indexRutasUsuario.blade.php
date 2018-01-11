@@ -17,6 +17,7 @@
                        <thead>
                          <th class="text-center">Código</th>
                          <th class="text-center">{{ $descripcion  }}</th>
+                         <th class="text-center">Estado</th>
                          <th class="text-center">Anular</th>
                        </thead>
                        <tbody>
@@ -25,6 +26,7 @@
                                <tr data-id="{{ $ruta->ID . '-' . $usuario_id . '-' . $empresa_id }}">
                                    <td><a href="{{ route('editUsuarioRuta', $empresa_id . '-'  . $usuario_id . '-' . $ruta->ID . '-' . $descripcion) }}">{{ $ruta->CLAVE}}</a></td>
                                    <td><a href="{{ route('editUsuarioRuta', $empresa_id . '-'  . $usuario_id . '-' . $ruta->ID . '-' . $descripcion) }}">{{ $ruta->DESCRIPCION}}</a></td>
+                                   <td class="text-center"><a href="{{ route('editUsuarioRuta', $empresa_id . '-'  . $usuario_id . '-' . $ruta->ID . '-' . $descripcion) }}">{{ ($ruta->ANULADO)?'ANULADO':'' }}</a></td>
                                    <td class="text-center">
                                      <a href="{{ route('anularRutaUsuario', $ruta->ID . '-' . $usuario_id . '-' . $empresa_id) }}" class="btn-delete"><span class="glyphicon glyphicon-ban-circle" aria-hidden="true" style="font-size:20px; color: black"></span></a>
                                    </td>
@@ -62,29 +64,24 @@
             var id = row.data('id');
             vurl = '{{ route('anularRutaUsuario')}}';
             vurl = vurl.replace('%7Bid%7D', id);
-            row.fadeOut();
+            /*row.fadeOut();
             $('#myModal').modal('show');
             $('#revertir').click(function () {
                 row.show();
             });
             $('#anular').click(function () {
-                $('#myModal').modal('hide');
+                $('#myModal').modal('hide');*/
                 $.ajax({
                     type: 'get',
                     url: vurl,
                     success: function (data) {
-                        if(data == 1) {
-                            console.log('La Ruta fue Eliminada Exitosamente!!!.')
-
-                        } else {
-                            alert('La Ruta no fue Eliminada!');
-                        }
+                        location.reload();
                     }
                 }).fail(function () {
                     alert ('La Ruta no pudo ser Eliminada!!!');
                     row.show();
                 });
-            })
+            //})
         });
     });
 </script>

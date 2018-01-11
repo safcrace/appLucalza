@@ -30,7 +30,7 @@
                          <th class="text-center">Código</th>
                          <th class="text-center">Nombre</th>
                          <th class="text-center">Correo Electrónico</th>
-                         <th>Anulado</th>
+                         <th>Estado</th>
                          <th class="text-center">Anular</th>
                          @if(isset($id_empresa))
                             @can('ver rutas')
@@ -92,7 +92,7 @@
             var id = row.data('id');
             vurl = '{{ route('anularUsuario') }}';
             vurl = vurl.replace('%7Bid%7D', id);
-            
+           
             //row.fadeOut();
             //$('#myModal').modal('show');
             //$('#revertir').click(function () {
@@ -104,6 +104,7 @@
                     type: 'get',
                     url: vurl,
                     success: function (data) {                                               
+                        
                         location.reload(); 
                     }
                 }).fail(function () {

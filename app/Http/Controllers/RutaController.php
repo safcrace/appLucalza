@@ -37,8 +37,7 @@ class RutaController extends Controller
 
          $rutas = Ruta::select('*')
                              ->where('cat_ruta.EMPRESA_ID', '=', $empresa_id)
-                             ->where('cat_ruta.TIPO_GASTO', '=', $descripcion)
-                             ->where('cat_ruta.ANULADO', '=', 0)
+                             ->where('cat_ruta.TIPO_GASTO', '=', $descripcion)                             
                              ->paginate(10);
          $empresa_id = $empresa_id;
          $nombreEmpresa = Empresa::select('DESCRIPCION')->where('ID', '=', $empresa_id)->first();
@@ -60,13 +59,12 @@ class RutaController extends Controller
 
           $user =  User::select('nombre')->where('id', '=', $usuario_id)->first();
 
-          $rutas = Ruta::select('cat_ruta.ID', 'cat_ruta.CLAVE', 'cat_ruta.DESCRIPCION', 'users.nombre')
+          $rutas = Ruta::select('cat_ruta.ID', 'cat_ruta.CLAVE', 'cat_ruta.DESCRIPCION', 'cat_usuarioruta.ANULADO','users.nombre')
                               ->join('cat_usuarioruta', 'cat_usuarioruta.RUTA_ID', '=', 'cat_ruta.ID')
                               ->join('users', 'users.id', '=', 'cat_usuarioruta.USER_ID')
                               ->where('users.id', '=', $usuario_id)
                               ->where('cat_ruta.EMPRESA_ID', '=', $empresa_id)
-                              ->where('cat_ruta.TIPO_GASTO', '=', $descripcion)
-                              ->where('cat_usuarioruta.ANULADO', '=', 0)
+                              ->where('cat_ruta.TIPO_GASTO', '=', $descripcion)                              
                               ->paginate(10);
 
           $usuario = User::select('nombre')
@@ -436,10 +434,18 @@ class RutaController extends Controller
                                     ->count();
 
         if($presupuestoActivo == 0) {
-            Ruta::where('ID', $id)
-                ->update(['ANULADO' => 1]);
-
-            return 1; //Redirect::to('empresa/ruta/' . $empresa_id);
+            $anulado = Ruta::where('id', '=', $id)->pluck('anulado');
+       
+            if ($anulado == 1) {
+                Ruta::where('id', $id)
+                            ->update(['ANULADO' => 0]);
+                $anular = 'No';
+            } else {
+                Ruta::where('id', $id)
+                ->update(['ANULADO' => 1]);            
+                $anular = 'Si';
+            }        
+            return $anular;
         } else {
             return 0; //Redirect::to('empresa/ruta/' . $empresa_id);
         }
@@ -460,10 +466,21 @@ class RutaController extends Controller
         $id = $param[0];
         $usuario_id = $param[1];
         $empresa_id = $param[2];
-        UsuarioRuta::where('USER_ID', $usuario_id)
-                            ->where('RUTA_ID', $id)
-                            ->update(['ANULADO' => 1]);
 
-        return 1; // Redirect::to('rutas/usuario/' . $empresa_id . '-' . $usuario_id);
+        $anulado = UsuarioRuta::where('USER_ID', '=', $usuario_id)->where('RUTA_ID', '=', $id)->pluck('anulado');
+       
+            if ($anulado == 1) {
+                UsuarioRuta::where('USER_ID', $usuario_id)
+                            ->where('RUTA_ID', $id)
+                            ->update(['ANULADO' => 0]);
+                $anular = 'No';
+            } else {
+                UsuarioRuta::where('USER_ID', $usuario_id)
+                            ->where('RUTA_ID', $id)
+                            ->update(['ANULADO' => 1]);            
+                $anular = 'Si';
+            }        
+            return $anular;
+       
     }
 }

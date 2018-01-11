@@ -53,8 +53,7 @@ class UsuarioController extends Controller
                 $users = User::select('users.id', 'users.nombre', 'users.email', 'users.anulado')
                                     ->orderBy('users.id')
                                     ->join('cat_usuarioempresa', 'cat_usuarioempresa.USER_ID', '=', 'users.id')
-                                    ->join('cat_empresa', 'cat_empresa.ID', '=', 'cat_usuarioempresa.EMPRESA_ID')
-                                    ->where('users.anulado', '=', 0)
+                                    ->join('cat_empresa', 'cat_empresa.ID', '=', 'cat_usuarioempresa.EMPRESA_ID')                                    
                                     ->where('cat_usuarioempresa.ANULADO', '=', 0)
                                     ->where('cat_empresa.ID', '=', $id_empresa)
                                     ->paginate(10);
@@ -67,7 +66,7 @@ class UsuarioController extends Controller
                             ->join('cat_usuarioempresa', 'cat_usuarioempresa.USER_ID', '=', 'users.id')
                             ->join('cat_empresa', 'cat_empresa.ID', '=', 'cat_usuarioempresa.EMPRESA_ID')
                             //->where('users.anulado', '=', 0)
-                            //->where('cat_usuarioempresa.ANULADO', '=', 0)
+                            ->where('cat_usuarioempresa.ANULADO', '=', 0)
                             ->where('cat_usuarioempresa.EMPRESA_ID', '=', $empresa_id)
                             ->paginate(10);                            
         }
@@ -86,9 +85,9 @@ class UsuarioController extends Controller
         $supervisor_id = $param[0];
         $empresa_id = $param[1];
 
-        $users = User::select('users.nombre', 'users.email', 'cat_supervisor_vendedor.ID_SUPERVISION')
+        $users = User::select('users.nombre', 'users.email', 'cat_supervisor_vendedor.ID_SUPERVISION', 'cat_supervisor_vendedor.ANULADO')
                             ->join('cat_supervisor_vendedor', 'cat_supervisor_vendedor.VENDEDOR_ID_USUARIO', '=', 'users.id')
-                            ->where('cat_supervisor_vendedor.ANULADO', '=', 0)
+                            //->where('cat_supervisor_vendedor.ANULADO', '=', 0)
                             ->where('users.anulado', '=', 0)
                             ->where('cat_supervisor_vendedor.SUPERVISOR_ID_USUARIO', '=', $supervisor_id)
                             ->paginate(10);
@@ -288,10 +287,10 @@ class UsuarioController extends Controller
     public function usuariosAsignadosEmpresa($id)
     {
         $empresas = Empresa::select('cat_empresa.DESCRIPCION', 'cat_usuarioempresa.ID', 'cat_usuarioempresa.CODIGO_PROVEEDOR_SAP', 
-                                    'cat_usuarioempresa.DESCRIPCION_PROVEEDORSAP', 'cat_usuarioempresa.USER_ID')
+                                    'cat_usuarioempresa.DESCRIPCION_PROVEEDORSAP', 'cat_usuarioempresa.USER_ID', 'cat_usuarioempresa.ANULADO')
                             ->join('cat_usuarioempresa', 'cat_usuarioempresa.EMPRESA_ID', '=', 'cat_empresa.id')
                             ->where('cat_usuarioempresa.USER_ID', '=', $id)
-                            ->where('cat_usuarioempresa.ANULADO', '=', 0)
+                            //->where('cat_usuarioempresa.ANULADO', '=', 0)
                             ->paginate(10);
 
 
@@ -450,7 +449,7 @@ class UsuarioController extends Controller
      */
     public function anular($id)
     {
-        //dd($id);
+        
         $anulado = User::where('id', '=', $id)->pluck('anulado');
        
         if ($anulado == 1) {
@@ -462,7 +461,7 @@ class UsuarioController extends Controller
             ->update(['ANULADO' => 1, 'ACTIVO' => 0]);            
             $anular = 'Si';
         }        
-
+       
         return $anular;//Redirect::to('empresa/usuario/' . $empresa_id);
     }
 
@@ -473,14 +472,27 @@ class UsuarioController extends Controller
         $usuarioEmpresa_id = $param[0];
         $usuario_id = $param[1];
 
-        UsuarioEmpresa::where('id', $usuarioEmpresa_id)
+        $anulado = UsuarioEmpresa::where('id', '=', $usuarioEmpresa_id)->pluck('anulado');
+       
+            if ($anulado == 1) {
+                UsuarioEmpresa::where('id', $usuarioEmpresa_id)
+                            ->update(['ANULADO' => 0]);
+                $anular = 'No';
+            } else {
+                UsuarioEmpresa::where('id', $usuarioEmpresa_id)
+                ->update(['ANULADO' => 1]);            
+                $anular = 'Si';
+            }  
+            return Redirect::to('usuario/empresa/' . $usuario_id);  
+
+        /*UsuarioEmpresa::where('id', $usuarioEmpresa_id)
             ->update(['ANULADO' => 1]);
 
         $usuarios = User::where('anulado', '=', 0)->lists('nombre','id')->toArray();
         $empresas = Empresa::where('ANULADO', '=', 0)->lists('DESCRIPCION', 'ID')->toArray();
         return Redirect::to('usuario/empresa/' . $usuario_id);//view('usuariosXempresa.asignacion', compact('usuarios', 'empresas'));
 
-        //return redirect::back()->withInput();//return 1;//Redirect::to('empresa/usuario/' . $empresa_id);
+        //return redirect::back()->withInput();//return 1;//Redirect::to('empresa/usuario/' . $empresa_id);*/
     }
 
     public function anularvendedorSupervisor($id)
@@ -490,8 +502,19 @@ class UsuarioController extends Controller
         $supervisorId = $param[1];
         $empresa_id = $param[2];
 
-        SupervisorVendedor::where('ID_SUPERVISION', $supervisionId)
-            ->update(['ANULADO' => 1]);
+        $anulado = SupervisorVendedor::where('ID_SUPERVISION', '=', $supervisionId)->pluck('anulado');
+       
+            if ($anulado == 1) {
+                SupervisorVendedor::where('ID_SUPERVISION', $supervisionId)
+                            ->update(['ANULADO' => 0]);
+                $anular = 'No';
+            } else {
+                SupervisorVendedor::where('ID_SUPERVISION', $supervisionId)
+                ->update(['ANULADO' => 1]);            
+                $anular = 'Si';
+            }   
+
+        
 
         $supervisores = User::join('cat_usuarioempresa', 'cat_usuarioempresa.USER_ID', '=', 'users.id')
             ->join('cat_empresa', 'cat_empresa.ID', '=', 'cat_usuarioempresa.EMPRESA_ID')

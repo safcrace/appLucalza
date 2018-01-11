@@ -40,14 +40,13 @@ class PresupuestoController extends Controller
         $empresa_id = Session::get('empresa');
         $tipoGasto = 'Rutas';
 
-        $presupuestos = Presupuesto::select('pre_presupuesto.ID as ID', 'users.nombre as USUARIO', 'cat_ruta.DESCRIPCION as RUTA', 'pre_presupuesto.VIGENCIA_INICIO', 'pre_presupuesto.VIGENCIA_FINAL')
+        $presupuestos = Presupuesto::select('pre_presupuesto.ID as ID', 'users.nombre as USUARIO', 'cat_ruta.DESCRIPCION as RUTA', 'pre_presupuesto.VIGENCIA_INICIO', 'pre_presupuesto.VIGENCIA_FINAL', 'pre_presupuesto.ANULADO')
             ->orderBy('pre_presupuesto.ID')
             ->join('cat_usuarioruta', 'cat_usuarioruta.ID', '=', 'pre_presupuesto.USUARIORUTA_ID')
             ->join('users', 'users.id', '=', 'cat_usuarioruta.USER_ID')
             ->join('cat_ruta', 'cat_ruta.ID', '=', 'cat_usuarioruta.RUTA_ID')
             ->join('cat_usuarioempresa', 'cat_usuarioempresa.USER_ID', '=', 'users.id' )
-            ->join('cat_empresa', 'cat_empresa.ID', '=', 'cat_usuarioempresa.EMPRESA_ID')
-            ->where('pre_presupuesto.ANULADO', '=', 0)
+            ->join('cat_empresa', 'cat_empresa.ID', '=', 'cat_usuarioempresa.EMPRESA_ID')            
             ->where('cat_empresa.ID', '=', $empresa_id)
             ->where('cat_ruta.TIPO_GASTO', '=', $tipoGasto)
             ->paginate(10);
@@ -76,14 +75,13 @@ class PresupuestoController extends Controller
         //dd($usuario_id);
         $empresa_id = Session::get('empresa');
         $tipoGasto = 'Otros Gastos';
-        $presupuestos = Presupuesto::select('pre_presupuesto.ID as ID', 'users.nombre as USUARIO', 'cat_ruta.DESCRIPCION as RUTA', 'pre_presupuesto.VIGENCIA_INICIO', 'pre_presupuesto.VIGENCIA_FINAL')
+        $presupuestos = Presupuesto::select('pre_presupuesto.ID as ID', 'users.nombre as USUARIO', 'cat_ruta.DESCRIPCION as RUTA', 'pre_presupuesto.VIGENCIA_INICIO', 'pre_presupuesto.VIGENCIA_FINAL', 'pre_presupuesto.ANULADO')
             ->orderBy('pre_presupuesto.ID')
             ->join('cat_usuarioruta', 'cat_usuarioruta.ID', '=', 'pre_presupuesto.USUARIORUTA_ID')
             ->join('users', 'users.id', '=', 'cat_usuarioruta.USER_ID')
             ->join('cat_ruta', 'cat_ruta.ID', '=', 'cat_usuarioruta.RUTA_ID')
             ->join('cat_usuarioempresa', 'cat_usuarioempresa.USER_ID', '=', 'users.id' )
-            ->join('cat_empresa', 'cat_empresa.ID', '=', 'cat_usuarioempresa.EMPRESA_ID')
-            ->where('pre_presupuesto.ANULADO', '=', 0)
+            ->join('cat_empresa', 'cat_empresa.ID', '=', 'cat_usuarioempresa.EMPRESA_ID')            
             ->where('cat_empresa.ID', '=', $empresa_id)
             ->where('cat_ruta.TIPO_GASTO', '=', $tipoGasto)
             ->paginate(10);
@@ -398,12 +396,12 @@ class PresupuestoController extends Controller
             ->lists('cat_ruta.DESCRIPCION', 'cat_ruta.ID')
             ->toArray();
 
-        $detallePresupuestos = DetallePresupuesto::select('pre_detpresupuesto.ID', 'cat_tipogasto.DESCRIPCION as TIPOGASTO', 'pre_detpresupuesto.MONTO', 'cat_frecuenciatiempo.DESCRIPCION as FRECUENCIA')
+        $detallePresupuestos = DetallePresupuesto::select('pre_detpresupuesto.ID', 'cat_tipogasto.DESCRIPCION as TIPOGASTO', 'pre_detpresupuesto.MONTO', 'cat_frecuenciatiempo.DESCRIPCION as FRECUENCIA', 'pre_detpresupuesto.ANULADO')
                                                   ->join('cat_tipogasto', 'cat_tipogasto.ID', '=', 'pre_detpresupuesto.TIPOGASTO_ID')
                                                   ->join('cat_frecuenciatiempo', 'cat_frecuenciatiempo.ID', '=', 'pre_detpresupuesto.FRECUENCIATIEMPO_ID')
                                                   ->where('pre_detpresupuesto.PRESUPUESTO_ID', '=', $presupuesto_id)
-                                                  ->where('pre_detpresupuesto.ANULADO', '=', 0)
-                                                  ->paginate();
+                                                  //->where('pre_detpresupuesto.ANULADO', '=', 0)
+                                                  ->paginate(10);
 
         if ($tipoGasto == 'Rutas') {
             $rutaPresupuesto = 'presupuestos.index';
@@ -472,10 +470,18 @@ class PresupuestoController extends Controller
      */
     public function anular($id)
     {
-        Presupuesto::where('ID', $id)
-            ->update(['ANULADO' => 1]);
-
-        return 1; //Redirect::to('presupuestos');
+        $anulado = Presupuesto::where('id', '=', $id)->pluck('anulado');
+       
+            if ($anulado == 1) {
+                Presupuesto::where('id', $id)
+                            ->update(['ANULADO' => 0]);
+                $anular = 'No';
+            } else {
+                Presupuesto::where('id', $id)
+                ->update(['ANULADO' => 1]);            
+                $anular = 'Si';
+            }  
+            return $anular;           
     }
 
 }

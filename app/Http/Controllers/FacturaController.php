@@ -940,8 +940,18 @@ dd($resultado);
      */
     public function anular($id)
     {
-        Factura::where('ID', $id)
-            ->update(['ANULADO' => 1]);
-        return 1; //Redirect::to('liquidaciones');
+        $anulado = Factura::where('id', '=', $id)->pluck('anulado');
+       
+            if ($anulado == 1) {
+                Factura::where('id', $id)
+                            ->update(['ANULADO' => 0]);
+                $anular = 'No';
+            } else {
+                Factura::where('id', $id)
+                ->update(['ANULADO' => 1]);            
+                $anular = 'Si';
+            }  
+            return $anular;  
+        
     }
 }

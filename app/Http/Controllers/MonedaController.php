@@ -30,8 +30,7 @@ class MonedaController extends Controller
      */
     public function index()
     {
-        $monedas = Moneda::select('*')
-                            ->where('cat_moneda.ANULADO', '=', 0)
+        $monedas = Moneda::select('*')                            
                             ->paginate(10);
 
         return view('monedas.index', compact('monedas'));
@@ -97,9 +96,8 @@ class MonedaController extends Controller
     {
         $moneda = Moneda::findOrFail($id);
 
-        $tasaCambio = TasaCambio::select('cat_tasacambio.ID', 'cat_tasacambio.MONEDA_ID', 'cat_tasacambio.FECHA', 'cat_tasacambio.COMPRA', 'cat_tasacambio.ANULADO')
-                                  ->where('cat_tasacambio.ANULADO', '=', 0)
-                                  ->where('cat_tasacambio.MONEDA_ID', '=', $id)->paginate(4);
+        $tasaCambio = TasaCambio::select('cat_tasacambio.ID', 'cat_tasacambio.MONEDA_ID', 'cat_tasacambio.FECHA', 'cat_tasacambio.COMPRA', 'cat_tasacambio.ANULADO')                                  
+                                  ->where('cat_tasacambio.MONEDA_ID', '=', $id)->paginate(5);
 
 
         return view('monedas.edit', compact('moneda','tasaCambio'));
@@ -160,11 +158,20 @@ class MonedaController extends Controller
                                     ->count();
 
         if($monedaActiva == 0) {
-            Moneda::where('ID', $id)
-                ->update(['ANULADO' => 1]);
-            return "Registro No. $id fue Eliminado!!";//Redirect::to('monedas');
-        } else {
-            return  'La Moneda no se puede eliminar, pertenece a una Empresa Activa.';//Redirect::to('monedas');
+            $anulado = Moneda::where('id', '=', $id)->pluck('anulado');
+       
+            if ($anulado == 1) {
+                Moneda::where('id', $id)
+                            ->update(['ANULADO' => 0]);
+                $anular = 'No';
+            } else {
+                Moneda::where('id', $id)
+                ->update(['ANULADO' => 1]);            
+                $anular = 'Si';
+            }        
+            return $anular;
+        } else {            
+            return  'La Moneda no se puede anular, pertenece a una Empresa Activa.';//Redirect::to('monedas');
         }
     }
 

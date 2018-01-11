@@ -21,6 +21,7 @@
                          <th class="text-center">{{ $tipoLiquidacion }}</th>
                          <th class="text-center">Monto</th>
                          <th class="text-center">Estatus</th>
+                         <th class="text-center">Anulado</th>
                          <th class="text-center">Anular</th>
                        </thead>
                        <tbody>
@@ -37,6 +38,7 @@
                                    @else
                                         <td><a href="{{ route('liquidaciones.edit', $liquidacion->ID . '-' . $tipoLiquidacion) }}">{{ $liquidacion->DESCRIPCION }}</td>
                                    @endif
+                                   <td class="text-center"><a href="{{ route('liquidaciones.edit', $liquidacion->ID ) }}">{{ ($liquidacion->ANULADO)?'SI':'' }}</a></td>
                                    <td class="text-center">
                                      <a href="{{ route('anularLiquidacion', $liquidacion->ID) }}" class="btn-delete"><span class="glyphicon glyphicon-ban-circle" aria-hidden="true" style="font-size:20px; color: black"></span></a>
                                    </td>
@@ -72,28 +74,24 @@
             var id = row.data('id');
             vurl = '{{ route('anularLiquidacion') }}';
             vurl = vurl.replace('%7Bid%7D', id);
-            row.fadeOut();
+            /*row.fadeOut();
             $('#myModal').modal('show');
             $('#revertir').click(function () {
                 row.show();
             });
             $('#anular').click(function () {
-                $('#myModal').modal('hide');
+                $('#myModal').modal('hide');*/
                 $.ajax({
                     type: 'get',
                     url: vurl,
                     success: function (data) {
-                        if(data == 1) {
-                            console.log('La Liquidación fue Eliminada Exitosamente!!!.');
-                        } else {
-                            alert('La Liquidación no fue Eliminada!!!');
-                        }
+                        location.reload();
                     }
                 }).fail(function () {
                     alert ('La Liquidación no pudo ser Eliminada!!!');
                     row.show();
                 });
-            })
+            //})
         });
     });
 </script>
