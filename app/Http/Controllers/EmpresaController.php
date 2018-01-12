@@ -148,10 +148,24 @@ class EmpresaController extends Controller
         $empresa = Empresa::findOrFail($id);
         //$moneda->fill($request->all());
 
+        
+        if ($request->PASSSAP == null) {
+            $passwordSap = Empresa::where('id', '=', $id)->pluck('PASSSAP');
+            
+        } else {
+            $passwordSap = bcrypt($request->PASSSAP);
+        }
+        if ($request->PASSSQL == null) {
+            $passwordSql = Empresa::where('id', '=', $id)->pluck('PASSSQL');
+            
+        } else {
+            $passwordSql = bcrypt($request->PASSSQL);
+        }
+
         Empresa::where('ID', $empresa->ID)
           ->update(['CLAVE' => $request->CLAVE, 'DESCRIPCION' => $request->DESCRIPCION, 'ANULADO' => $request->ANULADO, 'LICENSESERVER' => $request->LICENSESERVER,
                     'TIEMPOATRASO_RUTAS' => $request->TIEMPOATRASO_RUTAS, 'TIEMPOATRASO_OTROSGASTOS' => $request->TIEMPOATRASO_OTROSGASTOS, 'USERSAP' => $request->USERSAP,
-                    'PASSSAP' => bcrypt($request->PASSSAP), 'DBSAP' => $request->DBSAP, 'USERSQL' => $request->USERSQL, 'PASSSQL' => bcrypt($request->ANULADO),
+                    'PASSSAP' => $passwordSap, 'DBSAP' => $request->DBSAP, 'USERSQL' => $request->USERSQL, 'PASSSQL' => $passwordSql,
                     'SERVIDORSQL' => $request->SERVIDORSQL, 'ID_DATASERVERTYPE' => $request->ID_DATASERVERTYPE, 'MONEDA_ID' => $request->MONEDA_ID,
                     'IMPUESTO' => $request->IMPUESTO, 'FILAS_NOTA_CREDITO' => $request->FILAS_NOTA_CREDITO]);
 

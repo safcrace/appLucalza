@@ -53,11 +53,12 @@
       <div class="col-md-2">
             {!! Form::label('ANULADO', 'Estatus') !!}
       </div>
-      <div class="col-md-1">
-          {!! Form::radio('ANULADO', 0); !!}  Activo
+      <div class="col-md-1">          
+        <input name="ANULADO" type="radio" value="1" checked="cheked" >
+        Activo
       </div>
       <div class="col-md-2">
-          {!! Form::radio('ANULADO', 1); !!}  Inactivo
+          <input name="ANULADO"  type="radio" value="0" >  Inactivo
       </div>
     </div>
 
@@ -96,10 +97,10 @@
             {!! Form::label('FILAS_NOTA_CREDITO', 'Salida Notas Crédito') !!}
       </div>
       <div class="col-md-1">
-          {!! Form::radio('FILAS_NOTA_CREDITO', 1, true); !!}  1 Fila
+          <input name="FILAS_NOTA_CREDITO" type="radio" value="1" checked="cheked">  1 Fila
       </div>
       <div class="col-md-2">
-          {!! Form::radio('FILAS_NOTA_CREDITO', 2, false); !!}  2 Filas
+          <input name="FILAS_NOTA_CREDITO" type="radio" value="0" >  2 Filas
       </div>
     </div>
 
@@ -110,6 +111,9 @@
       <div class="col-md-3">
           {!! Form::password('PASSSAP', ['class' => 'form-control awesome', 'placeholder' => 'Contraseña SAP']); !!}
       </div>
+      <div class="col-md-1">
+        <span class="glyphicon glyphicon-eye-open" aria-hidden="true" style="color: black; cursor: pointer; font-size: 22px" data-toggle="tooltip" data-placement="top" title="Cambiar Vista" id="verPasswordSap"></span>
+    </div>
       
     </div>
 
@@ -144,6 +148,9 @@
       <div class="col-md-3">
           {!! Form::password('PASSSQL', ['class' => 'form-control awesome', 'placeholder' => 'Contraseña SQL']); !!}
       </div>
+      <div class="col-md-1">
+        <span class="glyphicon glyphicon-eye-open" aria-hidden="true" style="color: black; cursor: pointer; font-size: 22px" data-toggle="tooltip" data-placement="top" title="Cambiar Vista" id="verPasswordSql"></span>
+      </div>
     </div>
 
     <div class="row form-group">
@@ -158,3 +165,26 @@
 
   </div>
 </div>
+
+@push('scripts')
+<script type="text/javascript">
+    $(document).ready(function () {       
+        $('#verPasswordSap').click(function() {          
+            tipoInput = $('#PASSSAP').attr('type')           
+            if (tipoInput == 'password') {
+              $('#PASSSAP').attr("type", 'text')
+            } else {
+              $('#PASSSAP').attr("type", 'password')
+            }            
+        })
+        $('#verPasswordSql').click(function() {          
+            tipoInputTwo = $('#PASSSQL').attr('type')            
+            if (tipoInputTwo == 'password') {
+              $('#PASSSQL').attr("type", 'text')
+            } else {
+              $('#PASSSQL').attr("type", 'password')
+            }            
+        })
+    });
+</script>
+@endpush
