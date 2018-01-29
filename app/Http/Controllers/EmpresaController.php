@@ -126,7 +126,7 @@ class EmpresaController extends Controller
     public function edit($id)
     {
       $empresa = Empresa::findOrFail($id);
-
+      
       $moneda = Moneda::where('ANULADO', '=', 0)
                              ->lists('DESCRIPCION', 'ID')
                              ->toArray();
@@ -144,10 +144,10 @@ class EmpresaController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function update(CreateEmpresaRequest $request, $id)
-    {
+    {   //dd($id);
         $empresa = Empresa::findOrFail($id);
         //$moneda->fill($request->all());
-
+        
         
         if ($request->PASSSAP == null) {
             $passwordSap = Empresa::where('id', '=', $id)->pluck('PASSSAP');

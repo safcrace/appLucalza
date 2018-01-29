@@ -73,7 +73,7 @@
 
     <div class="row form-group">
       <div class="col-md-2 col-md-offset-1">
-            {!! Form::label('LICENSESERVER', 'Licencia de Servidor') !!}
+            {!! Form::label('LICENSESERVER', 'Servidor de Licencias') !!}
       </div>
       <div class="col-md-2">
           {!! Form::text('LICENSESERVER', null, ['class' => 'form-control', 'placeholder' => 'Licencia de Servidor SAP']); !!}
@@ -94,13 +94,30 @@
           {!! Form::text('USERSAP', null, ['class' => 'form-control', 'placeholder' => 'Usuario SAP']); !!}
       </div>
       <div class="col-md-2">
-            {!! Form::label('FILAS_NOTA_CREDITO', 'Salida Notas Crédito') !!}
+            {!! Form::label('FILAS_NOTA_CREDITO', 'Remanente en Nota de Crédito') !!}
       </div>
       <div class="col-md-1">
-          <input name="FILAS_NOTA_CREDITO" type="radio" value="1" checked="cheked">  1 Fila
+          @if(isset($empresa->FILAS_NOTA_CREDITO))
+            @if($empresa->FILAS_NOTA_CREDITO == 1)
+                <input name="FILAS_NOTA_CREDITO" type="radio" value="1" checked>  Si
+            @else
+                <input name="FILAS_NOTA_CREDITO" type="radio" value="1">  Si
+            @endif          
+          @else
+          <input name="FILAS_NOTA_CREDITO" type="radio" value="1">  Si
+          @endif
+
       </div>
       <div class="col-md-2">
-          <input name="FILAS_NOTA_CREDITO" type="radio" value="0" >  2 Filas
+          @if(isset($empresa->FILAS_NOTA_CREDITO))
+            @if($empresa->FILAS_NOTA_CREDITO == 0)
+                <input name="FILAS_NOTA_CREDITO" type="radio" value="0" checked>  No
+            @else
+                <input name="FILAS_NOTA_CREDITO" type="radio" value="0">  No
+            @endif  
+          @else
+            <input name="FILAS_NOTA_CREDITO" type="radio" value="0">  No        
+          @endif          
       </div>
     </div>
 

@@ -28,6 +28,7 @@ class CreateEmpresaRequest extends Request
             'DESCRIPCION'    => 'required',
             'LICENSESERVER'    => 'required',
             'USERSAP'    => 'required',
+            'FILAS_NOTA_CREDITO' => 'required',
             //'PASSSAP'    => 'required',
             'DBSAP'    => 'required',
             'USERSQL'    => 'required',

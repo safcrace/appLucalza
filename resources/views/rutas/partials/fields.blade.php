@@ -32,10 +32,10 @@
       {!! Form::label('ASIGNACIONPRESUPUESTO_ID', 'Tipo Gasto') !!}
     </div>
     <div class="col-md-3">
-      {!! Form::radio('ASIGNACIONPRESUPUESTO_ID', 1, true, ['id' => 'dinero']); !!}  ADMINISTRATIVO
+      {!! Form::radio('ASIGNACIONPRESUPUESTO_ID', 1, ['id' => 'dinero']); !!}  ADMINISTRATIVO
     </div>
     <div class="col-md-2">
-      {!! Form::radio('ASIGNACIONPRESUPUESTO_ID', 2, false, ['id' => 'unidad']); !!}  DEPRECIACION
+      {!! Form::radio('ASIGNACIONPRESUPUESTO_ID', 2, ['id' => 'unidad']); !!}  DEPRECIACION
     </div>
   </div>
 @endif

@@ -454,6 +454,7 @@
                   type: 'get',
                   url: vurl,
                   success: function (data) {
+                    alert(data)
                       $('#cuenta_afecta').html(data);
                       $('#myModalCa').modal('show')
                   }
@@ -463,7 +464,7 @@
           $('#ok_afecta').click(function() {
               var codigo_afecta = $('#cuentaContableAfecta').val()
               var descripcion_afecta = $('#cuentaContableAfecta option:selected').text()
-              var postable = $('#cuentaContableExenta').find(':selected').attr('data-postable')
+              var postable = $('#cuentaContableAfecta').find(':selected').attr('data-postable')              
               if(postable == 'Y') {                  
                   $('#cuenta_contable_afecta').val(codigo_afecta)
                   $('.descripcion_cuenta_ca').val(descripcion_afecta)
@@ -490,7 +491,7 @@
           $('#ok_remanente').click(function() {
               var codigo_remanente = $('#cuentaContableRemanente').val()
               var descripcion_remanente = $('#cuentaContableRemanente option:selected').text()
-              var postable = $('#cuentaContableExenta').find(':selected').attr('data-postable')
+              var postable = $('#cuentaContableRemanente').find(':selected').attr('data-postable')
               if(postable == 'Y') {                  
                   $('#cuenta_contable_remanente').val(codigo_remanente)
                   $('.descripcion_cuenta_cr').val(descripcion_remanente)
