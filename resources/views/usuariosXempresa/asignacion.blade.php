@@ -90,8 +90,10 @@
         });
 
         $('#proveedorSap').click(function() {
+            var criterio = $('#empresa').val() + '-' + 2
+            alert(criterio)
             vurl = '{{ route('codigoProveedorSap')}}'
-            vurl = vurl.replace('%7Bid%7D', 2);
+            vurl = vurl.replace('%7Bid%7D', criterio);
             $.ajax({
                 type: 'get',
                 url: vurl,

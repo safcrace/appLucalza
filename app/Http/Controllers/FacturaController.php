@@ -160,6 +160,13 @@ dd($resultado);
     {   
         $factura = new Factura();
 
+        if ($request->FMONEDA_ID == 2) {            
+            $montoConversion = round(($request->TOTAL * $request->TASA_CAMBIO), 4);
+        } else {
+            $montoConversion = $request->TOTAL * 1;
+        }
+        
+        //dd($montoConversion);
         /** Procesa Imagen **/
 
         $file = $request->file('FOTO');
@@ -292,7 +299,7 @@ dd($resultado);
                     /** Operaciones de Calculo **/
                     $factura->MONTO_EXENTO = round(($request->CANTIDAD_PORCENTAJE_CUSTOM * $idp->MONTO_A_APLICAR), 2);
                     
-                    $factura->MONTO_AFECTO = round((($request->TOTAL - $factura->MONTO_EXENTO) / (1 + 0.12)),2); //Se calcula monto afecto
+                    $factura->MONTO_AFECTO = round((($montoConversion - $factura->MONTO_EXENTO) / (1 + 0.12)),2); //Se calcula monto afecto
                     
                     $factura->MONTO_IVA = round(($factura->MONTO_AFECTO * 0.12 ), 2); //Se calcula monto de impuesto
                     
@@ -302,11 +309,11 @@ dd($resultado);
                     
                     $remanente = $request->CANTIDAD_PORCENTAJE_CUSTOM - $saldoParcial; //Ojo aca puede ser util                
 
-                    $precioGalon = round(($request->TOTAL / $request->CANTIDAD_PORCENTAJE_CUSTOM), 2);
+                    $precioGalon = round(($montoConversion / $request->CANTIDAD_PORCENTAJE_CUSTOM), 2);
 
                     $factura->MONTO_EXENTO = round(($request->CANTIDAD_PORCENTAJE_CUSTOM * $idp->MONTO_A_APLICAR), 2);
                     
-                    $factura->MONTO_AFECTO = round((($request->TOTAL - $factura->MONTO_EXENTO) / (1 + 0.12)),2); //Se calcula monto afecto
+                    $factura->MONTO_AFECTO = round((($montoConversion - $factura->MONTO_EXENTO) / (1 + 0.12)),2); //Se calcula monto afecto
                     
                     $factura->MONTO_IVA = round(($factura->MONTO_AFECTO * 0.12 ), 2); //Se calcula monto de impuesto
 
@@ -320,7 +327,7 @@ dd($resultado);
                 $factura->APROBACION_PAGO = 0;
                 
                 /** Operaciónes de Calculo **/
-                $factura->MONTO_REMANENTE = $request->TOTAL;            
+                $factura->MONTO_REMANENTE = $montoConversion;            
             }
             
         } else if ($request->CATEGORIA_GASTO == 'depreciación') {
@@ -328,7 +335,7 @@ dd($resultado);
             $idp = SubcategoriaTipoGasto::select('MONTO_A_APLICAR')->where('ID', '=', $request->SUBCATEGORIATIPOGASTO_ID)->first();
             
             if ($saldo > 0) {
-                $saldoFactura = $saldo - $request->TOTAL;
+                $saldoFactura = $saldo - $montoConversion;
                 
                 if ($saldoFactura > 0) {
                     $factura->APROBACION_PAGO = 1;
@@ -336,7 +343,7 @@ dd($resultado);
                     /** Operaciones de Calculo **/
                     $factura->MONTO_EXENTO = round(($request->CANTIDAD_PORCENTAJE_CUSTOM * $idp->MONTO_A_APLICAR), 2);
                     
-                    $factura->MONTO_AFECTO = round((($request->TOTAL - $factura->MONTO_EXENTO) / (1 + 0.12)),2); //Se calcula monto afecto
+                    $factura->MONTO_AFECTO = round((($montoConversion - $factura->MONTO_EXENTO) / (1 + 0.12)),2); //Se calcula monto afecto
                     
                     $factura->MONTO_IVA = round(($factura->MONTO_AFECTO * 0.12 ), 2); //Se calcula monto de impuesto
                    
@@ -344,13 +351,13 @@ dd($resultado);
                     
                     $saldoParcial = $saldo;
                     
-                    $remanente = $request->TOTAL - $saldoParcial; //Ojo aca puede ser util                
+                    $remanente = $montoConversion - $saldoParcial; //Ojo aca puede ser util                
 
-                    //$precioGalon = round(($request->TOTAL / $request->CANTIDAD_PORCENTAJE_CUSTOM), 2);
+                    //$precioGalon = round(($montoConversion / $request->CANTIDAD_PORCENTAJE_CUSTOM), 2);
 
                     $factura->MONTO_EXENTO = round(($request->CANTIDAD_PORCENTAJE_CUSTOM * $idp->MONTO_A_APLICAR), 2);
                     
-                    $factura->MONTO_AFECTO = round((($request->TOTAL - $factura->MONTO_EXENTO) / (1 + 0.12)),2); //Se calcula monto afecto
+                    $factura->MONTO_AFECTO = round((($montoConversion - $factura->MONTO_EXENTO) / (1 + 0.12)),2); //Se calcula monto afecto
                     
                     $factura->MONTO_IVA = round(($factura->MONTO_AFECTO * 0.12 ), 2); //Se calcula monto de impuesto
 
@@ -365,7 +372,7 @@ dd($resultado);
                 $factura->APROBACION_PAGO = 0;
                 
                 /** Operaciónes de Calculo **/
-                $factura->MONTO_REMANENTE = $request->TOTAL;            
+                $factura->MONTO_REMANENTE = $montoConversion;            
             }
         } else {
            
@@ -376,13 +383,13 @@ dd($resultado);
                 $impuesto = SubcategoriaTipoGasto::select('MONTO_A_APLICAR')->where('ID', '=', $request->SUBCATEGORIATIPOGASTO_ID)->first();
                 $factura->CANTIDAD_PORCENTAJE_CUSTOM = $impuesto->MONTO_A_APLICAR;
                 if ($saldo > 0) {
-                    $saldoFactura = $saldo - $request->TOTAL;
+                    $saldoFactura = $saldo - $montoConversion;
                     
                     if ($saldoFactura > 0) {
                         $factura->APROBACION_PAGO = 1;
         
                         /** Operaciones de Calculo **/                                               
-                        $factura->MONTO_AFECTO = round((($request->TOTAL - $factura->MONTO_EXENTO) / (1 + 0.12 + $impuesto->MONTO_A_APLICAR)),2); //Se calcula monto afecto
+                        $factura->MONTO_AFECTO = round((($montoConversion - $factura->MONTO_EXENTO) / (1 + 0.12 + $impuesto->MONTO_A_APLICAR)),2); //Se calcula monto afecto
 
                         $factura->MONTO_EXENTO = round(($factura->MONTO_AFECTO * $impuesto->MONTO_A_APLICAR), 2);
                         
@@ -392,9 +399,9 @@ dd($resultado);
                         
                         $saldoParcial = $saldo;
                         
-                        $remanente = $request->TOTAL - $saldoParcial; //Ojo aca puede ser util
+                        $remanente = $montoConversion - $saldoParcial; //Ojo aca puede ser util
     
-                        $factura->MONTO_AFECTO = round((($request->TOTAL - $factura->MONTO_EXENTO) / (1 + 0.12 + $impuesto->MONTO_A_APLICAR)),2); //Se calcula monto afecto
+                        $factura->MONTO_AFECTO = round((($montoConversion - $factura->MONTO_EXENTO) / (1 + 0.12 + $impuesto->MONTO_A_APLICAR)),2); //Se calcula monto afecto
                         
                         $factura->MONTO_EXENTO = round(($factura->MONTO_AFECTO * $impuesto->MONTO_A_APLICAR), 2);
                         
@@ -410,31 +417,31 @@ dd($resultado);
                     $factura->APROBACION_PAGO = 0;
                     
                     /** Operaciónes de Calculo **/
-                    $factura->MONTO_REMANENTE = $request->TOTAL;            
+                    $factura->MONTO_REMANENTE = $montoConversion;            
                 }                
 
                 
             } else {
                 if ($saldo > 0) {
-                    $saldoFactura = $saldo - $request->TOTAL;
+                    $saldoFactura = $saldo - $montoConversion;
                     if ($saldoFactura > 0) {
                         $factura->APROBACION_PAGO = 1;
         
                         /** Operaciones de Calculo **/
         
-                        $factura->MONTO_AFECTO = round(($request->TOTAL / (1 + 0.12)),2); //Se calcula monto afecto
+                        $factura->MONTO_AFECTO = round(($montoConversion / (1 + 0.12)),2); //Se calcula monto afecto
                 
                         $factura->MONTO_IVA = round(($factura->MONTO_AFECTO * 0.12 ), 2); //Se calcula monto de impuesto
         
                     } else {                        
                         $saldoParcial = $saldo;
 
-                        $factura->MONTO_AFECTO = round(($request->TOTAL / (1 + 0.12)),2); //Se calcula monto afecto
+                        $factura->MONTO_AFECTO = round(($montoConversion / (1 + 0.12)),2); //Se calcula monto afecto
                         
                         $factura->MONTO_IVA = round(($factura->MONTO_AFECTO * 0.12 ), 2); //Se calcula monto de impuesto
                         $factura->MONTO_EXENTO = 0;
                         
-                        $factura->MONTO_REMANENTE = $request->TOTAL - $saldoParcial;                
+                        $factura->MONTO_REMANENTE = $montoConversion - $saldoParcial;                
                         
                         $factura->APROBACION_PAGO = 1;
                     }
@@ -443,7 +450,7 @@ dd($resultado);
                     $factura->APROBACION_PAGO = 0;
                 
                     /** Operaciónes de Calculo **/
-                    $factura->MONTO_REMANENTE = $request->TOTAL;            
+                    $factura->MONTO_REMANENTE = $montoConversion;            
                 }
 
             }
@@ -474,6 +481,9 @@ dd($resultado);
         $factura->KILOMETRAJE_FINAL = $request->KM_FINAL;
         $factura->COMENTARIO_PAGO = $request->COMENTARIO_PAGO;
         $factura->TOTAL = $request->TOTAL;
+        $factura->MONTO_ORIGINAL = $request->TOTAL;
+        $factura->TASA_CAMBIO = $request->TASA_CAMBIO;
+        $factura->MONTO_CONVERSION = $montoConversion;
         $factura->FOTO = $name;
         $factura->ANULADO = 0;
 
@@ -661,7 +671,7 @@ dd($resultado);
                             /** Operaciones de Calculo **/
                             $factura->MONTO_EXENTO = round(($request->CANTIDAD_PORCENTAJE_CUSTOM * $idp->MONTO_A_APLICAR), 2);
                             
-                            $factura->MONTO_AFECTO = round((($request->TOTAL - $factura->MONTO_EXENTO) / (1 + 0.12)),2); //Se calcula monto afecto
+                            $factura->MONTO_AFECTO = round((($montoConversion - $factura->MONTO_EXENTO) / (1 + 0.12)),2); //Se calcula monto afecto
                             
                             $factura->MONTO_IVA = round(($factura->MONTO_AFECTO * 0.12 ), 2); //Se calcula monto de impuesto
 
@@ -673,11 +683,11 @@ dd($resultado);
                             
                             $remanente = $request->CANTIDAD_PORCENTAJE_CUSTOM - $saldoParcial; //Ojo aca puede ser util                
         
-                            $precioGalon = round(($request->TOTAL / $request->CANTIDAD_PORCENTAJE_CUSTOM), 2);
+                            $precioGalon = round(($montoConversion / $request->CANTIDAD_PORCENTAJE_CUSTOM), 2);
         
                             $factura->MONTO_EXENTO = round(($request->CANTIDAD_PORCENTAJE_CUSTOM * $idp->MONTO_A_APLICAR), 2);
                             
-                            $factura->MONTO_AFECTO = round((($request->TOTAL - $factura->MONTO_EXENTO) / (1 + 0.12)),2); //Se calcula monto afecto
+                            $factura->MONTO_AFECTO = round((($montoConversion - $factura->MONTO_EXENTO) / (1 + 0.12)),2); //Se calcula monto afecto
                             
                             $factura->MONTO_IVA = round(($factura->MONTO_AFECTO * 0.12 ), 2); //Se calcula monto de impuesto
         
@@ -691,7 +701,7 @@ dd($resultado);
                         $factura->APROBACION_PAGO = 0;
                         
                         /** Operaciónes de Calculo **/
-                        $factura->MONTO_REMANENTE = $request->TOTAL;            
+                        $factura->MONTO_REMANENTE = $montoConversion;            
                     }
                     
                 } else if ($request->CATEGORIA_GASTO == 'depreciación') {
@@ -699,7 +709,7 @@ dd($resultado);
                     $idp = SubcategoriaTipoGasto::select('MONTO_A_APLICAR')->where('ID', '=', $request->SUBCATEGORIATIPOGASTO_ID)->first();
                     
                     if ($saldo > 0) {
-                        $saldoFactura = $saldo - $request->TOTAL;
+                        $saldoFactura = $saldo - $montoConversion;
                         
                         if ($saldoFactura > 0) {
                             $factura->APROBACION_PAGO = 1;
@@ -707,7 +717,7 @@ dd($resultado);
                             /** Operaciones de Calculo **/
                             $factura->MONTO_EXENTO = round(($request->CANTIDAD_PORCENTAJE_CUSTOM * $idp->MONTO_A_APLICAR), 2);
                             
-                            $factura->MONTO_AFECTO = round((($request->TOTAL - $factura->MONTO_EXENTO) / (1 + 0.12)),2); //Se calcula monto afecto
+                            $factura->MONTO_AFECTO = round((($montoConversion - $factura->MONTO_EXENTO) / (1 + 0.12)),2); //Se calcula monto afecto
                             
                             $factura->MONTO_IVA = round(($factura->MONTO_AFECTO * 0.12 ), 2); //Se calcula monto de impuesto
 
@@ -717,13 +727,13 @@ dd($resultado);
                             
                             $saldoParcial = $saldo;
                             
-                            $remanente = $request->TOTAL - $saldoParcial; //Ojo aca puede ser util                
+                            $remanente = $montoConversion - $saldoParcial; //Ojo aca puede ser util                
         
-                            //$precioGalon = round(($request->TOTAL / $request->CANTIDAD_PORCENTAJE_CUSTOM), 2);
+                            //$precioGalon = round(($montoConversion / $request->CANTIDAD_PORCENTAJE_CUSTOM), 2);
         
                             $factura->MONTO_EXENTO = round(($request->CANTIDAD_PORCENTAJE_CUSTOM * $idp->MONTO_A_APLICAR), 2);
                             
-                            $factura->MONTO_AFECTO = round((($request->TOTAL - $factura->MONTO_EXENTO) / (1 + 0.12)),2); //Se calcula monto afecto
+                            $factura->MONTO_AFECTO = round((($montoConversion - $factura->MONTO_EXENTO) / (1 + 0.12)),2); //Se calcula monto afecto
                             
                             $factura->MONTO_IVA = round(($factura->MONTO_AFECTO * 0.12 ), 2); //Se calcula monto de impuesto
         
@@ -738,7 +748,7 @@ dd($resultado);
                         $factura->APROBACION_PAGO = 0;
                         
                         /** Operaciónes de Calculo **/
-                        $factura->MONTO_REMANENTE = $request->TOTAL;            
+                        $factura->MONTO_REMANENTE = $montoConversion;            
                     }
                 } else {                
                     
@@ -749,13 +759,13 @@ dd($resultado);
                         $impuesto = SubcategoriaTipoGasto::select('MONTO_A_APLICAR')->where('ID', '=', $request->SUBCATEGORIATIPOGASTO_ID)->first();
                         $factura->CANTIDAD_PORCENTAJE_CUSTOM = $impuesto->MONTO_A_APLICAR;
                         if ($saldo > 0) {
-                            $saldoFactura = $saldo - $request->TOTAL;
+                            $saldoFactura = $saldo - $montoConversion;
                             
                             if ($saldoFactura > 0) {
                                 $factura->APROBACION_PAGO = 1;
                 
                                 /** Operaciones de Calculo **/                                               
-                                $factura->MONTO_AFECTO = round((($request->TOTAL - $factura->MONTO_EXENTO) / (1 + 0.12 + $impuesto->MONTO_A_APLICAR)),2); //Se calcula monto afecto
+                                $factura->MONTO_AFECTO = round((($montoConversion - $factura->MONTO_EXENTO) / (1 + 0.12 + $impuesto->MONTO_A_APLICAR)),2); //Se calcula monto afecto
         
                                 $factura->MONTO_EXENTO = round(($factura->MONTO_AFECTO * $impuesto->MONTO_A_APLICAR), 2);
                                 
@@ -767,9 +777,9 @@ dd($resultado);
                                // dd('detenerse aqui!!!')   ;        
                                 $saldoParcial = $saldo;
                                 
-                                $remanente = $request->TOTAL - $saldoParcial; //Ojo aca puede ser util
+                                $remanente = $montoConversion - $saldoParcial; //Ojo aca puede ser util
             
-                                $factura->MONTO_AFECTO = round((($request->TOTAL - $factura->MONTO_EXENTO) / (1 + 0.12 + $impuesto->MONTO_A_APLICAR)),2); //Se calcula monto afecto
+                                $factura->MONTO_AFECTO = round((($montoConversion - $factura->MONTO_EXENTO) / (1 + 0.12 + $impuesto->MONTO_A_APLICAR)),2); //Se calcula monto afecto
                                 
                                 $factura->MONTO_EXENTO = round(($factura->MONTO_AFECTO * $impuesto->MONTO_A_APLICAR), 2);
                                 
@@ -785,19 +795,19 @@ dd($resultado);
                             $factura->APROBACION_PAGO = 0;
                             
                             /** Operaciónes de Calculo **/
-                            $factura->MONTO_REMANENTE = $request->TOTAL;            
+                            $factura->MONTO_REMANENTE = $montoConversion;            
                         }                
         
                         
                     } else {                       
                         if ($saldo > 0) {
-                            $saldoFactura = $saldo - $request->TOTAL;
+                            $saldoFactura = $saldo - $montoConversion;
                             if ($saldoFactura > 0) {
                                 $factura->APROBACION_PAGO = 1;
                 
                                 /** Operaciones de Calculo **/
                 
-                                $factura->MONTO_AFECTO = round(($request->TOTAL / (1 + 0.12)),2); //Se calcula monto afecto
+                                $factura->MONTO_AFECTO = round(($montoConversion / (1 + 0.12)),2); //Se calcula monto afecto
                         
                                 $factura->MONTO_IVA = round(($factura->MONTO_AFECTO * 0.12 ), 2); //Se calcula monto de impuesto
 
@@ -806,12 +816,12 @@ dd($resultado);
                             } else {                        
                                 $saldoParcial = $saldo;
         
-                                $factura->MONTO_AFECTO = round(($request->TOTAL / (1 + 0.12)),2); //Se calcula monto afecto
+                                $factura->MONTO_AFECTO = round(($montoConversion / (1 + 0.12)),2); //Se calcula monto afecto
                                 
                                 $factura->MONTO_IVA = round(($factura->MONTO_AFECTO * 0.12 ), 2); //Se calcula monto de impuesto
                                 $factura->MONTO_EXENTO = 0;
                                 
-                                $factura->MONTO_REMANENTE = $request->TOTAL - $saldoParcial;                
+                                $factura->MONTO_REMANENTE = $montoConversion - $saldoParcial;                
                                 
                                 $factura->APROBACION_PAGO = 1;
                             }
@@ -820,7 +830,7 @@ dd($resultado);
                             $factura->APROBACION_PAGO = 0;
                         
                             /** Operaciónes de Calculo **/
-                            $factura->MONTO_REMANENTE = $request->TOTAL;            
+                            $factura->MONTO_REMANENTE = $montoConversion;            
                         }
         
                     }
@@ -835,7 +845,7 @@ dd($resultado);
         Factura::where('ID', $id)
                 ->update(['TIPOGASTO_ID' => $request->TIPOGASTO_ID, 'MONEDA_ID' => $request->MONEDA_ID, 'PROVEEDOR_ID' => $request->PROVEEDOR_ID, 
                           'KILOMETRAJE_INICIAL' => $request->KM_INICIO, 'KILOMETRAJE_FINAL' => $request->KM_FINAL, 'CORRECCION' => 0,
-                          'SERIE' => $request->SERIE, 'NUMERO' => $request->NUMERO, 'FECHA_FACTURA' => $request->FECHA_FACTURA, 'TOTAL' => $request->TOTAL, 
+                          'SERIE' => $request->SERIE, 'NUMERO' => $request->NUMERO, 'FECHA_FACTURA' => $request->FECHA_FACTURA, 'TOTAL' => $montoConversion, 
                           'CANTIDAD_PORCENTAJE_CUSTOM' => $request->CANTIDAD_PORCENTAJE_CUSTOM, 'COMENTARIO_PAGO' => $request->COMENTARIO_PAGO, 
                           'APROBACION_PAGO' => $factura->APROBACION_PAGO, 'MONTO_AFECTO' => $factura->MONTO_AFECTO, 'MONTO_EXENTO' => $factura->MONTO_EXENTO,
                           'MONTO_IVA' => $factura->MONTO_IVA, 'MONTO_REMANENTE' => $factura->MONTO_REMANENTE, 'TIPODOCUMENTO_ID' => $request->TIPODOCUMENTO_ID,]);

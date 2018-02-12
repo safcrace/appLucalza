@@ -3,7 +3,10 @@
 @endif
 @if (isset($presupuesto_id))
     <input id="PRESUPUESTO_ID" name="PRESUPUESTO_ID" type="hidden" value="{{ $presupuesto_id }}">
-@endif
+    @endif
+    
+<input id="EMPRESA_ID" name="PRESUPUESTO_ID" type="hidden" value="{{ Session::get('empresa') }}">
+
 
 {!! Form::hidden('TIPO_GASTO', $tipo) !!}
 
@@ -217,9 +220,11 @@
             $('#unidades').hide()            
         })
 
-        $('#centro_1').click(function() {
-            vurl = '{{ route('codigoCentroCostoUno')}}'
-            vurl = vurl.replace('%7Bid%7D', 4 + '-' + 1);
+        $('#centro_1').click(function() {           
+            var criterio = $('#EMPRESA_ID').val() + '-' + 4 + '-' + 1
+            
+            vurl = '{{ route('codigoCentroCostoUno')}}'            
+            vurl = vurl.replace('%7Bid%7D', criterio);
 
             $.ajax({
                 type: 'get',
@@ -233,8 +238,9 @@
         })
 
         $('#centro_2').click(function() {
+            var criterio = $('#EMPRESA_ID').val() + '-' + 4 + '-' + 2
             vurl = '{{ route('codigoCentroCostoDos')}}'
-            vurl = vurl.replace('%7Bid%7D', 4 + '-' + 2);
+            vurl = vurl.replace('%7Bid%7D',criterio);
 
             $.ajax({
                 type: 'get',
@@ -248,8 +254,9 @@
         })
 
         $('#centro_3').click(function() {
+            var criterio = $('#EMPRESA_ID').val() + '-' + 4 + '-' + 3
             vurl = '{{ route('codigoCentroCostoTres')}}'
-            vurl = vurl.replace('%7Bid%7D', 4 + '-' + 3);
+            vurl = vurl.replace('%7Bid%7D', criterio);
 
             $.ajax({
                 type: 'get',
@@ -263,8 +270,9 @@
         })
 
         $('#centro_4').click(function() {
+            var criterio = $('#EMPRESA_ID').val() + '-' + 4 + '-' + 4
             vurl = '{{ route('codigoCentroCostoCuatro')}}'
-            vurl = vurl.replace('%7Bid%7D', 4 + '-' + 4);
+            vurl = vurl.replace('%7Bid%7D', criterio);
 
             $.ajax({
                 type: 'get',
@@ -278,8 +286,9 @@
         })
 
         $('#centro_5').click(function() {
+            var criterio = $('#EMPRESA_ID').val() + '-' + 4 + '-' + 5
             vurl = '{{ route('codigoCentroCostoCinco')}}'
-            vurl = vurl.replace('%7Bid%7D', 4 + '-' + 5);
+            vurl = vurl.replace('%7Bid%7D', criterio);
 
             $.ajax({
                 type: 'get',

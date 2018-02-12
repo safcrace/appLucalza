@@ -5,6 +5,8 @@
 
 {!! Form::hidden('PRESUPUESTO_ID', $presupuesto->ID) !!}
 {!! Form::hidden('TIPO_LIQUIDACION', $tipoLiquidacion) !!}
+{!! Form::hidden('TASA_CAMBIO', null, ['id' => 'tasaCambio']) !!}
+{!! Form::hidden('MONEDA_ID', $moneda->ID, ['id' => 'idMoneda']) !!}
 {!! Form::hidden('CATEGORIA_GASTO', 'Parametro', ['id' => 'categoriaGasto']) !!}
 {!! Form::hidden('SUBCATEGORIA_GASTO', 'Parametro', ['id' => 'subCategoriaGasto']) !!}
 @if (isset($factura))
@@ -334,7 +336,19 @@
                 $('.combus').hide()                
             }
 
-        });
+        });        
+
+        
+        
+        $("input[name=FMONEDA_ID]").click(function () {                           
+            tipoMoneda = $(this).val()
+            $('#idMoneda').val(tipoMoneda)
+            //alert(tipoMoneda)           
+            //$("#MLOCAL").attr('checked', false);
+        });    
+        
+
+        
 
         var tipoDocumento = $('#tipoDocumento option:selected').text()
         if(tipoDocumento.toLowerCase() == 'recibo') {
@@ -354,6 +368,28 @@
                 $('.numero').hide()                
             }
             //alert(tipoDocumento)
+        })
+
+        $('#TOTAL').blur(function() {            
+            var idMoneda = $("#idMoneda").val()
+            if(idMoneda == 2) {
+
+                var fechaFactura = $("#FECHA_FACTURA").val()
+                vurl = '{{ route('tasaCambio')}}'            
+                if (fechaFactura === '') {
+                    alert('Debe ingresar una fecha!')
+                }                           
+                vurl = vurl.replace('%7Bid%7D', fechaFactura);              
+                $.ajax({
+                    type: 'get',
+                    url: vurl,                
+                    success: function (data) {
+                        alert(data)
+                        $('#tasaCambio').val(data);                      
+                    }
+                });
+            }
+            
         })
 
         var nit = $('#nit').val();

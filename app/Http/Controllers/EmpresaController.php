@@ -147,7 +147,7 @@ class EmpresaController extends Controller
     {   //dd($id);
         $empresa = Empresa::findOrFail($id);
         //$moneda->fill($request->all());
-        
+        //dd($request->ANULADO);
         
         if ($request->PASSSAP == null) {
             $passwordSap = Empresa::where('id', '=', $id)->pluck('PASSSAP');

@@ -1,6 +1,6 @@
-@if (isset($empresa_id))
-    <input id="EMPRESA_ID" name="EMPRESA_ID" type="hidden" value="{{ $empresa_id }}">
-@endif
+{{--  @if (isset($empresa_id))  --}}
+    <input id="EMPRESA_ID" name="EMPRESA_ID" type="text" value="{{ $empresa_id }}">
+{{--  @endif  --}}
 {!! Form::hidden('CAUSAEXENCION_ID', 1, ['class' => 'form-control']); !!}
 <div class="row form-group">
     <div class="col-md-2 col-md-offset-1">
@@ -16,7 +16,7 @@
 </div>
 <div class="row form-group">
   <div class="col-md-2 col-md-offset-1">
-        {!! Form::label('DESCRIPCION', 'Descripción') !!}
+        {!! Form::label('DESCRIPCION', 'Descripción') !!} 
   </div>
   <div class="col-md-3">
       {!! Form::text('DESCRIPCION', null, ['class' => 'form-control', 'placeholder' => 'Descripción Gasto']); !!}
@@ -404,8 +404,9 @@
         })
 
         $('#cc_exento').click(function() {              
+              var criterio = $('#EMPRESA_ID').val() + '-' + 1              
               vurl = '{{ route('cuentaContableExenta')}}'
-              vurl = vurl.replace('%7Bid%7D', 1);
+              vurl = vurl.replace('%7Bid%7D', criterio);
               //alert(vurl)
               $.ajax({
                   type: 'get',
@@ -447,14 +448,14 @@
           })
 
           $('#cc_afecta').click(function() {
+              var criterio = $('#EMPRESA_ID').val() + '-' + 1
               vurl = '{{ route('cuentaContableAfecta')}}'
-              vurl = vurl.replace('%7Bid%7D', 1);
+              vurl = vurl.replace('%7Bid%7D', criterio);
               //alert(vurl)
               $.ajax({
                   type: 'get',
                   url: vurl,
-                  success: function (data) {
-                    alert(data)
+                  success: function (data) {                    
                       $('#cuenta_afecta').html(data);
                       $('#myModalCa').modal('show')
                   }
@@ -475,8 +476,9 @@
           })
 
           $('#cc_remanente').click(function() {
+              var criterio = $('#EMPRESA_ID').val() + '-' + 1
               vurl = '{{ route('cuentaContableRemanente')}}'
-              vurl = vurl.replace('%7Bid%7D', 1);
+              vurl = vurl.replace('%7Bid%7D', criterio);
               //alert(vurl)
               $.ajax({
                   type: 'get',
@@ -505,8 +507,9 @@
 
           $('#ci_exento').click(function() {
               //alert('que pasa')
+              var criterio = $('#EMPRESA_ID').val() + '-' + 5
               vurl = '{{ route('codigoImpuestoExento')}}'
-              vurl = vurl.replace('%7Bid%7D', 5);
+              vurl = vurl.replace('%7Bid%7D', criterio);
               //alert(vurl)
               $.ajax({
                   type: 'get',
@@ -528,8 +531,9 @@
 
           $('#ci_afecto').click(function() {
               //alert('que pasa')
+              var criterio = $('#EMPRESA_ID').val() + '-' + 5
               vurl = '{{ route('codigoImpuestoAfecto')}}'
-              vurl = vurl.replace('%7Bid%7D', 5);
+              vurl = vurl.replace('%7Bid%7D', criterio);
               //alert(vurl)
               $.ajax({
                   type: 'get',
@@ -552,8 +556,9 @@
 
           $('#ci_remanente').click(function() {
               //alert('que pasa')
+              var criterio = $('#EMPRESA_ID').val() + '-' + 5
               vurl = '{{ route('codigoImpuestoRemanente')}}'
-              vurl = vurl.replace('%7Bid%7D', 5);
+              vurl = vurl.replace('%7Bid%7D', criterio);
 
               $.ajax({
                   type: 'get',

@@ -19,6 +19,9 @@ class WebServiceController extends Controller
      */
     public function getCodeProveedorSap($id)
     {
+        $param = explode('-', $id);
+        $empresaId = $param[0];
+        $listId = $param[1];
 
         $client = new Client([
             'headers' => ['content-type' => 'application-json', 'Accept' => 'application-jsoon'],
@@ -29,9 +32,9 @@ class WebServiceController extends Controller
             'json' => [
                 'key' => 1502934063,
                 'token' => '0a2fd04f2aebaf869aea5e4a3482e427',
-                'companyId' => 1,
+                'companyId' => $empresaId,
                 'requestType' => 1,
-                'listId' => $id,
+                'listId' => $listId,
                 'filter' => ''
             ]
         ]);
@@ -54,6 +57,9 @@ class WebServiceController extends Controller
 
     public function getCuentaContableExenta($id)
     {
+        $param = explode('-', $id);
+        $empresaId = $param[0];
+        $listId = $param[1];
 
         $client = new Client([
             'headers' => ['content-type' => 'application-json', 'Accept' => 'application-jsoon'],
@@ -64,9 +70,9 @@ class WebServiceController extends Controller
             'json' => [
                 'key' => 1502934063,
                 'token' => '0a2fd04f2aebaf869aea5e4a3482e427',
-                'companyId' => 1,
+                'companyId' => $empresaId,
                 'requestType' => 1,
-                'listId' => $id,
+                'listId' => $listId,
                 'filter' => ''
             ]
         ]);
@@ -91,6 +97,9 @@ class WebServiceController extends Controller
 
     public function getCuentaContableAfecta($id)
     {
+        $param = explode('-', $id);
+        $empresaId = $param[0];
+        $listId = $param[1];
 
         $client = new Client([
             'headers' => ['content-type' => 'application-json', 'Accept' => 'application-jsoon'],
@@ -101,9 +110,9 @@ class WebServiceController extends Controller
             'json' => [
                 'key' => 1502934063,
                 'token' => '0a2fd04f2aebaf869aea5e4a3482e427',
-                'companyId' => 1,
+                'companyId' => $empresaId,
                 'requestType' => 1,
-                'listId' => $id,
+                'listId' => $listId,
                 'filter' => ''
             ]
         ]);
@@ -125,6 +134,9 @@ class WebServiceController extends Controller
 
     public function getCuentaContableRemanente($id)
     {
+        $param = explode('-', $id);
+        $empresaId = $param[0];
+        $listId = $param[1];
 
         $client = new Client([
             'headers' => ['content-type' => 'application-json', 'Accept' => 'application-jsoon'],
@@ -135,9 +147,9 @@ class WebServiceController extends Controller
             'json' => [
                 'key' => 1502934063,
                 'token' => '0a2fd04f2aebaf869aea5e4a3482e427',
-                'companyId' => 1,
+                'companyId' => $empresaId,
                 'requestType' => 1,
-                'listId' => $id,
+                'listId' => $listId,
                 'filter' => ''
             ]
         ]);
@@ -159,6 +171,9 @@ class WebServiceController extends Controller
 
     public function getCodigoImpuestoExento($id)
     {
+        $param = explode('-', $id);
+        $empresaId = $param[0];
+        $listId = $param[1];
 
         $client = new Client([
             'headers' => ['content-type' => 'application-json', 'Accept' => 'application-jsoon'],
@@ -169,9 +184,9 @@ class WebServiceController extends Controller
             'json' => [
                 'key' => 1502934063,
                 'token' => '0a2fd04f2aebaf869aea5e4a3482e427',
-                'companyId' => 1,
+                'companyId' => $empresaId,
                 'requestType' => 1,
-                'listId' => $id,
+                'listId' => $listId,
                 'filter' => ''
             ]
         ]);
@@ -192,6 +207,9 @@ class WebServiceController extends Controller
 
     public function getCodigoImpuestoAfecto($id)
     {
+        $param = explode('-', $id);
+        $empresaId = $param[0];
+        $listId = $param[1];
 
         $client = new Client([
             'headers' => ['content-type' => 'application-json', 'Accept' => 'application-jsoon'],
@@ -202,9 +220,9 @@ class WebServiceController extends Controller
             'json' => [
                 'key' => 1502934063,
                 'token' => '0a2fd04f2aebaf869aea5e4a3482e427',
-                'companyId' => 1,
+                'companyId' => $empresaId,
                 'requestType' => 1,
-                'listId' => $id,
+                'listId' => $listId,
                 'filter' => ''
             ]
         ]);
@@ -225,6 +243,9 @@ class WebServiceController extends Controller
 
     public function getCodigoImpuestoRemanente($id)
     {
+        $param = explode('-', $id);
+        $empresaId = $param[0];
+        $listId = $param[1];
 
         $client = new Client([
             'headers' => ['content-type' => 'application-json', 'Accept' => 'application-jsoon'],
@@ -235,9 +256,9 @@ class WebServiceController extends Controller
             'json' => [
                 'key' => 1502934063,
                 'token' => '0a2fd04f2aebaf869aea5e4a3482e427',
-                'companyId' => 1,
+                'companyId' => $empresaId,
                 'requestType' => 1,
-                'listId' => $id,
+                'listId' => $listId,
                 'filter' => ''
             ]
         ]);
@@ -259,8 +280,9 @@ class WebServiceController extends Controller
     public function getCodigoCentroCostoUno($id)
     {
         $param = explode('-', $id);
-        $id = $param[0];
-        $code = $param[1];
+        $empresId = $param[0];
+        $listId = $param[1];
+        $codeId = $param[2];
 
         $client = new Client([
             'headers' => ['content-type' => 'application-json', 'Accept' => 'application-jsoon'],
@@ -271,11 +293,11 @@ class WebServiceController extends Controller
             'json' => [
                 'key' => 1502934063,
                 'token' => '0a2fd04f2aebaf869aea5e4a3482e427',
-                'companyId' => 1,
+                'companyId' => $empresaId,
                 'requestType' => 1,
-                'listId' => $id,
+                'listId' => $listId,
                 'filter' => '',
-                'dimcode' => $code,
+                'dimcode' => $codeId,
                 'active' => 'Y',
             ]
         ]);
@@ -297,8 +319,9 @@ class WebServiceController extends Controller
     public function getCodigoCentroCostoDos($id)
     {
         $param = explode('-', $id);
-        $id = $param[0];
-        $code = $param[1];
+        $empresId = $param[0];
+        $listId = $param[1];
+        $codeId = $param[2];
 
         $client = new Client([
             'headers' => ['content-type' => 'application-json', 'Accept' => 'application-jsoon'],
@@ -309,11 +332,11 @@ class WebServiceController extends Controller
             'json' => [
                 'key' => 1502934063,
                 'token' => '0a2fd04f2aebaf869aea5e4a3482e427',
-                'companyId' => 1,
+                'companyId' => $empresaId,
                 'requestType' => 1,
-                'listId' => $id,
+                'listId' => $listId,
                 'filter' => '',
-                'dimcode' => $code,
+                'dimcode' => $codeId,
                 'active' => 'Y',
             ]
         ]);
@@ -342,8 +365,9 @@ class WebServiceController extends Controller
     public function getCodigoCentroCostoTres($id)
     {
         $param = explode('-', $id);
-        $id = $param[0];
-        $code = $param[1];
+        $empresId = $param[0];
+        $listId = $param[1];
+        $codeId = $param[2];
 
         $client = new Client([
             'headers' => ['content-type' => 'application-json', 'Accept' => 'application-jsoon'],
@@ -354,11 +378,11 @@ class WebServiceController extends Controller
             'json' => [
                 'key' => 1502934063,
                 'token' => '0a2fd04f2aebaf869aea5e4a3482e427',
-                'companyId' => 1,
+                'companyId' => $empresaId,
                 'requestType' => 1,
-                'listId' => $id,
+                'listId' => $listId,
                 'filter' => '',
-                'dimcode' => $code,
+                'dimcode' => $codeId,
                 'active' => 'Y',
             ]
         ]);
@@ -380,8 +404,9 @@ class WebServiceController extends Controller
     public function getCodigoCentroCostoCuatro($id)
     {
         $param = explode('-', $id);
-        $id = $param[0];
-        $code = $param[1];
+        $empresId = $param[0];
+        $listId = $param[1];
+        $codeId = $param[2];
 
         $client = new Client([
             'headers' => ['content-type' => 'application-json', 'Accept' => 'application-jsoon'],
@@ -392,11 +417,11 @@ class WebServiceController extends Controller
             'json' => [
                 'key' => 1502934063,
                 'token' => '0a2fd04f2aebaf869aea5e4a3482e427',
-                'companyId' => 1,
+                'companyId' => $empresaId,
                 'requestType' => 1,
-                'listId' => $id,
+                'listId' => $listId,
                 'filter' => '',
-                'dimcode' => $code,
+                'dimcode' => $codeId,
                 'active' => 'Y',
             ]
         ]);
@@ -418,8 +443,9 @@ class WebServiceController extends Controller
     public function getCodigoCentroCostoCinco($id)
     {
         $param = explode('-', $id);
-        $id = $param[0];
-        $code = $param[1];
+        $empresId = $param[0];
+        $listId = $param[1];
+        $codeId = $param[2];
 
         $client = new Client([
             'headers' => ['content-type' => 'application-json', 'Accept' => 'application-jsoon'],
@@ -430,11 +456,11 @@ class WebServiceController extends Controller
             'json' => [
                 'key' => 1502934063,
                 'token' => '0a2fd04f2aebaf869aea5e4a3482e427',
-                'companyId' => 1,
+                'companyId' => $empresaId,
                 'requestType' => 1,
-                'listId' => $id,
+                'listId' => $listId,
                 'filter' => '',
-                'dimcode' => $code,
+                'dimcode' => $codeId,
                 'active' => 'Y',
             ]
         ]);

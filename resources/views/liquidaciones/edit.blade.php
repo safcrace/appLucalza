@@ -67,7 +67,7 @@
                        </table>
 
                        <div class="text-center">
-                         {{--!!$factura->render()!!--}}
+                         {!! $facturas->render() !!};
                        </div>
                    </div>
                    </div>

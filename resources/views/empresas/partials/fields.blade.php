@@ -10,6 +10,12 @@
       <div class="col-md-2">
           {!! Form::text('CLAVE', null, ['class' => 'form-control', 'placeholder' => 'Código de Empresa']); !!}
       </div>
+      <div class="col-md-2 col-md-offset-2">
+        {!! Form::label('MONEDA_LOCAL', 'Moneda Local') !!}
+      </div>
+      <div class="col-md-1">
+        {!! Form::text('MONEDA_LOCAL', null, ['class' => 'form-control']); !!}
+      </div>  
     </div>
 
     <div class="row form-group">
@@ -20,11 +26,12 @@
           {!! Form::text('DESCRIPCION', null, ['class' => 'form-control', 'placeholder' => 'Nombre de Empresa']); !!}
       </div>
 
-      <div class="col-md-1">
-            {!! Form::label('MONEDA_ID', 'Moneda') !!}
+      <div class="col-md-2">
+            {!! Form::label('MONEDA_SYS', 'Moneda Extranjera') !!} {{--ANTERIORMENTE MONEDA_ID --}}
       </div>
-      <div class="col-md-3">
-          {!! Form::select('MONEDA_ID', $moneda, null, ['class' => 'form-control', 'placeholder' => 'Seleccione Moneda']); !!}
+      <div class="col-md-1">
+        {!! Form::text('MONEDA_SYS', null, ['class' => 'form-control']); !!}
+          {{--  {!! Form::select('MONEDA_ID', $moneda, null, ['class' => 'form-control', 'placeholder' => 'Seleccione Moneda']); !!}  --}}
       </div>
     </div>
 
@@ -53,13 +60,33 @@
       <div class="col-md-2">
             {!! Form::label('ANULADO', 'Estatus') !!}
       </div>
-      <div class="col-md-1">          
-        <input name="ANULADO" type="radio" value="1" checked="cheked" >
-        Activo
-      </div>
-      <div class="col-md-2">
-          <input name="ANULADO"  type="radio" value="0" >  Inactivo
-      </div>
+      @if(isset($empresa->ANULADO))
+        @if($empresa->ANULADO == 1)
+          <div class="col-md-1">          
+            <input name="ANULADO" type="radio" value="1" checked=true >
+            Activo
+          </div>
+          <div class="col-md-2">
+              <input name="ANULADO"  type="radio" value="0" >  Inactivo
+          </div>
+        @else
+          <div class="col-md-1">          
+            <input name="ANULADO" type="radio" value="1">
+            Activo
+          </div>
+          <div class="col-md-2">
+              <input name="ANULADO"  type="radio" value="0" checked=false >  Inactivo
+          </div>
+        @endif
+      @else
+        <div class="col-md-1">          
+          <input name="ANULADO" type="radio" value="1" checked=true >
+          Activo
+        </div>
+        <div class="col-md-2">
+            <input name="ANULADO"  type="radio" value="0" >  Inactivo
+        </div>
+      @endif
     </div>
 
 
@@ -202,6 +229,7 @@
               $('#PASSSQL').attr("type", 'password')
             }            
         })
+        $('#SERVIDORSQL').
     });
 </script>
 @endpush
