@@ -57,7 +57,11 @@ class ProveedorController extends Controller
              ->where('cat_empresa.ID', '=',  $empresa_id)
              ->first();
 
-         return view('proveedores.create', compact('empresa_id', 'tipoProveedor', 'moneda'));
+        $monedaEmpresa = Empresa::select('MONEDA_LOCAL','MONEDA_SYS')->where('ID', '=', $empresa_id)->first();
+
+        //dd($monedaEmpresa);
+
+         return view('proveedores.create', compact('empresa_id', 'tipoProveedor', 'monedaEmpresa'));
      }
 
     /**
@@ -77,7 +81,7 @@ class ProveedorController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(CreateProveedorRequest $request)
-    {
+    {   
         if(! isset($request->TIPOPROVEDOR_ID)) {
             $tipoProveedorId = 1;
         }
@@ -152,9 +156,12 @@ class ProveedorController extends Controller
             ->where('cat_empresa.ID', '=',  $proveedor->EMPRESA_ID)
             ->first();           
 
+        $monedaEmpresa = Empresa::select('MONEDA_LOCAL','MONEDA_SYS')->where('ID', '=', $proveedor->EMPRESA_ID)->first();
+
+
         $tipoProveedor = TipoProveedor::lists('DESCRIPCION', 'ID')->toArray();
 
-        return view('proveedores.edit', compact('proveedor', 'moneda', 'tipoProveedor'));
+        return view('proveedores.edit', compact('proveedor', 'monedaEmpresa', 'tipoProveedor'));
     }
 
     /**

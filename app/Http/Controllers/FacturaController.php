@@ -139,6 +139,8 @@ dd($resultado);
              ->where('cat_empresa.ID', '=',  $empresa_id)
              ->first();
 
+        $monedaEmpresa = Empresa::select('MONEDA_LOCAL','MONEDA_SYS')->where('ID', '=', $empresa_id)->first();
+
          $fechaFactura = null;
 
          $tipoDocumento = TipoDocumento::lists('DESCRIPCION', 'ID')->toArray();
@@ -146,7 +148,7 @@ dd($resultado);
         // $factura->CANTIDAD_PORCENTAJE_CUSTOM = null;
 
 
-         return view('facturas.create', compact('liquidacion_id', 'tipoGasto', 'proveedor', 'moneda', 'fechaFactura', 'tipoProveedor',
+         return view('facturas.create', compact('liquidacion_id', 'tipoGasto', 'proveedor', 'monedaEmpresa', 'fechaFactura', 'tipoProveedor',
                     'tipoDocumento', 'tipoLiquidacion', 'subcategoria', 'presupuesto'));
      }
 
@@ -159,13 +161,14 @@ dd($resultado);
     public function store(CreateFacturaRequest $request)
     {   
         $factura = new Factura();
-
-        if ($request->FMONEDA_ID == 2) {            
+//dd($request->all());
+        if (trim($request->FMONEDA_ID) == 'USD') {            
             $montoConversion = round(($request->TOTAL * $request->TASA_CAMBIO), 4);
+            //dd($montoConversion);
         } else {
             $montoConversion = $request->TOTAL * 1;
         }
-        
+  
         //dd($montoConversion);
         /** Procesa Imagen **/
 
@@ -461,6 +464,9 @@ dd($resultado);
         if ($request->CANTIDAD_PORCENTAJE_CUSTOM == '') {
             $request->CANTIDAD_PORCENTAJE_CUSTOM = 0.00;
         } 
+        if($request->TASA_CAMBIO == '') {            
+            $request->TASA_CAMBIO = 1.00;
+        }
 
         //dd('Este es el Pago Parcial: ' . $saldoParcial . ' y este el Remanente: ' . $remanente);
 
@@ -469,7 +475,7 @@ dd($resultado);
         $factura->LIQUIDACION_ID = $request->LIQUIDACION_ID;
         $factura->TIPOGASTO_ID = $request->TIPOGASTO_ID;
         $factura->DETPRESUPUESTO_ID = $detallePresupuesto->ID;
-        $factura->MONEDA_ID = $request->MONEDA_ID;
+        $factura->MONEDA_ID = $request->FMONEDA_ID;
         $factura->PROVEEDOR_ID = $request->PROVEEDOR_ID;
         $factura->CAUSAEXENCION_ID = 1;
         $factura->SERIE = $request->SERIE;
@@ -530,7 +536,7 @@ dd($resultado);
         $tipoLiquidacion = $param[2];
         $factura = Factura::findOrFail($factura_id);
 
-
+//dd($factura);
         $subcategoria = SubcategoriaTipoGasto::where('ANULADO', '=', 0)->lists('DESCRIPCION', 'ID')->toArray();
         $fechas =  Liquidacion::select('liq_liquidacion.FECHA_INICIO', 'liq_liquidacion.FECHA_FINAL')
             ->where('liq_liquidacion.ID', '=', $liquidacion_id)
@@ -557,6 +563,8 @@ dd($resultado);
             ->where('cat_empresa.ID', '=',  $empresa_id)
             ->first();
 
+        $monedaEmpresa = Empresa::select('MONEDA_LOCAL','MONEDA_SYS')->where('ID', '=', $empresa_id)->first();
+
         $fechaFactura = $factura->FECHA_FACTURA;
 
         $factura->EMAIL = Auth::user()->email;
@@ -573,7 +581,7 @@ dd($resultado);
             ->first();
             
 
-        return view('facturas.edit', compact('factura', 'tipoGasto', 'proveedor', 'moneda', 'fechaFactura', 'tipoProveedor', 'liquidacion_id', 'tipoDocumento',
+        return view('facturas.edit', compact('factura', 'tipoGasto', 'proveedor', 'monedaEmpresa', 'fechaFactura', 'tipoProveedor', 'liquidacion_id', 'tipoDocumento',
                     'tipoLiquidacion', 'presupuesto', 'subcategoria'));
     }
 
@@ -586,8 +594,15 @@ dd($resultado);
      */
     public function update(EditFacturaRequest $request, $id)
     {
-
+//dd($request->all());
         $factura = Factura::findOrFail($id);
+
+        if (trim($request->FMONEDA_ID) == 'USD') {            
+            $montoConversion = round(($request->TOTAL * $request->TASA_CAMBIO), 4);
+            //dd($montoConversion);
+        } else {
+            $montoConversion = $request->TOTAL * 1;
+        }
         //Se valida que fecha no sea anterior a X días programados por la empresa y dentro de Período de Liquidación
 
         $empresa = Session::get('loginEmpresa');
@@ -843,7 +858,7 @@ dd($resultado);
                 } 
         
         Factura::where('ID', $id)
-                ->update(['TIPOGASTO_ID' => $request->TIPOGASTO_ID, 'MONEDA_ID' => $request->MONEDA_ID, 'PROVEEDOR_ID' => $request->PROVEEDOR_ID, 
+                ->update(['TIPOGASTO_ID' => $request->TIPOGASTO_ID, 'MONEDA_ID' => $request->SENDER_ID, 'PROVEEDOR_ID' => $request->PROVEEDOR_ID, 
                           'KILOMETRAJE_INICIAL' => $request->KM_INICIO, 'KILOMETRAJE_FINAL' => $request->KM_FINAL, 'CORRECCION' => 0,
                           'SERIE' => $request->SERIE, 'NUMERO' => $request->NUMERO, 'FECHA_FACTURA' => $request->FECHA_FACTURA, 'TOTAL' => $montoConversion, 
                           'CANTIDAD_PORCENTAJE_CUSTOM' => $request->CANTIDAD_PORCENTAJE_CUSTOM, 'COMENTARIO_PAGO' => $request->COMENTARIO_PAGO, 

@@ -90,8 +90,7 @@
         });
 
         $('#proveedorSap').click(function() {
-            var criterio = $('#empresa').val() + '-' + 2
-            alert(criterio)
+            var criterio = $('#empresa').val() + '-' + 2            
             vurl = '{{ route('codigoProveedorSap')}}'
             vurl = vurl.replace('%7Bid%7D', criterio);
             $.ajax({
@@ -109,7 +108,22 @@
                 $('#descripcion_proveedorsap').val(descripcion_proveedorSap)
             })            
         })
-        
+
+        $('#codigoSap').click(function() {            
+            var criterio = $('#empresa').val() + '-' +  $('#usuario option:selected').text()            
+                        
+            vurl = '{{ route('codigoUsuario')}}'
+            vurl = vurl.replace('%7Bid%7D', criterio);          
+            $.ajax({
+                type: 'get',
+                url: vurl,
+                success: function (data) {
+                    $('#selectCodigo').empty().html(data);
+                    $('#selectCodigo').show()
+                    $('#textoCodigo').remove()
+                }
+            });
+        })
 
 
     });

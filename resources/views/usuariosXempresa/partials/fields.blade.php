@@ -46,7 +46,23 @@
 
               <div class="col-md-1 col-md-offset-1">
                   <span class="glyphicon glyphicon-import" aria-hidden="true" id="proveedorSap" style="cursor: pointer"></span>
-              </div>
+              </div>              
+          </div>
+          <div class="row form-group">
+                <div class="col-md-3">
+                    {!! Form::label('ID_USERSAP', 'Código Usuario SAP') !!}
+                </div>
+                <div class="col-md-3" id="textoCodigo">
+                    @if(isset($id_usersap))
+                    {!! Form::text('id_usersap', $id_usersap, ['class' => 'form-control', 'placeholder' => 'Código Usuario', 'disabled']); !!}
+                    @else
+                    {!! Form::text('id_usersap', null, ['class' => 'form-control', 'placeholder' => 'Código Usuario', 'disabled']); !!}
+                    @endif
+                </div>
+                <div class="col-md-3" id="selectCodigo" style="display: none"></div>
+                <div class="col-md-1 col-md-offset-1">
+                    <span class="glyphicon glyphicon-import" aria-hidden="true" id="codigoSap" style="cursor: pointer"></span>
+                </div>
           </div>
           {!! Form::hidden('DESCRIPCION_PROVEEDORSAP', null, ['class' => 'form-control', 'id' => 'descripcion_proveedorsap']); !!}
 

@@ -17,11 +17,17 @@
   <div class="col-md-2 col-md-offset-2">
         {!! Form::label('MONEDA_ID', 'Moneda') !!}
   </div>
-  <div class="col-md-2">
+  {{--  <div class="col-md-2">
     {!! Form::radio('MONEDA_ID', $moneda->ID, true); !!}  {{ $moneda->DESCRIPCION }}
   </div>
   <div class="col-md-2">
     {!! Form::radio('MONEDA_ID', 1); !!}  DOLAR
+  </div>  --}}
+  <div class="col-md-2 ">
+    {!! Form::radio('MONEDA_ID', $monedaEmpresa->MONEDA_LOCAL, true); !!}  {{ $monedaEmpresa->MONEDA_LOCAL }}
+  </div>
+  <div class="col-md-2">
+    {!! Form::radio('MONEDA_ID', $monedaEmpresa->MONEDA_SYS, false); !!}  {{ $monedaEmpresa->MONEDA_SYS }}
   </div>
 </div>
 

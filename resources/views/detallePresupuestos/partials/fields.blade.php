@@ -201,8 +201,7 @@
                 $.ajax({
                     type: 'get',
                     url: vurl,
-                    success: function (data) {
-                        alert(data)
+                    success: function (data) {                        
                         $('#tipoAsignacion').html(data);                        
 
                     }

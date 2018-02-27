@@ -147,7 +147,9 @@ class TipoGastoController extends Controller
 
       $grupo = GrupoTipoGasto::lists('DESCRIPCION', 'ID')->toArray();
 
-      return view('tipoGastos.edit', compact('tipoGasto', 'grupo', 'subcategoriaTipoGasto'));
+      $empresa_id = $tipoGasto->EMPRESA_ID;
+
+      return view('tipoGastos.edit', compact('tipoGasto', 'grupo', 'subcategoriaTipoGasto', 'empresa_id'));
     }
 
     /**

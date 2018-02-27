@@ -177,7 +177,7 @@ class UsuarioController extends Controller
         $usuario->password = bcrypt($request->password);
         $usuario->tel_codpais = $request->tel_codpais;
         $usuario->telefono = $request->telefono;
-        //$usuario->codigoProveedorSap = $request->codigoProveedorSap;
+        //$usuario->usersap_id = $request->usersap_id;
         $usuario->activo = $request->activo;
         $usuario->anulado = $request->anulado;
 
@@ -300,8 +300,8 @@ class UsuarioController extends Controller
     public function storeUsuarioEmpresa(Request $request)
     {      
         //dd($request->all());
-        if(($request->EMPRESA_ID === '') || ($request->DESCRIPCION_PROVEEDORSAP === '')) {
-            Session::flash('validaUsuarioEmpresa', '¡Los campos Empresa y Código Proveedor SAP son Obligatorios!');
+        if(($request->EMPRESA_ID === '') || ($request->DESCRIPCION_PROVEEDORSAP === '') || ($request->usersap_id === '')) {
+            Session::flash('validaUsuarioEmpresa', '¡Los campos Empresa, Código Proveedor SAP y Código Usuario SAP son Obligatorios!');
             return back()->withInput();
         }
 
@@ -331,6 +331,7 @@ class UsuarioController extends Controller
                 $usuarioEmpresa->USER_ID = $request->USUARIO_ID;
                 $usuarioEmpresa->EMPRESA_ID = $request->EMPRESA_ID;
                 $usuarioEmpresa->CODIGO_PROVEEDOR_SAP = $request->codigoProveedorSap;
+                $usuarioEmpresa->usersap_id = $request->usersap_id;
                 $usuarioEmpresa->DESCRIPCION_PROVEEDORSAP = $request->DESCRIPCION_PROVEEDORSAP;
                 $usuarioEmpresa->ANULADO = 0;
     
@@ -395,9 +396,9 @@ class UsuarioController extends Controller
     public function edit($id)
     {
         $usuario = User::findOrFail($id);
+        $id_usersap = $usuario->usersap_id;        
 
-
-        return view('usuarios.edit', compact('usuario'));
+        return view('usuarios.edit', compact('usuario', 'id_usersap'));
     }
 
     /**
@@ -425,7 +426,7 @@ class UsuarioController extends Controller
 
         User::where('ID', $usuario_id)
                 ->update(['nombre' => $request->nombre, 'email' => $request->email, 'tel_codpais' => $request->tel_codpais, 'password' => $password,
-                          'telefono' => $request->telefono, 'activo' => $request->activo, 'anulado' => $request->anulado]);
+                          'telefono' => $request->telefono, 'activo' => $request->activo, /*'usersap_id' => $request->ID_USERSAP,*/ 'anulado' => $request->anulado]);
 
         return redirect::to('usuarios');
     }

@@ -73,7 +73,7 @@ class EmpresaController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(CreateEmpresaRequest $request)
-    {
+    {   
         /** Se verifica que no exista Codigo de Empresa */
         $existeCodigo = Empresa::select('ID')->where('CLAVE', '=', $request->CLAVE)->first();
         
@@ -85,7 +85,7 @@ class EmpresaController extends Controller
         $empresa = new Empresa();
         $empresa->CLAVE = $request->CLAVE;
         $empresa->DESCRIPCION = $request->DESCRIPCION;
-        $empresa->MONEDA_ID = $request->MONEDA_ID;
+        $empresa->MONEDA_ID = 1;
         $empresa->IMPUESTO = $request->IMPUESTO;
         $empresa->ANULADO = $request->ANULADO;
         $empresa->LICENSESERVER = $request->LICENSESERVER;
@@ -103,7 +103,8 @@ class EmpresaController extends Controller
 
         $empresa->save();
 
-        return redirect::to('empresas');
+        return redirect::to('webservice/monedasEmpresa/' . $empresa->id);
+
     }
 
     /**
@@ -161,12 +162,13 @@ class EmpresaController extends Controller
         } else {
             $passwordSql = bcrypt($request->PASSSQL);
         }
+        
 
         Empresa::where('ID', $empresa->ID)
           ->update(['CLAVE' => $request->CLAVE, 'DESCRIPCION' => $request->DESCRIPCION, 'ANULADO' => $request->ANULADO, 'LICENSESERVER' => $request->LICENSESERVER,
                     'TIEMPOATRASO_RUTAS' => $request->TIEMPOATRASO_RUTAS, 'TIEMPOATRASO_OTROSGASTOS' => $request->TIEMPOATRASO_OTROSGASTOS, 'USERSAP' => $request->USERSAP,
                     'PASSSAP' => $passwordSap, 'DBSAP' => $request->DBSAP, 'USERSQL' => $request->USERSQL, 'PASSSQL' => $passwordSql,
-                    'SERVIDORSQL' => $request->SERVIDORSQL, 'ID_DATASERVERTYPE' => $request->ID_DATASERVERTYPE, 'MONEDA_ID' => $request->MONEDA_ID,
+                    'SERVIDORSQL' => $request->SERVIDORSQL, 'ID_DATASERVERTYPE' => $request->ID_DATASERVERTYPE, 'MONEDA_ID' => 1,
                     'IMPUESTO' => $request->IMPUESTO, 'FILAS_NOTA_CREDITO' => $request->FILAS_NOTA_CREDITO]);
 
         return Redirect::to('empresas');

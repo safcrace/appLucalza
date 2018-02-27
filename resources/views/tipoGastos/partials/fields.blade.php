@@ -1,5 +1,5 @@
 {{--  @if (isset($empresa_id))  --}}
-    <input id="EMPRESA_ID" name="EMPRESA_ID" type="text" value="{{ $empresa_id }}">
+    <input id="EMPRESA_ID" name="EMPRESA_ID" type="hidden" value="{{ $empresa_id }}">
 {{--  @endif  --}}
 {!! Form::hidden('CAUSAEXENCION_ID', 1, ['class' => 'form-control']); !!}
 <div class="row form-group">

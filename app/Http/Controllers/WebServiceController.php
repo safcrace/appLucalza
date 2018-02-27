@@ -2,13 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use App\CuentasContables;
-use Illuminate\Http\Request;
+use App\User;
+use App\Empresa;
 
 use App\Http\Requests;
-use App\Http\Controllers\Controller;
 use GuzzleHttp\Client;
+use App\CuentasContables;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Redirect;
 
 class WebServiceController extends Controller
 {
@@ -280,7 +283,8 @@ class WebServiceController extends Controller
     public function getCodigoCentroCostoUno($id)
     {
         $param = explode('-', $id);
-        $empresId = $param[0];
+        //dd($param[0]);
+        $empresaId = $param[0];
         $listId = $param[1];
         $codeId = $param[2];
 
@@ -319,7 +323,7 @@ class WebServiceController extends Controller
     public function getCodigoCentroCostoDos($id)
     {
         $param = explode('-', $id);
-        $empresId = $param[0];
+        $empresaId = $param[0];
         $listId = $param[1];
         $codeId = $param[2];
 
@@ -365,7 +369,7 @@ class WebServiceController extends Controller
     public function getCodigoCentroCostoTres($id)
     {
         $param = explode('-', $id);
-        $empresId = $param[0];
+        $empresaId = $param[0];
         $listId = $param[1];
         $codeId = $param[2];
 
@@ -404,7 +408,7 @@ class WebServiceController extends Controller
     public function getCodigoCentroCostoCuatro($id)
     {
         $param = explode('-', $id);
-        $empresId = $param[0];
+        $empresaId = $param[0];
         $listId = $param[1];
         $codeId = $param[2];
 
@@ -443,7 +447,7 @@ class WebServiceController extends Controller
     public function getCodigoCentroCostoCinco($id)
     {
         $param = explode('-', $id);
-        $empresId = $param[0];
+        $empresaId = $param[0];
         $listId = $param[1];
         $codeId = $param[2];
 
@@ -519,4 +523,106 @@ class WebServiceController extends Controller
         return round($valor, 2);
 
     }
+
+    public function getMonedasEmpresa($id)
+    {
+        $client = new Client([
+            'headers' => ['content-type' => 'application-json', 'Accept' => 'application-jsoon'],
+        ]);
+
+
+        $response = $client->request('POST', 'http://pcidmsserver.cloudapp.net:8080/lucalza/ws/', [
+            'json' => [
+                'key' => 1502934063,
+                'token' => '0a2fd04f2aebaf869aea5e4a3482e427',
+                'companyId' => $id,
+                'requestType' => 1,
+                'listId' => 7,
+                'filter' => ''                
+            ]
+        ]);
+
+        $data = json_decode($response->getBody(), true);
+
+
+        $filas = $data['nrows'];
+
+        $codigos = [];
+        
+        foreach ($data['data'] as $a => $b) {
+            $codigos[] = $b['local_currency'];
+            $codigos[] = $b['sys_currency'];
+        }        
+
+        Empresa::where('ID', $id)
+          ->update(['MONEDA_LOCAL' => $codigos[0], 'MONEDA_SYS' => $codigos[1]]);      
+        
+
+        return redirect::to('empresas');
+
+    }
+
+    public function getCodigoUsuario($id)
+    {
+        /* $empresa = User::select('cat_empresa.ID as ID')
+        ->join('cat_usuarioempresa', 'cat_usuarioempresa.USER_ID', '=', 'users.id')
+        ->join('cat_empresa', 'cat_empresa.ID', '=', 'cat_usuarioempresa.EMPRESA_ID')
+        ->where('users.nombre', '=', $id)
+        ->where('users.activo', '=', 1) 
+        ->where('cat_usuarioempresa.ANULADO', '=', 0)                               
+        ->first();
+
+        if ($empresa) {            
+            $empresaId = $empresa->ID;
+            $filtro = 'Carlos Pérez';
+        } else {
+            $combo = '<select class="form-control" id="usersap_id" name="usersap_id">';            
+                $combo .=  '<option value="00">Usuario no asociado a Empresa</option>';            
+            $combo .= '</select>';    
+            return $combo;            
+        } */
+
+        $param = explode('-', $id);
+        $empresaId = $param[0];
+        $filtro = $param[1];
+
+        
+        $client = new Client([
+            'headers' => ['content-type' => 'application-json', 'Accept' => 'application-jsoon'],
+        ]);
+
+
+        $response = $client->request('POST', 'http://pcidmsserver.cloudapp.net:8080/lucalza/ws/', [
+            'json' => [
+                'key' => 1502934063,
+                'token' => '0a2fd04f2aebaf869aea5e4a3482e427',
+                'companyId' => $empresaId,
+                'requestType' => 1,
+                'listId' => 6,
+                'filter' => /*'Carlos Pérez'*/$filtro                
+            ]
+        ]);
+
+        $data = json_decode($response->getBody(), true);
+
+
+        $filas = $data['nrows'];
+
+        if($filas == 0) {
+            $combo = '<select class="form-control" id="usersap_id" name="usersap_id">';            
+                $combo .=  '<option value="00">SIN RESULTADOS</option>';            
+            $combo .= '</select>';    
+            return $combo;
+        }
+
+        $combo = '<select class="form-control" id="usersap_id" name="usersap_id">';
+        foreach ($data['data'] as $a => $b) {
+            $combo .=  '<option value="' . $b['code'] . '">' . $b['name'] . '</option>';
+        }
+        $combo .= '</select>';
+
+        return $combo;
+
+    }
+
 }

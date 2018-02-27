@@ -63,28 +63,28 @@
       @if(isset($empresa->ANULADO))
         @if($empresa->ANULADO == 1)
           <div class="col-md-1">          
-            <input name="ANULADO" type="radio" value="1" checked=true >
+            <input name="ANULADO" type="radio" value="0" >
             Activo
           </div>
           <div class="col-md-2">
-              <input name="ANULADO"  type="radio" value="0" >  Inactivo
+              <input name="ANULADO"  type="radio" value="1" checked=true>  Inactivo
           </div>
         @else
           <div class="col-md-1">          
-            <input name="ANULADO" type="radio" value="1">
+            <input name="ANULADO" type="radio" value="0" checked=true>
             Activo
           </div>
           <div class="col-md-2">
-              <input name="ANULADO"  type="radio" value="0" checked=false >  Inactivo
+              <input name="ANULADO"  type="radio" value="1" >  Inactivo
           </div>
         @endif
       @else
         <div class="col-md-1">          
-          <input name="ANULADO" type="radio" value="1" checked=true >
+          <input name="ANULADO" type="radio" value="0" checked=true >
           Activo
         </div>
         <div class="col-md-2">
-            <input name="ANULADO"  type="radio" value="0" >  Inactivo
+            <input name="ANULADO"  type="radio" value="1" >  Inactivo
         </div>
       @endif
     </div>
@@ -229,7 +229,16 @@
               $('#PASSSQL').attr("type", 'password')
             }            
         })
-        $('#SERVIDORSQL').
+        
+        $('#MONEDA_LOCAL').focus(function() {
+          alert('Este campo es únicamente Administrado por el Sistema')
+          $('#CLAVE').focus()
+        })
+
+        $('#MONEDA_SYS').focus(function() {
+          alert('Este campo es únicamente Administrado por el Sistema')
+          $('#CLAVE').focus()
+        })
     });
 </script>
 @endpush

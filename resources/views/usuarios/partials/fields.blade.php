@@ -63,11 +63,11 @@
     </div>
 
 
-    <div class="row form-group">
-      <div class="col-md-2 col-md-offset-1">
+    <div class="row form-group">      
+      <div class="col-md-1 col-md-offset-1">
             {!! Form::label('activo', 'Estatus') !!}
       </div>
-      <div class="col-md-1">          
+      <div class="col-md-1 col-md-offset-1">          
            <input name="activo" type="radio" value="1" checked="cheked" >
            Activo
       </div>
@@ -98,6 +98,13 @@
               $('#password').attr("type", 'password')
             }            
         })
+        
+/*
+          $('#pro_sap').on('change', '#codigoProveedorSap', function() {                
+              var descripcion_proveedorSap = $('#codigoProveedorSap option:selected').text()
+              $('#descripcion_proveedorsap').val(descripcion_proveedorSap)
+          })   */         
+      })
     });
 </script>
 @endpush

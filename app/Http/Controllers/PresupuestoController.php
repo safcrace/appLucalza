@@ -134,6 +134,8 @@ class PresupuestoController extends Controller
             ->lists('cat_ruta.DESCRIPCION', 'cat_ruta.ID')
             ->toArray();
 
+        $monedaEmpresa = Empresa::select('MONEDA_LOCAL','MONEDA_SYS')->where('ID', '=', $empresa_id)->first();
+
         /*$combos = Presupuesto::select('pre_presupuesto.ID as ID', 'users.id as USUARIO', 'cat_ruta.ID as RUTA', 'cat_empresa.ID as EMPRESA')
                                       ->join('cat_usuarioruta', 'cat_usuarioruta.ID', '=', 'pre_presupuesto.USUARIORUTA_ID')
                                       ->join('users', 'users.id', '=', 'cat_usuarioruta.USER_ID')
@@ -151,7 +153,7 @@ class PresupuestoController extends Controller
         }
 
 
-        return view('presupuestos.create', compact('usuarios', 'rutas', 'moneda', 'vigenciaInicio', 'vigenciaFinal', 'tipoGasto', 'rutaPresupuesto'));
+        return view('presupuestos.create', compact('usuarios', 'rutas', 'monedaEmpresa', 'vigenciaInicio', 'vigenciaFinal', 'tipoGasto', 'rutaPresupuesto'));
         /*dd($id);
         $empresa_id = Session::get('empresa');
 
@@ -316,6 +318,8 @@ class PresupuestoController extends Controller
             ->where('cat_empresa.ID', '=',  $empresa_id)
             ->first();
 
+        $monedaEmpresa = Empresa::select('MONEDA_LOCAL','MONEDA_SYS')->where('ID', '=', $empresa_id)->first();
+
         $vigenciaInicio = null;
         $vigenciaFinal = null;
 
@@ -325,7 +329,7 @@ class PresupuestoController extends Controller
             $rutaPresupuesto = 'indexPresupuestoOtrosGastos';
         }
 
-        return view('presupuestos.create', compact('usuario_id', 'usuarios', 'rutas', 'moneda', 'vigenciaInicio', 'vigenciaFinal', 'tipoGasto', 'rutaPresupuesto'));
+        return view('presupuestos.create', compact('usuario_id', 'usuarios', 'rutas', 'monedaEmpresa', 'vigenciaInicio', 'vigenciaFinal', 'tipoGasto', 'rutaPresupuesto'));
     }
 
     /**
@@ -350,6 +354,8 @@ class PresupuestoController extends Controller
             ->join('cat_moneda', 'cat_moneda.ID', '=', 'cat_empresa.MONEDA_ID')
             ->where('cat_empresa.ID', '=',  $empresa_id)
             ->first();
+
+        $monedaEmpresa = Empresa::select('MONEDA_LOCAL','MONEDA_SYS')->where('ID', '=', $empresa_id)->first();
 
 
             $usuarios = User::join('cat_usuarioempresa', 'cat_usuarioempresa.USER_ID', '=', 'users.id')
@@ -415,7 +421,7 @@ class PresupuestoController extends Controller
         $tasaCambio = TasaCambio::select('cat_tasacambio.ID', 'cat_tasacambio.MONEDA_ID', 'cat_tasacambio.FECHA', 'cat_tasacambio.COMPRA', 'cat_tasacambio.VENTA', 'cat_tasacambio.PROMEDIO', 'cat_tasacambio.ANULADO')
                                   ->where('cat_tasacambio.MONEDA_ID', '=', $id)->paginate(4);*/
 
-        return view('presupuestos.edit', compact('presupuesto', 'usuarios', 'rutas', 'usuario_id', 'ruta_id', 'detallePresupuestos', 'moneda', 'vigenciaInicio', 'vigenciaFinal', 'tipoGasto', 'rutaPresupuesto'));
+        return view('presupuestos.edit', compact('presupuesto', 'usuarios', 'rutas', 'usuario_id', 'ruta_id', 'detallePresupuestos', 'monedaEmpresa', 'vigenciaInicio', 'vigenciaFinal', 'tipoGasto', 'rutaPresupuesto'));
     }
 
     /**

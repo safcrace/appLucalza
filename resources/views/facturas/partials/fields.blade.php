@@ -6,7 +6,7 @@
 {!! Form::hidden('PRESUPUESTO_ID', $presupuesto->ID) !!}
 {!! Form::hidden('TIPO_LIQUIDACION', $tipoLiquidacion) !!}
 {!! Form::hidden('TASA_CAMBIO', null, ['id' => 'tasaCambio']) !!}
-{!! Form::hidden('MONEDA_ID', $moneda->ID, ['id' => 'idMoneda']) !!}
+{!! Form::hidden('MONEDA_ID', $monedaEmpresa->LOCAL, ['id' => 'idMoneda']) !!}
 {!! Form::hidden('CATEGORIA_GASTO', 'Parametro', ['id' => 'categoriaGasto']) !!}
 {!! Form::hidden('SUBCATEGORIA_GASTO', 'Parametro', ['id' => 'subCategoriaGasto']) !!}
 @if (isset($factura))
@@ -59,12 +59,37 @@
         <div class="col-md-2 col-md-offset-1">
             {!! Form::label('FMONEDA_ID', 'Moneda') !!}
         </div>
-        <div class="col-md-2">
+        {{--  <div class="col-md-2">
             {!! Form::radio('FMONEDA_ID', $moneda->ID, true); !!}  {{ $moneda->DESCRIPCION }}
         </div>
         <div class="col-md-1">
             {!! Form::radio('FMONEDA_ID', 2); !!}  Dólar
-        </div>
+        </div>  --}}
+        @if(isset($factura->MONEDA_ID))
+            @if(trim($factura->MONEDA_ID) == 'QTZ')                
+                <div class="col-md-1 ">
+                    {!! Form::radio('FMONEDA_ID', $monedaEmpresa->MONEDA_LOCAL, true); !!}  {{ $monedaEmpresa->MONEDA_LOCAL }}
+                </div>
+                <div class="col-md-2">
+                    {!! Form::radio('FMONEDA_ID', $monedaEmpresa->MONEDA_SYS, false); !!}  {{ $monedaEmpresa->MONEDA_SYS }}
+                </div>
+            @else 
+            {{ $factura->MONEDA_ID }}
+            <div class="col-md-1 ">
+                    {!! Form::radio('FMONEDA_ID', $monedaEmpresa->MONEDA_LOCAL, false); !!}  {{ $monedaEmpresa->MONEDA_LOCAL }}
+                </div>
+                <div class="col-md-2">
+                    {!! Form::radio('FMONEDA_ID', $monedaEmpresa->MONEDA_SYS, true); !!}  {{ $monedaEmpresa->MONEDA_SYS }}
+                </div>
+            @endif
+        @else
+            <div class="col-md-1 ">
+                {!! Form::radio('FMONEDA_ID', $monedaEmpresa->MONEDA_LOCAL, true); !!}  {{ $monedaEmpresa->MONEDA_LOCAL }}
+            </div>
+            <div class="col-md-2">
+                {!! Form::radio('FMONEDA_ID', $monedaEmpresa->MONEDA_SYS, false); !!}  {{ $monedaEmpresa->MONEDA_SYS }}
+            </div>
+        @endif
 
         <div class="col-md-2 ">
             {!! Form::label('FOTO', 'Imagen Factura') !!}
@@ -372,7 +397,9 @@
 
         $('#TOTAL').blur(function() {            
             var idMoneda = $("#idMoneda").val()
-            if(idMoneda == 2) {
+            idMoneda = idMoneda.trim()
+           
+            if(idMoneda == 'USD') {
 
                 var fechaFactura = $("#FECHA_FACTURA").val()
                 vurl = '{{ route('tasaCambio')}}'            
