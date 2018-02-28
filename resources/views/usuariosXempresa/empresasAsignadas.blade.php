@@ -1,6 +1,6 @@
 <div class="panel panel-primary">
     <div class="panel-heading panel-title" style="height: 65px">Empresas Asignadas
-        <button type="button" class="btn btn-default" style="border-color: white; float: right" data-toggle="modal" data-target="#myModal"><a href="#" title="Agregar"><span class="glyphicon glyphicon-plus-sign" aria-hidden="true" style="font-size:32px; color: black"></span></a></button>
+        {{--  <button type="button" class="btn btn-default" style="border-color: white; float: right" id="nathalia"><span class="glyphicon glyphicon-plus-sign" aria-hidden="true" style="font-size:32px; color: black"></span></button>  --}}
     </div>
 
     <div class="panel-body">
@@ -9,6 +9,7 @@
             <thead>
             <th class="text-center">Empresa</th>
             <th class="text-center">Código Proveedor SAP</th>
+            <th class="text-center">Código Usuario SAP</th>
             <th class="text-center">Estado</th>
             <th class="text-center">Anular</th>
             </thead>
@@ -18,7 +19,7 @@
                 <tr>
                     <td>{{ $empresa->DESCRIPCION }}</td>
                     <td>{{ $empresa->DESCRIPCION_PROVEEDORSAP }}</td>
-                    {{--  <td>{{ $empresa->DESCRIPCION }}</td>  --}}
+                    <td>{{ $empresa->USERSAP_ID }}</td>  
                     <td class="text-center">{{ ($empresa->ANULADO)?'ANULADO':'' }}</td>
                     <td class="text-center">
                       <a href="{{route('anularUsuarioEmpresa', $empresa->ID . '-' . $empresa->USER_ID) }}" class="btn-delete"><span class="glyphicon glyphicon-ban-circle" aria-hidden="true" style="font-size:20px; color: black"></span></a>
@@ -42,7 +43,7 @@
 @push('scripts')
 <script type="text/javascript">
     $(document).ready(function () {       
-
+        alert('Sender')
         $('.btn-delete').click(function (e) {
             alert('si');
             e.preventDefault();
@@ -75,6 +76,9 @@
                 });
             //})
         });
+        $('#nathalia').click(function() {            
+            alert('Hello');
+        })
     });
 </script>
 @endpush

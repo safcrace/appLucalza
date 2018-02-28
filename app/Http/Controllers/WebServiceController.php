@@ -599,7 +599,7 @@ class WebServiceController extends Controller
                 'companyId' => $empresaId,
                 'requestType' => 1,
                 'listId' => 6,
-                'filter' => /*'Carlos Pérez'*/$filtro                
+                'filter' => ''//*'Carlos Pérez'*/$filtro                
             ]
         ]);
 

@@ -395,7 +395,7 @@
             //alert(tipoDocumento)
         })
 
-        $('#TOTAL').blur(function() {            
+        $('#realizaConversion').click(function() { 
             var idMoneda = $("#idMoneda").val()
             idMoneda = idMoneda.trim()
            
@@ -410,11 +410,14 @@
                 $.ajax({
                     type: 'get',
                     url: vurl,                
-                    success: function (data) {
-                        alert(data)
-                        $('#tasaCambio').val(data);                      
+                    success: function (data) {                        
+                        $('#tasaCambio').val(data); 
+                        $('#form-save').submit()                     
                     }
-                });
+                });                                
+            } else {
+                $('#tasaCambio').val(1.00)    
+                $('#form-save').submit()
             }
             
         })

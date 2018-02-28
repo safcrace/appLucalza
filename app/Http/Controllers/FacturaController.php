@@ -159,10 +159,9 @@ dd($resultado);
      * @return \Illuminate\Http\Response
      */
     public function store(CreateFacturaRequest $request)
-    {   
+    {           
         $factura = new Factura();
-//dd($request->all());
-        if (trim($request->FMONEDA_ID) == 'USD') {            
+        if (trim($request->FMONEDA_ID) == 'USD') { 
             $montoConversion = round(($request->TOTAL * $request->TASA_CAMBIO), 4);
             //dd($montoConversion);
         } else {

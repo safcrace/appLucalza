@@ -286,9 +286,10 @@ class UsuarioController extends Controller
      */
     public function usuariosAsignadosEmpresa($id)
     {
-        $empresas = Empresa::select('cat_empresa.DESCRIPCION', 'cat_usuarioempresa.ID', 'cat_usuarioempresa.CODIGO_PROVEEDOR_SAP', 
+        $empresas = Empresa::select('cat_empresa.DESCRIPCION', 'cat_usuarioempresa.ID', 'cat_usuarioempresa.CODIGO_PROVEEDOR_SAP', 'cat_usuarioempresa.USERSAP_ID',
                                     'cat_usuarioempresa.DESCRIPCION_PROVEEDORSAP', 'cat_usuarioempresa.USER_ID', 'cat_usuarioempresa.ANULADO')
                             ->join('cat_usuarioempresa', 'cat_usuarioempresa.EMPRESA_ID', '=', 'cat_empresa.id')
+                            ->orderBy('cat_empresa.ID')
                             ->where('cat_usuarioempresa.USER_ID', '=', $id)
                             //->where('cat_usuarioempresa.ANULADO', '=', 0)
                             ->paginate(10);
@@ -318,9 +319,10 @@ class UsuarioController extends Controller
                                         ->where('EMPRESA_ID', '=', $request->EMPRESA_ID)->first();
         
         if($existe) { 
-                     
+             //dd('pasa. ' . ' Usuario: ' . $request->USUARIO_ID . ' Empresa: ' . $request->EMPRESA_ID)        ;
             UsuarioEmpresa::where('USER_ID', '=', $request->USUARIO_ID)->where('EMPRESA_ID', '=', $request->EMPRESA_ID)
-                                ->update(['ANULADO' => 0, 'CODIGO_PROVEEDOR_SAP' => $request->codigoProveedorSap, 'DESCRIPCION_PROVEEDORSAP' => $request->DESCRIPCION_PROVEEDORSAP]);
+                                ->update(['ANULADO' => 0, 'CODIGO_PROVEEDOR_SAP' => $request->codigoProveedorSap, 'USERSAP_ID' => $request->usersap_id,
+                                         'DESCRIPCION_PROVEEDORSAP' => $request->DESCRIPCION_PROVEEDORSAP]);
                                    
         } else {
             
@@ -331,7 +333,7 @@ class UsuarioController extends Controller
                 $usuarioEmpresa->USER_ID = $request->USUARIO_ID;
                 $usuarioEmpresa->EMPRESA_ID = $request->EMPRESA_ID;
                 $usuarioEmpresa->CODIGO_PROVEEDOR_SAP = $request->codigoProveedorSap;
-                $usuarioEmpresa->usersap_id = $request->usersap_id;
+                $usuarioEmpresa->USERSAP_ID = $request->usersap_id;
                 $usuarioEmpresa->DESCRIPCION_PROVEEDORSAP = $request->DESCRIPCION_PROVEEDORSAP;
                 $usuarioEmpresa->ANULADO = 0;
     

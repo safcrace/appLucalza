@@ -103,8 +103,8 @@
           $('#pro_sap').on('change', '#codigoProveedorSap', function() {                
               var descripcion_proveedorSap = $('#codigoProveedorSap option:selected').text()
               $('#descripcion_proveedorsap').val(descripcion_proveedorSap)
-          })   */         
-      })
-    });
+          })  */          
+      //})
+    })
 </script>
 @endpush
