@@ -287,7 +287,7 @@ class UsuarioController extends Controller
     public function usuariosAsignadosEmpresa($id)
     {
         $empresas = Empresa::select('cat_empresa.DESCRIPCION', 'cat_usuarioempresa.ID', 'cat_usuarioempresa.CODIGO_PROVEEDOR_SAP', 'cat_usuarioempresa.USERSAP_ID',
-                                    'cat_usuarioempresa.DESCRIPCION_PROVEEDORSAP', 'cat_usuarioempresa.USER_ID', 'cat_usuarioempresa.ANULADO')
+                                    'cat_usuarioempresa.DESCRIPCION_PROVEEDORSAP', 'cat_usuarioempresa.USER_ID', 'cat_usuarioempresa.ANULADO', 'cat_usuarioempresa.DESCRIPCION_USERSAPID')
                             ->join('cat_usuarioempresa', 'cat_usuarioempresa.EMPRESA_ID', '=', 'cat_empresa.id')
                             ->orderBy('cat_empresa.ID')
                             ->where('cat_usuarioempresa.USER_ID', '=', $id)
@@ -322,7 +322,7 @@ class UsuarioController extends Controller
              //dd('pasa. ' . ' Usuario: ' . $request->USUARIO_ID . ' Empresa: ' . $request->EMPRESA_ID)        ;
             UsuarioEmpresa::where('USER_ID', '=', $request->USUARIO_ID)->where('EMPRESA_ID', '=', $request->EMPRESA_ID)
                                 ->update(['ANULADO' => 0, 'CODIGO_PROVEEDOR_SAP' => $request->codigoProveedorSap, 'USERSAP_ID' => $request->usersap_id,
-                                         'DESCRIPCION_PROVEEDORSAP' => $request->DESCRIPCION_PROVEEDORSAP]);
+                                         'DESCRIPCION_PROVEEDORSAP' => $request->DESCRIPCION_PROVEEDORSAP, 'DESCRIPCION_USERSAPID' => $request->DESCRIPCION_CODIGOUSUARIO]);
                                    
         } else {
             
@@ -335,6 +335,7 @@ class UsuarioController extends Controller
                 $usuarioEmpresa->CODIGO_PROVEEDOR_SAP = $request->codigoProveedorSap;
                 $usuarioEmpresa->USERSAP_ID = $request->usersap_id;
                 $usuarioEmpresa->DESCRIPCION_PROVEEDORSAP = $request->DESCRIPCION_PROVEEDORSAP;
+                $usuarioEmpresa->DESCRIPCION_USERSAPID = $request->usersap_id . '-' . $request->DESCRIPCION_CODIGOUSUARIO;
                 $usuarioEmpresa->ANULADO = 0;
     
                 $usuarioEmpresa->save();

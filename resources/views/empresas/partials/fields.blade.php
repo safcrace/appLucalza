@@ -46,7 +46,10 @@
         {!! Form::label('IMPUESTO', 'Valor Impuesto') !!}
       </div>
       <div class="col-md-2">
-        {!! Form::text('IMPUESTO', null, ['class' => 'form-control', 'placeholder' => 'Valor Impuesto']); !!}
+        {!! Form::text('IMPUESTO', null, ['class' => 'form-control', 'placeholder' => 'Valor Impuesto']); !!} 
+      </div>
+      <div class="col-md-1">
+        %
       </div>
     </div>
 

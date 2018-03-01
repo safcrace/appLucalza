@@ -350,7 +350,7 @@ class WebServiceController extends Controller
 
         $filas = $data['nrows'];
         if($filas == 0) {
-            $combo = '<select class="form-control" id="CENTROCOSTO5" name="CENTROCOSTO5">';            
+            $combo = '<select class="form-control" id="CENTROCOSTO2" name="CENTROCOSTO2">';            
                 $combo .=  '<option value="00">SIN RESULTADOS</option>';            
             $combo .= '</select>';    
             return $combo;
@@ -616,8 +616,9 @@ class WebServiceController extends Controller
         }
 
         $combo = '<select class="form-control" id="usersap_id" name="usersap_id">';
+        $combo .='<option value="0">Seleccione una opción</option>';
         foreach ($data['data'] as $a => $b) {
-            $combo .=  '<option value="' . $b['code'] . '">' . $b['name'] . '</option>';
+            $combo .=  '<option value="' . $b['code'] . '">' . $b['code'].' - '.$b['name'] . '</option>';
         }
         $combo .= '</select>';
 
@@ -626,3 +627,5 @@ class WebServiceController extends Controller
     }
 
 }
+
+

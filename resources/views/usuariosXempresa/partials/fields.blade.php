@@ -60,6 +60,7 @@
         </div>  --}}
     </div>
     {!! Form::hidden('DESCRIPCION_PROVEEDORSAP', null, ['class' => 'form-control', 'id' => 'descripcion_proveedorsap']); !!}
+    {!! Form::hidden('DESCRIPCION_CODIGOUSUARIO', null, ['class' => 'form-control', 'id' => 'descripcion_codigousuario']); !!}
 
 </div>
 <div class="col-md-12" id="agregar" style="display: none">

@@ -402,7 +402,7 @@ class PresupuestoController extends Controller
             ->lists('cat_ruta.DESCRIPCION', 'cat_ruta.ID')
             ->toArray();
 
-        $detallePresupuestos = DetallePresupuesto::select('pre_detpresupuesto.ID', 'cat_tipogasto.DESCRIPCION as TIPOGASTO', 'pre_detpresupuesto.MONTO', 'cat_frecuenciatiempo.DESCRIPCION as FRECUENCIA', 'pre_detpresupuesto.ANULADO')
+        $detallePresupuestos = DetallePresupuesto::select('pre_detpresupuesto.ID', 'cat_tipogasto.DESCRIPCION as TIPOGASTO', 'pre_detpresupuesto.MONTO', 'pre_detpresupuesto.TIPOASIGNACION_ID', 'cat_frecuenciatiempo.DESCRIPCION as FRECUENCIA', 'pre_detpresupuesto.ANULADO')
                                                   ->join('cat_tipogasto', 'cat_tipogasto.ID', '=', 'pre_detpresupuesto.TIPOGASTO_ID')
                                                   ->join('cat_frecuenciatiempo', 'cat_frecuenciatiempo.ID', '=', 'pre_detpresupuesto.FRECUENCIATIEMPO_ID')
                                                   ->where('pre_detpresupuesto.PRESUPUESTO_ID', '=', $presupuesto_id)

@@ -105,6 +105,7 @@
                 type: 'get',
                 url: vurl,
                 success: function (data) {
+                    $('#pro_sap').hide()
                     $('#pro_sap').empty().html(data);
                     $('#pro_sap').show()
                     $('#cod_pro').remove()
@@ -128,6 +129,7 @@
                 type: 'get',
                 url: vurl,
                 success: function (data2) {
+                    $('#selectCodigo').hide()
                     $('#selectCodigo').empty().html(data2);
                     $('#selectCodigo').show()
                     $('#textoCodigo').remove()
@@ -136,6 +138,12 @@
                     });
                 }
             });
+
+            $('#selectCodigo').on('change', '#usersap_id', function() {   
+                             
+                var descripcion_codigoUsuario = $('#usersap_id option:selected').text()
+                $('#descripcion_codigousuario').val(descripcion_codigoUsuario)
+            }) 
 
 
         });

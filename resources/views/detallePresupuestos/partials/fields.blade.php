@@ -5,7 +5,7 @@
     <input id="PRESUPUESTO_ID" name="PRESUPUESTO_ID" type="hidden" value="{{ $presupuesto_id }}">
     @endif
     
-<input id="EMPRESA_ID" name="PRESUPUESTO_ID" type="hidden" value="{{ Session::get('empresa') }}">
+<input id="EMPRESA_ID" name="EMPRESA_ID" type="hidden" value="{{ Session::get('empresa') }}">
 
 
 {!! Form::hidden('TIPO_GASTO', $tipo) !!}

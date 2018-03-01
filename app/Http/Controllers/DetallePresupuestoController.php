@@ -76,7 +76,7 @@ class DetallePresupuestoController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(CreateDetallePresupuestoRequest $request)
-    {        //dd($request->TIPOASIGNACION_ID)   ;
+    {        //dd($request->all())   ;
         $detallePresupuesto = new DetallePresupuesto();
         $detallePresupuesto->PRESUPUESTO_ID = $request->PRESUPUESTO_ID;
         $detallePresupuesto->TIPOGASTO_ID = $request->TIPOGASTO_ID;

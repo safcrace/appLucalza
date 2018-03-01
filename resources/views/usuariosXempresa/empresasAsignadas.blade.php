@@ -19,7 +19,7 @@
                 <tr>
                     <td>{{ $empresa->DESCRIPCION }}</td>
                     <td>{{ $empresa->DESCRIPCION_PROVEEDORSAP }}</td>
-                    <td>{{ $empresa->USERSAP_ID }}</td>  
+                    <td>{{ $empresa->DESCRIPCION_USERSAPID }}</td>  
                     <td class="text-center">{{ ($empresa->ANULADO)?'ANULADO':'' }}</td>
                     <td class="text-center">
                       <a href="{{route('anularUsuarioEmpresa', $empresa->ID . '-' . $empresa->USER_ID) }}" class="btn-delete"><span class="glyphicon glyphicon-ban-circle" aria-hidden="true" style="font-size:20px; color: black"></span></a>
