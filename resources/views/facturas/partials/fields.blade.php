@@ -8,7 +8,7 @@
 {!! Form::hidden('TASA_CAMBIO', null, ['id' => 'tasaCambio']) !!}
 {!! Form::hidden('MONEDA_ID', $monedaEmpresa->LOCAL, ['id' => 'idMoneda']) !!}
 {!! Form::hidden('CATEGORIA_GASTO', 'Parametro', ['id' => 'categoriaGasto']) !!}
-{!! Form::hidden('SUBCATEGORIA_GASTO', 'Parametro', ['id' => 'subCategoriaGasto']) !!}
+{!! Form::text('SUBCATEGORIA_GASTO', 'Parametro', ['id' => 'subCategoriaGasto']) !!}
 @if (isset($factura))
     {!! Form::hidden('URL_IMAGEN_FACTURA', $factura->EMAIL . '/' . $factura->FOTO, ['id' => 'urlImagenFactura']) !!}
     {!! Form::hidden('ID_FACTURA', $factura->ID, ['id' => 'idFactura']) !!}
@@ -361,7 +361,18 @@
                 $('.combus').hide()                
             }
 
-        });        
+            /*$('#pro_sap').on('change', '#codigoProveedorSap', function() {   
+                             
+                var descripcion_proveedorSap = $('#codigoProveedorSap option:selected').text()
+                $('#descripcion_proveedorsap').val(descripcion_proveedorSap)
+            })*/ 
+
+        });
+        
+        $('#subcategoriaTipoGasto').change(function() {
+            var subcategoria = $('#subcategoriaTipoGasto option:selected').text()
+            $('#subCategoriaGasto').val(subcategoria)
+        })
 
         
         
@@ -381,8 +392,7 @@
         }
 
         $('#tipoDocumento').change(function() {
-            var subcategoria = $('#subcategoriaTipoGasto option:selected').text()
-            $('#subCategoriaGasto').val(subcategoria)
+            
             var tipoDocumento = $('#tipoDocumento option:selected').text()
             var patron = 'factura'
             //tipoDocumento = tipoDocumento.toLowerCase()

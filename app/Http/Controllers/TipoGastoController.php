@@ -191,14 +191,23 @@ class TipoGastoController extends Controller
                                 ->where('ID', '=', $id)
                                 ->where('ANULADO', '=', 0)
                                 ->get();
+
+        
     }
 
     public function getSubcategoriaTipoGasto($id)
     {
-        return SubcategoriaTipoGasto::select('ID', 'DESCRIPCION')
+        $subcategorias = SubcategoriaTipoGasto::select('ID', 'DESCRIPCION')
             ->where('TIPOGASTO_ID', '=', $id)
             ->where('ANULADO', '=', 0)
-            ->get();
+            ->get()
+            ->toArray();
+
+        if (count($subcategorias) > 0) {
+            array_unshift($subcategorias, ['ID' => '', 'DESCRIPCION' => 'Seleccione una Opción']);
+        }
+
+        return $subcategorias;
     }
 
     /**

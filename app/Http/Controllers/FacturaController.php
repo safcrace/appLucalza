@@ -162,13 +162,17 @@ dd($resultado);
     {           
         $factura = new Factura();
         if (trim($request->FMONEDA_ID) == 'USD') { 
-            $montoConversion = round(($request->TOTAL * $request->TASA_CAMBIO), 4);
-            //dd($montoConversion);
+            $montoConversion = round(($request->TOTAL * $request->TASA_CAMBIO), 4);           
         } else {
             $montoConversion = $request->TOTAL * 1;
         }
-  
-        //dd($montoConversion);
+
+        /** Se obtiene valor de impuesto */
+        $empresa_id = Session::get('empresa');
+        $valorImpuesto = EMPRESA::select('IMPUESTO')->where('ID', '=', $empresa_id)->first();
+        $valorImpuesto = round(($valorImpuesto->IMPUESTO / 100), 4);      
+        
+
         /** Procesa Imagen **/
 
         $file = $request->file('FOTO');
@@ -271,7 +275,7 @@ dd($resultado);
        
 
         /** Se obtiene monto gastado hasta el momento por tipo de gasto **/
-        if ($request->CATEGORIA_GASTO == 'combustible') {
+        if ($request->CATEGORIA_GASTO == 'combustible') {            
             $montoAcumulado = Factura::where('LIQUIDACION_ID', '=', $request->LIQUIDACION_ID)
             ->where('TIPOGASTO_ID', '=', $request->TIPOGASTO_ID)
             ->sum('CANTIDAD_PORCENTAJE_CUSTOM');
@@ -282,9 +286,9 @@ dd($resultado);
             ->sum('TOTAL');
         }
         
-
+        
         $saldo = $detallePresupuesto->MONTO - $montoAcumulado;
-
+        
         
         //Se determina si tiene presupuesto para cubrir el gasto o si existe remanente
 
@@ -299,28 +303,28 @@ dd($resultado);
                     $factura->APROBACION_PAGO = 1;
     
                     /** Operaciones de Calculo **/
-                    $factura->MONTO_EXENTO = round(($request->CANTIDAD_PORCENTAJE_CUSTOM * $idp->MONTO_A_APLICAR), 2);
+                    $factura->MONTO_EXENTO = round(($request->CANTIDAD_PORCENTAJE_CUSTOM * $idp->MONTO_A_APLICAR), 4);
                     
-                    $factura->MONTO_AFECTO = round((($montoConversion - $factura->MONTO_EXENTO) / (1 + 0.12)),2); //Se calcula monto afecto
+                    $factura->MONTO_AFECTO = round((($montoConversion - $factura->MONTO_EXENTO) / (1 + $valorImpuesto)),4); //Se calcula monto afecto
                     
-                    $factura->MONTO_IVA = round(($factura->MONTO_AFECTO * 0.12 ), 2); //Se calcula monto de impuesto
-                    
+                    $factura->MONTO_IVA = round(($factura->MONTO_AFECTO * $valorImpuesto), 4); //Se calcula monto de impuesto
+                   
                 } else {
                     
                     $saldoParcial = $saldo;
                     
                     $remanente = $request->CANTIDAD_PORCENTAJE_CUSTOM - $saldoParcial; //Ojo aca puede ser util                
 
-                    $precioGalon = round(($montoConversion / $request->CANTIDAD_PORCENTAJE_CUSTOM), 2);
-
-                    $factura->MONTO_EXENTO = round(($request->CANTIDAD_PORCENTAJE_CUSTOM * $idp->MONTO_A_APLICAR), 2);
+                    $precioGalon = round(($montoConversion / $request->CANTIDAD_PORCENTAJE_CUSTOM), 4);
                     
-                    $factura->MONTO_AFECTO = round((($montoConversion - $factura->MONTO_EXENTO) / (1 + 0.12)),2); //Se calcula monto afecto
+                    $factura->MONTO_EXENTO = round(($request->CANTIDAD_PORCENTAJE_CUSTOM * $idp->MONTO_A_APLICAR), 4);
                     
-                    $factura->MONTO_IVA = round(($factura->MONTO_AFECTO * 0.12 ), 2); //Se calcula monto de impuesto
+                    $factura->MONTO_AFECTO = round((($montoConversion - $factura->MONTO_EXENTO) / (1 + $valorImpuesto)),4); //Se calcula monto afecto
+                    
+                    $factura->MONTO_IVA = round(($factura->MONTO_AFECTO * $valorImpuesto ), 4); //Se calcula monto de impuesto
 
                     //$factura->MONTO_EXENTO = $reembolsable * $precioGalon *  
-                    $factura->MONTO_REMANENTE = round(($remanente * $precioGalon), 2);    
+                    $factura->MONTO_REMANENTE = round(($remanente * $precioGalon), 4);    
                     $factura->APROBACION_PAGO = 1;
                     
                 }
@@ -329,7 +333,12 @@ dd($resultado);
                 $factura->APROBACION_PAGO = 0;
                 
                 /** Operaciónes de Calculo **/
-                $factura->MONTO_REMANENTE = $montoConversion;            
+                $factura->MONTO_REMANENTE = $montoConversion;
+                $factura->MONTO_EXENTO = round(($request->CANTIDAD_PORCENTAJE_CUSTOM * $idp->MONTO_A_APLICAR), 4);
+                    
+                $factura->MONTO_AFECTO = round((($montoConversion - $factura->MONTO_EXENTO) / (1 + $valorImpuesto)),4); //Se calcula monto afecto
+                
+                $factura->MONTO_IVA = round(($factura->MONTO_AFECTO * $valorImpuesto), 4); //Se calcula monto de impuesto            
             }
             
         } else if ($request->CATEGORIA_GASTO == 'depreciación') {
@@ -343,11 +352,11 @@ dd($resultado);
                     $factura->APROBACION_PAGO = 1;
     
                     /** Operaciones de Calculo **/
-                    $factura->MONTO_EXENTO = round(($request->CANTIDAD_PORCENTAJE_CUSTOM * $idp->MONTO_A_APLICAR), 2);
+                    $factura->MONTO_EXENTO = round(($request->CANTIDAD_PORCENTAJE_CUSTOM * $idp->MONTO_A_APLICAR), 4);
                     
-                    $factura->MONTO_AFECTO = round((($montoConversion - $factura->MONTO_EXENTO) / (1 + 0.12)),2); //Se calcula monto afecto
+                    $factura->MONTO_AFECTO = round((($montoConversion - $factura->MONTO_EXENTO) / (1 + $valorImpuesto)),4); //Se calcula monto afecto
                     
-                    $factura->MONTO_IVA = round(($factura->MONTO_AFECTO * 0.12 ), 2); //Se calcula monto de impuesto
+                    $factura->MONTO_IVA = round(($factura->MONTO_AFECTO * $valorImpuesto ), 4); //Se calcula monto de impuesto
                    
                 } else {
                     
@@ -355,17 +364,17 @@ dd($resultado);
                     
                     $remanente = $montoConversion - $saldoParcial; //Ojo aca puede ser util                
 
-                    //$precioGalon = round(($montoConversion / $request->CANTIDAD_PORCENTAJE_CUSTOM), 2);
+                    //$precioGalon = round(($montoConversion / $request->CANTIDAD_PORCENTAJE_CUSTOM), 4);
 
-                    $factura->MONTO_EXENTO = round(($request->CANTIDAD_PORCENTAJE_CUSTOM * $idp->MONTO_A_APLICAR), 2);
+                    $factura->MONTO_EXENTO = round(($request->CANTIDAD_PORCENTAJE_CUSTOM * $idp->MONTO_A_APLICAR), 4);
                     
-                    $factura->MONTO_AFECTO = round((($montoConversion - $factura->MONTO_EXENTO) / (1 + 0.12)),2); //Se calcula monto afecto
+                    $factura->MONTO_AFECTO = round((($montoConversion - $factura->MONTO_EXENTO) / (1 + $valorImpuesto)),4); //Se calcula monto afecto
                     
-                    $factura->MONTO_IVA = round(($factura->MONTO_AFECTO * 0.12 ), 2); //Se calcula monto de impuesto
+                    $factura->MONTO_IVA = round(($factura->MONTO_AFECTO * $valorImpuesto ), 4); //Se calcula monto de impuesto
 
                     //$factura->MONTO_EXENTO = $reembolsable * $precioGalon *  
-                    //$factura->MONTO_REMANENTE = round(($remanente * $precioGalon), 2);    
-                    $factura->MONTO_REMANENTE = round($remanente, 2);
+                    //$factura->MONTO_REMANENTE = round(($remanente * $precioGalon), 4);    
+                    $factura->MONTO_REMANENTE = round($remanente, 4);
                     $factura->APROBACION_PAGO = 1;
                     
                 }
@@ -374,16 +383,25 @@ dd($resultado);
                 $factura->APROBACION_PAGO = 0;
                 
                 /** Operaciónes de Calculo **/
-                $factura->MONTO_REMANENTE = $montoConversion;            
+                $factura->MONTO_REMANENTE = $montoConversion;      
+                $factura->MONTO_EXENTO = round(($request->CANTIDAD_PORCENTAJE_CUSTOM * $idp->MONTO_A_APLICAR), 4);
+                    
+                $factura->MONTO_AFECTO = round((($montoConversion - $factura->MONTO_EXENTO) / (1 + $valorImpuesto)),4); //Se calcula monto afecto
+                
+                $factura->MONTO_IVA = round(($factura->MONTO_AFECTO * $valorImpuesto ), 4); //Se calcula monto de impuesto      
             }
-        } else {
-           
+        } else {           
             $findMe = 'con';
+            
             $impuestoHotel = strpos(strtolower($request->SUBCATEGORIA_GASTO), $findMe); 
+            
             if($impuestoHotel !== false)            
             {   
                 $impuesto = SubcategoriaTipoGasto::select('MONTO_A_APLICAR')->where('ID', '=', $request->SUBCATEGORIATIPOGASTO_ID)->first();
-                $factura->CANTIDAD_PORCENTAJE_CUSTOM = $impuesto->MONTO_A_APLICAR;
+                $impuestoInguat = round(($impuesto->MONTO_A_APLICAR / 100), 4);      
+                
+                
+                $factura->CANTIDAD_PORCENTAJE_CUSTOM = $impuestoInguat;
                 if ($saldo > 0) {
                     $saldoFactura = $saldo - $montoConversion;
                     
@@ -391,11 +409,12 @@ dd($resultado);
                         $factura->APROBACION_PAGO = 1;
         
                         /** Operaciones de Calculo **/                                               
-                        $factura->MONTO_AFECTO = round((($montoConversion - $factura->MONTO_EXENTO) / (1 + 0.12 + $impuesto->MONTO_A_APLICAR)),2); //Se calcula monto afecto
-
-                        $factura->MONTO_EXENTO = round(($factura->MONTO_AFECTO * $impuesto->MONTO_A_APLICAR), 2);
+                        $factura->MONTO_AFECTO = round((($montoConversion) / (1 + $valorImpuesto + $impuestoInguat)),4); //Se calcula monto afecto
+                        $factura->MONTO_EXENTO = round(($factura->MONTO_AFECTO * $impuestoInguat), 4);
                         
-                        $factura->MONTO_IVA = round(($factura->MONTO_AFECTO * 0.12 ), 2); //Se calcula monto de impuesto
+                        
+                        $factura->MONTO_IVA = round(($factura->MONTO_AFECTO * $valorImpuesto ), 4); //Se calcula monto de impuesto
+                        
                         
                     } else {
                         
@@ -403,13 +422,13 @@ dd($resultado);
                         
                         $remanente = $montoConversion - $saldoParcial; //Ojo aca puede ser util
     
-                        $factura->MONTO_AFECTO = round((($montoConversion - $factura->MONTO_EXENTO) / (1 + 0.12 + $impuesto->MONTO_A_APLICAR)),2); //Se calcula monto afecto
+                        $factura->MONTO_AFECTO = round((($montoConversion - $factura->MONTO_EXENTO) / (1 + $valorImpuesto + $impuestoInguat)),4); //Se calcula monto afecto
                         
-                        $factura->MONTO_EXENTO = round(($factura->MONTO_AFECTO * $impuesto->MONTO_A_APLICAR), 2);
+                        $factura->MONTO_EXENTO = round(($factura->MONTO_AFECTO * $impuestoInguat), 4);
                         
-                        $factura->MONTO_IVA = round(($factura->MONTO_AFECTO * 0.12 ), 2); //Se calcula monto de impuesto
+                        $factura->MONTO_IVA = round(($factura->MONTO_AFECTO * $valorImpuesto ), 4); //Se calcula monto de impuesto
 
-                        $factura->MONTO_REMANENTE = round($remanente, 2);
+                        $factura->MONTO_REMANENTE = round($remanente, 4);
                             
                         $factura->APROBACION_PAGO = 1;
                         
@@ -419,28 +438,30 @@ dd($resultado);
                     $factura->APROBACION_PAGO = 0;
                     
                     /** Operaciónes de Calculo **/
-                    $factura->MONTO_REMANENTE = $montoConversion;            
+                    $factura->MONTO_REMANENTE = $montoConversion; 
+                    $factura->MONTO_AFECTO = round((($montoConversion) / (1 + $valorImpuesto + $impuestoInguat)),4); //Se calcula monto afecto
+                    $factura->MONTO_EXENTO = round(($factura->MONTO_AFECTO * $impuestoInguat), 4);           
                 }                
 
                 
-            } else {
-                if ($saldo > 0) {
+            } else {                     
+                if ($saldo > 0) { 
                     $saldoFactura = $saldo - $montoConversion;
-                    if ($saldoFactura > 0) {
+                    if ($saldoFactura > 0) {                        
                         $factura->APROBACION_PAGO = 1;
         
                         /** Operaciones de Calculo **/
         
-                        $factura->MONTO_AFECTO = round(($montoConversion / (1 + 0.12)),2); //Se calcula monto afecto
+                        $factura->MONTO_AFECTO = round(($montoConversion / (1 + $valorImpuesto)),4); //Se calcula monto afecto
                 
-                        $factura->MONTO_IVA = round(($factura->MONTO_AFECTO * 0.12 ), 2); //Se calcula monto de impuesto
+                        $factura->MONTO_IVA = round(($factura->MONTO_AFECTO * $valorImpuesto ), 4); //Se calcula monto de impuesto
         
                     } else {                        
                         $saldoParcial = $saldo;
 
-                        $factura->MONTO_AFECTO = round(($montoConversion / (1 + 0.12)),2); //Se calcula monto afecto
+                        $factura->MONTO_AFECTO = round(($montoConversion / (1 + $valorImpuesto)),4); //Se calcula monto afecto
                         
-                        $factura->MONTO_IVA = round(($factura->MONTO_AFECTO * 0.12 ), 2); //Se calcula monto de impuesto
+                        $factura->MONTO_IVA = round(($factura->MONTO_AFECTO * $valorImpuesto), 4); //Se calcula monto de impuesto
                         $factura->MONTO_EXENTO = 0;
                         
                         $factura->MONTO_REMANENTE = $montoConversion - $saldoParcial;                
@@ -452,6 +473,8 @@ dd($resultado);
                     $factura->APROBACION_PAGO = 0;
                 
                     /** Operaciónes de Calculo **/
+                    $factura->MONTO_AFECTO = round(($montoConversion / (1 + $valorImpuesto)),4); //Se calcula monto afecto                
+                    $factura->MONTO_IVA = round(($factura->MONTO_AFECTO * $valorImpuesto ), 4); //Se calcula monto de impuesto
                     $factura->MONTO_REMANENTE = $montoConversion;            
                 }
 
@@ -602,6 +625,14 @@ dd($resultado);
         } else {
             $montoConversion = $request->TOTAL * 1;
         }
+
+
+        /** Se obtiene valor de impuesto */
+        $empresa_id = Session::get('empresa');
+        $valorImpuesto = EMPRESA::select('IMPUESTO')->where('ID', '=', $empresa_id)->first();
+        $valorImpuesto = round(($valorImpuesto->IMPUESTO / 100), 4);  
+
+
         //Se valida que fecha no sea anterior a X días programados por la empresa y dentro de Período de Liquidación
 
         $empresa = Session::get('loginEmpresa');
@@ -683,11 +714,11 @@ dd($resultado);
                             $factura->APROBACION_PAGO = 1;
             
                             /** Operaciones de Calculo **/
-                            $factura->MONTO_EXENTO = round(($request->CANTIDAD_PORCENTAJE_CUSTOM * $idp->MONTO_A_APLICAR), 2);
+                            $factura->MONTO_EXENTO = round(($request->CANTIDAD_PORCENTAJE_CUSTOM * $idp->MONTO_A_APLICAR), 4);
                             
-                            $factura->MONTO_AFECTO = round((($montoConversion - $factura->MONTO_EXENTO) / (1 + 0.12)),2); //Se calcula monto afecto
+                            $factura->MONTO_AFECTO = round((($montoConversion - $factura->MONTO_EXENTO) / (1 + $valorImpuesto)),4); //Se calcula monto afecto
                             
-                            $factura->MONTO_IVA = round(($factura->MONTO_AFECTO * 0.12 ), 2); //Se calcula monto de impuesto
+                            $factura->MONTO_IVA = round(($factura->MONTO_AFECTO * $valorImpuesto ), 4); //Se calcula monto de impuesto
 
                             $factura->MONTO_REMANENTE = 0;
                             
@@ -697,16 +728,16 @@ dd($resultado);
                             
                             $remanente = $request->CANTIDAD_PORCENTAJE_CUSTOM - $saldoParcial; //Ojo aca puede ser util                
         
-                            $precioGalon = round(($montoConversion / $request->CANTIDAD_PORCENTAJE_CUSTOM), 2);
+                            $precioGalon = round(($montoConversion / $request->CANTIDAD_PORCENTAJE_CUSTOM), 4);
         
-                            $factura->MONTO_EXENTO = round(($request->CANTIDAD_PORCENTAJE_CUSTOM * $idp->MONTO_A_APLICAR), 2);
+                            $factura->MONTO_EXENTO = round(($request->CANTIDAD_PORCENTAJE_CUSTOM * $idp->MONTO_A_APLICAR), 4);
                             
-                            $factura->MONTO_AFECTO = round((($montoConversion - $factura->MONTO_EXENTO) / (1 + 0.12)),2); //Se calcula monto afecto
+                            $factura->MONTO_AFECTO = round((($montoConversion - $factura->MONTO_EXENTO) / (1 + $valorImpuesto)),4); //Se calcula monto afecto
                             
-                            $factura->MONTO_IVA = round(($factura->MONTO_AFECTO * 0.12 ), 2); //Se calcula monto de impuesto
+                            $factura->MONTO_IVA = round(($factura->MONTO_AFECTO * $valorImpuesto), 4); //Se calcula monto de impuesto
         
                             //$factura->MONTO_EXENTO = $reembolsable * $precioGalon *  
-                            $factura->MONTO_REMANENTE = round(($remanente * $precioGalon), 2);    
+                            $factura->MONTO_REMANENTE = round(($remanente * $precioGalon), 4);    
                             $factura->APROBACION_PAGO = 1;
                             
                         }
@@ -729,11 +760,11 @@ dd($resultado);
                             $factura->APROBACION_PAGO = 1;
             
                             /** Operaciones de Calculo **/
-                            $factura->MONTO_EXENTO = round(($request->CANTIDAD_PORCENTAJE_CUSTOM * $idp->MONTO_A_APLICAR), 2);
+                            $factura->MONTO_EXENTO = round(($request->CANTIDAD_PORCENTAJE_CUSTOM * $idp->MONTO_A_APLICAR), 4);
                             
-                            $factura->MONTO_AFECTO = round((($montoConversion - $factura->MONTO_EXENTO) / (1 + 0.12)),2); //Se calcula monto afecto
+                            $factura->MONTO_AFECTO = round((($montoConversion - $factura->MONTO_EXENTO) / (1 + $valorImpuesto)),4); //Se calcula monto afecto
                             
-                            $factura->MONTO_IVA = round(($factura->MONTO_AFECTO * 0.12 ), 2); //Se calcula monto de impuesto
+                            $factura->MONTO_IVA = round(($factura->MONTO_AFECTO * $valorImpuesto ), 4); //Se calcula monto de impuesto
 
                             $factura->MONTO_REMANENTE = 0;
                            
@@ -743,17 +774,17 @@ dd($resultado);
                             
                             $remanente = $montoConversion - $saldoParcial; //Ojo aca puede ser util                
         
-                            //$precioGalon = round(($montoConversion / $request->CANTIDAD_PORCENTAJE_CUSTOM), 2);
+                            //$precioGalon = round(($montoConversion / $request->CANTIDAD_PORCENTAJE_CUSTOM), 4);
         
-                            $factura->MONTO_EXENTO = round(($request->CANTIDAD_PORCENTAJE_CUSTOM * $idp->MONTO_A_APLICAR), 2);
+                            $factura->MONTO_EXENTO = round(($request->CANTIDAD_PORCENTAJE_CUSTOM * $idp->MONTO_A_APLICAR), 4);
                             
-                            $factura->MONTO_AFECTO = round((($montoConversion - $factura->MONTO_EXENTO) / (1 + 0.12)),2); //Se calcula monto afecto
+                            $factura->MONTO_AFECTO = round((($montoConversion - $factura->MONTO_EXENTO) / (1 + $valorImpuesto)),4); //Se calcula monto afecto
                             
-                            $factura->MONTO_IVA = round(($factura->MONTO_AFECTO * 0.12 ), 2); //Se calcula monto de impuesto
+                            $factura->MONTO_IVA = round(($factura->MONTO_AFECTO * $valorImpuesto ), 4); //Se calcula monto de impuesto
         
                             //$factura->MONTO_EXENTO = $reembolsable * $precioGalon *  
-                            //$factura->MONTO_REMANENTE = round(($remanente * $precioGalon), 2);    
-                            $factura->MONTO_REMANENTE = round($remanente, 2);
+                            //$factura->MONTO_REMANENTE = round(($remanente * $precioGalon), 4);    
+                            $factura->MONTO_REMANENTE = round($remanente, 4);
                             $factura->APROBACION_PAGO = 1;
                             
                         }
@@ -771,7 +802,8 @@ dd($resultado);
                     if($impuestoHotel !== false)            
                     {   
                         $impuesto = SubcategoriaTipoGasto::select('MONTO_A_APLICAR')->where('ID', '=', $request->SUBCATEGORIATIPOGASTO_ID)->first();
-                        $factura->CANTIDAD_PORCENTAJE_CUSTOM = $impuesto->MONTO_A_APLICAR;
+                        $impuestoInguat = round(($impuesto->MONTO_A_APLICAR / 100), 4);
+                        $factura->CANTIDAD_PORCENTAJE_CUSTOM = $impuestoInguat;
                         if ($saldo > 0) {
                             $saldoFactura = $saldo - $montoConversion;
                             
@@ -779,11 +811,11 @@ dd($resultado);
                                 $factura->APROBACION_PAGO = 1;
                 
                                 /** Operaciones de Calculo **/                                               
-                                $factura->MONTO_AFECTO = round((($montoConversion - $factura->MONTO_EXENTO) / (1 + 0.12 + $impuesto->MONTO_A_APLICAR)),2); //Se calcula monto afecto
+                                $factura->MONTO_AFECTO = round((($montoConversion - $factura->MONTO_EXENTO) / (1 + $valorImpuesto + $impuestoInguat)),4); //Se calcula monto afecto
         
-                                $factura->MONTO_EXENTO = round(($factura->MONTO_AFECTO * $impuesto->MONTO_A_APLICAR), 2);
+                                $factura->MONTO_EXENTO = round(($factura->MONTO_AFECTO * $impuestoInguat), 4);
                                 
-                                $factura->MONTO_IVA = round(($factura->MONTO_AFECTO * 0.12 ), 2); //Se calcula monto de impuesto
+                                $factura->MONTO_IVA = round(($factura->MONTO_AFECTO * $valorImpuesto ), 4); //Se calcula monto de impuesto
 
                                 $factura->MONTO_REMANENTE = 0;
                                 
@@ -793,13 +825,13 @@ dd($resultado);
                                 
                                 $remanente = $montoConversion - $saldoParcial; //Ojo aca puede ser util
             
-                                $factura->MONTO_AFECTO = round((($montoConversion - $factura->MONTO_EXENTO) / (1 + 0.12 + $impuesto->MONTO_A_APLICAR)),2); //Se calcula monto afecto
+                                $factura->MONTO_AFECTO = round((($montoConversion - $factura->MONTO_EXENTO) / (1 + $valorImpuesto + $impuestoInguat)),4); //Se calcula monto afecto
                                 
-                                $factura->MONTO_EXENTO = round(($factura->MONTO_AFECTO * $impuesto->MONTO_A_APLICAR), 2);
+                                $factura->MONTO_EXENTO = round(($factura->MONTO_AFECTO * $impuestoInguat), 4);
                                 
-                                $factura->MONTO_IVA = round(($factura->MONTO_AFECTO * 0.12 ), 2); //Se calcula monto de impuesto
+                                $factura->MONTO_IVA = round(($factura->MONTO_AFECTO * $valorImpuesto ), 4); //Se calcula monto de impuesto
         
-                                $factura->MONTO_REMANENTE = round($remanente, 2);
+                                $factura->MONTO_REMANENTE = round($remanente, 4);
                                     
                                 $factura->APROBACION_PAGO = 1;
                                 
@@ -821,18 +853,18 @@ dd($resultado);
                 
                                 /** Operaciones de Calculo **/
                 
-                                $factura->MONTO_AFECTO = round(($montoConversion / (1 + 0.12)),2); //Se calcula monto afecto
+                                $factura->MONTO_AFECTO = round(($montoConversion / (1 + $valorImpuesto)),4); //Se calcula monto afecto
                         
-                                $factura->MONTO_IVA = round(($factura->MONTO_AFECTO * 0.12 ), 2); //Se calcula monto de impuesto
+                                $factura->MONTO_IVA = round(($factura->MONTO_AFECTO * $valorImpuesto ), 4); //Se calcula monto de impuesto
 
                                 $factura->MONTO_REMANENTE = 0;
                 
                             } else {                        
                                 $saldoParcial = $saldo;
         
-                                $factura->MONTO_AFECTO = round(($montoConversion / (1 + 0.12)),2); //Se calcula monto afecto
+                                $factura->MONTO_AFECTO = round(($montoConversion / (1 + $valorImpuesto)),4); //Se calcula monto afecto
                                 
-                                $factura->MONTO_IVA = round(($factura->MONTO_AFECTO * 0.12 ), 2); //Se calcula monto de impuesto
+                                $factura->MONTO_IVA = round(($factura->MONTO_AFECTO * $valorImpuesto ), 4); //Se calcula monto de impuesto
                                 $factura->MONTO_EXENTO = 0;
                                 
                                 $factura->MONTO_REMANENTE = $montoConversion - $saldoParcial;                
