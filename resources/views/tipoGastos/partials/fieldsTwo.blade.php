@@ -92,6 +92,8 @@
 
         $('#exento').click(function () {
           $('.div_exento').show();
+          $('.ph_cantidad').show();
+          $('#unidad').show()         
         });
 
         $('#cantidad').click(function () {

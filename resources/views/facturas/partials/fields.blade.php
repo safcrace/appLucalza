@@ -8,7 +8,7 @@
 {!! Form::hidden('TASA_CAMBIO', null, ['id' => 'tasaCambio']) !!}
 {!! Form::hidden('MONEDA_ID', $monedaEmpresa->LOCAL, ['id' => 'idMoneda']) !!}
 {!! Form::hidden('CATEGORIA_GASTO', 'Parametro', ['id' => 'categoriaGasto']) !!}
-{!! Form::text('SUBCATEGORIA_GASTO', 'Parametro', ['id' => 'subCategoriaGasto']) !!}
+{!! Form::hidden('SUBCATEGORIA_GASTO', 'Parametro', ['id' => 'subCategoriaGasto']) !!}
 @if (isset($factura))
     {!! Form::hidden('URL_IMAGEN_FACTURA', $factura->EMAIL . '/' . $factura->FOTO, ['id' => 'urlImagenFactura']) !!}
     {!! Form::hidden('ID_FACTURA', $factura->ID, ['id' => 'idFactura']) !!}

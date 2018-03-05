@@ -439,8 +439,10 @@ dd($resultado);
                     
                     /** Operaciónes de Calculo **/
                     $factura->MONTO_REMANENTE = $montoConversion; 
-                    $factura->MONTO_AFECTO = round((($montoConversion) / (1 + $valorImpuesto + $impuestoInguat)),4); //Se calcula monto afecto
-                    $factura->MONTO_EXENTO = round(($factura->MONTO_AFECTO * $impuestoInguat), 4);           
+                    $factura->MONTO_AFECTO = round((($montoConversion) / (1 + $valorImpuesto + $impuestoInguat)),4); //Se calcula monto afecto                    
+                    $factura->MONTO_EXENTO = round(($factura->MONTO_AFECTO * $impuestoInguat), 4);   
+                    $factura->MONTO_IVA = round(($factura->MONTO_AFECTO * $valorImpuesto ), 4);        
+                    
                 }                
 
                 
