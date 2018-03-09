@@ -8,7 +8,7 @@
 {!! Form::hidden('TASA_CAMBIO', null, ['id' => 'tasaCambio']) !!}
 {!! Form::hidden('MONEDA_ID', $monedaEmpresa->LOCAL, ['id' => 'idMoneda']) !!}
 {!! Form::hidden('CATEGORIA_GASTO', 'Parametro', ['id' => 'categoriaGasto']) !!}
-{!! Form::hidden('SUBCATEGORIA_GASTO', 'Parametro', ['id' => 'subCategoriaGasto']) !!}
+{!! Form::hidden('SUBCATEGORIA_GASTO', (isset($factura->SUBCATEGORIA_TIPOGASTO_ID))?$factura->SUBCATEGORIA_TIPOGASTO_ID:null, ['id' => 'subCategoriaGasto']) !!}
 @if (isset($factura))
     {!! Form::hidden('URL_IMAGEN_FACTURA', $factura->EMAIL . '/' . $factura->FOTO, ['id' => 'urlImagenFactura']) !!}
     {!! Form::hidden('ID_FACTURA', $factura->ID, ['id' => 'idFactura']) !!}
@@ -39,11 +39,17 @@
 
     <div class="row form-group">
         <div class="col-md-2 col-md-offset-1">
-            {!! Form::label('SUBCATEGORIATIPOGASTO_ID', 'Tipo de Gasto') !!}
+            {!! Form::label('subcategoriaTipoGasto', 'Tipo de Gasto') !!}
         </div>
-        <div class="col-md-3">
-            {!! Form::select('SUBCATEGORIATIPOGASTO_ID', $subcategoria, null, ['class' => 'form-control', 'placeholder' => 'Seleccione Tipo de Gasto', 'id' => 'subcategoriaTipoGasto']); !!}
-        </div>
+        @if(isset($factura->SUBCATEGORIA_TIPOGASTO_ID))
+            <div class="col-md-3">                
+                {!! Form::select('subcategoriaTipoGasto', $subcategoria, null, ['class' => 'form-control', 'placeholder' => 'Seleccione Tipo de Gasto', 'id' => 'subcategoriaTipoGasto']); !!}
+            </div>
+        @else
+            <div class="col-md-3">
+                {!! Form::select('subcategoriaTipoGasto', $subcategoria, null, ['class' => 'form-control', 'placeholder' => 'Seleccione Tipo de Gasto', 'id' => 'subcategoriaTipoGasto']); !!}
+            </div>
+        @endif
 
       <div class="col-md-2">
             {!! Form::label('NOMBRE_PROVEEDOR', 'Nombre Proveedor') !!}
@@ -300,14 +306,19 @@
         }*/
         var tipo = $('#tipoGasto').val()
         if (tipo != null) {
+            //alert($factura->SUBCATEGORIA_TIPOGASTO_ID)
             var categoria = $('#tipoGasto option:selected').text()
-            vurl = '{{ route('getSubcategoriaTipoGasto') }}'
+            /*vurl = '{{ route('getSubcategoriaTipoGasto') }}'
             vurl = vurl.replace('%7Bid%7D', tipo);
-                
+            
             $.getJSON(vurl, null, function (values) {
                 $('#subcategoriaTipoGasto').populateSelect(values)
-            })
-
+            })*/
+           
+            var subcatego = $('#subCategoriaGasto').val()
+            //alert('Esto trae al cargar:  ' +     subcatego)
+            $('#subcategoriaTipoGasto').val(subcatego)
+            
             if (categoria == 'Combustible') {
                 $('#categoriaGasto').val('combustible')
                 $('.combus').show()
@@ -319,7 +330,8 @@
                 $('#categoriaGasto').val('otros')
             }
         }
-
+        
+        
 
         $('#tipoGasto').change(function () {
             var tipo = $('#tipoGasto').val();
@@ -371,7 +383,7 @@
         
         $('#subcategoriaTipoGasto').change(function() {
             var subcategoria = $('#subcategoriaTipoGasto option:selected').text()
-            $('#subCategoriaGasto').val(subcategoria)
+            $('#subCategoriaGasto').val(subcategoria)           
         })
 
         
@@ -425,7 +437,7 @@
                         $('#form-save').submit()                     
                     }
                 });                                
-            } else {
+            } else {                
                 $('#tasaCambio').val(1.00)    
                 $('#form-save').submit()
             }

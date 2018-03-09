@@ -255,7 +255,7 @@ dd($resultado);
 //dd('PRIMER DATO:  ' . $request->PRESUPUESTO_ID . ' SEGUNDO DATO: ' . $request->TIPOGASTO_ID);
 
         /** Se obtiene No. de Detalle Presupuesto al que Corresponde **/
-//dd($request->all());
+
         if(($request->TIPO_LIQUIDACION == 'Otros Gastos') && ($request->CATEGORIA_GASTO == 'combustible' )) {
             $detallePresupuesto = Presupuesto::select('ID', 'ASIGNACION_MENSUAL as MONTO')->where('ID', '=', $request->PRESUPUESTO_ID)->first();
             //dd('ahi vamos...' . $detallePresupuesto->MONTO);
@@ -294,7 +294,7 @@ dd($resultado);
 
         if ($request->CATEGORIA_GASTO == 'combustible') {
             
-            $idp = SubcategoriaTipoGasto::select('MONTO_A_APLICAR')->where('ID', '=', $request->SUBCATEGORIATIPOGASTO_ID)->first();
+            $idp = SubcategoriaTipoGasto::select('MONTO_A_APLICAR')->where('ID', '=', $request->subcategoriaTipoGasto)->first();
             
             if ($saldo > 0) {
                 $saldoFactura = $saldo - $request->CANTIDAD_PORCENTAJE_CUSTOM;
@@ -343,7 +343,7 @@ dd($resultado);
             
         } else if ($request->CATEGORIA_GASTO == 'depreciación') {
             
-            $idp = SubcategoriaTipoGasto::select('MONTO_A_APLICAR')->where('ID', '=', $request->SUBCATEGORIATIPOGASTO_ID)->first();
+            $idp = SubcategoriaTipoGasto::select('MONTO_A_APLICAR')->where('ID', '=', $request->subcategoriaTipoGasto)->first();
             
             if ($saldo > 0) {
                 $saldoFactura = $saldo - $montoConversion;
@@ -397,7 +397,7 @@ dd($resultado);
             
             if($impuestoHotel !== false)            
             {   
-                $impuesto = SubcategoriaTipoGasto::select('MONTO_A_APLICAR')->where('ID', '=', $request->SUBCATEGORIATIPOGASTO_ID)->first();
+                $impuesto = SubcategoriaTipoGasto::select('MONTO_A_APLICAR')->where('ID', '=', $request->subcategoriaTipoGasto)->first();
                 $impuestoInguat = round(($impuesto->MONTO_A_APLICAR / 100), 4);      
                 
                 
@@ -498,6 +498,7 @@ dd($resultado);
 
         $factura->LIQUIDACION_ID = $request->LIQUIDACION_ID;
         $factura->TIPOGASTO_ID = $request->TIPOGASTO_ID;
+        $factura->SUBCATEGORIA_TIPOGASTO_ID = $request->subcategoriaTipoGasto;
         $factura->DETPRESUPUESTO_ID = $detallePresupuesto->ID;
         $factura->MONEDA_ID = $request->FMONEDA_ID;
         $factura->PROVEEDOR_ID = $request->PROVEEDOR_ID;
@@ -561,7 +562,7 @@ dd($resultado);
         $factura = Factura::findOrFail($factura_id);
 
 //dd($factura);
-        $subcategoria = SubcategoriaTipoGasto::where('ANULADO', '=', 0)->lists('DESCRIPCION', 'ID')->toArray();
+        $subcategoria = SubcategoriaTipoGasto::where('ANULADO', '=', 0)->where('TIPOGASTO_ID', '=', $factura->TIPOGASTO_ID)->lists('DESCRIPCION', 'ID')->toArray();
         $fechas =  Liquidacion::select('liq_liquidacion.FECHA_INICIO', 'liq_liquidacion.FECHA_FINAL')
             ->where('liq_liquidacion.ID', '=', $liquidacion_id)
             ->first();
@@ -707,7 +708,7 @@ dd($resultado);
         
                 if ($request->CATEGORIA_GASTO == 'combustible') {
                     
-                    $idp = SubcategoriaTipoGasto::select('MONTO_A_APLICAR')->where('ID', '=', $request->SUBCATEGORIATIPOGASTO_ID)->first();
+                    $idp = SubcategoriaTipoGasto::select('MONTO_A_APLICAR')->where('ID', '=', $request->subcategoriaTipoGasto)->first();
                     
                     if ($saldo > 0) {
                         $saldoFactura = $saldo - $request->CANTIDAD_PORCENTAJE_CUSTOM;
@@ -753,7 +754,7 @@ dd($resultado);
                     
                 } else if ($request->CATEGORIA_GASTO == 'depreciación') {
                     
-                    $idp = SubcategoriaTipoGasto::select('MONTO_A_APLICAR')->where('ID', '=', $request->SUBCATEGORIATIPOGASTO_ID)->first();
+                    $idp = SubcategoriaTipoGasto::select('MONTO_A_APLICAR')->where('ID', '=', $request->subcategoriaTipoGasto)->first();
                     
                     if ($saldo > 0) {
                         $saldoFactura = $saldo - $montoConversion;
@@ -803,7 +804,7 @@ dd($resultado);
                     $impuestoHotel = strpos(strtolower($request->SUBCATEGORIA_GASTO), $findMe); 
                     if($impuestoHotel !== false)            
                     {   
-                        $impuesto = SubcategoriaTipoGasto::select('MONTO_A_APLICAR')->where('ID', '=', $request->SUBCATEGORIATIPOGASTO_ID)->first();
+                        $impuesto = SubcategoriaTipoGasto::select('MONTO_A_APLICAR')->where('ID', '=', $request->subcategoriaTipoGasto)->first();
                         $impuestoInguat = round(($impuesto->MONTO_A_APLICAR / 100), 4);
                         $factura->CANTIDAD_PORCENTAJE_CUSTOM = $impuestoInguat;
                         if ($saldo > 0) {
@@ -891,13 +892,13 @@ dd($resultado);
                 } 
         
         Factura::where('ID', $id)
-                ->update(['TIPOGASTO_ID' => $request->TIPOGASTO_ID, 'MONEDA_ID' => $request->SENDER_ID, 'PROVEEDOR_ID' => $request->PROVEEDOR_ID, 
-                          'KILOMETRAJE_INICIAL' => $request->KM_INICIO, 'KILOMETRAJE_FINAL' => $request->KM_FINAL, 'CORRECCION' => 0,
+                ->update(['TIPOGASTO_ID' => $request->TIPOGASTO_ID, 'MONEDA_ID' => $request->FMONEDA_ID, 'PROVEEDOR_ID' => $request->PROVEEDOR_ID, 
+                          'KILOMETRAJE_INICIAL' => $request->KM_INICIO, 'KILOMETRAJE_FINAL' => $request->KM_FINAL, 'CORRECCION' => 0, 'SUBCATEGORIA_TIPOGASTO_ID' => $request->subcategoriaTipoGasto,
                           'SERIE' => $request->SERIE, 'NUMERO' => $request->NUMERO, 'FECHA_FACTURA' => $request->FECHA_FACTURA, 'TOTAL' => $montoConversion, 
                           'CANTIDAD_PORCENTAJE_CUSTOM' => $request->CANTIDAD_PORCENTAJE_CUSTOM, 'COMENTARIO_PAGO' => $request->COMENTARIO_PAGO, 
                           'APROBACION_PAGO' => $factura->APROBACION_PAGO, 'MONTO_AFECTO' => $factura->MONTO_AFECTO, 'MONTO_EXENTO' => $factura->MONTO_EXENTO,
                           'MONTO_IVA' => $factura->MONTO_IVA, 'MONTO_REMANENTE' => $factura->MONTO_REMANENTE, 'TIPODOCUMENTO_ID' => $request->TIPODOCUMENTO_ID,]);
-
+                          
 
         return Redirect::to('liquidaciones/' . $request->LIQUIDACION_ID . '-' . $request->TIPO_LIQUIDACION . '/edit');
     }

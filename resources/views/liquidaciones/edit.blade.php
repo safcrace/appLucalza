@@ -54,7 +54,7 @@
                                     @endif
                                     <td><a href="{{ route('facturas.edit', $liquidacion->ID . '-' . $factura->ID . '-' . $tipoLiquidacion) }}">{{ $factura->TIPOGASTO}}</a></td>
                                     <td><a href="{{ route('facturas.edit', $liquidacion->ID . '-' . $factura->ID . '-' . $tipoLiquidacion) }}">{{ $factura->TOTAL}}</a></td>
-                                    <td><a href="{{ route('facturas.edit', $liquidacion->ID . '-' . $factura->ID . '-' . $tipoLiquidacion) }}">{{ ($factura->MONTO_REMANENTE)?'Remanente: ' . $factura->MONTO_REMANENTE:'N/A' }}</a></td>
+                                    <td><a href="{{ route('facturas.edit', $liquidacion->ID . '-' . $factura->ID . '-' . $tipoLiquidacion) }}">{{ ($factura->MONTO_REMANENTE)?$factura->MONTO_REMANENTE:'N/A' }}</a></td>
                                     <td class="text-center"><a href="{{ route('facturas.edit', $factura->ID ) }}">{{ ($factura->ANULADO)?'SI':'' }}</a></td>
                                     <td class="text-center">
                                       <a href="{{ route('anularFactura', $factura->ID) }}" class="btn-delete"><span class="glyphicon glyphicon-ban-circle" aria-hidden="true" style="font-size:20px; color: black"></span></a>
