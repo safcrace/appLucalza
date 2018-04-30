@@ -31,12 +31,21 @@
     <div class="col-md-1 col-md-offset-1">
       {!! Form::label('ASIGNACIONPRESUPUESTO_ID', 'Tipo Gasto') !!}
     </div>
-    <div class="col-md-3">
-      {!! Form::radio('ASIGNACIONPRESUPUESTO_ID', 1, ['id' => 'dinero']); !!}  ADMINISTRATIVO
-    </div>
-    <div class="col-md-2">
-      {!! Form::radio('ASIGNACIONPRESUPUESTO_ID', 2, ['id' => 'unidad']); !!}  DEPRECIACION
-    </div>
+    @if(isset($ruta))
+      <div class="col-md-3">
+        {!! Form::radio('ASIGNACIONPRESUPUESTO_ID', 1, ['id' => 'dinero']); !!}  ADMINISTRATIVO
+      </div>
+      <div class="col-md-2">
+          {!! Form::radio('ASIGNACIONPRESUPUESTO_ID', 2, ['id' => 'unidad']); !!}  DEPRECIACION
+      </div>
+    @else
+        <div class="col-md-3">
+          {!! Form::radio('ASIGNACIONPRESUPUESTO_ID', 1, true, ['id' => 'dinero']); !!}  ADMINISTRATIVO
+        </div>
+        <div class="col-md-2">
+          {!! Form::radio('ASIGNACIONPRESUPUESTO_ID', 2, false, ['id' => 'unidad']); !!}  DEPRECIACION
+        </div>
+    @endif
   </div>
 @endif
 

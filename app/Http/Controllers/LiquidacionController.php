@@ -10,9 +10,10 @@ use App\UsuarioRuta;
 use App\Http\Requests;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
+use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Mail;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Redirect;
 use App\Http\Requests\CreateLiquidacionRequest;
@@ -106,10 +107,15 @@ class LiquidacionController extends Controller
                         ->where('RUTA_ID', '=', $request->RUTA_ID)
                         ->first();
 
-        /** Se valida si periodo de Liquidación existe en Presupuesto **/
+                        
+                        /** Se valida si periodo de Liquidación existe en Presupuesto **/
+                        
+                        $fechaInicio = $request->FECHA_INICIO;
+                        $fechaFinal = $request->FECHA_FINAL;
 
-        $fechaInicio = $request->FECHA_INICIO;
-        $fechaFinal = $request->FECHA_FINAL;
+        if ($fechaInicio >= $fechaFinal) {            
+            return back()->withInput()->with('info', 'La Fecha de Inicio no puede ser Mayor a la Fecha Final');
+        }
 
         $presupuestoRuta = Presupuesto::select('ID', 'VIGENCIA_INICIO', 'VIGENCIA_FINAL')
                                             ->where('USUARIORUTA_ID', '=', $usuarioRuta->ID)
@@ -119,7 +125,7 @@ class LiquidacionController extends Controller
 
         if ($presupuestoRuta == null) {
             return back()->withInput()->with('info', 'El Período de la Liquidación no pertenece a un Presupuesto Válido.  Por favor verifique Ruta y Rango de Fechas!');
-        }
+        }       
 
         /** Se Valida que no existe una Liquidación para el mismo periodo **/
 
@@ -225,6 +231,13 @@ class LiquidacionController extends Controller
                         ->where('RUTA_ID', '=', $request->RUTA_ID)
                         ->first();
 
+                        $fechaInicio = $request->FECHA_INICIO;
+                        $fechaFinal = $request->FECHA_FINAL;
+
+        if ($fechaInicio >= $fechaFinal) {            
+            return back()->withInput()->with('info', 'La Fecha de Inicio no puede ser Mayor a la Fecha Final');
+        }
+
 
         Liquidacion::where('ID', $id)
                 ->update(['USUARIORUTA_ID' => $usuarioRuta_id->ID, 'FECHA_INICIO' => $request->FECHA_INICIO, 'FECHA_FINAL' => $request->FECHA_FINAL,
@@ -246,6 +259,12 @@ class LiquidacionController extends Controller
         $liquidacion_id = $param[0];
         $tipoLiquidacion = $param[1];
 
+        $total = Factura::where('LIQUIDACION_ID', '=', $liquidacion_id)->count();
+
+        if ($total == 0) {
+            return back()->withInput()->with('info', 'Debe registrar al menos una factura!');
+        }        
+
         Liquidacion::where('ID', $liquidacion_id)
             ->update(['ESTADOLIQUIDACION_ID' => 2]);
         return Redirect::to('liquidaciones/tipo/' . $tipoLiquidacion);
@@ -266,16 +285,21 @@ class LiquidacionController extends Controller
                                     ->where('liq_liquidacion.ID', '=', $id)
                                     ->first();
 
-        $mail->ruta = $request->root() . "/liquidaciones/$id-" . trim($request->TIPO_GASTO) . '/edit';         
-                                    
-
+        $mail->ruta = $request->root() . "/liquidaciones/$id-" . trim($request->TIPO_GASTO) . '/edit';  
+        
+        if (! $request->SUPERVISOR_COMENTARIO) {
+            return back()->withInput()->with('info', 'Debe registrar un comentario!');
+        } 
+        
         Liquidacion::where('ID', $id)
-                ->update(['SUPERVISOR_COMENTARIO' => $request->SUPERVISOR_COMENTARIO, 'ESTADOLIQUIDACION_ID' => 6]);
-
+        ->update(['SUPERVISOR_COMENTARIO' => $request->SUPERVISOR_COMENTARIO, 'ESTADOLIQUIDACION_ID' => 6]);
+        
         $liquidacion = Liquidacion::where('ID', '=', $id)->first();
+        
+        $facturas = Factura::where('LIQUIDACION_ID', '=', $id)->where('CORRECCION', '=', 1)->get();        
 
 
-        Mail::send('emails/correccionSupervisor', compact('mail','liquidacion'), function($m) use ($mail) {
+        Mail::send('emails/correccionSupervisor', compact('mail','liquidacion', 'facturas'), function($m) use ($mail) {
            $m->to($mail->email, $mail->nombre)->subject('Corección de Liquidación');
         });
 
@@ -297,12 +321,18 @@ class LiquidacionController extends Controller
             ->where('liq_liquidacion.ID', '=', $id)
             ->first();
 
+        if (! $request->CONTABILIDAD_COMENTARIO) {
+            return back()->withInput()->with('info', 'Debe registrar un comentario!');
+        } 
+
         Liquidacion::where('ID', $id)
                 ->update(['CONTABILIDAD_COMENTARIO' => $request->CONTABILIDAD_COMENTARIO, 'ESTADOLIQUIDACION_ID' => 6]);
 
         $liquidacion = Liquidacion::where('ID', '=', $id)->first();
 
-        Mail::send('emails/correccionContabilidad', compact('mail','liquidacion'), function($m) use ($mail) {
+        $facturas = Factura::where('LIQUIDACION_ID', '=', $id)->where('CORRECCION', '=', 1)->get(); 
+
+        Mail::send('emails/correccionContabilidad', compact('mail','liquidacion', 'facturas'), function($m) use ($mail) {
             $m->to($mail->email, $mail->nombre)->subject('Corección de Liquidación');
         });
 
@@ -318,9 +348,16 @@ class LiquidacionController extends Controller
      */
     public function updateLiquidacionAprobacion(Request $request, $id)
     {
+        $total = Factura::where('LIQUIDACION_ID', '=', $id)->where('CORRECCION', '=', 1)->count();
+
+        if ($total > 0) {
+            return back()->withInput()->with('info', 'No puede aprobar, hay correciones pendientes de resolver!');
+        }
 
         Liquidacion::where('ID', $id)
                 ->update(['ESTADOLIQUIDACION_ID' => 3]);
+
+
 
         return Redirect::to('supervisor');
     }
@@ -357,5 +394,81 @@ class LiquidacionController extends Controller
             }        
             return $anular;            
     }
+
+    public function exportarExcel($id)
+    {
+        //dd('yes');
+        Excel::create('Informe Liquidación No. ' . $id, function($excel) use ($id) {
+
+            $excel->sheet('Liquidación No. ' . $id, function($sheet) use ($id) {
+                
+                $liquidacion = Liquidacion::findOrFail($id);
+
+                $usuario = Liquidacion::select('users.nombre' )
+                                            ->join('cat_usuarioruta', 'cat_usuarioruta.ID', '=', 'liq_liquidacion.USUARIORUTA_ID')
+                                            ->join('users', 'users.id', '=', 'cat_usuarioruta.USER_ID')
+                                            ->where('liq_liquidacion.ID', '=', $id)
+                                            ->first();
+                $usuario_id = Auth::user()->id;
+
+                $rutas = Ruta::join('cat_usuarioruta', 'cat_usuarioruta.RUTA_ID', '=', 'cat_ruta.ID')
+                              ->join('users', 'users.id', '=', 'cat_usuarioruta.USER_ID')
+                              ->where('users.id', '=', $usuario_id)
+                              ->lists('cat_ruta.DESCRIPCION', 'cat_ruta.ID')
+                              ->toArray();
+
+                $combo = Liquidacion::select('liq_liquidacion.ID as ID', 'cat_ruta.DESCRIPCION as RUTA')
+                                      ->join('cat_usuarioruta', 'cat_usuarioruta.ID', '=', 'liq_liquidacion.USUARIORUTA_ID')
+                                      ->join('cat_ruta', 'cat_ruta.ID', '=', 'cat_usuarioruta.RUTA_ID')
+                                      ->where('liq_liquidacion.ID', '=', $id)
+                                      ->first();
+//dd($liquidacion->SUPERVISOR_COMENTARIO);
+
+                //header
+                //$sheet->mergeCells('A1:E1');
+                $sheet->row(1,['Liquidación No. ' . $liquidacion->ID]);
+                $sheet->mergeCells('A1:E1');
+                $sheet->row(2,['Nombre: ' . $usuario->nombre]);
+                $sheet->mergeCells('A1:E1');
+                $sheet->row(3,['Ruta: ' . $combo->RUTA]);
+                $sheet->mergeCells('A1:E1');
+                $sheet->row(4,['Fecha de Inicio: ' . $liquidacion->FECHA_INICIO->format('d-m-Y')]);
+                $sheet->mergeCells('A1:E1');
+                $sheet->row(5,['Fecha de Final: ' . $liquidacion->FECHA_FINAL->format('d-m-Y')]);
+                
+                $sheet->row(6,['']);                
+                $sheet->row(7,['CORRELATIVO', 'PROVEEDOR', 'SERIE', 'NUMERO', 'TOTAL', 'FECHA', 'ANULADO', 'TIPO GASTO', 'NO APLICA PAGO']);
+
+///Detalle de facturas
+                
+                $facturas = Factura::select('liq_factura.ID', 'cat_proveedor.NOMBRE', 'liq_factura.SERIE as SERIE', 'liq_factura.NUMERO as NUMERO', 'liq_factura.TOTAL as TOTAL',
+                                            'liq_factura.FECHA_FACTURA', 'liq_factura.ANULADO', 'cat_tipogasto.DESCRIPCION as TIPOGASTO', 'liq_factura.CORRECCION', 'liq_factura.MONTO_REMANENTE')
+                                                        ->join('cat_proveedor', 'cat_proveedor.ID', '=', 'liq_factura.PROVEEDOR_ID')
+                                                        ->join('cat_tipogasto', 'cat_tipogasto.ID', '=', 'liq_factura.TIPOGASTO_ID')
+                                                        //->join('cat_frecuenciatiempo', 'cat_frecuenciatiempo.ID', '=', 'pre_detpresupuesto.FRECUENCIATIEMPO_ID')
+                                                        ->where('liq_factura.LIQUIDACION_ID', '=', $id)
+                                                        //->where('liq_factura.ANULADO', '=', 0)
+                                                        ->get();
+                $correlativo = 1;
+                //$column[];
+                foreach ($facturas as $factura) {
+                    $column[0] = $correlativo++;
+                    $column[1] = $factura->NOMBRE;
+                    $column[2] = $factura->SERIE;
+                    $column[3] = $factura->NUMERO;
+                    $column[4] = $factura->TOTAL;
+                    $column[5] = $factura->FECHA_FACTURA->format('d-m-y');
+                    $column[6] = $factura->ANULADO ? 'Si' : 'No';
+                    $column[7] = $factura->TIPOGASTO;
+                    $column[8] = $factura->MONTO_REMANENTE;
+                    $sheet->appendRow($column);
+
+                }                       
+        
+            });
+        
+        })->download('xls');
+    }
+   
 
 }

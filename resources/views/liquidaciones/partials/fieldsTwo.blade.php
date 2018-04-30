@@ -8,7 +8,7 @@
   <div class="col-md-1 col-md-offset-1">
         {!! Form::label('USUARIO', 'Usuario') !!}
   </div>
-  <div class="col-md-3">
+  <div class="col-md-3"> 
       {!! Form::text('USUARIO', $usuario->nombre, ['class' => 'form-control', 'disabled' => 'true']); !!}
   </div>
 
@@ -20,9 +20,7 @@
   </div>
 
 
-  <div class="col-md-1 col-md-offset-1">
-      <button type="button" class="btn btn-default"><span class="glyphicon glyphicon-print" aria-hidden="true" style="font-size:32px; color: black" data-toggle="tooltip" data-placement="top" title="Imprimr"></button>
-  </div>
+  
 </div>
 
 <div class="row form-group">
@@ -54,12 +52,7 @@
         {!! Form::text('TOTAL', number_format(App\Factura::where('LIQUIDACION_ID', '=', $liquidacion->ID)->where('ANULADO', '=', 0)->sum('TOTAL'), 2), ['class' => 'form-control', 'disabled' => 'true', 'id' => 'totalLiquidacion']); !!}
     </div>
 
-  <div class="col-md-1">
-
-      <a href="{{ route('enviarLiquidacion', $liquidacion->ID . '-' . $tipoLiquidacion) }}">
-        <button type="button" class="btn btn-default" ><span class="glyphicon glyphicon-floppy-saved" aria-hidden="true" style="font-size:32px; color: black" data-toggle="tooltip" data-placement="top" title="Enviar"></button>
-      </a>
-  </div>
+  
 </div>
 
 <div class="row form-group">
@@ -69,9 +62,9 @@
     <div class="col-md-8">
         {!! Form::textarea('COMENTARIO_PAGO', null, ['class' => 'form-control', 'rows' => '2', 'cols' => '500', 'placeholder' => 'Observaciones y/o Comentarios']); !!}
     </div>
-  <div class="col-md-1">
+  {{--  <div class="col-md-1">
       <button type="button" class="btn btn-default" data-toggle="modal" data-target="#myModalTwo"><span class="glyphicon glyphicon-floppy-remove" aria-hidden="true" style="font-size:32px; color: black" data-toggle="tooltip" data-placement="top" title="Anular"></span></button>
-  </div>
+  </div>  --}}
     {{--<div class="col-md-1 col-md-offset-1">
         {!! Form::label('ANULADO', 'Estatus') !!}
   </div>
@@ -80,8 +73,7 @@
   </div>
   <div class="col-md-2">
       {!! Form::radio('ANULADO', 1); !!}  Baja
-  </div>--}}
-
+  </div>--}}  
 
 </div>
 
@@ -106,3 +98,16 @@
         </div>
     </div>
 @endif
+
+<div class="row form-group">
+        <div class="col-md-1  col-md-offset-1 col-xs-1 col-xs-offset-3">
+            <button type="button" class="btn btn-default"><a href="{{ route('exportarExcel', $liquidacion->ID) }}"><span class="glyphicon glyphicon-download-alt" aria-hidden="true" style="font-size:32px; color: black" data-toggle="tooltip" data-placement="top" title="Descargar"></span></a></button>
+        </div>
+        
+        <div class="col-md-1 col-md-offset-7 col-xs-1 col-xs-offset-1">
+    
+            <a href="{{ route('enviarLiquidacion', $liquidacion->ID . '-' . $tipoLiquidacion) }}">
+                <button type="button" class="btn btn-default" ><span class="glyphicon glyphicon-floppy-saved" aria-hidden="true" style="font-size:32px; color: black" data-toggle="tooltip" data-placement="top" title="Enviar"></button>
+            </a>
+        </div>
+</div>

@@ -15,6 +15,13 @@
 
     <a href="{{ $mail->ruta }}">Ir a la Liquidación</a>
 
+    <p>Facturas a corregir:</p>
+    <ul>
+        @foreach($facturas as $factura)        
+            <li>Factura #: {{$factura->NUMERO}} ::: Motivo: {{$factura->COMENTARIO_SUPERVISOR}}</li>
+        @endforeach
+    </ul>
+
     <p>Saludos,</p>
 
 </body>

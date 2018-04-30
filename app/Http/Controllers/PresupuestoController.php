@@ -237,6 +237,9 @@ class PresupuestoController extends Controller
             $texto = ' de esta Ruta';
         } else {
             $texto = ' de este Gasto';
+            if ( $request->ASIGNACION_MENSUAL <= 0) {
+                return back()->withInput()->with('info', 'Debe ingresar una Asignación Valida');
+            }
         }
 
         $usuarioRuta_id = UsuarioRuta::select('ID')
@@ -250,11 +253,16 @@ class PresupuestoController extends Controller
                                                 ->get();
 
         //dd($request->all());
+
+        if ($request->VIGENCIA_INICIO >= $request->VIGENCIA_FINAL) {
+            return back()->withInput()->with('info', 'La Fecha de Inicio no puede ser Mayor a la Fecha Final');
+        }
+        
         foreach ($presupuestosRuta as $presupuestoRuta) {
             if ($request->VIGENCIA_INICIO <= $presupuestoRuta->VIGENCIA_FINAL) {
                 return back()->withInput()->with('info', 'Por Favor Revise el Rango de Fecha, ya que se Traslapa con otro presupuesto' . $texto);
             }
-        }
+        }       
 
         //dd('pasamos porue no existe condicion!' . $presupuestosRuta);
 

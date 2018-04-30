@@ -43,6 +43,12 @@
                 <th class="text-center">Monto Exento</th>
                 <th class="text-center">Monto Iva</th>
                 <th class="text-center">Monto Remanente</th>
+                <th class="text-center">Cuenta Contable Exento</th>
+                <th class="text-center">Codigo Impuesto Exento</th>
+                <th class="text-center">Cuenta Contable Afecto</th>
+                <th class="text-center">Codigo Impuesto Afecto</th>
+                <th class="text-center">Cuenta Contable Remanente</th>
+                <th class="text-center">Codigo Impuesto Remanente</th>
                 <th class="text-center">Project</th>
                 <th class="text-center">Centro de Costo 1</th>
                 <th class="text-center">Centro de Costo 2</th>
@@ -73,6 +79,12 @@
                         <td>Q.{{ $factura->MONTO_EXENTO}}</td>
                         <td>Q.{{ $factura->MONTO_IVA}}</td>
                         <td>Q.{{ $factura->MONTO_REMANENTE}}</td>
+                        <td>{{ $factura->CUENTA_CONTABLE_EXENTO }}</td>
+                        <td>{{ $factura->CODIGO_IMPUESTO_EXENTO }}</td>
+                        <td>{{ $factura->CUENTA_CONTABLE_AFECTO }}</td>
+                        <td>{{ $factura->CODIGO_IMPUESTO_AFECTO }}</td>
+                        <td>{{ $factura->CUENTA_CONTABLE_REMANENTE }}</td>
+                        <td>{{ $factura->CODIGO_IMPUESTO_REMANENTE }}</td>
                         <td>00FISCAL</td>
                         <td>{{ $factura->CENTROCOSTO1}}</td>
                         <td>{{ $factura->CENTROCOSTO2}}</td>

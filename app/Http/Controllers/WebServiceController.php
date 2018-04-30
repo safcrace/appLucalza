@@ -542,9 +542,13 @@ class WebServiceController extends Controller
             ]
         ]);
 
+        
         $data = json_decode($response->getBody(), true);
-
-
+        
+       /*  if ($data['message'] == "Invalid SAP database reference") {
+            dd('Bien Safi');
+        } */
+        
         $filas = $data['nrows'];
 
         $codigos = [];

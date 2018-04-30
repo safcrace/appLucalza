@@ -30,7 +30,7 @@
                     <li><a href="{{ route('login') }}">Login</a></li>
                     <li><a href="{{ route('register') }}">Register</a></li>
                 @else
-                    <li style="position:relative; top: 30px; left: 120px: ">{{ Auth::user()->nombre }}</li>
+                    <li class="hidden-xs" style="position:relative; top: 30px; left: 120px: ">{{ Auth::user()->nombre }}</li>
                     <li class=""><a href="{{ route('home') }}" data-toggle="tooltip" data-placement="top" title="Inicio"><img src="{{ asset('images/ayuda.png') }}" alt=""></a></li>
                     <li class="">
                       <a href="{{ route('logout') }}" data-toggle="tooltip" data-placement="top" title="Cerrar Sesión"><span class="glyphicon glyphicon-off" aria-hidden="true" style="font-size:32px;"></span></a>

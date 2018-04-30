@@ -14,38 +14,50 @@
   </div>
 
   <div class="col-md-1">
-        {!! Form::label('TOTAL', 'Total') !!}
-  </div>
+    {!! Form::label('USUARIO', 'Usuario') !!}
+</div>
+<div class="col-md-3">
+    {!! Form::text('USUARIO', $liquidacion->USUARIO, ['class' => 'form-control', 'disabled' => 'true']); !!}
+</div>
+
+  
 </div>
 
 <div class="row form-group">
+  
   <div class="col-md-1">
-        {!! Form::label('USUARIO', 'Usuario') !!}
-  </div>
-  <div class="col-md-2">
-        {!! Form::text('USUARIO', $liquidacion->USUARIO, ['class' => 'form-control', 'disabled' => 'true']); !!}
-  </div>
-  <div class="col-md-1">
-        {!! Form::label('FECHA', 'Fecha') !!}
+        {!! Form::label('FECHA', 'Fecha Inicio') !!}
   </div>
   <div class="col-md-2">
         {!! Form::text('FECHA', $liquidacion->FECHA_INICIO->format('d-m-Y'), ['class' => 'form-control', 'disabled' => 'true']); !!}
   </div>
+  <div class="col-md-1">
+    {!! Form::label('FECHA', 'Fecha Final') !!}
+</div>
+<div class="col-md-2">
+    {!! Form::text('FECHA', $liquidacion->FECHA_FINAL->format('d-m-Y'), ['class' => 'form-control', 'disabled' => 'true']); !!}
+</div>
+
+  <div class="col-md-1">
+    {!! Form::label('TOTAL', 'Total') !!}
+  </div>
   <div class="col-md-2">
 
-        {!! Form::text('TOTAL', 'Q.' . App\Factura::where('LIQUIDACION_ID', '=', $liquidacion->ID)->where('ANULADO', '=', 0)->sum('TOTAL'), ['class' => 'form-control', 'disabled' => 'true']); !!}
+    {!! Form::text('TOTAL', 'Q.' . App\Factura::where('LIQUIDACION_ID', '=', $liquidacion->ID)->where('ANULADO', '=', 0)->sum('TOTAL'), ['class' => 'form-control', 'disabled' => 'true']); !!}
   </div>
-  <div class="col-md-1 col-md-offset-1">
-      <button type="button" class="btn btn-default" data-toggle="modal" data-target="#myModalTwo"><span class="glyphicon glyphicon-floppy-remove" aria-hidden="true" style="font-size:32px; color: black" data-toggle="tooltip" data-placement="top" title="Corregir"></span></button>
-  </div>
-  <div class="col-md-1">
-    {!! Form::model($liquidacion, ['route' => ['aprobacionLiquidacion', $liquidacion->ID], 'method' => 'PATCH']) !!}
-      <button type="submit" class="btn btn-default"><span class="glyphicon glyphicon-floppy-saved" aria-hidden="true" style="font-size:32px; color: black" data-toggle="tooltip" data-placement="top" title="Aprobar"></button>
-    {!! Form::close() !!}
-  </div>
-  <div class="col-md-1">
-      <button type="button" class="btn btn-default"><span class="glyphicon glyphicon-print" aria-hidden="true" style="font-size:32px; color: black" data-toggle="tooltip" data-placement="top" title="Imprimr"></button>
-  </div>
+</div>
+<div class="row form-group">
+      <div class="col-md-1 col-md-offset-3 col-xs-1 col-xs-offset-2">
+          <button type="button" class="btn btn-default" data-toggle="modal" data-target="#myModalTwo"><span class="glyphicon glyphicon-floppy-remove" aria-hidden="true" style="font-size:32px; color: black" data-toggle="tooltip" data-placement="top" title="Corregir"></span></button>
+      </div>
+      <div class="col-md-1 col-xs-1 col-xs-offset-1">
+        {!! Form::model($liquidacion, ['route' => ['aprobacionLiquidacion', $liquidacion->ID], 'method' => 'PATCH']) !!}
+          <button type="submit" class="btn btn-default"><span class="glyphicon glyphicon-floppy-saved" aria-hidden="true" style="font-size:32px; color: black" data-toggle="tooltip" data-placement="top" title="Aprobar"></button>
+        {!! Form::close() !!}
+      </div>
+      <div class="col-md-1 col-xs-1 col-xs-offset-1">
+          <button type="button" class="btn btn-default"><span class="glyphicon glyphicon-download-alt" aria-hidden="true" style="font-size:32px; color: black" data-toggle="tooltip" data-placement="top" title="Descargar"></button>
+      </div>
 </div>
 
 

@@ -949,7 +949,7 @@ dd($resultado);
      * @return \Illuminate\Http\Response
      */
     public function updateComentarioFactura(Request $request, $id)
-    {
+    {       
         $comentarioActual = Factura::select('COMENTARIO_SUPERVISOR')->where('ID', '=', $id)->first();
         $nuevoComentario = $comentarioActual->COMENTARIO_SUPERVISOR . ' ' . $request->COMENTARIO_SUPERVISOR;
         Factura::where('ID', $id)

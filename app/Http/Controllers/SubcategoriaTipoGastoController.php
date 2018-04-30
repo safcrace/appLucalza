@@ -55,6 +55,22 @@ class SubcategoriaTipoGastoController extends Controller
             'DESCRIPCION' => 'required',
             'EXENTO'    => 'required'
         ]);
+//dd($request->all());
+        if ($request->EXENTO) {
+            if ($request->CAUSAEXENCION_ID == 2) {                
+                if ($request->MONTO_A_APLICAR_CANTIDAD <= 0) {
+                    return back()->withInput()->with('info', 'El Campo Cantidad debe contener un valor válido!');
+                } 
+                if ($request->UNIDAD_MEDIDA_ID == null) {                   
+                    return back()->withInput()->with('info', 'Debe seleccionar un tipo de asignación!');
+                } 
+            } else {               
+                if ($request->MONTO_A_APLICAR_PORCENTAJE <= 0) {
+                    return back()->withInput()->with('info', 'El Campo Porcentaje debe contener un valor válido!');
+                }            
+            }
+        } 
+        
         $tipoGasto = $request->TIPOGASTO_ID;
 
 

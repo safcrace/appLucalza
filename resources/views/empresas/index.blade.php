@@ -25,6 +25,7 @@
                          <th class="text-center">Estado</th>
                          <th class="text-center">Anular</th>
                          <th class="text-center">Módulo</th>
+                         
                        </thead>
                        <tbody>
 

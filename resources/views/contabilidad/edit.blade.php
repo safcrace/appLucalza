@@ -29,7 +29,7 @@
 
 
                    <div class="panel-body">
-
+                    <div class="table-responsive">
                       <table class="table table-bordered table-striped table-hover">
                         <thead>
                           <th class="text-center">No.</th>
@@ -65,15 +65,20 @@
                                             <img src='{{ asset("images/$factura->EMAIL/$factura->FOTO") }}' height="32px">
                                         </a>
                                     </td>
-                                    <td class="text-center"><span class="glyphicon glyphicon-pencil btn_corregir" aria-hidden="true" style="font-size:20px; color: black" data-toggle="modal" data-target="#myModal"></td>
+                                    @if($factura->CORRECCION == 1)
+                                    hola
+                                        <td class="text-center" style="background-color: red;"><span class="glyphicon glyphicon-pencil btn_corregir" aria-hidden="true" style="font-size:20px; color: black" data-toggle="modal" data-target="#myModal"></td>
+                                    @else
+                                        <td class="text-center"><span class="glyphicon glyphicon-pencil btn_corregir" aria-hidden="true" style="font-size:20px; color: black" data-toggle="modal" data-target="#myModal"></td>
+                                    @endif
                                     <td class="text-center" style="max-widht: 200px" >
                                         <button type="button" class="btn btn-sm btn-default" data-toggle="popover" data-trigger="focus" title="Comentario Supervisor" data-content="{{ $factura->COMENTARIO_SUPERVISOR }}">
-                                            {{ substr($factura->COMENTARIO_SUPERVISOR, 1, 20) }}
+                                            {{ substr($factura->COMENTARIO_SUPERVISOR, 1, 10) }}
                                         </button>
                                     </td>
                                     <td style="max-widht: 200px" class="text-center">
                                         <button type="button" class="btn btn-sm btn-default" data-toggle="popover" data-trigger="focus" title="Comentario Contabilidad" data-content="{{ $factura->COMENTARIO_CONTABILIDAD }}">
-                                            {{ substr($factura->COMENTARIO_CONTABILIDAD, 1, 20) }}
+                                            {{ substr($factura->COMENTARIO_CONTABILIDAD, 1, 10) }}
                                         </button>
                                     </td>
                                     {{--<td class="text-center">{!! Form::checkbox('Corregir', true, false, ['class' => 'btn_corregir']); !!}</td>--}}
@@ -85,7 +90,7 @@
 
 
                        </table>
-
+                    </div>   
                        <div class="text-center">
                          {{--!!$factura->render()!! | , 'data-toggle' => 'modal', 'data-target' => '#myModal' --}}
                        </div>
@@ -108,7 +113,7 @@
       {!! Form::model($factura, ['route' => ['comentarioContabilidad', ':FACTURA_ID'], 'method' => 'PATCH', 'id' => 'form-update']) !!}
       <div class="modal-body">
 
-          <textarea name="COMENTARIO_CONTABILIDAD" class="form-control" rows="3"></textarea>
+          <textarea name="COMENTARIO_CONTABILIDAD" id="COMENTARIO_CONTABILIDADF" class="form-control" rows="3"></textarea>
 
       </div>
       <div class="modal-footer">
@@ -183,16 +188,20 @@
 
       $(".btn_enviar").click(function(e){
           e.preventDefault();
+          var comentarioContabilidad = $('#COMENTARIO_CONTABILIDADF').val()  
+          if (!comentarioContabilidad) {
+            alert('Debe registrar un comentario!')
+          } else {              
+            var form = $('#form-update');
+            var id = $("#facturaId").html();
+            var url = form.attr('action').replace(':FACTURA_ID', id);
+            var data = form.serialize();
 
-          var form = $('#form-update');
-          var id = $("#facturaId").html();
-          var url = form.attr('action').replace(':FACTURA_ID', id);
-          var data = form.serialize();
-
-          $.post(url, data, function (result){            
-            $('#myModal').modal('hide');
-            location.reload();
-          })
+            $.post(url, data, function (result){            
+                $('#myModal').modal('hide');
+                location.reload();
+            })
+          }
       });
 
       $('.popup-gallery').magnificPopup({

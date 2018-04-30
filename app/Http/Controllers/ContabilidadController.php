@@ -82,7 +82,7 @@ class ContabilidadController extends Controller
                                   ->first();
 
         $facturas = Factura::select('liq_factura.ID', 'cat_proveedor.ID as PROVEEDORID', 'cat_proveedor.NOMBRE', 'liq_factura.SERIE as SERIE', 'liq_factura.NUMERO as NUMERO', 'liq_factura.TOTAL as TOTAL',
-                                    'liq_factura.FECHA_FACTURA', 'cat_tipogasto.DESCRIPCION as TIPOGASTO', 'liq_factura.COMENTARIO_SUPERVISOR', 'liq_factura.COMENTARIO_CONTABILIDAD',
+                                    'liq_factura.FECHA_FACTURA', 'cat_tipogasto.DESCRIPCION as TIPOGASTO', 'liq_factura.COMENTARIO_SUPERVISOR', 'liq_factura.COMENTARIO_CONTABILIDAD', 'liq_factura.CORRECCION',
                                     'users.email as EMAIL', 'liq_factura.FOTO as FOTO', 'cat_proveedor.TIPOPROVEEDOR_ID')
                                                 ->join('cat_proveedor', 'cat_proveedor.ID', '=', 'liq_factura.PROVEEDOR_ID')
                                                 ->join('cat_tipogasto', 'cat_tipogasto.ID', '=', 'liq_factura.TIPOGASTO_ID')
@@ -93,6 +93,7 @@ class ContabilidadController extends Controller
                                                 ->where('liq_factura.LIQUIDACION_ID', '=', $id)
                                                 ->where('liq_factura.ANULADO', '=', 0) 
                                                 ->paginate();
+
         $corregirFactura = array();
 
         $tipoProveedor = TipoProveedor::lists('DESCRIPCION', 'ID')->toArray();
@@ -149,7 +150,8 @@ class ContabilidadController extends Controller
                                     'cat_tipogasto.DESCRIPCION as TIPOGASTO', 'cat_tipogasto.GRUPOTIPOGASTO_ID', 'liq_factura.APROBACION_PAGO', 'cat_tipodocumento.DESCRIPCION as DOCUMENTO',
                                     'users.email as EMAIL', 'liq_factura.FOTO as FOTO', 'cat_proveedor.TIPOPROVEEDOR_ID', 'liq_factura.MONTO_AFECTO',
                                     'MONTO_EXENTO', 'liq_factura.MONTO_REMANENTE', 'pre_detpresupuesto.CENTROCOSTO1', 'pre_detpresupuesto.CENTROCOSTO2',
-                                    'pre_detpresupuesto.CENTROCOSTO3', 'pre_detpresupuesto.CENTROCOSTO4', 'pre_detpresupuesto.CENTROCOSTO5')
+                                    'pre_detpresupuesto.CENTROCOSTO3', 'pre_detpresupuesto.CENTROCOSTO4', 'pre_detpresupuesto.CENTROCOSTO5', 'cat_tipogasto.CUENTA_CONTABLE_EXENTO', 'cat_tipogasto.CODIGO_IMPUESTO_EXENTO',
+                                    'cat_tipogasto.CUENTA_CONTABLE_AFECTO', 'cat_tipogasto.CODIGO_IMPUESTO_AFECTO', 'cat_tipogasto.CUENTA_CONTABLE_REMANENTE', 'cat_tipogasto.CODIGO_IMPUESTO_REMANENTE')
                                         ->join('cat_proveedor', 'cat_proveedor.ID', '=', 'liq_factura.PROVEEDOR_ID')
                                         ->join('cat_tipogasto', 'cat_tipogasto.ID', '=', 'liq_factura.TIPOGASTO_ID')
                                         ->join('liq_liquidacion', 'liq_liquidacion.ID', '=', 'liq_factura.LIQUIDACION_ID')
@@ -160,7 +162,7 @@ class ContabilidadController extends Controller
                                         //->join('cat_frecuenciatiempo', 'cat_frecuenciatiempo.ID', '=', 'pre_detpresupuesto.FRECUENCIATIEMPO_ID')
                                         ->where('liq_factura.LIQUIDACION_ID', '=', $id)
                                         ->where('liq_factura.ANULADO', '=', 0) 
-                                        ->paginate();       
+                                        ->paginate();                                               
 
         return view('contabilidad.report', compact('liquidacion', 'facturas', 'codigoUsuarioSap'));
     }

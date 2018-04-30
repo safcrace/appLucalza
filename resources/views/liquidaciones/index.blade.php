@@ -6,12 +6,15 @@
       <div class="row">
           <div class="col-md-12 ">
               <div class="panel panel-primary">
-                  <div class="panel-heading panel-title" style="height: 65px">Control de Liquidaciones
-                      <button type="button" class="btn btn-default" style="border-color: white; float: right"><a href="{{ route('home') }}" title="Cerrar"><span class="glyphicon glyphicon-remove-sign" aria-hidden="true" style="font-size:32px; color: black"></span></a></button>
-                      <button type="button" class="btn btn-default" style="border-color: white; float: right"><a href="{{ route('liquidacionCreate', $tipoLiquidacion ) }}" title="Agregar"><span class="glyphicon glyphicon-plus-sign" aria-hidden="true" style="font-size:32px; color: black"></span></a></button>
+                  <div class="panel-heading panel-title" style="height: 65px">Control Liquidaciones
+                      <button type="button" class="btn btn-default hidden-xs" style="border-color: white; float: right"><a href="{{ route('home') }}" title="Cerrar"><span class="glyphicon glyphicon-remove-sign" aria-hidden="true" style="font-size:32px; color: black"></span></a></button>
+                      <button type="button" class="btn btn-default btn-xs visible-xs" style="border-color: white; float: right"><a href="{{ route('home') }}" title="Cerrar"><span class="glyphicon glyphicon-remove-sign" aria-hidden="true" style="font-size:24px; color: black"></span></a></button>
+                      <button type="button" class="btn btn-default hidden-xs" style="border-color: white; float: right"><a href="{{ route('liquidacionCreate', $tipoLiquidacion ) }}" title="Agregar"><span class="glyphicon glyphicon-plus-sign" aria-hidden="true" style="font-size:32px; color: black"></span></a></button>
+                      <button type="button" class="btn btn-default btn-xs visible-xs" style="border-color: white; float: right"><a href="{{ route('liquidacionCreate', $tipoLiquidacion ) }}" title="Agregar"><span class="glyphicon glyphicon-plus-sign" aria-hidden="true" style="font-size:24px; color: black"></span></a></button>
                   </div>
 
                   <div class="panel-body">
+                    <div class="table-responsive"> 
 
                      <table class="table table-bordered table-striped table-hover">
                        <thead>
@@ -50,7 +53,7 @@
 
 
                       </table>
-
+                    </div>
                       <div class="text-center">
                       {!!$liquidaciones->render()!!}
                       </div>

@@ -24,12 +24,8 @@
                <div class="panel panel-primary">
                    <div class="panel-heading panel-title">Detalle de Facturación</div>
 
-
-
-
-
                    <div class="panel-body">
-
+                    <div class="table-responsive">
                       <table class="table table-bordered table-striped table-hover">
                         <thead>
                           <th class="text-center">No.</th>
@@ -63,7 +59,11 @@
                                           <img src='{{ asset("images/$factura->EMAIL/$factura->FOTO") }}' height="32px">
                                       </a>
                                     </td>
-                                    <td class="text-center"><span class="glyphicon glyphicon-pencil btn_corregir" aria-hidden="true" style="font-size:20px; color: black" data-toggle="modal" data-target="#myModal"></td>
+                                    @if($factura->CORRECCION == 1)
+                                      <td class="text-center" style="background-color: red;"><span class="glyphicon glyphicon-pencil btn_corregir" aria-hidden="true" style="font-size:20px; color: black" data-toggle="modal" data-target="#myModal"></td>
+                                    @else
+                                      <td class="text-center"><span class="glyphicon glyphicon-pencil btn_corregir" aria-hidden="true" style="font-size:20px; color: black" data-toggle="modal" data-target="#myModal"></td>
+                                    @endif
                                     <td style="max-widht: 200px">{{ $factura->COMENTARIO_SUPERVISOR}}</td>
                                     <td style="max-widht: 200px">{{ $factura->COMENTARIO_CONTABILIDAD}}</td>
                                     {{--<td class="text-center">{!! Form::checkbox('Corregir', true, false, ['class' => 'btn_corregir']); !!}</td>--}}
@@ -75,7 +75,7 @@
 
 
                        </table>
-
+                      </div>
                        <div class="text-center">
                          {{--!!$factura->render()!! | , 'data-toggle' => 'modal', 'data-target' => '#myModal' --}}
                        </div>
@@ -96,7 +96,7 @@
       </div>
       {!! Form::model($facturas, ['route' => ['comentarioSupervisor', ':FACTURA_ID'], 'method' => 'PATCH', 'id' => 'form-update']) !!}
       <div class="modal-body">          
-          <textarea name="COMENTARIO_SUPERVISOR" class="form-control" rows="3"></textarea>
+          <textarea name="COMENTARIO_SUPERVISOR" id="COMENTARIO_SUPERVISORF" class="form-control" rows="3"></textarea>
 
       </div>
       <div class="modal-footer">
@@ -120,7 +120,7 @@
       {!! Form::model($liquidacion, ['route' => ['correccionLiquidacion', $liquidacion->ID], 'method' => 'PATCH']) !!}
       <div class="modal-body">
           {!! Form::hidden('TIPO_GASTO', $liquidacion->TIPO_GASTO) !!}
-          <textarea name="SUPERVISOR_COMENTARIO" class="form-control" rows="3"></textarea>
+          <textarea name="SUPERVISOR_COMENTARIO" class="form-control" rows="15" ></textarea>
 
       </div>
       <div class="modal-footer">
@@ -148,16 +148,20 @@
 
       $(".btn_enviar").click(function(e){
           e.preventDefault();
+          var comentarioSupervisor = $('#COMENTARIO_SUPERVISORF').val()          
+          if (!comentarioSupervisor) {
+            alert('Debe registrar un comentario!')
+          } else {
+            var form = $('#form-update');
+            var id = $("#facturaId").html();
+            var url = form.attr('action').replace(':FACTURA_ID', id);            
+            var data = form.serialize();
 
-          var form = $('#form-update');
-          var id = $("#facturaId").html();
-          var url = form.attr('action').replace(':FACTURA_ID', id);
-          var data = form.serialize();
-
-          $.post(url, data, function (result){           
-            $('#myModal').modal('hide');
-            location.reload();
-          })
+            $.post(url, data, function (result){           
+              $('#myModal').modal('hide');
+              location.reload();
+            })            
+          }
       });
 
       $('.popup-gallery').magnificPopup({

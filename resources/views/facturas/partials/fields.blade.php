@@ -26,19 +26,6 @@
       </div>
 
       <div class="col-md-2">
-            {!! Form::label('PROVEEDOR_ID', 'NIT Proveedor') !!}
-      </div>
-      <div class="col-md-3" id="proveedorTemporal" style="display: block">
-          {!! Form::select('PROVEEDOR_ID', $proveedor, null, ['class' => 'form-control', 'placeholder' => 'Seleccione Proveedor', 'id' => 'nit']); !!}
-      </div>
-
-      <div class="col-md-1">
-          <a href="#" title="Agregar Proveedor" data-toggle="modal" data-target="#myModalA"><span class="glyphicon glyphicon-plus-sign" aria-hidden="true" style="font-size:24px; color: black"></span></a>
-      </div>
-    </div>
-
-    <div class="row form-group">
-        <div class="col-md-2 col-md-offset-1">
             {!! Form::label('subcategoriaTipoGasto', 'Tipo de Gasto') !!}
         </div>
         @if(isset($factura->SUBCATEGORIA_TIPOGASTO_ID))
@@ -50,6 +37,18 @@
                 {!! Form::select('subcategoriaTipoGasto', $subcategoria, null, ['class' => 'form-control', 'placeholder' => 'Seleccione Tipo de Gasto', 'id' => 'subcategoriaTipoGasto']); !!}
             </div>
         @endif
+
+      
+    </div>
+
+    <div class="row form-group">
+        <div class="col-md-2 col-md-offset-1">
+                {!! Form::label('PROVEEDOR_ID', 'NIT Proveedor') !!}  <a href="#" title="Agregar Proveedor" data-toggle="modal" data-target="#myModalA"><span class="glyphicon glyphicon-plus-sign" aria-hidden="true" style="font-size:18px; color: black; padding-left:35px"></span></a>
+            </div>
+            <div class="col-md-3" id="proveedorTemporal" style="display: block">
+                {!! Form::select('PROVEEDOR_ID', $proveedor, null, ['class' => 'form-control', 'placeholder' => 'Seleccione Proveedor', 'id' => 'nit']); !!} 
+            </div>    
+            
 
       <div class="col-md-2">
             {!! Form::label('NOMBRE_PROVEEDOR', 'Nombre Proveedor') !!}
@@ -418,6 +417,33 @@
         })
 
         $('#realizaConversion').click(function() { 
+            var idMoneda = $("#idMoneda").val()
+            idMoneda = idMoneda.trim()
+           
+            if(idMoneda == 'USD') {
+
+                var fechaFactura = $("#FECHA_FACTURA").val()
+                vurl = '{{ route('tasaCambio')}}'            
+                if (fechaFactura === '') {
+                    alert('Debe ingresar una fecha!')
+                }                           
+                vurl = vurl.replace('%7Bid%7D', fechaFactura);              
+                $.ajax({
+                    type: 'get',
+                    url: vurl,                
+                    success: function (data) {                        
+                        $('#tasaCambio').val(data); 
+                        $('#form-save').submit()                     
+                    }
+                });                                
+            } else {                
+                $('#tasaCambio').val(1.00)    
+                $('#form-save').submit()
+            }
+            
+        })
+
+        $('#realizaConversionMovil').click(function() { 
             var idMoneda = $("#idMoneda").val()
             idMoneda = idMoneda.trim()
            

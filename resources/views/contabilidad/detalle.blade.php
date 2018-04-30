@@ -46,7 +46,7 @@
   </div>
   <div class="col-md-1">
       <a href="{{ route('reporteContabilidad', $liquidacion->ID) }}">
-        <button type="button" class="btn btn-default"><span class="glyphicon glyphicon-print" aria-hidden="true" style="font-size:32px; color: black" data-toggle="tooltip" data-placement="top" title="Reporte"></button>
+        <button type="button" class="btn btn-default"><span class="glyphicon glyphicon-download-alt" aria-hidden="true" style="font-size:32px; color: black" data-toggle="tooltip" data-placement="top" title="Descargar"></button>
       </a>
   </div>
 </div>

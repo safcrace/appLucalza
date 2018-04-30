@@ -15,13 +15,20 @@
 
   <div class="col-md-1 col-md-offset-1">
     {!! Form::label('EXENTO', 'Exento') !!}
-  </div>
+  </div>  
   <div class="col-md-1">
     {!! Form::radio('EXENTO', 1, false, ['id' => 'exento']); !!}  SI
   </div>
-  <div class="col-md-1">
-    {!! Form::radio('EXENTO', 0, false, ['id' => 'no_exento']); !!}  NO
-  </div>
+  @if(isset($subcategoriaTipoGastos))  
+    <div class="col-md-1">
+        {!! Form::radio('EXENTO', 0, false, ['id' => 'no_exento']); !!}  NO
+    </div>
+  @else
+    <div class="col-md-1">
+        {!! Form::radio('EXENTO', 0, true, ['id' => 'no_exento']); !!}  NO
+    </div>
+  @endif
+
 </div>
 
 <div class="row form-group">

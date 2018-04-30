@@ -39,15 +39,28 @@
       <div class="col-md-3 col-md-offset-1">
         {!! Form::label('DESCRIPCION', 'Días de atraso Facturación Rutas') !!}
       </div>
-      <div class="col-md-1">
-        {!! Form::text('TIEMPOATRASO_RUTAS', null, ['class' => 'form-control', 'placeholder' => '# días']); !!}
-      </div>      
+      @if(isset($empresa))
+        <div class="col-md-1">
+          {!! Form::text('TIEMPOATRASO_RUTAS', null, ['class' => 'form-control', 'placeholder' => '# días']); !!}
+        </div>      
+      @else
+        <div class="col-md-1">
+          {!! Form::text('TIEMPOATRASO_RUTAS', 0, ['class' => 'form-control', 'placeholder' => '# días']); !!}
+        </div>
+      @endif      
+      
       <div class="col-md-2">
         {!! Form::label('IMPUESTO', 'Valor Impuesto') !!}
       </div>
-      <div class="col-md-2">
-        {!! Form::text('IMPUESTO', null, ['class' => 'form-control', 'placeholder' => 'Valor Impuesto']); !!} 
-      </div>
+      @if(isset($empresa))
+        <div class="col-md-2">
+          {!! Form::text('IMPUESTO', null, ['class' => 'form-control', 'placeholder' => 'Valor Impuesto']); !!} 
+        </div>
+        @else
+          <div class="col-md-2">
+            {!! Form::text('IMPUESTO', 0, ['class' => 'form-control', 'placeholder' => 'Valor Impuesto']); !!} 
+          </div>
+      @endif
       <div class="col-md-1">
         %
       </div>
@@ -57,10 +70,44 @@
       <div class="col-md-3 col-md-offset-1">
         {!! Form::label('DESCRIPCION', 'Días de atraso Facturación Gastos') !!}
       </div>
-      <div class="col-md-1">
-        {!! Form::text('TIEMPOATRASO_OTROSGASTOS', null, ['class' => 'form-control', 'placeholder' => '# días']); !!}
-      </div>
+      @if(isset($empresa))
+        <div class="col-md-1">
+          {!! Form::text('TIEMPOATRASO_OTROSGASTOS', null, ['class' => 'form-control', 'placeholder' => '# días']); !!}
+        </div>
+        @else
+          <div class="col-md-1">
+            {!! Form::text('TIEMPOATRASO_OTROSGASTOS', 0, ['class' => 'form-control', 'placeholder' => '# días']); !!}
+          </div>
+      @endif
       <div class="col-md-2">
+          {!! Form::label('FILAS_NOTA_CREDITO', 'Remanente en Nota de Crédito') !!}
+    </div>
+    <div class="col-md-1">
+        @if(isset($empresa->FILAS_NOTA_CREDITO))
+          @if($empresa->FILAS_NOTA_CREDITO == 1)
+              <input name="FILAS_NOTA_CREDITO" type="radio" value="1" checked>  Si
+          @else
+              <input name="FILAS_NOTA_CREDITO" type="radio" value="1">  Si
+          @endif          
+        @else
+        <input name="FILAS_NOTA_CREDITO" type="radio" value="1" checked>  Si
+        @endif
+
+    </div>
+    <div class="col-md-2">
+        @if(isset($empresa->FILAS_NOTA_CREDITO))
+          @if($empresa->FILAS_NOTA_CREDITO == 0)
+              <input name="FILAS_NOTA_CREDITO" type="radio" value="0" checked>  No
+          @else
+              <input name="FILAS_NOTA_CREDITO" type="radio" value="0">  No
+          @endif  
+        @else
+          <input name="FILAS_NOTA_CREDITO" type="radio" value="0">  No        
+        @endif          
+    </div>
+    </div>
+    <div class="row form-group">
+      <div class="col-md-2 col-md-offset-1">
             {!! Form::label('ANULADO', 'Estatus') !!}
       </div>
       @if(isset($empresa->ANULADO))
@@ -122,33 +169,7 @@
       </div>
       <div class="col-md-3">
           {!! Form::text('USERSAP', null, ['class' => 'form-control', 'placeholder' => 'Usuario SAP']); !!}
-      </div>
-      <div class="col-md-2">
-            {!! Form::label('FILAS_NOTA_CREDITO', 'Remanente en Nota de Crédito') !!}
-      </div>
-      <div class="col-md-1">
-          @if(isset($empresa->FILAS_NOTA_CREDITO))
-            @if($empresa->FILAS_NOTA_CREDITO == 1)
-                <input name="FILAS_NOTA_CREDITO" type="radio" value="1" checked>  Si
-            @else
-                <input name="FILAS_NOTA_CREDITO" type="radio" value="1">  Si
-            @endif          
-          @else
-          <input name="FILAS_NOTA_CREDITO" type="radio" value="1">  Si
-          @endif
-
-      </div>
-      <div class="col-md-2">
-          @if(isset($empresa->FILAS_NOTA_CREDITO))
-            @if($empresa->FILAS_NOTA_CREDITO == 0)
-                <input name="FILAS_NOTA_CREDITO" type="radio" value="0" checked>  No
-            @else
-                <input name="FILAS_NOTA_CREDITO" type="radio" value="0">  No
-            @endif  
-          @else
-            <input name="FILAS_NOTA_CREDITO" type="radio" value="0">  No        
-          @endif          
-      </div>
+      </div>      
     </div>
 
     <div class="row form-group">

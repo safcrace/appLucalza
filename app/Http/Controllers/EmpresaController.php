@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use App\Http\Requests\CreateEmpresaRequest;
+use App\Http\Requests\UpdateEmpresaRequest;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Redirect;
 use App\Empresa;
@@ -31,7 +32,7 @@ class EmpresaController extends Controller
     {
         //$user = $request->user();
         //dd($user->can('ver usuarios'));
-
+            
 
 
         if (auth()->user()->hasRole('administrador')) {
@@ -62,6 +63,7 @@ class EmpresaController extends Controller
                                         ->toArray();
 
         $sapDbType = SapDbType::lists('DESCRIPCION', 'ID_DATASERVERTYPE')->toArray();
+       
 
         return view('empresas.create', compact('moneda','sapDbType'));
     }
@@ -144,7 +146,7 @@ class EmpresaController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(CreateEmpresaRequest $request, $id)
+    public function update(UpdateEmpresaRequest $request, $id)
     {   //dd($id);
         $empresa = Empresa::findOrFail($id);
         //$moneda->fill($request->all());

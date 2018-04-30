@@ -24,8 +24,15 @@ class CreateTipoGastoRequest extends Request
     public function rules()
     {
         return [
+            'GRUPO_ID' => 'required',
             'DESCRIPCION'    => 'required',
             'OPCIONCOMBUSTIBLE_ID'    => 'required',
+            'CUENTA_EXENTO' => 'required',
+            'CODIGO_IMPUESTO_EXENTO' => 'required',
+            'CUENTA_AFECTO' => 'required',
+            'CODIGO_IMPUESTO_AFECTO' => 'required',
+            'CUENTA_REMANENTE' => 'required',
+            'CODIGO_IMPUESTO_REMANENTE' => 'required'
         ];
     }
 

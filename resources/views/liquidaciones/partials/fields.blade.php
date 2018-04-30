@@ -88,6 +88,7 @@
        $('#newRutas').select2({
             placeholder: 'Seleccione una ruta'
         })
+        
     });
 </script>
 @endpush

@@ -182,7 +182,17 @@ return [
         'TIEMPOATRASO_OTROSGASTOS' => 'Días de Atraso Facturación Otros Gastos',
         'sendLink'              => 'Enviar enlace para reestablecer Contraseña',
         'resetPassword'         => 'Restablecer Contraseña',
-        'COMPRA'                => 'Tasa de Cambio'
+        'COMPRA'                => 'Tasa de Cambio',
+        'TIPODOCUMENTO_ID'      => 'Tipo de Documento',
+        'subcategoriaTipoGasto' => 'Tipo de Gasto',
+        'FRECUENCIATIEMPO_ID'   => 'Frecuencia',
+        'GRUPO_ID' => 'Grupo',
+        'CUENTA_EXENTO' => 'Cuenta Contable Exento',
+        'CODIGO_IMPUESTO_EXENTO' => 'Código Impuesto Exento',
+        'CUENTA_AFECTO' => 'Cuenta Contable Afecto',
+        'CODIGO_IMPUESTO_AFECTO' => 'Código Impuesto Afecto',
+        'CUENTA_REMANENTE' => 'Cuenta Contable Remanente',
+        'CODIGO_IMPUESTO_REMANENTE' => 'Código Impuesto Remanente'
     ],
 
 ];

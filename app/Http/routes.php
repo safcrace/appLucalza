@@ -128,6 +128,7 @@ Route::get('liquidacion/anular/{id}', ['uses' => 'LiquidacionController@anular',
 //Route::get('liquidacion/enviar/{id}', ['uses' => 'LiquidacionController@show', 'as' => 'enviarLiquidacion']);
 Route::get('liquidacion/create/{id}', ['uses' => 'LiquidacionController@liquidacionCreate', 'as' => 'liquidacionCreate']);
 Route::get('liquidaciones/tipo/{id}', ['uses' => 'LiquidacionController@IndexGeneral', 'as' => 'indexGeneral']);
+Route::get('liquidaciones/exportar/{id}', ['uses' => 'LiquidacionController@exportarExcel', 'as' => 'exportarExcel']);
 Route::resource('liquidaciones', 'LiquidacionController');
 
 // Facturas routes

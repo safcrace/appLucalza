@@ -26,6 +26,8 @@ class CreateFacturaRequest extends Request
         return [
             'PROVEEDOR_ID' => 'required',
             'TIPOGASTO_ID' => 'required',
+            'TIPODOCUMENTO_ID' => 'required',
+            'subcategoriaTipoGasto' => 'required',
             'FECHA_FACTURA' => 'required',            
             'NUMERO' => 'required',
             'TOTAL' => 'required',

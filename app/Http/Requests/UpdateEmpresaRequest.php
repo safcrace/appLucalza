@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use App\Http\Requests\Request;
 
-class CreateEmpresaRequest extends Request
+class UpdateEmpresaRequest extends Request
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -28,11 +28,9 @@ class CreateEmpresaRequest extends Request
             'DESCRIPCION'    => 'required',
             'LICENSESERVER'    => 'required',
             'USERSAP'    => 'required',
-            'FILAS_NOTA_CREDITO' => 'required',
-            'PASSSAP'    => 'required',
+            'FILAS_NOTA_CREDITO' => 'required',            
             'DBSAP'    => 'required',
-            'USERSQL'    => 'required',
-            'PASSSQL'    => 'required',
+            'USERSQL'    => 'required',            
             'SERVIDORSQL'    => 'required',
             'ID_DATASERVERTYPE'    => 'required',
             'TIEMPOATRASO_RUTAS'    => 'required',

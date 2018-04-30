@@ -13,6 +13,15 @@
 
     <p>Por este medio se le informa, que la Liquidación No. <b>{{$liquidacion->ID}}</b>, ha sido rechazada por Contabilidad, por el siguiente motivo: {{$liquidacion->SUPERVISOR_CONTABILIDAD}}. </p>
 
+    <a href="{{ $mail->ruta }}">Ir a la Liquidación</a>
+
+    <p>Facturas a corregir:</p>
+    <ul>
+        @foreach($facturas as $factura)        
+            <li>Factura #: {{$factura->NUMERO}} ::: Motivo: {{$factura->COMENTARIO_CONTABILIDAD}}</li>
+        @endforeach
+    </ul>
+
     Saludos,
 
 </body>

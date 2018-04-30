@@ -30,4 +30,11 @@ class CreateLiquidacionRequest extends Request
             'FECHA_FINAL' => 'required',
         ];
     }
+
+    public function messages()
+    {
+        return [
+            'RUTA_ID.required' => 'El campo Ruta es obligatorio!!',
+        ];
+    }
 }
