@@ -72,7 +72,7 @@
                     </div>
 
                        <div class="text-center">
-                         {!! $facturas->render() !!};
+                         {!! $facturas->render() !!}
                        </div>
                    </div>
                    </div>

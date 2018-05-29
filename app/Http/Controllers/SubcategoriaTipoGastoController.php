@@ -51,10 +51,16 @@ class SubcategoriaTipoGastoController extends Controller
      */
     public function store(Request $request)
     {   
-        $this->validate($request, [
+        /* $this->validate($request, [
             'DESCRIPCION' => 'required',
             'EXENTO'    => 'required'
-        ]);
+        ]); */
+//dd($request->all());
+        if($request->DESCRIPCION == null)
+        {
+            
+            return back()->withInput()->with('info', 'El Campo Descripción es obligatorio!');
+        }
 //dd($request->all());
         if ($request->EXENTO) {
             if ($request->CAUSAEXENCION_ID == 2) {                
@@ -64,10 +70,12 @@ class SubcategoriaTipoGastoController extends Controller
                 if ($request->UNIDAD_MEDIDA_ID == null) {                   
                     return back()->withInput()->with('info', 'Debe seleccionar un tipo de asignación!');
                 } 
-            } else {               
+            } elseif ($request->CAUSAEXENCION_ID == 3) {               
                 if ($request->MONTO_A_APLICAR_PORCENTAJE <= 0) {
                     return back()->withInput()->with('info', 'El Campo Porcentaje debe contener un valor válido!');
                 }            
+            } else {
+                return back()->withInput()->with('info', 'Debe seleccionar Cantidad o Porcentaje!');
             }
         } 
         

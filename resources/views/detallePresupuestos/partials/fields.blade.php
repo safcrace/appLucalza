@@ -222,7 +222,7 @@
         $('#centro_1').click(function() {           
             var criterio = $('#EMPRESA_ID').val() + '-' + 4 + '-' + 1
             
-            vurl = '{{ route('codigoCentroCostoUno')}}'            
+            vurl = '{{ route('codigoCentroCostoUnoAsincrono')}}'            
             vurl = vurl.replace('%7Bid%7D', criterio);
 
             $.ajax({

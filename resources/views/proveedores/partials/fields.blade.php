@@ -61,7 +61,7 @@
   <div class="col-md-2 col-md-offset-1">
         {!! Form::label('NOMBRE', 'Nombre') !!}
   </div>
-  <div class="col-md-4">
+  <div class="col-md-5">
       {!! Form::text('NOMBRE', null, ['class' => 'form-control', 'placeholder' => 'Nombre de Proveedor', 'id' => 'nombre']); !!}
   </div>
 </div>
@@ -70,8 +70,8 @@
   <div class="col-md-2 col-md-offset-1">
         {!! Form::label('DOMICILIO', 'Dirección') !!}
   </div>
-  <div class="col-md-4">
-      {!! Form::text('DOMICILIO', null, ['class' => 'form-control', 'placeholder' => 'Dirección de Proveedor', 'id' => 'domicilio']); !!}
+  <div class="col-md-5">
+      {!! Form::textarea('DOMICILIO', null, ['class' => 'form-control', 'rows' => '2', 'cols' => '600', 'placeholder' => 'Dirección de Proveedor', 'id' => 'domicilio']); !!}
   </div>
 </div>
 

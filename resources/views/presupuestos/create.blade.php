@@ -15,7 +15,7 @@
 
                   <div class="panel-body">
 
-                      @include('partials.messages')
+                      
                       @include('presupuestos.partials.fields')
 
 

@@ -149,7 +149,7 @@ Route::get('supervisor/show/{id}', ['uses' => 'SupervisorController@show', 'as' 
 Route::get('contabilidad/reporte/{id}', ['uses' => 'ContabilidadController@report', 'as' => 'reporteContabilidad']);
 Route::get('contabilidad', ['uses' => 'ContabilidadController@index', 'as' => 'contabilidad']);
 Route::get('contabilidad/show/{id}', ['uses' => 'ContabilidadController@show', 'as' => 'showLiquidacionRev']);
-Route::get('contabilidad/sap/{id}', ['uses' => 'ContabilidadController@envioSap', 'as' => 'envioSap']);
+//Route::get('contabilidad/sap/{id}', ['uses' => 'ContabilidadController@envioSap', 'as' => 'envioSap']);
 
 //Permisos routes
 Route::get('permisos/role', ['uses' => 'PermisoController@asignaPermisosRole', 'as' => 'asignaPermisosRole']);
@@ -182,3 +182,5 @@ Route::get('webservice/codigo/centroCosto5/{id}', ['uses' => 'WebServiceControll
 Route::get('webservice/tasaCambio/{id}', ['uses' => 'WebServiceController@getTasaCambio', 'as' => 'tasaCambio']);
 Route::get('webservice/monedasEmpresa/{id}', ['uses' => 'WebServiceController@getMonedasEmpresa', 'as' => 'monedasEmpresa']);
 Route::get('webservice/codigoUsuario/{id}', ['uses' => 'WebServiceController@getCodigoUsuario', 'as' => 'codigoUsuario']);
+Route::get('webservice/codigo/centroCostoUnoAsincrono/{id}', ['uses' => 'WebServiceController@getCodigoCentroCostoUnoAsincrono', 'as' => 'codigoCentroCostoUnoAsincrono']);
+Route::get('webservice/envioSap/{id}', ['uses' => 'WebServiceController@envioSap', 'as' => 'envioSap']);

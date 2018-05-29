@@ -52,7 +52,7 @@
                                     <td>{{ $factura->CORRELATIVO}}</td>
                                     <td>{{ $factura->FECHA_FACTURA->format('d-m-Y') }}</td>
                                     @if($factura->TIPOPROVEEDOR_ID == 1)
-                                        <td style="background-color: red; color: white;" class="proveedor">{{ $factura->NOMBRE}} || {{ $factura->PROVEEDORID }}</td>
+                                        <td style="background-color: red; color: white;" class="proveedor">{{ $factura->NOMBRE}} </td>
                                     @else
                                         <td>{{ $factura->NOMBRE}}</td>
                                     @endif

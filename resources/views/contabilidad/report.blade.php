@@ -55,6 +55,7 @@
                 <th class="text-center">Centro de Costo 3</th>
                 <th class="text-center">Centro de Costo 4</th>
                 <th class="text-center">Centro de Costo 5</th>
+                <th class="text-center">Nota Crédito</th>
                 <th class="text-center">Autorizado</th>
 
                 {{--<th class="text-center">Corregir</th>--}}
@@ -92,6 +93,7 @@
                         <td>{{ $factura->CENTROCOSTO4}}</td>
                         <td>{{ $factura->CENTROCOSTO5}}</td>
                         <td>{{ ($factura->APROBACION_PAGO)  ? 'SI' : 'NO' }}</td>                                        
+                        <td>{{ ($factura->FILAS_NOTA_CREDITO)  ? 'SI' : 'NO' }}</td>                                                                
                     </tr>
                 @endforeach
             </tbody>

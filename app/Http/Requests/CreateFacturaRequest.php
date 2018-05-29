@@ -22,16 +22,23 @@ class CreateFacturaRequest extends Request
      * @return array
      */
     public function rules()
-    {
+    { 
         return [
-            'PROVEEDOR_ID' => 'required',
             'TIPOGASTO_ID' => 'required',
-            'TIPODOCUMENTO_ID' => 'required',
             'subcategoriaTipoGasto' => 'required',
+            'PROVEEDOR_ID' => 'required',
+            'FOTO'    => 'required',
+            'TIPODOCUMENTO_ID' => 'required',
             'FECHA_FACTURA' => 'required',            
             'NUMERO' => 'required',
             'TOTAL' => 'required',
-            'FOTO'    => 'required',
+        ];
+    }
+
+    public function messages()
+    {
+        return [
+            'TIPOGASTO_ID.required' => 'El campo Categoria Gasto es obligatorio',
         ];
     }
 }

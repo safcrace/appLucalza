@@ -258,15 +258,30 @@ class LiquidacionController extends Controller
         $param = explode('-', $id);
         $liquidacion_id = $param[0];
         $tipoLiquidacion = $param[1];
-
         $total = Factura::where('LIQUIDACION_ID', '=', $liquidacion_id)->count();
-
+        
         if ($total == 0) {
             return back()->withInput()->with('info', 'Debe registrar al menos una factura!');
-        }        
+        }  
+        
+        $mail = \App\User::select('users.nombre', 'users.email')
+        ->join('cat_supervisor_vendedor', 'cat_supervisor_vendedor.SUPERVISOR_ID_USUARIO', '=', 'users.id')                                    
+        ->where('cat_supervisor_vendedor.VENDEDOR_ID_USUARIO', '=',  Auth::user()->id)
+        ->first();                                    
+        
+        $mail->ruta = $request->root() . "/supervisor/show/$liquidacion_id";  
+        
 
         Liquidacion::where('ID', $liquidacion_id)
             ->update(['ESTADOLIQUIDACION_ID' => 2]);
+
+        $liquidacion = Liquidacion::where('ID', '=', $liquidacion_id)->first();   
+                
+
+        Mail::send('emails/envioSupervision', compact('mail','liquidacion'), function($m) use ($mail) {
+            $m->to($mail->email, $mail->nombre)->subject('Revisión de Liquidación');
+        });
+        
         return Redirect::to('liquidaciones/tipo/' . $tipoLiquidacion);
     }
 
@@ -290,6 +305,12 @@ class LiquidacionController extends Controller
         if (! $request->SUPERVISOR_COMENTARIO) {
             return back()->withInput()->with('info', 'Debe registrar un comentario!');
         } 
+
+        $total = Factura::where('CORRECCION', '=', 1)->where('LIQUIDACION_ID', '=', $id)->count();
+        
+        if ($total == 0) {
+            return back()->withInput()->with('info', 'Debe enviar al menos una factura para corregir!');
+        }  
         
         Liquidacion::where('ID', $id)
         ->update(['SUPERVISOR_COMENTARIO' => $request->SUPERVISOR_COMENTARIO, 'ESTADOLIQUIDACION_ID' => 6]);
@@ -354,9 +375,29 @@ class LiquidacionController extends Controller
             return back()->withInput()->with('info', 'No puede aprobar, hay correciones pendientes de resolver!');
         }
 
+
+
+        $mail = \App\User::select('users.nombre', 'users.email')
+                                ->join('users_roles', 'users_roles.user_id', '=', 'users.id')                                    
+                                ->join('roles', 'roles.id', '=', 'users_roles.role_id')                                    
+                                ->where('roles.id', '=',  6)
+                                ->first();
+                                
+        if(!$mail) {
+            return back()->withInput()->with('info', 'No existe Perfil de Contador!');
+        }
+        
+        $mail->ruta = $request->root() . "/contabilidad/show/$id";  
+
         Liquidacion::where('ID', $id)
                 ->update(['ESTADOLIQUIDACION_ID' => 3]);
 
+        $liquidacion = Liquidacion::where('ID', '=', $id)->first();   
+        
+
+        Mail::send('emails/envioContabilidad', compact('mail','liquidacion'), function($m) use ($mail) {
+            $m->to($mail->email, $mail->nombre)->subject('Aprobación de Liquidación');
+        });
 
 
         return Redirect::to('supervisor');

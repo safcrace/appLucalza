@@ -162,7 +162,7 @@ return [
         'NOMBRE'                => 'Nombre',
         'DOMICILIO'             => 'Domicilio',
         'VIGENCIA_INICIO'      => 'Vigencia Del',
-        'VIGENCIA_FINAL'        => 'Al',
+        'VIGENCIA_FINAL'        => 'Vigencia Al',
         'USUARIO_ID'            => 'Usuario',
         'RUTA_ID'               => '',
         'TIPOGASTO_ID'          => 'Tipo de Gasto',

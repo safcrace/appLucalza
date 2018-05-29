@@ -159,7 +159,7 @@ dd($resultado);
      * @return \Illuminate\Http\Response
      */
     public function store(CreateFacturaRequest $request)
-    {           
+    {      
         $factura = new Factura();
         if (trim($request->FMONEDA_ID) == 'USD') { 
             $montoConversion = round(($request->TOTAL * $request->TASA_CAMBIO), 4);           
@@ -278,11 +278,13 @@ dd($resultado);
         if ($request->CATEGORIA_GASTO == 'combustible') {            
             $montoAcumulado = Factura::where('LIQUIDACION_ID', '=', $request->LIQUIDACION_ID)
             ->where('TIPOGASTO_ID', '=', $request->TIPOGASTO_ID)
+            ->where('ANULADO', '=', 0)
             ->sum('CANTIDAD_PORCENTAJE_CUSTOM');
             
         } else {
             $montoAcumulado = Factura::where('LIQUIDACION_ID', '=', $request->LIQUIDACION_ID)
             ->where('TIPOGASTO_ID', '=', $request->TIPOGASTO_ID)
+            ->where('ANULADO', '=', 0)
             ->sum('TOTAL');
         }
         

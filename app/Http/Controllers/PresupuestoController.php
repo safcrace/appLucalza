@@ -354,7 +354,7 @@ class PresupuestoController extends Controller
 
         $presupuesto = Presupuesto::findOrFail($presupuesto_id);
 
-        //$usuario_id = Auth::user()->id;
+        //$usuario_id = Auth::user()->id;        
 
         $empresa_id = Session::get('empresa');
 
@@ -409,7 +409,7 @@ class PresupuestoController extends Controller
             ->where('cat_ruta.ANULADO', '=', 0)
             ->lists('cat_ruta.DESCRIPCION', 'cat_ruta.ID')
             ->toArray();
-
+        
         $detallePresupuestos = DetallePresupuesto::select('pre_detpresupuesto.ID', 'cat_tipogasto.DESCRIPCION as TIPOGASTO', 'pre_detpresupuesto.MONTO', 'pre_detpresupuesto.TIPOASIGNACION_ID', 'cat_frecuenciatiempo.DESCRIPCION as FRECUENCIA', 'pre_detpresupuesto.ANULADO')
                                                   ->join('cat_tipogasto', 'cat_tipogasto.ID', '=', 'pre_detpresupuesto.TIPOGASTO_ID')
                                                   ->join('cat_frecuenciatiempo', 'cat_frecuenciatiempo.ID', '=', 'pre_detpresupuesto.FRECUENCIATIEMPO_ID')

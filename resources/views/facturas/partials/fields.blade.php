@@ -96,36 +96,12 @@
             </div>
         @endif
 
-        <div class="col-md-2 ">
-            {!! Form::label('FOTO', 'Imagen Factura') !!}
-        </div>
-
-            @if(isset($factura->EMAIL))
-            <div class="col-md-1 text-center">
-                <a class="image-popup-fit-width" href='{{ asset("images/$factura->EMAIL/$factura->FOTO") }}' title="Imagen Factura.">
-                    <img src='{{ asset("images/$factura->EMAIL/$factura->FOTO") }}' height="32px">
-                </a>
-            </div>
-            <div class="col-md-2 col-md-offset-1">
-                <a href="#" title="Reemplazar Factura" data-toggle="modal" data-target="#myModalS"><span class="glyphicon glyphicon-refresh" aria-hidden="true" style="font-size:24px; color: black"></span></a>
-            </div>
-            @else
-                <div class="col-md-2">
-                    {!! Form::file('FOTO'); !!}
-                </div>
-            @endif
-
-            
-    </div>
-
-    <div class="row form-group">
-        <div class="col-md-2 col-md-offset-1">
+        <div class="col-md-2">
             {!! Form::label('TIPODOCUMENTO_ID', 'Tipo de Documento') !!}
         </div>
         <div class="col-md-3" id="proveedorTemporal" style="display: block">
             {!! Form::select('TIPODOCUMENTO_ID', $tipoDocumento, null, ['class' => 'form-control', 'placeholder' => 'Seleccione Tipo de Documento', 'id' => 'tipoDocumento']); !!}
-        </div>
-
+        </div>            
     </div>
 
     <div class="row form-group">
@@ -139,34 +115,64 @@
                 {!! Form::date('FECHA_FACTURA', null, ['class' => 'form-control']); !!}
             @endif
         </div>
-    </div>
-
-    <div class="row form-group numero">
         <div class="col-md-2 col-md-offset-1">
             {!! Form::label('SERIE', 'Serie') !!}
         </div>
         <div class="col-md-3">
             {!! Form::text('SERIE', null, ['class' => 'form-control', 'placeholder' => 'Serie', 'id' => 'numSerie']); !!}
         </div>
-
     </div>
-
+    
     <div class="row form-group">
         <div class="col-md-2 col-md-offset-1">
             {!! Form::label('NUMERO', 'Número') !!}
         </div>
         <div class="col-md-3">
-            {!! Form::text('NUMERO', null, ['class' => 'form-control', 'placeholder' => 'Número']); !!}
-        </div>
-    </div>
-    <div class="row form-group">
-        <div class="col-md-2 col-md-offset-1">
+            {!! Form::text('NUMERO', null, ['class' => 'form-control', 'placeholder' => 'Número', 'id' => 'numero']); !!}
+        </div>        
+        <div class="col-md-2 ">
             {!! Form::label('TOTAL', 'Total') !!}
         </div>
-        <div class="col-md-2">
+        <div class="col-md-3">
             {!! Form::text('TOTAL', null, ['class' => 'form-control', 'placeholder' => 'Total']); !!}
         </div>
     </div>
+    
+    <div class="row form-group combus" style="display: none">
+        <hr>
+            <h4 style="text-align: center">Control de Combustible</h4>
+            <br>
+            <div class="col-md-2 col-md-offset-1 combus" style="display: none">
+                    <div id="etiqueta" style="font-weight: 700">Cantidad Galones</div>
+                </div>
+                <div class="col-md-2 combus" style="display: none">
+                    @if(isset($factura->CANTIDAD_PORCENTAJE_CUSTOM))
+                        {!! Form::text('CANTIDAD_PORCENTAJE_CUSTOM', $factura->CANTIDAD_PORCENTAJE_CUSTOM, ['class' => 'form-control', 'placeholder' => 'Cantidad']); !!}
+                    @else
+                        {!! Form::text('CANTIDAD_PORCENTAJE_CUSTOM', null, ['class' => 'form-control', 'placeholder' => 'Cantidad']); !!}
+                    @endif
+                </div>
+                <div class="col-md-1 combus" style="display: none">
+                    {!! Form::label('KM_INICIO', 'Kilometraje Inicial') !!}
+                </div>
+                <div class="col-md-2 combus" style="display: none">
+                    @if(isset($factura->KILOMETRAJE_INICIAL))
+                        {!! Form::text('KM_INICIO', $factura->KILOMETRAJE_INICIAL, ['class' => 'form-control', 'placeholder' => 'Inicio']); !!}
+                    @else
+                        {!! Form::text('KM_INICIO', null, ['class' => 'form-control', 'placeholder' => 'Inicio']); !!}
+                    @endif
+                </div>
+                <div class="col-md-1 combus" style="display: none">
+                        {!! Form::label('KM_FINAL', 'Kilometraje Final') !!}
+                </div>
+                <div class="col-md-2 combus" style="display: none">
+                    @if(isset($factura->KILOMETRAJE_FINAL))
+                        {!! Form::text('KM_FINAL', $factura->KILOMETRAJE_FINAL, ['class' => 'form-control', 'placeholder' => 'Final']); !!}
+                    @else
+                        {!! Form::text('KM_FINAL', null, ['class' => 'form-control', 'placeholder' => 'Final']); !!}
+                    @endif
+                </div>
+    </div>   
 
     <hr>
 
@@ -177,36 +183,24 @@
         <div class="col-md-4">
             {!! Form::textarea('COMENTARIO_PAGO', null, ['class' => 'form-control', 'rows' => '3', 'cols' => '500', 'placeholder' => 'Observaciones y/o Comentarios']); !!}
         </div>
-        <div class="col-md-1 combus" style="display: none">
-            <div id="etiqueta" style="font-weight: 700">Cantidad Galones</div>
-        </div>
-        <div class="col-md-1 combus" style="display: none">
-            @if(isset($factura->CANTIDAD_PORCENTAJE_CUSTOM))
-                {!! Form::text('CANTIDAD_PORCENTAJE_CUSTOM', $factura->CANTIDAD_PORCENTAJE_CUSTOM, ['class' => 'form-control', 'placeholder' => 'Cantidad']); !!}
+        <div class="col-md-2 ">
+                {!! Form::label('FOTO', 'Imagen Factura') !!}
+            </div>
+        
+            @if(isset($factura->EMAIL))
+                <div class="col-md-1 text-center">
+                    <a class="image-popup-fit-width" href='{{ asset("images/$factura->EMAIL/$factura->FOTO") }}' title="Imagen Factura.">
+                        <img src='{{ asset("images/$factura->EMAIL/$factura->FOTO") }}' height="32px">
+                    </a>
+                </div>
+                <div class="col-md-2 col-md-offset-1">
+                    <a href="#" title="Reemplazar Factura" data-toggle="modal" data-target="#myModalS"><span class="glyphicon glyphicon-refresh" aria-hidden="true" style="font-size:24px; color: black"></span></a>
+                </div>
             @else
-                {!! Form::text('CANTIDAD_PORCENTAJE_CUSTOM', null, ['class' => 'form-control', 'placeholder' => 'Cantidad']); !!}
+                <div class="col-md-2">
+                    {!! Form::file('FOTO', ['id' => 'validaTiempo']); !!}
+                </div>
             @endif
-        </div>
-        <div class="col-md-1 combus" style="display: none">
-            {!! Form::label('KM_INICIO', 'Km Inicio') !!}
-        </div>
-        <div class="col-md-1 combus" style="display: none">
-            @if(isset($factura->KILOMETRAJE_INICIAL))
-                {!! Form::text('KM_INICIO', $factura->KILOMETRAJE_INICIAL, ['class' => 'form-control', 'placeholder' => 'Inicio']); !!}
-            @else
-                {!! Form::text('KM_INICIO', null, ['class' => 'form-control', 'placeholder' => 'Inicio']); !!}
-            @endif
-        </div>
-        <div class="col-md-1 combus" style="display: none">
-                {!! Form::label('KM_FINAL', 'Km Final') !!}
-        </div>
-        <div class="col-md-1 combus" style="display: none">
-            @if(isset($factura->KILOMETRAJE_FINAL))
-                {!! Form::text('KM_FINAL', $factura->KILOMETRAJE_FINAL, ['class' => 'form-control', 'placeholder' => 'Final']); !!}
-            @else
-                {!! Form::text('KM_FINAL', null, ['class' => 'form-control', 'placeholder' => 'Final']); !!}
-            @endif
-        </div>
     </div>
 
 
@@ -242,6 +236,7 @@
 
   </div>
 </div>
+
 
 
 
@@ -313,7 +308,12 @@
             $.getJSON(vurl, null, function (values) {
                 $('#subcategoriaTipoGasto').populateSelect(values)
             })*/
-           
+            vurl = '{{ route('getSubcategoriaTipoGasto') }}'
+                vurl = vurl.replace('%7Bid%7D', tipo);
+                
+                $.getJSON(vurl, null, function (values) {
+                    $('#subcategoriaTipoGasto').populateSelect(values)
+                })
             var subcatego = $('#subCategoriaGasto').val()
             //alert('Esto trae al cargar:  ' +     subcatego)
             $('#subcategoriaTipoGasto').val(subcatego)
@@ -505,6 +505,10 @@
             placeholder: 'Seleccione un Número de identificación tributaria'
         });
 
+        $('#tipoDocumento').select2({
+            placeholder: 'Seleccione un Número de identificación tributaria'
+        });
+
         $('#grabarProveedor').click(function () {
             var form = $('#form-save')
             var url = '{{ route('proveedores.store') }}'
@@ -535,6 +539,12 @@
                 //$('#myModalA').modal('hide')
             })
         });
+
+        $('#validaTiempo').click(function () {
+            setTimeout(function(){
+               alert('Verifique que su Archivo haya subido!')
+            }, 3000);
+        })
 
         $('.popup-gallery').magnificPopup({
             delegate: 'a',

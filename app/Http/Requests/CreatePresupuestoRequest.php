@@ -30,4 +30,11 @@ class CreatePresupuestoRequest extends Request
             'RUTA_ID' => 'required',
         ];
     }
+
+    public function messages()
+    {
+        return [
+            'RUTA_ID.required' => 'El campo Ruta es obligatorio',
+        ];
+    }
 }

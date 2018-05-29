@@ -24,11 +24,21 @@ class EditFacturaRequest extends Request
     public function rules()
     {
         return [
-            'PROVEEDOR_ID' => 'required',
             'TIPOGASTO_ID' => 'required',
+            'subcategoriaTipoGasto' => 'required',
+            'PROVEEDOR_ID' => 'required',
+            //'FOTO'    => 'required',
+            'TIPODOCUMENTO_ID' => 'required',
             'FECHA_FACTURA' => 'required',            
             'NUMERO' => 'required',
-            'TOTAL' => 'required',            
+            'TOTAL' => 'required',
         ];
     }
+
+    public function messages()
+    {
+        return [
+            'TIPOGASTO_ID.required' => 'El campo Categoria Gasto es obligatorio',
+        ];
+    }    
 }

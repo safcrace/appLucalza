@@ -36,7 +36,7 @@
         {!! Form::label('RUTA_ID', $tipoGasto) !!}
   </div>
   <div class="col-md-3">
-      @if (isset($ruta_id))
+      @if (isset($ruta_id))      
           {!! Form::select('RUTA_ID', $rutas, $ruta_id, ['class' => 'form-control', 'placeholder' => 'Seleccione una Opción', 'id' => 'ruta']); !!}
       @else
           {!! Form::select('RUTA_ID', $rutas, null, ['class' => 'form-control', 'placeholder' => 'Seleccione una Opción', 'id' => 'ruta']); !!}
