@@ -417,6 +417,7 @@
         })
 
         $('#realizaConversion').click(function() { 
+            $('#realizaConversion').hide();
             var idMoneda = $("#idMoneda").val()
             idMoneda = idMoneda.trim()
            
@@ -540,10 +541,12 @@
             })
         });
 
-        $('#validaTiempo').click(function () {
-            setTimeout(function(){
+        $('#validaTiempo').change(function () {
+            $('#realizaConversion').show()
+            $('#realizaConversionMovil').show()
+            /*setTimeout(function(){
                alert('Verifique que su Archivo haya subido!')
-            }, 3000);
+            }, 3000);*/
         })
 
         $('.popup-gallery').magnificPopup({

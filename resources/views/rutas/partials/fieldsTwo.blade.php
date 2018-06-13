@@ -25,14 +25,14 @@
   </div>
 </div>
 
-<div class="row form-group">
+{{-- <div class="row form-group">
   <div class="col-md-1 col-md-offset-1">
         {!! Form::label('ANULADO', 'Anular') !!}
   </div>
   <div class="col-md-4">
       {!! Form::checkbox('ANULADO', 1); !!}
   </div>
-</div>
+</div> --}}
 
 @push('scripts')
 <script type="text/javascript">

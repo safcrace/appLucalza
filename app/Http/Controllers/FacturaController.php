@@ -2,29 +2,30 @@
 
 namespace App\Http\Controllers;
 
-use App\DetallePresupuesto;
-use App\Empresa;
-use App\SubcategoriaTipoGasto;
-use App\TipoDocumento;
-use App\TipoProveedor;
-use Carbon\Carbon;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Redirect;
-use Illuminate\Support\Facades\Auth;
-use App\Http\Requests\CreateFacturaRequest;
-use App\Http\Requests\EditFacturaRequest;
-
-use App\Http\Requests;
-use App\Http\Controllers\Controller;
-use App\TipoGasto;
-use App\Proveedor;
 use App\Moneda;
+use App\Empresa;
 use App\Factura;
+use DateTimeZone;
+use App\Proveedor;
+use App\TipoGasto;
+use Carbon\Carbon;
 use App\Liquidacion;
-use App\UsuarioRuta;
 use App\Presupuesto;
+use App\UsuarioRuta;
+use App\Http\Requests;
+use App\TipoDocumento;
+
+use App\TipoProveedor;
+use App\DetallePresupuesto;
+use Illuminate\Http\Request;
+use App\SubcategoriaTipoGasto;
+use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Redirect;
+use App\Http\Requests\EditFacturaRequest;
+use App\Http\Requests\CreateFacturaRequest;
 
 class FacturaController extends Controller
 {
@@ -61,7 +62,7 @@ class FacturaController extends Controller
      * @return \Illuminate\Http\Response
      */
      public function liquidacionCreateFactura($id)
-     { 
+     {  
          $param = explode('-', $id);
          $liquidacion_id = $param[0];
          $tipoLiquidacion = $param[1];
@@ -159,7 +160,7 @@ dd($resultado);
      * @return \Illuminate\Http\Response
      */
     public function store(CreateFacturaRequest $request)
-    {      
+    {   
         $factura = new Factura();
         if (trim($request->FMONEDA_ID) == 'USD') { 
             $montoConversion = round(($request->TOTAL * $request->TASA_CAMBIO), 4);           
@@ -266,14 +267,25 @@ dd($resultado);
                                                         ->first();
         }
 
-        /**  Se valida si es combustible que se ingrese la cantidad correspondiente de galones  **/
+        /**  Se valida si es combustible que se ingrese la cantidad correspondiente de galones y que Km Final sea > Km Inicial**/
         if ($request->CATEGORIA_GASTO == 'combustible') {
             if($request->CANTIDAD_PORCENTAJE_CUSTOM === '') {
                 return back()->withInput()->with('info', 'Es obligatorio que ingrese la cantidad de galones facturados!');
             } 
-        }              
-       
-
+            if ($request->KM_INICIO == null || $request->KM_FINAL ==null) {
+                return back()->withInput()->with('info', 'Es obligatorio que ingrese Kilometraje Inicial y Kilometraje Final!');
+            }
+            if ($request->KM_FINAL <= $request->KM_INICIO) {
+                return back()->withInput()->with('info', 'El Kilometraje Inicial debe ser Mayor al Kilometraje Final!');
+            }
+        }       
+        
+        /** Se valida que fecha ingresada no sea mayor a fecha del día */       
+        if ($request->FECHA_FACTURA > (Carbon::now(new DateTimeZone('America/Guatemala')))) {
+            return back()->withInput()->with('info', 'La Fecha de la Factura, no puede ser mayor a la Fecha de Hoy!');        
+        }
+              
+        
         /** Se obtiene monto gastado hasta el momento por tipo de gasto **/
         if ($request->CATEGORIA_GASTO == 'combustible') {            
             $montoAcumulado = Factura::where('LIQUIDACION_ID', '=', $request->LIQUIDACION_ID)
@@ -631,6 +643,24 @@ dd($resultado);
             $montoConversion = $request->TOTAL * 1;
         }
 
+        /**  Se valida si es combustible que se ingrese la cantidad correspondiente de galones y que Km Final sea > Km Inicial**/
+        if ($request->CATEGORIA_GASTO == 'combustible') {
+            if($request->CANTIDAD_PORCENTAJE_CUSTOM === '') {
+                return back()->withInput()->with('info', 'Es obligatorio que ingrese la cantidad de galones facturados!');
+            } 
+            if ($request->KM_INICIO == null || $request->KM_FINAL ==null) {
+                return back()->withInput()->with('info', 'Es obligatorio que ingrese Kilometraje Inicial y Kilometraje Final!');
+            }
+            if ($request->KM_FINAL <= $request->KM_INICIO) {
+                return back()->withInput()->with('info', 'El Kilometraje Inicial debe ser Mayor al Kilometraje Final!');
+            }
+        }       
+        
+        /** Se valida que fecha ingresada no sea mayor a fecha del día */       
+        if ($request->FECHA_FACTURA > (Carbon::now(new DateTimeZone('America/Guatemala')))) {
+            return back()->withInput()->with('info', 'La Fecha de la Factura, no puede ser mayor a la Fecha de Hoy!');        
+        }
+
 
         /** Se obtiene valor de impuesto */
         $empresa_id = Session::get('empresa');
@@ -677,14 +707,8 @@ dd($resultado);
                                                                 ->where('PRESUPUESTO_ID', '=', $request->PRESUPUESTO_ID)
                                                                 ->where('TIPOGASTO_ID', '=', $request->TIPOGASTO_ID)
                                                                 ->first();
-                }
-        
-                /**  Se valida si es combustible que se ingrese la cantidad correspondiente de galones  **/
-                if ($request->CATEGORIA_GASTO == 'combustible') {
-                    if($request->CANTIDAD_PORCENTAJE_CUSTOM === '') {
-                        return back()->withInput()->with('info', 'Es obligatorio que ingrese la cantidad de galones facturados!');
-                    } 
-                }              
+                }      
+                       
                
         
                 /** Se obtiene monto gastado hasta el momento por tipo de gasto **/

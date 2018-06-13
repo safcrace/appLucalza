@@ -72,12 +72,12 @@ class LiquidacionController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function liquidacionCreate($id)
-    {
+    {   
         $tipoLiquidacion = $id;
         $usuario = Auth::user()->nombre;
         $usuario_id = Auth::user()->id;
-        //dd($request->all());
         $empresa_id = Session::get('loginEmpresa');
+        //dd($empresa_id);
 
         $rutas = Ruta::join('cat_usuarioruta', 'cat_usuarioruta.RUTA_ID', '=', 'cat_ruta.ID')
                               ->join('users', 'users.id', '=', 'cat_usuarioruta.USER_ID')
@@ -345,6 +345,13 @@ class LiquidacionController extends Controller
         if (! $request->CONTABILIDAD_COMENTARIO) {
             return back()->withInput()->with('info', 'Debe registrar un comentario!');
         } 
+
+        $total = Factura::where('CORRECCION', '=', 1)->where('LIQUIDACION_ID', '=', $id)->count();
+        
+        if ($total == 0) {
+            return back()->withInput()->with('info', 'Debe enviar al menos una factura para corregir!');
+        }  
+        
 
         Liquidacion::where('ID', $id)
                 ->update(['CONTABILIDAD_COMENTARIO' => $request->CONTABILIDAD_COMENTARIO, 'ESTADOLIQUIDACION_ID' => 6]);

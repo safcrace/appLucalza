@@ -192,7 +192,10 @@ return [
         'CUENTA_AFECTO' => 'Cuenta Contable Afecto',
         'CODIGO_IMPUESTO_AFECTO' => 'Código Impuesto Afecto',
         'CUENTA_REMANENTE' => 'Cuenta Contable Remanente',
-        'CODIGO_IMPUESTO_REMANENTE' => 'Código Impuesto Remanente'
+        'CODIGO_IMPUESTO_REMANENTE' => 'Código Impuesto Remanente',
+        'KM_INICIO' => 'Kilometraje Inicial',
+        'KM_FINAL'  => 'Kilometraje Final',
+        'CANTIDAD_PORCENTAJE_CUSTOM' => 'Cantidad Galones'
     ],
 
 ];

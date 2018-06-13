@@ -27,11 +27,14 @@ class EditFacturaRequest extends Request
             'TIPOGASTO_ID' => 'required',
             'subcategoriaTipoGasto' => 'required',
             'PROVEEDOR_ID' => 'required',
-            //'FOTO'    => 'required',
+            'FOTO'    => 'mimes:jpeg,bmp,png,pdf',           
             'TIPODOCUMENTO_ID' => 'required',
             'FECHA_FACTURA' => 'required',            
             'NUMERO' => 'required',
             'TOTAL' => 'required',
+            'KM_INICIO' => 'numeric',
+            'KM_FINAL' => 'numeric',
+            'CANTIDAD_PORCENTAJE_CUSTOM' => 'numeric'
         ];
     }
 

@@ -51,7 +51,7 @@ class WebServiceController extends Controller
         ]);
 
         $data = json_decode($response->getBody(), true);
-
+            
 
         $filas = $data['nrows'];
         $combo = '<select class="form-control" id="codigoProveedorSap" name="codigoProveedorSap", disable=false>';
@@ -667,7 +667,7 @@ class WebServiceController extends Controller
 
         $data = json_decode($response->getBody(), true);
 
-
+              //  dd($data);
         $filas = $data['nrows'];
 
         if($filas == 0) {
@@ -692,6 +692,7 @@ class WebServiceController extends Controller
     {
         //dd('Liquidacion: ' . $id);
         $empresa_id = Session::get('empresa');
+        
         $usuario_id = Auth::user()->id;  
         $notaCredito = Empresa::where('ID', '=', $empresa_id)->pluck('FILAS_NOTA_CREDITO');
 
@@ -733,6 +734,7 @@ class WebServiceController extends Controller
 
             //dd($facturas);
             $noteCredit = array();
+            $remanenteGlobal = 0;
             foreach ($facturas as $factura) {                      
                 $DocNum += 1;     
                 $factura->DocNum = $DocNum ;
@@ -751,11 +753,12 @@ class WebServiceController extends Controller
                 $factura->U_FacNit = $factura->IDENTIFICADOR_TRIBUTARIO;
                 $factura->U_FacNom = $factura->NOMBRE;
                 $factura->U_Clase_Libro = $factura->GRUPOTIPOGASTO_ID;
-                $factura->U_Tipo_Documento = $factura->DOCUMENTO;  
+                $factura->U_Tipo_Documento = $factura->DOCUMENTO; 
+                $factura->businessObject = 'oPurchaseInvoices';
                 if ($factura->TIPOGASTO == 'Alimentación') {
                     if ($notaCredito == 0) {
                         if ($factura->MONTO_REMANENTE == null) {
-                            $factura->Detalle = array(
+                            $factura->detail = array(
                                 array(
                                     'ParentKey' => $factura->$DocNum,
                                     'LineNum' => 0,
@@ -774,7 +777,7 @@ class WebServiceController extends Controller
                         } 
                     } else { 
                         if ($factura->MONTO_REMANENTE == null) {
-                            $factura->Detalle = array(
+                            $factura->detail = array(
                                 array(
                                     'ParentKey' => $factura->$DocNum,
                                     'LineNum' => 0,
@@ -792,7 +795,7 @@ class WebServiceController extends Controller
                             );
                         } else {
                             $linea = 0;
-                            $factura->Detalle = array(
+                            $factura->detail = array(
                                 array(
                                     'ParentKey' => $factura->$DocNum,
                                     'LineNum' => $linea + 1,
@@ -807,7 +810,7 @@ class WebServiceController extends Controller
                                     'CostingCode4' => $factura->CENTROCOSTO4,
                                     'CostingCode5' => $factura->CENTROCOSTO5,
                                 ),
-                                array(
+                                /*array(
                                     'ParentKey_2' => $factura->$DocNum,
                                     'LineNum_2' => $linea + 2,
                                     'AccountCode_2' => $factura->CUENTA_CONTABLE_REMANENTE,
@@ -820,8 +823,10 @@ class WebServiceController extends Controller
                                     'CostingCode3_2' => $factura->CENTROCOSTO3,
                                     'CostingCode4_2' => $factura->CENTROCOSTO4,
                                     'CostingCode5_2' => $factura->CENTROCOSTO5
-                                )
+                                )*/
                             );
+                            $remanenteGlobal += $factura->MONTO_REMANENTE;
+                                
                         }                   
                     }
                 }          
@@ -830,13 +835,13 @@ class WebServiceController extends Controller
                     if ($notaCredito == 0) {
                         if ($factura->MONTO_REMANENTE == null) {
                             $linea = 0;
-                            $factura->Detalle = array(
+                            $factura->detail = array(
                                 array(
                                     'ParentKey' => $factura->$DocNum,
                                     'LineNum' => $linea + 1,
                                     'AccountCode' => $factura->CUENTA_CONTABLE_AFECTO,
                                     'ItemDescription' => $factura->TIPOGASTO . ' ' . $factura->DOCUMENTO . ' ' . $factura->SERIE . '-' . $factura->NUMERO,
-                                    'PriceAfterVAT' => $factura->MONTO_AFECTO . $factura->MONTO_IVA,
+                                    'PriceAfterVAT' => (double)$factura->MONTO_AFECTO + (double)$factura->MONTO_IVA,
                                     'TaxCode' => $factura->CODIGO_IMPUESTO_AFECTO,
                                     'ProjectCode' => 'OOFISCAL',
                                     'CostingCode' => $factura->CENTROCOSTO1,
@@ -864,13 +869,13 @@ class WebServiceController extends Controller
                     } else {
                         if ($factura->MONTO_REMANENTE == null) {                        
                             $linea = 0;
-                            $factura->Detalle = array(
+                            $factura->detail = array(
                                 array(
                                     'ParentKey' => $factura->$DocNum,
                                     'LineNum' => $linea + 1,
                                     'AccountCode' => $factura->CUENTA_CONTABLE_AFECTO,
                                     'ItemDescription' => $factura->TIPOGASTO . ' ' . $factura->DOCUMENTO . ' ' . $factura->SERIE . '-' . $factura->NUMERO,
-                                    'PriceAfterVAT' => $factura->MONTO_AFECTO . $factura->MONTO_IVA,
+                                    'PriceAfterVAT' => (double)$factura->MONTO_AFECTO + (double)$factura->MONTO_IVA,
                                     'TaxCode' => $factura->CODIGO_IMPUESTO_AFECTO,
                                     'ProjectCode' => 'OOFISCAL',
                                     'CostingCode' => $factura->CENTROCOSTO1,
@@ -896,13 +901,13 @@ class WebServiceController extends Controller
                             );                        
                         } else {
                             $linea = 0;
-                            $factura->Detalle = array(
+                            $factura->detail = array(
                                 array(   
                                     'ParentKey' => $factura->$DocNum,
                                     'LineNum' => $linea + 1,
                                     'AccountCode' => $factura->CUENTA_CONTABLE_AFECTO,
                                     'ItemDescription' => $factura->TIPOGASTO . ' ' . $factura->DOCUMENTO . ' ' . $factura->SERIE . '-' . $factura->NUMERO,
-                                    'PriceAfterVAT' => $factura->MONTO_AFECTO . $factura->MONTO_IVA,
+                                    'PriceAfterVAT' => (double)$factura->MONTO_AFECTO + (double)$factura->MONTO_IVA,
                                     'TaxCode' => $factura->CODIGO_IMPUESTO_AFECTO,
                                     'ProjectCode' => 'OOFISCAL',
                                     'CostingCode' => $factura->CENTROCOSTO1,
@@ -925,7 +930,7 @@ class WebServiceController extends Controller
                                     'CostingCode4_2' => $factura->CENTROCOSTO4,
                                     'CostingCode5_2' => $factura->CENTROCOSTO5
                                 ),
-                                array(
+                                /*array(
                                     'ParentKey_3' => $factura->$DocNum,
                                     'LineNum_3' => $linea + 3,
                                     'AccountCode_3' => $factura->CUENTA_CONTABLE_REMANENTE,
@@ -938,8 +943,10 @@ class WebServiceController extends Controller
                                     'CostingCode3_3' => $factura->CENTROCOSTO3,
                                     'CostingCode4_3' => $factura->CENTROCOSTO4,
                                     'CostingCode5_3' => $factura->CENTROCOSTO5
-                                )
+                                )*/
                             );
+                            $remanenteGlobal += $factura->MONTO_REMANENTE; 
+                              
                         }
                     }
                 }
@@ -948,7 +955,7 @@ class WebServiceController extends Controller
                     if ($notaCredito == 0) {
                         if ($factura->MONTO_EXENTO == null) {
                             if ($factura->MONTO_REMANENTE == null) {
-                                $factura->Detalle = array(
+                                $factura->detail = array(
                                     array(
                                         'ParentKey' => $factura->$DocNum,
                                         'LineNum' => 0,
@@ -968,13 +975,13 @@ class WebServiceController extends Controller
                         
                         } else {                        
                             $linea = 0;
-                            $factura->Detalle = array(
+                            $factura->detail = array(
                                 array(
                                     'ParentKey' => $factura->$DocNum,
                                     'LineNum' => $linea + 1,
                                     'AccountCode' => $factura->CUENTA_CONTABLE_AFECTO,
                                     'ItemDescription' => $factura->TIPOGASTO . ' ' . $factura->DOCUMENTO . ' ' . $factura->SERIE . '-' . $factura->NUMERO,
-                                    'PriceAfterVAT' => $factura->MONTO_AFECTO . $factura->MONTO_IVA,
+                                    'PriceAfterVAT' => (double)$factura->MONTO_AFECTO + (double)$factura->MONTO_IVA,
                                     'TaxCode' => $factura->CODIGO_IMPUESTO_AFECTO,
                                     'ProjectCode' => 'OOFISCAL',
                                     'CostingCode' => $factura->CENTROCOSTO1,
@@ -983,10 +990,10 @@ class WebServiceController extends Controller
                                     'CostingCode4' => $factura->CENTROCOSTO4,
                                     'CostingCode5' => $factura->CENTROCOSTO5,
                                 ),
-                                array(
+                                /*array(
                                     'ParentKey_2' => $factura->$DocNum,
                                     'LineNum_2' => $linea + 2,
-                                    'AccountCode_2' => $factura->CUENTA_CONTABLE_EXENTO,
+                                    'AccountCode_2' => $factura->CUENTA_CONTABLE_REMANENTE,
                                     'ItemDescription_2' => $factura->TIPOGASTO . ' ' . $factura->DOCUMENTO . ' ' . $factura->SERIE . '-' . $factura->NUMERO,
                                     'PriceAfterVAT_2' => $factura->MONTO_EXENTO,
                                     'TaxCode_2' => $factura->CODIGO_IMPUESTO_EXENTO,
@@ -996,14 +1003,16 @@ class WebServiceController extends Controller
                                     'CostingCode3_2' => $factura->CENTROCOSTO3,
                                     'CostingCode4_2' => $factura->CENTROCOSTO4,
                                     'CostingCode5_2' => $factura->CENTROCOSTO5
-                                )
-                            );                     
+                                )*/                                
+                            );
+                            $remanenteGlobal += $factura->MONTO_REMANENTE;                      
+                             
 
                         }
                     } else {
                         if ($factura->MONTO_EXENTO == null) {
                             if ($factura->MONTO_REMANENTE == null) {
-                                $factura->Detalle = array(
+                                $factura->detail = array(
                                     array(
                                         'ParentKey' => $factura->$DocNum,
                                         'LineNum' => 0,
@@ -1021,13 +1030,13 @@ class WebServiceController extends Controller
                                 );    
                             } else {
                                 $linea = 0;
-                                $factura->Detalle = array(
+                                $factura->detail = array(
                                     array(
                                         'ParentKey' => $factura->$DocNum,
                                         'LineNum' => $linea + 1,
                                         'AccountCode' => $factura->CUENTA_CONTABLE_AFECTO,
                                         'ItemDescription' => $factura->TIPOGASTO . ' ' . $factura->DOCUMENTO . ' ' . $factura->SERIE . '-' . $factura->NUMERO,
-                                        'PriceAfterVAT' => $factura->MONTO_AFECTO . $factura->MONTO_IVA,
+                                        'PriceAfterVAT' => (double)$factura->MONTO_AFECTO + (double)$factura->MONTO_IVA,
                                         'TaxCode' => $factura->CODIGO_IMPUESTO_AFECTO,
                                         'ProjectCode' => 'OOFISCAL',
                                         'CostingCode' => $factura->CENTROCOSTO1,
@@ -1036,7 +1045,7 @@ class WebServiceController extends Controller
                                         'CostingCode4' => $factura->CENTROCOSTO4,
                                         'CostingCode5' => $factura->CENTROCOSTO5,
                                     ),
-                                    array(
+                                    /*array(
                                         'ParentKey_2' => $factura->$DocNum,
                                         'LineNum_2' => $linea + 2,
                                         'AccountCode_2' => $factura->CUENTA_CONTABLE_REMANENTE,
@@ -1049,19 +1058,20 @@ class WebServiceController extends Controller
                                         'CostingCode3_2' => $factura->CENTROCOSTO3,
                                         'CostingCode4_2' => $factura->CENTROCOSTO4,
                                         'CostingCode5_2' => $factura->CENTROCOSTO5
-                                    )
+                                    )*/                                
                                 );
+                                
                             }  
                         } else {
                             if ($factura->MONTO_REMANENTE == null) {                        
                                 $linea = 0;
-                                $factura->Detalle = array(
+                                $factura->detail = array(
                                     array(
                                         'ParentKey' => $factura->$DocNum,
                                         'LineNum' => $linea + 1,
                                         'AccountCode' => $factura->CUENTA_CONTABLE_AFECTO,
                                         'ItemDescription' => $factura->TIPOGASTO . ' ' . $factura->DOCUMENTO . ' ' . $factura->SERIE . '-' . $factura->NUMERO,
-                                        'PriceAfterVAT' => $factura->MONTO_AFECTO . $factura->MONTO_IVA,
+                                        'PriceAfterVAT' => (double)$factura->MONTO_AFECTO + (double)$factura->MONTO_IVA,
                                         'TaxCode' => $factura->CODIGO_IMPUESTO_AFECTO,
                                         'ProjectCode' => 'OOFISCAL',
                                         'CostingCode' => $factura->CENTROCOSTO1,
@@ -1087,13 +1097,13 @@ class WebServiceController extends Controller
                                 );                        
                             } else {
                                 $linea = 0;
-                                $factura->Detalle = array(
+                                $factura->detail = array(
                                     array(   
                                         'ParentKey' => $factura->$DocNum,
                                         'LineNum' => $linea + 1,
                                         'AccountCode' => $factura->CUENTA_CONTABLE_AFECTO,
                                         'ItemDescription' => $factura->TIPOGASTO . ' ' . $factura->DOCUMENTO . ' ' . $factura->SERIE . '-' . $factura->NUMERO,
-                                        'PriceAfterVAT' => $factura->MONTO_AFECTO . $factura->MONTO_IVA,
+                                        'PriceAfterVAT' => (double)$factura->MONTO_AFECTO + (double)$factura->MONTO_IVA,
                                         'TaxCode' => $factura->CODIGO_IMPUESTO_AFECTO,
                                         'ProjectCode' => 'OOFISCAL',
                                         'CostingCode' => $factura->CENTROCOSTO1,
@@ -1116,7 +1126,7 @@ class WebServiceController extends Controller
                                         'CostingCode4_2' => $factura->CENTROCOSTO4,
                                         'CostingCode5_2' => $factura->CENTROCOSTO5
                                     ),
-                                    array(
+                                    /*array(
                                         'ParentKey_3' => $factura->$DocNum,
                                         'LineNum_3' => $linea + 3,
                                         'AccountCode_3' => $factura->CUENTA_CONTABLE_REMANENTE,
@@ -1129,14 +1139,19 @@ class WebServiceController extends Controller
                                         'CostingCode3_3' => $factura->CENTROCOSTO3,
                                         'CostingCode4_3' => $factura->CENTROCOSTO4,
                                         'CostingCode5_3' => $factura->CENTROCOSTO5
-                                    )
+                                    )*/
                                 );
+                                $remanenteGlobal += $factura->MONTO_REMANENTE; 
+                                
                             }
 
                         }                 
 
                     }
                 }
+
+                // Se crea nuevo documento correspondiente a la nota de credito por remanente
+
                 $noteCredit['DocNum'] = $DocNum + 1;
                 $noteCredit['DocType'] = 'dDocument_Service';
                 $noteCredit['DocDate'] = $factura->FECHA_FACTURA->format('Y-m-d');
@@ -1154,22 +1169,40 @@ class WebServiceController extends Controller
                 $noteCredit['U_FacNom'] = $factura->NOMBRE;
                 $noteCredit['U_Clase_Libro'] = $factura->GRUPOTIPOGASTO_ID;
                 $noteCredit['U_Tipo_Documento'] = $factura->DOCUMENTO;
+                $noteCredit['businessObject'] = 'oPurchaseCreditNotes';
             }
-            
-            dd($noteCredit);
+
+            $noteCredit['detail'] = array(
+                                            array(
+                                                'ParentKey' => $noteCredit['DocNum'],
+                                                'LineNum' => 1,
+                                                'AccountCode' => '_SYS00000001119',
+                                                'ItemDescription' => 'Otros Ingresos',
+                                                'PriceAfterVAT' => $remanenteGlobal,
+                                                'TaxCode' => 'Pendiente',
+                                                'ProjectCode' => 'OOFISCAL',
+                                                'CostingCode' => 'Pendiente',
+                                                'CostingCode2' => 'Pendiente',
+                                                'CostingCode3' => 'Pendiente',
+                                                'CostingCode4' => 'Pendiente',
+                                                'CostingCode5' => 'Pendiente'
+                                            )                                        
+            );
+            $facturas->push($noteCredit);
             $facturas = $facturas->toArray();
             
-
+            
             $facturas = array_map(function($fac) {
                 return array_except($fac, ['ID', 'PROVEEDORID', 'NOMBRE', 'IDENTIFICADOR_TRIBUTARIO', 'SERIE', 'NUMERO',
-                                        'TOTAL', 'FECHA_FACTURA', 'MONTO_IVA', 'TIPOGASTO', 'GRUPOTIPOGASTO_ID',
-                                        'APROBACION_PAGO', 'DOCUMENTO', 'EMAIL', 'FOTO', 'TIPOPROVEEDOR_ID', 'MONTO_AFECTO',
-                                        'MONTO_EXENTO', 'MONTO_REMANENTE', 'CENTROCOSTO1', 'CENTROCOSTO2', 'CENTROCOSTO3',
-                                        'CENTROCOSTO4', 'CENTROCOSTO5', 'CUENTA_CONTABLE_EXENTO', 'CODIGO_IMPUESTO_EXENTO',
-                                        'CUENTA_CONTABLE_AFECTO', 'CODIGO_IMPUESTO_AFECTO','CUENTA_CONTABLE_REMANENTE',
-                                        'CODIGO_IMPUESTO_REMANENTE']);
+                'TOTAL', 'FECHA_FACTURA', 'MONTO_IVA', 'TIPOGASTO', 'GRUPOTIPOGASTO_ID',
+                'APROBACION_PAGO', 'DOCUMENTO', 'EMAIL', 'FOTO', 'TIPOPROVEEDOR_ID', 'MONTO_AFECTO',
+                'MONTO_EXENTO', 'MONTO_REMANENTE', 'CENTROCOSTO1', 'CENTROCOSTO2', 'CENTROCOSTO3',
+                'CENTROCOSTO4', 'CENTROCOSTO5', 'CUENTA_CONTABLE_EXENTO', 'CODIGO_IMPUESTO_EXENTO',
+                'CUENTA_CONTABLE_AFECTO', 'CODIGO_IMPUESTO_AFECTO','CUENTA_CONTABLE_REMANENTE',
+                'CODIGO_IMPUESTO_REMANENTE']);
             }, $facturas);
-
+            
+            dd($facturas);
             //dd($id);
         
 

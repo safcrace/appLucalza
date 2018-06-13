@@ -234,14 +234,14 @@
 
 <hr>
 
-<div class="row form-group">
+{{-- <div class="row form-group">
   <div class="col-md-2 col-md-offset-1">
         {!! Form::label('ANULADO', 'Anular') !!}
   </div>
   <div class="col-md-4">
       {!! Form::checkbox('ANULADO', 1); !!}
   </div>
-</div>
+</div> --}}
 
 <div class="modal fade" id="myModalCe" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
   <div class="modal-dialog" role="document">

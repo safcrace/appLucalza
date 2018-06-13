@@ -80,6 +80,7 @@
             vurl = vurl.replace('%7Bid%7D', fechaInicio + '&' + fechaFinal + '&' + tipoLiquidacion + '&' + usuarioId)            
 
             $.getJSON(vurl, null, function (values) {
+                //console.log(values)
                 $('#newRutas').populateSelect(values)
             })
             

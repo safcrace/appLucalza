@@ -63,7 +63,7 @@
 
 </div>
 
-<hr>
+{{-- <hr>
 
 <div class="row form-group">
   <div class="col-md-2 col-md-offset-1">
@@ -72,7 +72,7 @@
   <div class="col-md-4">
       {!! Form::checkbox('ANULADO', 1); !!}
   </div>
-</div>
+</div> --}}
 
 
 
