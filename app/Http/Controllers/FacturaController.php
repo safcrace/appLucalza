@@ -76,7 +76,7 @@ class FacturaController extends Controller
          dd($tipoGasto[0],[1]);
 dd($resultado);
 */
-         $subcategoria = SubcategoriaTipoGasto::where('ANULADO', '=', 0)->lists('DESCRIPCION', 'ID')->toArray();
+         $subcategoria = null;//SubcategoriaTipoGasto::where('ANULADO', '=', 0)->lists('DESCRIPCION', 'ID')->toArray();
          $fechas =  Liquidacion::select('liq_liquidacion.FECHA_INICIO', 'liq_liquidacion.FECHA_FINAL', 'USUARIORUTA_ID' )
                                         ->where('liq_liquidacion.ID', '=', $liquidacion_id)
                                         ->first();

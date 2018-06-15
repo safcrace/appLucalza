@@ -34,7 +34,7 @@
             </div>
         @else
             <div class="col-md-3">
-                {!! Form::select('subcategoriaTipoGasto', $subcategoria, null, ['class' => 'form-control', 'placeholder' => 'Seleccione Tipo de Gasto', 'id' => 'subcategoriaTipoGasto']); !!}
+                {!! Form::select('subcategoriaTipoGasto', ['00' => 'SELECCIONE CATEGORIA DE GASTO'], null, ['class' => 'form-control', 'placeholder' => 'Seleccione Tipo de Gasto', 'id' => 'subcategoriaTipoGasto']); !!}
             </div>
         @endif
 

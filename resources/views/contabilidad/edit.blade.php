@@ -39,6 +39,7 @@
                           <th class="text-center">Numero</th>
                           <th class="text-center">Tipo de Gasto</th>
                           <th class="text-center">Total</th>
+                          <th class="text-center">No Aplica Pago</th>
                           <th class="text-center">Ver</th>
                           <th class="text-center">Corregir</th>
                           <th class="text-center">Comentario Supervisor</th>
@@ -60,6 +61,7 @@
                                     <td>{{ $factura->NUMERO}}</td>
                                     <td>{{ $factura->TIPOGASTO}}</td>
                                     <td>Q.{{ $factura->TOTAL}}</td>
+                                    <td>{{ ($factura->MONTO_REMANENTE)?$factura->MONTO_REMANENTE:'N/A' }}</td>
                                     <td class="text-center">
                                         <a class="image-popup-fit-width" href='{{ asset("images/$factura->EMAIL/$factura->FOTO") }}' title="Imagen Factura.">
                                             <img src='{{ asset("images/$factura->EMAIL/$factura->FOTO") }}' height="32px">

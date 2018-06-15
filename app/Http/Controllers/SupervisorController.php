@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-
-use App\Http\Requests;
-use App\Http\Controllers\Controller;
 use App\Factura;
+
 use App\Liquidacion;
+use App\Presupuesto;
+use App\Http\Requests;
+use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 
@@ -80,7 +81,7 @@ class SupervisorController extends Controller
     public function show($id)
     {   
         $liquidacion = Liquidacion::select('liq_liquidacion.ID', 'liq_liquidacion.FECHA_INICIO', 'liq_liquidacion.FECHA_FINAL', 'users.nombre as USUARIO', 'cat_ruta.DESCRIPCION as RUTA',
-                                           'liq_liquidacion.SUPERVISOR_COMENTARIO', 'liq_liquidacion.CONTABILIDAD_COMENTARIO', 'cat_ruta.TIPO_GASTO' )
+                                           'liq_liquidacion.SUPERVISOR_COMENTARIO', 'liq_liquidacion.CONTABILIDAD_COMENTARIO', 'liq_liquidacion.USUARIORUTA_ID', 'cat_ruta.TIPO_GASTO' )
                                   ->join('cat_usuarioruta', 'cat_usuarioruta.ID', '=', 'liq_liquidacion.USUARIORUTA_ID')
                                   ->join('users', 'users.id', '=', 'cat_usuarioruta.USER_ID')
                                   ->join('cat_ruta', 'cat_ruta.ID', '=', 'cat_usuarioruta.RUTA_ID')
@@ -90,7 +91,7 @@ class SupervisorController extends Controller
 
         $facturas = Factura::select('liq_factura.ID', 'cat_proveedor.NOMBRE', 'liq_factura.SERIE as SERIE', 'liq_factura.NUMERO as NUMERO', 'liq_factura.TOTAL as TOTAL',
                                     'liq_factura.FECHA_FACTURA', 'cat_tipogasto.DESCRIPCION as TIPOGASTO', 'liq_factura.COMENTARIO_SUPERVISOR', 'liq_factura.COMENTARIO_CONTABILIDAD',
-                                    'users.email as EMAIL', 'liq_factura.FOTO as FOTO', 'liq_factura.CORRECCION')
+                                    'users.email as EMAIL', 'liq_factura.FOTO as FOTO', 'liq_factura.CORRECCION', 'liq_factura.MONTO_REMANENTE')
                                                   ->join('cat_proveedor', 'cat_proveedor.ID', '=', 'liq_factura.PROVEEDOR_ID')
                                                   ->join('cat_tipogasto', 'cat_tipogasto.ID', '=', 'liq_factura.TIPOGASTO_ID')
                                                   ->join('liq_liquidacion', 'liq_liquidacion.ID', '=', 'liq_factura.LIQUIDACION_ID')
@@ -109,7 +110,24 @@ class SupervisorController extends Controller
             $correlativo = $correlativo + 1;            
         endforeach;
 
-        return view('supervisor.edit', compact('liquidacion', 'facturas', 'corregirFactura'));
+        $fechaFinal = $liquidacion->FECHA_FINAL;//->format('Y-m-d');
+        $fechaInicio = $liquidacion->FECHA_INICIO;//->format('Y-m-d');
+       // dd($fechaInicio);
+ 
+         $presupuestoAsignado = Presupuesto::select('pre_detpresupuesto.PRESUPUESTO_ID', 'cat_tipogasto.DESCRIPCION AS TIPOGASTO', 'pre_detpresupuesto.MONTO', 'cat_asignacionpresupuesto.DESCRIPCION')
+                                             ->join('pre_detpresupuesto', 'pre_detpresupuesto.PRESUPUESTO_ID', '=', 'pre_presupuesto.ID')
+                                             ->join('cat_tipogasto', 'cat_tipogasto.ID', '=', 'pre_detpresupuesto.TIPOGASTO_ID')
+                                             ->join('cat_asignacionpresupuesto', 'cat_asigNacionpresupuesto.ID', '=', 'pre_detpresupuesto.TIPOASIGNACION_ID')
+                                             ->where('pre_presupuesto.VIGENCIA_INICIO', '<=', $fechaFinal)
+                                             ->where('pre_presupuesto.VIGENCIA_FINAL', '>=', $fechaInicio)
+                                             ->where('pre_presupuesto.USUARIORUTA_ID', '=', $liquidacion->USUARIORUTA_ID)
+                                             ->get();
+ 
+         $noAplicaPago = Factura::where('LIQUIDACION_ID', '=', $liquidacion->ID)->sum('MONTO_REMANENTE');
+                                             
+         $total = Factura::where('LIQUIDACION_ID', '=', $liquidacion->ID)->where('ANULADO', '=', 0)->sum('TOTAL');  
+
+        return view('supervisor.edit', compact('liquidacion', 'facturas', 'corregirFactura', 'presupuestoAsignado', 'noAplicaPago', 'total'));
     }
 
     /**

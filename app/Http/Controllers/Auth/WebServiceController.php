@@ -1197,13 +1197,13 @@ class WebServiceController extends Controller
                 where lf.LIQUIDACION_ID = 22
                 GROUP BY tg.DESCRIPCION
              */
-            $cuentas = DB::select("select tg.DESCRIPCION, SUM(MONTO_REMANENTE) AS REMANENTE, tg.CUENTA_CONTABLE_REMANENTE
+            $cuentas = DB::select('select tg.DESCRIPCION, SUM(MONTO_REMANENTE) AS REMANENTE, tg.CUENTA_CONTABLE_REMANENTE
                                     from liq_factura as lf inner join cat_tipogasto as tg on tg.ID = lf.TIPOGASTO_ID
-                                    where lf.LIQUIDACION_ID = {$id}
-                                    GROUP BY tg.DESCRIPCION, tg.CUENTA_CONTABLE_REMANENTE"
+                                    where lf.LIQUIDACION_ID = 22
+                                    GROUP BY tg.DESCRIPCION, tg.CUENTA_CONTABLE_REMANENTE'
                                 );
                                 $linea = 0;
-            $details = null;                   
+                               
             foreach ($cuentas as $cuenta) {
                 $details[] = [
                     'ParentKey' => $noteCredit['DocNum'],
@@ -1221,7 +1221,7 @@ class WebServiceController extends Controller
                 ];                
             }
                                
-            //dd($details);
+            dd($details);
             //dd(count($cuentas));
 
             
@@ -1240,39 +1240,9 @@ class WebServiceController extends Controller
                 'CODIGO_IMPUESTO_REMANENTE']);
             }, $facturas);
             
-           // dd($facturas);
+            dd($facturas);
             //dd($id);
         
-/*
-        $client = new Client([
-            'headers' => ['content-type' => 'application-json', 'Accept' => 'application-jsoon'],
-        ]);
-
-
-        $response = $client->requestAsync('POST', 'http://pcidmsserver.cloudapp.net:8080/lucalza/ws/', [
-            'json' => [
-                'key' => 1502934063,
-                'token' => '0a2fd04f2aebaf869aea5e4a3482e427',
-                'companyId' => $empresa_id,
-                'requestType' => 3,
-                'liquidacionId' => $id,
-                'items' => $facturas/               
-            ]
-            ], ['time' => 300]);
-            $response->wait();
-
-        $response->then(
-            function (ResponseInteface $res) {
-                dd('Regreso');
-                $data = json_decode($response->getBody(), true);
-                dd($data);
-            },
-            function (RequestException $e) {
-                dd('entro aqui');
-                echo $e->getMessage() . "\n";
-                echo $e->getRequest()->getMethod();
-            }
-        );*/
 
         $client = new Client([
             'headers' => ['content-type' => 'application-json', 'Accept' => 'application-jsoon'],
@@ -1286,12 +1256,12 @@ class WebServiceController extends Controller
                 'companyId' => $empresa_id,
                 'requestType' => 3,
                 'liquidacionId' => $id,
-                'items' => $facturas
+                'items' => $facturas//*'Carlos Pérez'*/$filtro                
             ]
         ]);
 
         $data = json_decode($response->getBody(), true);
-        
+
         dd($data);
 
     }

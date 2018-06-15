@@ -19,7 +19,8 @@ class DetallePresupuesto extends Model
      * @var array
      */
     protected $fillable = ['PRESUPUESTO_ID', 'TIPOGASTO_ID', 'MONTO', 'CENTROCOSTO1', 'CENTROCOSTO2', 'CENTROCOSTO3',
-                           'CENTROCOSTO4', 'CENTROCOSTO5', 'ANULADO'];
+                           'CENTROCOSTO4', 'CENTROCOSTO5', 'DESCCENTRO1', 'DESCCENTRO2', 'DESCCENTRO3', 'DESCCENTRO4',
+                           'DESCCENTRO5', 'ANULADO'];
 
 
     public $timestamps = false;

@@ -67,84 +67,75 @@
       </div>
     </DIV>
     <hr>
-
+    
+    {!! Form::hidden('DESCCENTRO1', null, ['id' => 'DESCCENTRO1'] ); !!}    
     <div class="row form-group">
       <div class="col-md-2 col-md-offset-1">
             {!! Form::label('CENTROCOSTO1', 'Centro de Costo1') !!}
       </div>
       <div class="col-md-3" id="cc_1">
-          {!! Form::text('CENTROCOSTO1', null, ['class' => 'form-control', 'placeholder' => 'Centro de Costo 1', 'disabled']); !!}
+          {!! Form::select('CENTROCOSTO1', [$detallePresupuesto->CENTROCOSTO1 => $detallePresupuesto->DESCCENTRO1], null, ['class' => 'form-control']); !!}
       </div>
-      <div class="col-md-3" id="cc1_sap" style="display: none">
-
-      </div>
+            
       <div class="col-md-1">
         <span class="glyphicon glyphicon-import" aria-hidden="true" id="centro_1" style="cursor: pointer"></span>
       </div>
     </div>
 
+    {!! Form::hidden('DESCCENTRO2', null, ['id' => 'DESCCENTRO2'] ); !!}
     <div class="row form-group">
       <div class="col-md-2 col-md-offset-1">
             {!! Form::label('CENTROCOSTO2', 'Centro de Costo2') !!}
       </div>
       <div class="col-md-3" id="cc_2">
-          {!! Form::text('CENTROCOSTO2', null, ['class' => 'form-control', 'placeholder' => 'Centro de Costo 2', 'disabled']); !!}
+          {!! Form::select('CENTROCOSTO2', [$detallePresupuesto->CENTROCOSTO2 => $detallePresupuesto->DESCCENTRO2], null, ['class' => 'form-control']); !!}
       </div>
-
-      <div class="col-md-3" id="cc2_sap" style="display: none">
-
-      </div>
+      
       <div class="col-md-1">
         <span class="glyphicon glyphicon-import" aria-hidden="true" id="centro_2" style="cursor: pointer"></span>
       </div>
     </div>
 
+    {!! Form::hidden('DESCCENTRO3', null, ['id' => 'DESCCENTRO3'] ); !!}
     <div class="row form-group">
       <div class="col-md-2 col-md-offset-1">
             {!! Form::label('CENTROCOSTO3', 'Centro de Costo3') !!}
       </div>
       <div class="col-md-3" id="cc_3">
-          {!! Form::text('CENTROCOSTO3', null, ['class' => 'form-control', 'placeholder' => 'Centro de Costo 3', 'disabled']); !!}
-      </div>
-      <div class="col-md-3" id="cc3_sap" style="display: none">
-
-      </div>
+          {!! Form::select('CENTROCOSTO3', [$detallePresupuesto->CENTROCOSTO3 => $detallePresupuesto->DESCCENTRO3], null, ['class' => 'form-control']); !!}
+      </div>      
       <div class="col-md-1">
         <span class="glyphicon glyphicon-import" aria-hidden="true" id="centro_3" style="cursor: pointer"></span>
       </div>
     </div>
-
+ 
+    {!! Form::hidden('DESCCENTRO4', null, ['id' => 'DESCCENTRO4'] ); !!}
     <div class="row form-group">
       <div class="col-md-2 col-md-offset-1">
             {!! Form::label('CENTROCOSTO4', 'Centro de Costo4') !!}
       </div>
       <div class="col-md-3" id="cc_4">
-          {!! Form::text('CENTROCOSTO4', null, ['class' => 'form-control', 'placeholder' => 'Centro de Costo 4', 'disabled']); !!}
+          {!! Form::select('CENTROCOSTO4', [$detallePresupuesto->CENTROCOSTO4 => $detallePresupuesto->DESCCENTRO4], null, ['class' => 'form-control']); !!}
       </div>
-
-      <div class="col-md-3" id="cc4_sap" style="display: none">
-
-      </div>
+      
       <div class="col-md-1">
         <span class="glyphicon glyphicon-import" aria-hidden="true" id="centro_4" style="cursor: pointer"></span>
       </div>
     </div>
 
+    {!! Form::hidden('DESCCENTRO5', null, ['id' => 'DESCCENTRO5'] ); !!}
     <div class="row form-group">
       <div class="col-md-2 col-md-offset-1">
             {!! Form::label('CENTROCOSTO5', 'Centro de Costo5') !!}
       </div>
       <div class="col-md-3" id="cc_5">
-          {!! Form::text('CENTROCOSTO5', null, ['class' => 'form-control', 'placeholder' => 'Centro de Costo 5', 'disabled']); !!}
+          {!! Form::select('CENTROCOSTO5', [$detallePresupuesto->CENTROCOSTO5 => $detallePresupuesto->DESCCENTRO5], null, ['class' => 'form-control']); !!}
       </div>
-
-      <div class="col-md-3" id="cc5_sap" style="display: none">
-
-      </div>
+      
       <div class="col-md-1">
         <span class="glyphicon glyphicon-import" aria-hidden="true" id="centro_5" style="cursor: pointer"></span>
       </div>
-    </div>
+    </div> 
 
     <div class="row form-group">
       <div class="col-md-2 col-md-offset-1">
@@ -163,6 +154,15 @@
 @push('scripts')
 <script type="text/javascript">
     $(document).ready(function () {
+
+        $.fn.populateSelect = function (values) {
+            var options = ''
+            $.each(values, function (key, row) {
+                options += '<option value = "' + row.ID + '">' + row.DESCRIPCION + '</option>'
+            })
+            $(this).html(options)
+        }
+
         var tipo = $('#tipo option:selected').text()
         if(tipo != null) { 
             if ((tipo == 'Combustible')) {
@@ -220,20 +220,19 @@
         })
 
         $('#centro_1').click(function() {           
-            var criterio = $('#EMPRESA_ID').val() + '-' + 4 + '-' + 1
-            
-            vurl = '{{ route('codigoCentroCostoUnoAsincrono')}}'            
-            vurl = vurl.replace('%7Bid%7D', criterio);
+            var criterio = $('#EMPRESA_ID').val() + '-' + 4 + '-' + 1            
+            vurl = '{{ route('codigoCentroCostoUno')}}'            
+            vurl = vurl.replace('%7Bid%7D', criterio);            
 
-            $.ajax({
-                type: 'get',
-                url: vurl,
-                success: function (data) {
-                    $('#cc_1').remove()
-                    $('#cc1_sap').html(data);
-                    $('#cc1_sap').show()
-                }
-            })
+            $.getJSON(vurl, null, function (values) {                
+                $('#CENTROCOSTO1').populateSelect(values)
+            })            
+           
+        })
+       
+        $('#CENTROCOSTO1').change(function() {                
+            console.log($('#CENTROCOSTO1 option:selected').text())
+            $('#DESCCENTRO1').val($('#CENTROCOSTO1 option:selected').text())
         })
 
         $('#centro_2').click(function() {
@@ -241,15 +240,13 @@
             vurl = '{{ route('codigoCentroCostoDos')}}'
             vurl = vurl.replace('%7Bid%7D',criterio);
 
-            $.ajax({
-                type: 'get',
-                url: vurl,
-                success: function (data) {
-                    $('#cc_2').remove()
-                    $('#cc2_sap').html(data);
-                    $('#cc2_sap').show()
-                }
-            })
+            $.getJSON(vurl, null, function (values) {                
+                $('#CENTROCOSTO2').populateSelect(values)
+            })   
+        })
+
+         $('#CENTROCOSTO2').change(function() {            
+            $('#DESCCENTRO2').val($('#CENTROCOSTO2 option:selected').text())
         })
 
         $('#centro_3').click(function() {
@@ -257,15 +254,13 @@
             vurl = '{{ route('codigoCentroCostoTres')}}'
             vurl = vurl.replace('%7Bid%7D', criterio);
 
-            $.ajax({
-                type: 'get',
-                url: vurl,
-                success: function (data) {
-                    $('#cc_3').remove()
-                    $('#cc3_sap').html(data);
-                    $('#cc3_sap').show()
-                }
-            })
+            $.getJSON(vurl, null, function (values) {                
+                $('#CENTROCOSTO3').populateSelect(values)
+            })   
+        })
+
+         $('#CENTROCOSTO3').change(function() {            
+            $('#DESCCENTRO3').val($('#CENTROCOSTO3 option:selected').text())
         })
 
         $('#centro_4').click(function() {
@@ -273,15 +268,13 @@
             vurl = '{{ route('codigoCentroCostoCuatro')}}'
             vurl = vurl.replace('%7Bid%7D', criterio);
 
-            $.ajax({
-                type: 'get',
-                url: vurl,
-                success: function (data) {
-                    $('#cc_4').remove()
-                    $('#cc4_sap').html(data);
-                    $('#cc4_sap').show()
-                }
-            })
+           $.getJSON(vurl, null, function (values) {                
+                $('#CENTROCOSTO4').populateSelect(values)
+            })   
+        })
+
+         $('#CENTROCOSTO4').change(function() {            
+            $('#DESCCENTRO4').val($('#CENTROCOSTO4 option:selected').text())
         })
 
         $('#centro_5').click(function() {
@@ -289,15 +282,13 @@
             vurl = '{{ route('codigoCentroCostoCinco')}}'
             vurl = vurl.replace('%7Bid%7D', criterio);
 
-            $.ajax({
-                type: 'get',
-                url: vurl,
-                success: function (data) {
-                    $('#cc_5').remove()
-                    $('#cc5_sap').html(data);
-                    $('#cc5_sap').show()
-                }
-            })
+            $.getJSON(vurl, null, function (values) {                
+                $('#CENTROCOSTO5').populateSelect(values)
+            })   
+        })
+
+         $('#CENTROCOSTO5').change(function() {            
+            $('#DESCCENTRO5').val($('#CENTROCOSTO5 option:selected').text())
         })
 
     });

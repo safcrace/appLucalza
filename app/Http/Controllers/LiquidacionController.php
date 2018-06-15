@@ -4,16 +4,18 @@ namespace App\Http\Controllers;
 
 use App\Ruta;
 use App\Factura;
-use App\Presupuesto;
+use Carbon\Carbon;
 use App\Liquidacion;
+use App\Presupuesto;
 use App\UsuarioRuta;
-use App\Http\Requests;
 
+use App\Http\Requests;
 use Illuminate\Http\Request;
-use Maatwebsite\Excel\Facades\Excel;
-use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
+use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Redirect;
 use App\Http\Requests\CreateLiquidacionRequest;
@@ -113,10 +115,10 @@ class LiquidacionController extends Controller
                         $fechaInicio = $request->FECHA_INICIO;
                         $fechaFinal = $request->FECHA_FINAL;
 
-        if ($fechaInicio >= $fechaFinal) {            
+        if ($fechaInicio > $fechaFinal) {            
             return back()->withInput()->with('info', 'La Fecha de Inicio no puede ser Mayor a la Fecha Final');
-        }
-
+        } 
+        dd(date('W'));
         $presupuestoRuta = Presupuesto::select('ID', 'VIGENCIA_INICIO', 'VIGENCIA_FINAL')
                                             ->where('USUARIORUTA_ID', '=', $usuarioRuta->ID)
                                             ->where('VIGENCIA_INICIO', '<=', $fechaInicio)
@@ -203,6 +205,7 @@ class LiquidacionController extends Controller
                                       ->join('cat_ruta', 'cat_ruta.ID', '=', 'cat_usuarioruta.RUTA_ID')
                                       ->where('liq_liquidacion.ID', '=', $liquidacion_id)
                                       ->first();
+                                      
 //dd($liquidacion->SUPERVISOR_COMENTARIO);
         $facturas = Factura::select('liq_factura.ID', 'cat_proveedor.NOMBRE', 'liq_factura.SERIE as SERIE', 'liq_factura.NUMERO as NUMERO', 'liq_factura.TOTAL as TOTAL',
                                     'liq_factura.FECHA_FACTURA', 'liq_factura.ANULADO', 'cat_tipogasto.DESCRIPCION as TIPOGASTO', 'liq_factura.CORRECCION', 'liq_factura.MONTO_REMANENTE')
@@ -212,8 +215,29 @@ class LiquidacionController extends Controller
                                                   ->where('liq_factura.LIQUIDACION_ID', '=', $liquidacion_id)
                                                   //->where('liq_factura.ANULADO', '=', 0)
                                                   ->paginate(10);
+
+        //$ejemplo = new Carbon($fechaInicio);
+        //$numeroSemana = ($liquidacion->FECHA_INICIO->weekOfYear);
+       // dd($numeroSemana);
+
+       $fechaFinal = $liquidacion->FECHA_FINAL;//->format('Y-m-d');
+       $fechaInicio = $liquidacion->FECHA_INICIO;//->format('Y-m-d');
+      // dd($fechaInicio);
+
+        $presupuestoAsignado = Presupuesto::select('pre_detpresupuesto.PRESUPUESTO_ID', 'cat_tipogasto.DESCRIPCION AS TIPOGASTO', 'pre_detpresupuesto.MONTO', 'cat_asignacionpresupuesto.DESCRIPCION')
+                                            ->join('pre_detpresupuesto', 'pre_detpresupuesto.PRESUPUESTO_ID', '=', 'pre_presupuesto.ID')
+                                            ->join('cat_tipogasto', 'cat_tipogasto.ID', '=', 'pre_detpresupuesto.TIPOGASTO_ID')
+                                            ->join('cat_asignacionpresupuesto', 'cat_asigNacionpresupuesto.ID', '=', 'pre_detpresupuesto.TIPOASIGNACION_ID')
+                                            ->where('pre_presupuesto.VIGENCIA_INICIO', '<=', $fechaFinal)
+                                            ->where('pre_presupuesto.VIGENCIA_FINAL', '>=', $fechaInicio)
+                                            ->where('pre_presupuesto.USUARIORUTA_ID', '=', $liquidacion->USUARIORUTA_ID)
+                                            ->get();
+
+        $noAplicaPago = Factura::where('LIQUIDACION_ID', '=', $liquidacion_id)->sum('MONTO_REMANENTE');
+                                            
+        $total = Factura::where('LIQUIDACION_ID', '=', $liquidacion->ID)->where('ANULADO', '=', 0)->sum('TOTAL');                                       ;
                                                   
-        return view('liquidaciones.edit', compact('liquidacion', 'usuario', 'usuario_id', 'rutas', 'combo', 'facturas', 'tipoLiquidacion'));
+        return view('liquidaciones.edit', compact('liquidacion', 'usuario', 'usuario_id', 'rutas', 'combo', 'facturas', 'tipoLiquidacion', 'presupuestoAsignado', 'noAplicaPago', 'total'));
     }
 
     /**

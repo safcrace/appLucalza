@@ -46,13 +46,34 @@
     </div>
 
     <div class="col-md-1">
-        {!! Form::label('TOTAL', 'TOTAL') !!}
+        {!! Form::label('TOTAL', 'Detalle Presupuesto') !!}
+    </div>
+    <div class="col-md-1">
+        <button type="button" class="btn btn-default" data-toggle="modal" data-target="#myModal"><span class="glyphicon glyphicon-list-alt" aria-hidden="true" style="font-size:32px; color: black"></button>
+    </div>
+</div>
+
+<div class="row form-group">
+    <div class="col-md-1 col-md-offset-1">
+        {!! Form::label('TOTAL', 'Total Facturado') !!}
     </div>
     <div class="col-md-2">
-        {!! Form::text('TOTAL', number_format(App\Factura::where('LIQUIDACION_ID', '=', $liquidacion->ID)->where('ANULADO', '=', 0)->sum('TOTAL'), 2), ['class' => 'form-control', 'disabled' => 'true', 'id' => 'totalLiquidacion']); !!}
+        {!! Form::text('TOTAL', number_format($total, 2), ['class' => 'form-control', 'disabled' => 'true', 'id' => 'totalLiquidacion']); !!}
     </div>
+    
+    <div class="col-md-1">
+        {!! Form::label('REMANENTE', 'No Aplica Pago') !!}
+    </div>
+    <div class="col-md-2">
+        {!! Form::text('REMANENTE', $noAplicaPago, ['class' => 'form-control', 'disabled' => 'true']); !!}
+    </div> 
 
-  
+    <div class="col-md-1">
+        {!! Form::label('REEMBOLSO', 'Reembolso') !!}
+    </div>
+    <div class="col-md-2">
+        {!! Form::text('REEMBOLSO', $total - $noAplicaPago, ['class' => 'form-control', 'disabled' => 'true']); !!}
+    </div> 
 </div>
 
 <div class="row form-group">
@@ -111,3 +132,36 @@
             </a>
         </div>
 </div>
+
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title" id="myModalLabel">Detalle Presupuesto</h4>
+        </div>
+        <div class="modal-body">
+            <table class="table table-bordered table-striped table-hover">
+                <thead>
+                  <th class="text-center">Categoría Gasto</th>
+                  <th class="text-center">Monto</th>
+                  <th class="text-center">Tipo de Asignación</th>                  
+                </thead>
+                <tbody>
+                    @foreach ($presupuestoAsignado as $presupuesto)
+                        <tr>
+                            <td>{{ $presupuesto->TIPOGASTO }}</td>
+                            <td>{{ $presupuesto->MONTO }}</td>
+                            <td>{{ $presupuesto->DESCRIPCION }}</td>                            
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
+        <div class="modal-footer">
+          {{-- <button type="button" class="btn btn-default" data-dismiss="modal"><span class="glyphicon glyphicon-remove-sign" aria-hidden="true" style="font-size:32px; color: black"></span></button>
+          <button type="button" class="btn btn-default" style="border-color: white"><span class="glyphicon glyphicon-ok-sign" aria-hidden="true" style="font-size:32px; color: black;" id="ok_exenta"></button> --}}
+        </div>
+      </div>
+    </div>
+  </div>
