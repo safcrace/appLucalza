@@ -120,7 +120,7 @@ class ContabilidadController extends Controller
                                              ->where('pre_presupuesto.USUARIORUTA_ID', '=', $liquidacion->USUARIORUTA_ID)
                                              ->get();
  
-         $noAplicaPago = Factura::where('LIQUIDACION_ID', '=', $liquidacion->ID)->sum('MONTO_REMANENTE');
+         $noAplicaPago = Factura::where('LIQUIDACION_ID', '=', $liquidacion->ID)->where('ANULADO', '=', 0)->sum('MONTO_REMANENTE');
                                              
          $total = Factura::where('LIQUIDACION_ID', '=', $liquidacion->ID)->where('ANULADO', '=', 0)->sum('TOTAL'); 
 //dd($factura);

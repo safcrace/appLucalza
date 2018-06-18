@@ -69,8 +69,7 @@ class PresupuestoController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function indexOtrosGastos()
-    {
-        //dd('otros gastos');
+    {        
         //$usuario_id = Auth::user()->id;
         //dd($usuario_id);
         $empresa_id = Session::get('empresa');
@@ -104,9 +103,9 @@ class PresupuestoController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function presupuestoCreate($id)
-    {   
+    {  
         $tipoGasto = $id;
-
+        
         $empresa_id = Session::get('empresa');
 
         $moneda = Empresa::select('cat_moneda.ID', 'cat_moneda.DESCRIPCION')
@@ -133,7 +132,7 @@ class PresupuestoController extends Controller
             //->where('cat_ruta.ANULADO', '=', 0)
             ->lists('cat_ruta.DESCRIPCION', 'cat_ruta.ID')
             ->toArray();
-
+            
         $monedaEmpresa = Empresa::select('MONEDA_LOCAL','MONEDA_SYS')->where('ID', '=', $empresa_id)->first();
 
         /*$combos = Presupuesto::select('pre_presupuesto.ID as ID', 'users.id as USUARIO', 'cat_ruta.ID as RUTA', 'cat_empresa.ID as EMPRESA')
@@ -233,12 +232,20 @@ class PresupuestoController extends Controller
      */
     public function store(CreatePresupuestoRequest $request)
     {
+        /** Se determina el nombre de la ruta */
+        $nombreRuta = UsuarioRuta::join('cat_ruta', 'cat_ruta.ID', '=', 'cat_usuarioruta.RUTA_ID')
+                                    ->where('cat_usuarioruta.USER_ID', '=', $request->USUARIO_ID)
+                                    ->where('cat_usuarioruta.RUTA_ID', '=', $request->RUTA_ID)
+                                    ->select('cat_ruta.DESCRIPCION')->first();
+
         if ($request->TIPO_GASTO == 'Rutas') {
             $texto = ' de esta Ruta';
         } else {
             $texto = ' de este Gasto';
-            if ( $request->ASIGNACION_MENSUAL <= 0) {
-                return back()->withInput()->with('info', 'Debe ingresar una Asignación Valida');
+            if ($nombreRuta == (strtoupper($nombreRuta->DESCRIPCION) == 'DEPRECIACIóN') || strtoupper($nombreRuta->DESCRIPCION) == 'DEPRECIACION') {
+                if ( $request->ASIGNACION_MENSUAL <= 0) {
+                    return back()->withInput()->with('info', 'Debe ingresar una Asignación Valida');
+                }            
             }
         }
 

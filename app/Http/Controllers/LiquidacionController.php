@@ -10,6 +10,7 @@ use App\Presupuesto;
 use App\UsuarioRuta;
 
 use App\Http\Requests;
+use App\DetallePresupuesto;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
@@ -115,10 +116,12 @@ class LiquidacionController extends Controller
                         $fechaInicio = $request->FECHA_INICIO;
                         $fechaFinal = $request->FECHA_FINAL;
 
+        
+
         if ($fechaInicio > $fechaFinal) {            
             return back()->withInput()->with('info', 'La Fecha de Inicio no puede ser Mayor a la Fecha Final');
         } 
-        dd(date('W'));
+        
         $presupuestoRuta = Presupuesto::select('ID', 'VIGENCIA_INICIO', 'VIGENCIA_FINAL')
                                             ->where('USUARIORUTA_ID', '=', $usuarioRuta->ID)
                                             ->where('VIGENCIA_INICIO', '<=', $fechaInicio)
@@ -141,7 +144,49 @@ class LiquidacionController extends Controller
             return back()->withInput()->with('info', 'Ya existe una Liquidación para este período!');
         } 
 
+        /** Validación de Frecuencia de Periodos */
+        $frecuenciaPresupuesto = DetallePresupuesto::where('PRESUPUESTO_ID', '=', $presupuestoRuta->ID)->pluck('FRECUENCIATIEMPO_ID');
+        $fechaInicio = new Carbon($fechaInicio);
+        $fechaFinal = new Carbon($fechaFinal);
+        $diferenciaFechas = $fechaFinal->diffInDays($fechaInicio);
 
+        if ($request->TIPO_LIQUIDACION == 'Otros Gastos') {
+            $frecuenciaPresupuesto = 4;
+        }
+//dd($fechaInicio->format('d-m-Y'));
+
+        /* $mesActual = $fechaInicio->month;
+        $mesInicia = $fechaInicio->startOfMonth();
+        $mesFin = $fechaInicio->endOfYear();
+         */
+        
+        if($frecuenciaPresupuesto == 2) {  //Presupuesto Semanal
+            if ($diferenciaFechas != 6) {
+                return back()->withInput()->with('info', 'Verifique el período de la Liquidación, ya que el Presupuesto es Semanal!');     
+            } 
+        } elseif ($frecuenciaPresupuesto == 3) {  //Presupuesto Quincenal
+            if ($diferenciaFechas != 14) {
+                return back()->withInput()->with('info', 'Verifique el período de la Liquidación, ya que el Presupuesto es Quincenal!');
+            }             
+        } elseif ($frecuenciaPresupuesto == 4) {  //Presupuesto Mensual
+            $mesInicia = $fechaInicio->startOfMonth();
+            $mesFin = $fechaFinal->endOfMonth();
+            /* dd($fechaFinal);
+            echo $fechaInicio->format('d-m-Y') . " ::: " . $mesInicia->format('d-m-Y') . ' :: ' . $fechaFinal . ' :: ' . $mesFin;  */
+            if ($fechaInicio != $mesInicia || $fechaFinal != $mesFin) {                
+                return back()->withInput()->with('info', 'Verifique el período de la Liquidación, ya que el Presupuesto es Mensual!');
+            }
+        } else {
+            $inicio = $fechaInicio->startOfYear();
+            $fin = $fechaInicio->endOfYear();
+            if ($fechaInicio != $inicio || $fechaFinal != $fin) {
+                return back()->withInput()->with('info', 'Verifique el período de la Liquidación, ya que el Presupuesto es Anual!');
+            }
+        }
+        /* dd($frecuenciaPresupuesto);
+        echo $fechaInicio . ' :: ' . $fechaFinal;
+        dd($diferenciaFechas); */
+        
         $liquidacion = new Liquidacion();
 
         $liquidacion->USUARIORUTA_ID = $usuarioRuta->ID;
@@ -184,6 +229,9 @@ class LiquidacionController extends Controller
 
         $liquidacion = Liquidacion::findOrFail($liquidacion_id);
 
+        $fechaFinal = $liquidacion->FECHA_FINAL;//->format('Y-m-d');
+       $fechaInicio = $liquidacion->FECHA_INICIO;//->format('Y-m-d');
+
         $usuario = Liquidacion::select('users.nombre' )
                                     ->join('cat_usuarioruta', 'cat_usuarioruta.ID', '=', 'liq_liquidacion.USUARIORUTA_ID')
                                     ->join('users', 'users.id', '=', 'cat_usuarioruta.USER_ID')
@@ -191,11 +239,24 @@ class LiquidacionController extends Controller
                                     ->first();
         $usuario_id = Auth::user()->id;
 
-        $rutas = Ruta::join('cat_usuarioruta', 'cat_usuarioruta.RUTA_ID', '=', 'cat_ruta.ID')
+        /* $rutas = Ruta::join('cat_usuarioruta', 'cat_usuarioruta.RUTA_ID', '=', 'cat_ruta.ID')
                               ->join('users', 'users.id', '=', 'cat_usuarioruta.USER_ID')
                               ->where('users.id', '=', $usuario_id)
                               ->lists('cat_ruta.DESCRIPCION', 'cat_ruta.ID')
+                              ->toArray(); */
+
+        $rutas = Ruta::join('cat_usuarioruta', 'cat_usuarioruta.RUTA_ID', '=', 'cat_ruta.ID')
+                              ->join('users', 'users.id', '=', 'cat_usuarioruta.USER_ID')
+                              ->join('pre_presupuesto', 'pre_presupuesto.USUARIORUTA_ID', '=', 'cat_usuarioruta.ID')
+                              ->where('cat_ruta.TIPO_GASTO', '=', $tipoLiquidacion)
+                              ->where('cat_usuarioruta.USER_ID', '=', $usuario_id)
+                              ->where('pre_presupuesto.ANULADO', '=', 0)
+                              ->where('pre_presupuesto.VIGENCIA_INICIO', '<=', $fechaInicio)
+                              ->where('pre_presupuesto.VIGENCIA_FINAL', '>=', $fechaFinal)
+                              ->lists('cat_ruta.DESCRIPCION', 'cat_ruta.ID')
+                              //->get()
                               ->toArray();
+        
 //dd($rutas);
         /*$frecuencia = FrecuenciaTiempo::lists('DESCRIPCION', 'ID')
                                         ->toArray();*/
@@ -220,24 +281,48 @@ class LiquidacionController extends Controller
         //$numeroSemana = ($liquidacion->FECHA_INICIO->weekOfYear);
        // dd($numeroSemana);
 
-       $fechaFinal = $liquidacion->FECHA_FINAL;//->format('Y-m-d');
-       $fechaInicio = $liquidacion->FECHA_INICIO;//->format('Y-m-d');
-      // dd($fechaInicio);
+       
 
-        $presupuestoAsignado = Presupuesto::select('pre_detpresupuesto.PRESUPUESTO_ID', 'cat_tipogasto.DESCRIPCION AS TIPOGASTO', 'pre_detpresupuesto.MONTO', 'cat_asignacionpresupuesto.DESCRIPCION')
-                                            ->join('pre_detpresupuesto', 'pre_detpresupuesto.PRESUPUESTO_ID', '=', 'pre_presupuesto.ID')
-                                            ->join('cat_tipogasto', 'cat_tipogasto.ID', '=', 'pre_detpresupuesto.TIPOGASTO_ID')
-                                            ->join('cat_asignacionpresupuesto', 'cat_asigNacionpresupuesto.ID', '=', 'pre_detpresupuesto.TIPOASIGNACION_ID')
-                                            ->where('pre_presupuesto.VIGENCIA_INICIO', '<=', $fechaFinal)
-                                            ->where('pre_presupuesto.VIGENCIA_FINAL', '>=', $fechaInicio)
-                                            ->where('pre_presupuesto.USUARIORUTA_ID', '=', $liquidacion->USUARIORUTA_ID)
-                                            ->get();
+       //if($tipoLiquidacion == 'Rutas') {
+            $presupuestoAsignado = Presupuesto::select('pre_detpresupuesto.PRESUPUESTO_ID', 'cat_tipogasto.DESCRIPCION AS TIPOGASTO', 
+            'pre_detpresupuesto.MONTO', 'cat_asignacionpresupuesto.DESCRIPCION')
+            ->join('pre_detpresupuesto', 'pre_detpresupuesto.PRESUPUESTO_ID', '=', 'pre_presupuesto.ID')
+            ->join('cat_tipogasto', 'cat_tipogasto.ID', '=', 'pre_detpresupuesto.TIPOGASTO_ID')
+            ->join('cat_asignacionpresupuesto', 'cat_asigNacionpresupuesto.ID', '=', 'pre_detpresupuesto.TIPOASIGNACION_ID')
+            ->where('pre_presupuesto.VIGENCIA_INICIO', '<=', $fechaFinal)
+            ->where('pre_presupuesto.VIGENCIA_FINAL', '>=', $fechaInicio)
+            ->where('pre_presupuesto.USUARIORUTA_ID', '=', $liquidacion->USUARIORUTA_ID)
+            ->get();
+       //} else {
+            $asignacionMensual = Presupuesto::where('VIGENCIA_INICIO', '<=', $fechaFinal)
+                                                ->where('VIGENCIA_FINAL', '>=', $fechaInicio)
+                                                ->where('USUARIORUTA_ID', '=', $liquidacion->USUARIORUTA_ID)
+                                                ->pluck('ASIGNACION_MENSUAL');
+            if($asignacionMensual > 0) {
+                $presupuestoDepreciacion = collect(['TIPOGASTO' => 'Depreciación', 'MONTO' => $asignacionMensual, 'DESCRIPCION' => 'Efectivo']);
+                $presupuestoDepreciacion = $presupuestoDepreciacion->toArray();              
+            } /*else {
+                $presupuestoAsignado = Presupuesto::select('pre_detpresupuesto.PRESUPUESTO_ID', 'cat_tipogasto.DESCRIPCION AS TIPOGASTO', 
+                                                    'pre_detpresupuesto.MONTO', 'cat_asignacionpresupuesto.DESCRIPCION')
+                                                    ->join('pre_detpresupuesto', 'pre_detpresupuesto.PRESUPUESTO_ID', '=', 'pre_presupuesto.ID')
+                                                    ->join('cat_tipogasto', 'cat_tipogasto.ID', '=', 'pre_detpresupuesto.TIPOGASTO_ID')
+                                                    ->join('cat_asignacionpresupuesto', 'cat_asigNacionpresupuesto.ID', '=', 'pre_detpresupuesto.TIPOASIGNACION_ID')
+                                                    ->where('pre_presupuesto.VIGENCIA_INICIO', '<=', $fechaFinal)
+                                                    ->where('pre_presupuesto.VIGENCIA_FINAL', '>=', $fechaInicio)
+                                                    ->where('pre_presupuesto.USUARIORUTA_ID', '=', $liquidacion->USUARIORUTA_ID)
+                                                    ->get();
+            }*/
+       //}
+             //  dd('para');
+        
 
-        $noAplicaPago = Factura::where('LIQUIDACION_ID', '=', $liquidacion_id)->sum('MONTO_REMANENTE');
+       
+
+        $noAplicaPago = Factura::where('LIQUIDACION_ID', '=', $liquidacion_id)->where('ANULADO', '=', 0)->sum('MONTO_REMANENTE');
                                             
         $total = Factura::where('LIQUIDACION_ID', '=', $liquidacion->ID)->where('ANULADO', '=', 0)->sum('TOTAL');                                       ;
                                                   
-        return view('liquidaciones.edit', compact('liquidacion', 'usuario', 'usuario_id', 'rutas', 'combo', 'facturas', 'tipoLiquidacion', 'presupuestoAsignado', 'noAplicaPago', 'total'));
+        return view('liquidaciones.edit', compact('liquidacion', 'usuario', 'usuario_id', 'rutas', 'combo', 'facturas', 'tipoLiquidacion', 'presupuestoAsignado', 'noAplicaPago', 'total', 'presupuestoDepreciacion'));
     }
 
     /**

@@ -71,7 +71,7 @@
             $(this).html(options)
         }
 
-      $('#fechaFin').change(function() { 
+      $('#fechaFin').blur(function() {             
             var fechaInicio = $('#fechaIni').val();
             var fechaFinal = $('#fechaFin').val();
             var tipoLiquidacion = $('#tipoLiquidacion').val();

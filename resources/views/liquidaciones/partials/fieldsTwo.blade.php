@@ -147,14 +147,21 @@
                   <th class="text-center">Monto</th>
                   <th class="text-center">Tipo de Asignación</th>                  
                 </thead>
-                <tbody>
-                    @foreach ($presupuestoAsignado as $presupuesto)
-                        <tr>
-                            <td>{{ $presupuesto->TIPOGASTO }}</td>
-                            <td>{{ $presupuesto->MONTO }}</td>
-                            <td>{{ $presupuesto->DESCRIPCION }}</td>                            
-                        </tr>
-                    @endforeach
+                <tbody>                    
+                    @if(isset($presupuestoDepreciacion))                    
+                        <td>{{ $presupuestoDepreciacion['TIPOGASTO'] }}</td>
+                        <td>{{ $presupuestoDepreciacion['MONTO'] }}</td>
+                        <td>{{ $presupuestoDepreciacion['DESCRIPCION'] }}</td>
+                    @else
+                    <h1>Entro aca</h1>
+                        @foreach ($presupuestoAsignado as $presupuesto)
+                            <tr>
+                                <td>{{ $presupuesto->TIPOGASTO }}</td>
+                                <td>{{ $presupuesto->MONTO }}</td>
+                                <td>{{ $presupuesto->DESCRIPCION }}</td>                            
+                            </tr>
+                        @endforeach
+                    @endif
                 </tbody>
             </table>
         </div>

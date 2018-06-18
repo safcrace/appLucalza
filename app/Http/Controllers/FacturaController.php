@@ -161,6 +161,54 @@ dd($resultado);
      */
     public function store(CreateFacturaRequest $request)
     {   
+        //Se valida que fecha no sea anterior a X días programados por la empresa y dentro de Período de Liquidación
+
+        $empresa = Session::get('loginEmpresa');
+        
+        if($request->TIPO_LIQUIDACION == 'Rutas') {            
+            $restriccionDias = Empresa::select('TIEMPOATRASO_RUTAS')->where('ID', '=', $empresa)->first();
+            $limite = Liquidacion::select('FECHA_INICIO', 'FECHA_FINAL')->where('ID', '=', $request->LIQUIDACION_ID)->first();
+            //dd($limite->FECHA_INICIO->format('d-m-Y'));
+            //dd($restriccionDias);
+            
+            $fechaFactura = new Carbon($request->FECHA_FACTURA);            
+            if ($fechaFactura->format('Y-m-d') < $limite->FECHA_INICIO->subDays($restriccionDias->TIEMPOATRASO_RUTAS)->format('Y-m-d')) {
+                return back()->withInput()->with('info', 'La Fecha de esta Factura se encuentra fuera del Rango Permitido!');            
+            }
+            if ($fechaFactura->format('Y-m-d') > $limite->FECHA_FINAL->format('Y-m-d')) {
+                return back()->withInput()->with('info', 'La Fecha de esta Factura se encuentra fuera del Rango Permitido!');            
+            }    
+        } else {
+            $restriccionDias = Empresa::select('TIEMPOATRASO_OTROSGASTOS')->where('ID', '=', $empresa)->first();
+            $limite = Liquidacion::select('FECHA_INICIO', 'FECHA_FINAL')->where('ID', '=', $request->LIQUIDACION_ID)->first();
+            $fechaFactura = date_create($request->FECHA_FACTURA);
+            if ($fechaFactura->format('Y-m-d') < $limite->FECHA_INICIO->subDays($restriccionDias->TIEMPOATRASO_OTROSGASTOS)->format('Y-m-d')) {
+                return back()->withInput()->with('info', 'La Fecha de esta Factura se encuentra fuera del Rango Permitido!');            
+            }
+            if ($fechaFactura->format('Y-m-d') > $limite->FECHA_FINAL->format('Y-m-d')) {
+                return back()->withInput()->with('info', 'La Fecha de esta Factura se encuentra fuera del Rango Permitido!');            
+            }                
+        }
+
+        /**  Se valida si es combustible que se ingrese la cantidad correspondiente de galones y que Km Final sea > Km Inicial**/
+        if ($request->CATEGORIA_GASTO == 'combustible') {
+            if($request->CANTIDAD_PORCENTAJE_CUSTOM === '') {
+                return back()->withInput()->with('info', 'Es obligatorio que ingrese la cantidad de galones facturados!');
+            } 
+            if ($request->KM_INICIO == null || $request->KM_FINAL ==null) {
+                return back()->withInput()->with('info', 'Es obligatorio que ingrese Kilometraje Inicial y Kilometraje Final!');
+            }
+            if ($request->KM_FINAL <= $request->KM_INICIO) {
+                return back()->withInput()->with('info', 'El Kilometraje Inicial debe ser Mayor al Kilometraje Final!');
+            }
+        }       
+        
+        /** Se valida que fecha ingresada no sea mayor a fecha del día */       
+        if ($request->FECHA_FACTURA > (Carbon::now(new DateTimeZone('America/Guatemala')))) {
+            return back()->withInput()->with('info', 'La Fecha de la Factura, no puede ser mayor a la Fecha de Hoy!');        
+        }
+
+
         $factura = new Factura();
         if (trim($request->FMONEDA_ID) == 'USD') { 
             $montoConversion = round(($request->TOTAL * $request->TASA_CAMBIO), 4);           
@@ -188,125 +236,52 @@ dd($resultado);
         }
         $file->move($path,$name);
 
+        /** Se Determina si es Liquidación de Depreciación */
+
+        $nombreRuta = Liquidacion::join('cat_usuarioruta', 'cat_usuarioruta.ID', '=', 'liq_liquidacion.USUARIORUTA_ID')
+                                    ->join('cat_ruta', 'cat_ruta.ID', '=', 'cat_usuarioruta.RUTA_ID')
+                                    ->where('liq_liquidacion.ID', '=', $request->LIQUIDACION_ID)
+                                    ->select('cat_ruta.DESCRIPCION')->first();
         
-
-        //Se valida que fecha no sea anterior a X días programados por la empresa y dentro de Período de Liquidación
-
-        $empresa = Session::get('loginEmpresa');
-        
-        if($request->TIPO_LIQUIDACION == 'Rutas') {            
-            $restriccionDias = Empresa::select('TIEMPOATRASO_RUTAS')->where('ID', '=', $empresa)->first();
-            $limite = Liquidacion::select('FECHA_INICIO', 'FECHA_FINAL')->where('ID', '=', $request->LIQUIDACION_ID)->first();
-            //dd($limite->FECHA_INICIO->format('d-m-Y'));
-            //dd($restriccionDias);
-            //dd($restriccionDias);
-            $fechaFactura = date_create($request->FECHA_FACTURA);
-            if ($fechaFactura->format('Y-m-d') < $limite->FECHA_INICIO->subDays($restriccionDias->TIEMPOATRASO_RUTAS)->format('Y-m-d')) {
-                return back()->withInput()->with('info', 'La Fecha de esta Factura se encuentra fuera del Rango Permitido!');            
-            }
-            if ($fechaFactura->format('Y-m-d') > $limite->FECHA_FINAL->format('Y-m-d')) {
-                return back()->withInput()->with('info', 'La Fecha de esta Factura se encuentra fuera del Rango Permitido!');            
-            }    
-        } else {
-            $restriccionDias = Empresa::select('TIEMPOATRASO_OTROSGASTOS')->where('ID', '=', $empresa)->first();
-            $limite = Liquidacion::select('FECHA_INICIO', 'FECHA_FINAL')->where('ID', '=', $request->LIQUIDACION_ID)->first();
-            $fechaFactura = date_create($request->FECHA_FACTURA);
-            if ($fechaFactura->format('Y-m-d') < $limite->FECHA_INICIO->subDays($restriccionDias->TIEMPOATRASO_OTROSGASTOS)->format('Y-m-d')) {
-                return back()->withInput()->with('info', 'La Fecha de esta Factura se encuentra fuera del Rango Permitido!');            
-            }
-            if ($fechaFactura->format('Y-m-d') > $limite->FECHA_FINAL->format('Y-m-d')) {
-                return back()->withInput()->with('info', 'La Fecha de esta Factura se encuentra fuera del Rango Permitido!');            
-            }                
-        }
-        
-        
-
-        //dd('Esta es la fecha de la factura ' . $fechaFactura->format('Y-m-d') . ' y esta la de limite ' . $limite->FECHA_INICIO->subDays($restriccionDias->TIEMPOATRASO_RUTAS)->format('Y-m-d'));
-        
-          
-
-        
-
-
-        
-        //dd($limite->FECHA_INICIO->subDays($restriccionDias->TIEMPOATRASO_RUTAS)->format('d-m-Y'));
-       
-
-/*
-        $detPresupuestoId = Liquidacion::select('liq_liquidacion.USUARIORUTA_ID')
-                                      ->join('cat_usuarioruta', 'cat_usuarioruta.ID', '=', 'liq_liquidacion.USUARIORUTA_ID')
-                                      ->join('pre_presupuesto', 'pre_presupuesto.USUARIORUTA_ID', '=', 'cat_usuarioruta.ID')
-                                      ->join('pre_detpresupuesto', 'pre_detpresupuesto.PRESUPUESTO_ID', '=', 'pre_presupuesto.ID')
-                                      ->whereBetween($request->FECHA_FACTURA, ['pre_presupuesto.VIGENCIA_INICIO','pre_presupuesto.VIGENCIA_FINAL'])
-                                      ->where('pre_detpresupuesto.TIPOGASTO_ID','=', $request->TIPOGASTO_ID)
-                                      ->where('liq_liquidacion.ID', '=', $request->LIQUIDACION_ID)
-                                      ->get();
-                                      dd($detPresupuestoId);
-
-       select dp.PRESUPUESTO_ID
-	from cat_usuarioruta as ur
-		inner join pre_presupuesto as p
-			on p.USUARIORUTA_ID = ur.ID
-				and  @fechaFactura between '2017-06-22' and '2017-06-30'
-		inner join pre_detpresupuesto dp
-			on dp.PRESUPUESTO_ID = p.ID
-				and dp.TIPOGASTO_ID = @tipogastoId
-	where ur.ID = @usuarioRutaId;*/
-
-//dd('PRIMER DATO:  ' . $request->PRESUPUESTO_ID . ' SEGUNDO DATO: ' . $request->TIPOGASTO_ID);
-
+      
         /** Se obtiene No. de Detalle Presupuesto al que Corresponde **/
 
-        if(($request->TIPO_LIQUIDACION == 'Otros Gastos') && ($request->CATEGORIA_GASTO == 'combustible' )) {
+        if(($request->TIPO_LIQUIDACION == 'Otros Gastos') && ((strtoupper($nombreRuta->DESCRIPCION) == 'DEPRECIACIóN') || strtoupper($nombreRuta->DESCRIPCION) == 'DEPRECIACION') ) {            
             $detallePresupuesto = Presupuesto::select('ID', 'ASIGNACION_MENSUAL as MONTO')->where('ID', '=', $request->PRESUPUESTO_ID)->first();
             //dd('ahi vamos...' . $detallePresupuesto->MONTO);
-        } else {
+        } else {            
             $detallePresupuesto = DetallePresupuesto::select('ID', 'MONTO')
                                                         ->where('PRESUPUESTO_ID', '=', $request->PRESUPUESTO_ID)
                                                         ->where('TIPOGASTO_ID', '=', $request->TIPOGASTO_ID)
                                                         ->first();
         }
-
-        /**  Se valida si es combustible que se ingrese la cantidad correspondiente de galones y que Km Final sea > Km Inicial**/
-        if ($request->CATEGORIA_GASTO == 'combustible') {
-            if($request->CANTIDAD_PORCENTAJE_CUSTOM === '') {
-                return back()->withInput()->with('info', 'Es obligatorio que ingrese la cantidad de galones facturados!');
-            } 
-            if ($request->KM_INICIO == null || $request->KM_FINAL ==null) {
-                return back()->withInput()->with('info', 'Es obligatorio que ingrese Kilometraje Inicial y Kilometraje Final!');
-            }
-            if ($request->KM_FINAL <= $request->KM_INICIO) {
-                return back()->withInput()->with('info', 'El Kilometraje Inicial debe ser Mayor al Kilometraje Final!');
-            }
-        }       
-        
-        /** Se valida que fecha ingresada no sea mayor a fecha del día */       
-        if ($request->FECHA_FACTURA > (Carbon::now(new DateTimeZone('America/Guatemala')))) {
-            return back()->withInput()->with('info', 'La Fecha de la Factura, no puede ser mayor a la Fecha de Hoy!');        
-        }
-              
-        
+       
+        /* $numeroSemana = $fechaFactura->weekOfYear;
+        $inicioSemana = $fechaFactura->startOfWeek();
+        $finSemana = $fechaFactura->endOfWeek(); */
+       
         /** Se obtiene monto gastado hasta el momento por tipo de gasto **/
-        if ($request->CATEGORIA_GASTO == 'combustible') {            
+        if ($request->CATEGORIA_GASTO == 'combustible' && $request->TIPO_LIQUIDACION != 'Otros Gastos' ) {                      ;
             $montoAcumulado = Factura::where('LIQUIDACION_ID', '=', $request->LIQUIDACION_ID)
             ->where('TIPOGASTO_ID', '=', $request->TIPOGASTO_ID)
             ->where('ANULADO', '=', 0)
             ->sum('CANTIDAD_PORCENTAJE_CUSTOM');
             
-        } else {
+        } elseif (strtoupper($nombreRuta->DESCRIPCION) == 'DEPRECIACIóN' || strtoupper($nombreRuta->DESCRIPCION) == 'DEPRECIACION') {            
+            $montoAcumulado = Factura::where('LIQUIDACION_ID', '=', $request->LIQUIDACION_ID)            
+            ->where('ANULADO', '=', 0)
+            ->sum('TOTAL');
+        } else { 
             $montoAcumulado = Factura::where('LIQUIDACION_ID', '=', $request->LIQUIDACION_ID)
             ->where('TIPOGASTO_ID', '=', $request->TIPOGASTO_ID)
             ->where('ANULADO', '=', 0)
-            ->sum('TOTAL');
+            ->sum('TOTAL');            
         }
-        
-        
-        $saldo = $detallePresupuesto->MONTO - $montoAcumulado;
-        
+        $saldo = $detallePresupuesto->MONTO - $montoAcumulado;        
         
         //Se determina si tiene presupuesto para cubrir el gasto o si existe remanente
 
-        if ($request->CATEGORIA_GASTO == 'combustible') {
+        if ($request->CATEGORIA_GASTO == 'combustible' && $request->TIPO_LIQUIDACION != 'Otros Gastos' ) {
             
             $idp = SubcategoriaTipoGasto::select('MONTO_A_APLICAR')->where('ID', '=', $request->subcategoriaTipoGasto)->first();
             
@@ -355,8 +330,9 @@ dd($resultado);
                 $factura->MONTO_IVA = round(($factura->MONTO_AFECTO * $valorImpuesto), 4); //Se calcula monto de impuesto            
             }
             
-        } else if ($request->CATEGORIA_GASTO == 'depreciación') {
-            
+        /* } else if (strtoupper($nombreRuta->DESCRIPCION) == 'DEPRECIACIóN' || strtoupper($nombreRuta->DESCRIPCION) == 'DEPRECIACION') { */
+        } else if ($request->CATEGORIA_GASTO == 'combustible' && $request->TIPO_LIQUIDACION != 'Rutas' ) {
+            //dd('bien SAFIRO!!!');
             $idp = SubcategoriaTipoGasto::select('MONTO_A_APLICAR')->where('ID', '=', $request->subcategoriaTipoGasto)->first();
             
             if ($saldo > 0) {
@@ -372,7 +348,7 @@ dd($resultado);
                     
                     $factura->MONTO_IVA = round(($factura->MONTO_AFECTO * $valorImpuesto ), 4); //Se calcula monto de impuesto
                    
-                } else {
+                } else {                  
                     
                     $saldoParcial = $saldo;
                     
@@ -389,8 +365,7 @@ dd($resultado);
                     //$factura->MONTO_EXENTO = $reembolsable * $precioGalon *  
                     //$factura->MONTO_REMANENTE = round(($remanente * $precioGalon), 4);    
                     $factura->MONTO_REMANENTE = round($remanente, 4);
-                    $factura->APROBACION_PAGO = 1;
-                    
+                    $factura->APROBACION_PAGO = 1;                    
                 }
     
             } else {            
