@@ -820,7 +820,7 @@ class WebServiceController extends Controller
                                     'LineNum' => $linea + 1,
                                     'AccountCode' => $factura->CUENTA_CONTABLE_AFECTO,
                                     'ItemDescription' => $factura->TIPOGASTO . ' ' . $factura->DOCUMENTO . ' ' . $factura->SERIE . '-' . $factura->NUMERO,
-                                    'PriceAfterVAT' => $factura->MONTO_AFECTO . $factura->MONTO_IVA,
+                                    'PriceAfterVAT' => (double)$factura->MONTO_AFECTO + (double)$factura->MONTO_IVA,
                                     'TaxCode' => $factura->CODIGO_IMPUESTO_AFECTO,
                                     'ProjectCode' => 'OOFISCAL',
                                     'CostingCode' => $factura->CENTROCOSTO1,
@@ -1240,11 +1240,11 @@ class WebServiceController extends Controller
                 'CODIGO_IMPUESTO_REMANENTE']);
             }, $facturas);
             
-           // dd($facturas);
+            //dd($facturas);
             //dd($id);
         
-/*
-        $client = new Client([
+
+        /* $client = new Client([
             'headers' => ['content-type' => 'application-json', 'Accept' => 'application-jsoon'],
         ]);
 
@@ -1256,9 +1256,9 @@ class WebServiceController extends Controller
                 'companyId' => $empresa_id,
                 'requestType' => 3,
                 'liquidacionId' => $id,
-                'items' => $facturas/               
+                'items' => $facturas               
             ]
-            ], ['time' => 300]);
+            ], ['time' => 0.5]);
             $response->wait();
 
         $response->then(
@@ -1272,7 +1272,7 @@ class WebServiceController extends Controller
                 echo $e->getMessage() . "\n";
                 echo $e->getRequest()->getMethod();
             }
-        );*/
+        ); */
 
         $client = new Client([
             'headers' => ['content-type' => 'application-json', 'Accept' => 'application-jsoon'],

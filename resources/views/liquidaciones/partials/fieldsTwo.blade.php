@@ -58,21 +58,21 @@
         {!! Form::label('TOTAL', 'Total Facturado') !!}
     </div>
     <div class="col-md-2">
-        {!! Form::text('TOTAL', number_format($total, 2), ['class' => 'form-control', 'disabled' => 'true', 'id' => 'totalLiquidacion']); !!}
+        {!! Form::text('TOTAL', number_format($total, 2), ['class' => 'form-control text-right', 'disabled' => 'true', 'id' => 'totalLiquidacion']); !!}
     </div>
     
     <div class="col-md-1">
         {!! Form::label('REMANENTE', 'No Aplica Pago') !!}
     </div>
     <div class="col-md-2">
-        {!! Form::text('REMANENTE', $noAplicaPago, ['class' => 'form-control', 'disabled' => 'true']); !!}
+        {!! Form::text('REMANENTE', $noAplicaPago, ['class' => 'form-control text-right', 'disabled' => 'true']); !!}
     </div> 
 
     <div class="col-md-1">
         {!! Form::label('REEMBOLSO', 'Reembolso') !!}
     </div>
     <div class="col-md-2">
-        {!! Form::text('REEMBOLSO', $total - $noAplicaPago, ['class' => 'form-control', 'disabled' => 'true']); !!}
+        {!! Form::text('REEMBOLSO', $total - $noAplicaPago, ['class' => 'form-control text-right', 'disabled' => 'true']); !!}
     </div> 
 </div>
 
@@ -150,14 +150,14 @@
                 <tbody>                    
                     @if(isset($presupuestoDepreciacion))                    
                         <td>{{ $presupuestoDepreciacion['TIPOGASTO'] }}</td>
-                        <td>{{ $presupuestoDepreciacion['MONTO'] }}</td>
+                        <td class="text-right">{{ $presupuestoDepreciacion['MONTO'] }}</td>
                         <td>{{ $presupuestoDepreciacion['DESCRIPCION'] }}</td>
                     @else
                     <h1>Entro aca</h1>
                         @foreach ($presupuestoAsignado as $presupuesto)
                             <tr>
                                 <td>{{ $presupuesto->TIPOGASTO }}</td>
-                                <td>{{ $presupuesto->MONTO }}</td>
+                                <td class="text-right">{{ $presupuesto->MONTO }}</td>
                                 <td>{{ $presupuesto->DESCRIPCION }}</td>                            
                             </tr>
                         @endforeach

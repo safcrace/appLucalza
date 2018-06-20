@@ -54,8 +54,8 @@
                                     <td>{{ $factura->SERIE }}</td>
                                     <td>{{ $factura->NUMERO}}</td>
                                     <td>{{ $factura->TIPOGASTO}}</td>
-                                    <td>Q.{{ $factura->TOTAL}}</td>
-                                    <td>{{ ($factura->MONTO_REMANENTE)?$factura->MONTO_REMANENTE:'N/A' }}</td>
+                                    <td class="text-right">{{ $factura->TOTAL}}</td>
+                                    <td class="text-right">{{ ($factura->MONTO_REMANENTE)?$factura->MONTO_REMANENTE:'N/A' }}</td>
                                     <td class="text-center">
                                       <a class="image-popup-fit-width" href='{{ asset("images/$factura->EMAIL/$factura->FOTO") }}' title="Imagen Factura.">
                                           <img src='{{ asset("images/$factura->EMAIL/$factura->FOTO") }}' height="32px">

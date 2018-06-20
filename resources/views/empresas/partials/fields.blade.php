@@ -41,11 +41,11 @@
       </div>
       @if(isset($empresa))
         <div class="col-md-1">
-          {!! Form::text('TIEMPOATRASO_RUTAS', null, ['class' => 'form-control', 'placeholder' => '# días']); !!}
+          {!! Form::text('TIEMPOATRASO_RUTAS', null, ['class' => 'form-control text-right', 'placeholder' => '# días']); !!}
         </div>      
       @else
         <div class="col-md-1">
-          {!! Form::text('TIEMPOATRASO_RUTAS', 0, ['class' => 'form-control', 'placeholder' => '# días']); !!}
+          {!! Form::text('TIEMPOATRASO_RUTAS', 0, ['class' => 'form-control text-right', 'placeholder' => '# días']); !!}
         </div>
       @endif      
       
@@ -54,11 +54,11 @@
       </div>
       @if(isset($empresa))
         <div class="col-md-2">
-          {!! Form::text('IMPUESTO', null, ['class' => 'form-control', 'placeholder' => 'Valor Impuesto']); !!} 
+          {!! Form::text('IMPUESTO', null, ['class' => 'form-control text-right', 'placeholder' => 'Valor Impuesto']); !!} 
         </div>
         @else
           <div class="col-md-2">
-            {!! Form::text('IMPUESTO', 0, ['class' => 'form-control', 'placeholder' => 'Valor Impuesto']); !!} 
+            {!! Form::text('IMPUESTO', 0, ['class' => 'form-control text-right', 'placeholder' => 'Valor Impuesto']); !!} 
           </div>
       @endif
       <div class="col-md-1">
@@ -72,11 +72,11 @@
       </div>
       @if(isset($empresa))
         <div class="col-md-1">
-          {!! Form::text('TIEMPOATRASO_OTROSGASTOS', null, ['class' => 'form-control', 'placeholder' => '# días']); !!}
+          {!! Form::text('TIEMPOATRASO_OTROSGASTOS', null, ['class' => 'form-control text-right', 'placeholder' => '# días']); !!}
         </div>
         @else
           <div class="col-md-1">
-            {!! Form::text('TIEMPOATRASO_OTROSGASTOS', 0, ['class' => 'form-control', 'placeholder' => '# días']); !!}
+            {!! Form::text('TIEMPOATRASO_OTROSGASTOS', 0, ['class' => 'form-control text-right', 'placeholder' => '# días']); !!}
           </div>
       @endif
       <div class="col-md-2">

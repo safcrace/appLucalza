@@ -88,9 +88,9 @@
     </div>
     <div class="col-md-3">
         @if(isset($presupuesto->ASIGNACION_MENSUAL))
-            {!! Form::text('ASIGNACION_MENSUAL', $presupuesto->ASIGNACION_MENSUAL, ['class' => 'form-control', 'placeholder' => 'Ingrese Asignación']); !!}    
+            {!! Form::text('ASIGNACION_MENSUAL', $presupuesto->ASIGNACION_MENSUAL, ['class' => 'form-control text-right', 'placeholder' => 'Ingrese Asignación']); !!}    
         @else
-            {!! Form::text('ASIGNACION_MENSUAL', 0, ['class' => 'form-control', 'placeholder' => 'Ingrese Asignación']); !!}    
+            {!! Form::text('ASIGNACION_MENSUAL', 0, ['class' => 'form-control text-right', 'placeholder' => 'Ingrese Asignación']); !!}    
         @endif
         
     </div>

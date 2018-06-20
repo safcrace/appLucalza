@@ -45,7 +45,7 @@
                                 <tr data-id="{{ $detallePresupuesto->ID . '-' . $presupuesto->ID }}">
                                     <td><a href="{{ route('detallePresupuestos.edit', $detallePresupuesto->ID . '-' . $tipoGasto) }}">{{ $detallePresupuesto->TIPOGASTO}}</a></td>
                                     <td><a href="{{ route('detallePresupuestos.edit', $detallePresupuesto->ID . '-' . $tipoGasto) }}">{{ $detallePresupuesto->FRECUENCIA}}</a></td>
-                                    <td><a href="{{ route('detallePresupuestos.edit', $detallePresupuesto->ID . '-' . $tipoGasto) }}">{{ $detallePresupuesto->MONTO}}</a></td>
+                                    <td class="text-right"><a href="{{ route('detallePresupuestos.edit', $detallePresupuesto->ID . '-' . $tipoGasto) }}">{{ $detallePresupuesto->MONTO}}</a></td>
                                     <td><a href="{{ route('detallePresupuestos.edit', $detallePresupuesto->ID . '-' . $tipoGasto) }}">{{ ($detallePresupuesto->TIPOASIGNACION_ID == 1)?'EFECTIVO':'UNIDADES'}}</a></td>
                                     <td class="text-center"><a href="{{ route('detallePresupuestos.edit', $detallePresupuesto->ID ) }}">{{ ($detallePresupuesto->ANULADO)?'ANULADO':'' }}</a></td>
                                     <td class="text-center">

@@ -137,14 +137,14 @@
       </div>
     </div> 
 
-    <div class="row form-group">
+   {{--  <div class="row form-group">
       <div class="col-md-2 col-md-offset-1">
             {!! Form::label('ANULADODP', 'Anular') !!}
       </div>
       <div class="col-md-4">
           {!! Form::checkbox('ANULADOPD', 1); !!}
       </div>
-    </div>
+    </div> --}}
 
   </div>
 </div>
