@@ -137,6 +137,7 @@ Route::patch('update/factura/{id}/supervisor/comentario', ['uses' => 'FacturaCon
 Route::patch('update/factura/{id}/contabilidad/comentario', ['uses' => 'FacturaController@updateComentarioContabilidadFactura', 'as' => 'comentarioContabilidad']);
 Route::get('factura/tipoGasto/{id}', ['uses' => 'FacturaController@tipoGasto', 'as' => 'tipoGasto']);
 Route::get('factura/anular/{id}', ['uses' => 'FacturaController@anular', 'as' => 'anularFactura']);
+Route::get('factura/anular/sap/{id}', ['uses' => 'FacturaController@anularFacturaSap', 'as' => 'anularFacturaSAP']);
 Route::post('factura/imagen/reemplazar', ['uses' => 'FacturaController@sustituirFactura', 'as' => 'sustituirFactura']);
 Route::resource('facturas', 'FacturaController');
 
@@ -174,6 +175,7 @@ Route::get('webservice/cuentaContable/remanente/{id}', ['uses' => 'WebServiceCon
 Route::get('webservice/codigoImpuesto/exento/{id}', ['uses' => 'WebServiceController@getCodigoImpuestoExento', 'as' => 'codigoImpuestoExento']);
 Route::get('webservice/codigoImpuesto/afecto/{id}', ['uses' => 'WebServiceController@getCodigoImpuestoAfecto', 'as' => 'codigoImpuestoAfecto']);
 Route::get('webservice/codigoImpuesto/remanente/{id}', ['uses' => 'WebServiceController@getCodigoImpuestoRemanente', 'as' => 'codigoImpuestoRemanente']);
+Route::get('webservice/codigo/project/{id}', ['uses' => 'WebServiceController@getCodigoProject', 'as' => 'codigoProyecto']);
 Route::get('webservice/codigo/centroCosto1/{id}', ['uses' => 'WebServiceController@getCodigoCentroCostoUno', 'as' => 'codigoCentroCostoUno']);
 Route::get('webservice/codigo/centroCosto2/{id}', ['uses' => 'WebServiceController@getCodigoCentroCostoDos', 'as' => 'codigoCentroCostoDos']);
 Route::get('webservice/codigo/centroCosto3/{id}', ['uses' => 'WebServiceController@getCodigoCentroCostoTres', 'as' => 'codigoCentroCostoTres']);

@@ -11,6 +11,7 @@ use App\Http\Requests;
 use App\TipoProveedor;
 use App\UsuarioEmpresa;
 use Illuminate\Http\Request;
+use App\SubcategoriaTipoGasto;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
@@ -85,7 +86,7 @@ class ContabilidadController extends Controller
 
         $facturas = Factura::select('liq_factura.ID', 'cat_proveedor.ID as PROVEEDORID', 'cat_proveedor.NOMBRE', 'liq_factura.SERIE as SERIE', 'liq_factura.NUMERO as NUMERO', 'liq_factura.TOTAL as TOTAL',
                                     'liq_factura.FECHA_FACTURA', 'cat_tipogasto.DESCRIPCION as TIPOGASTO', 'liq_factura.COMENTARIO_SUPERVISOR', 'liq_factura.COMENTARIO_CONTABILIDAD', 'liq_factura.CORRECCION',
-                                    'users.email as EMAIL', 'liq_factura.FOTO as FOTO', 'cat_proveedor.TIPOPROVEEDOR_ID', 'liq_factura.MONTO_REMANENTE')
+                                    'users.email as EMAIL', 'liq_factura.FOTO as FOTO', 'cat_proveedor.TIPOPROVEEDOR_ID', 'liq_factura.MONTO_REMANENTE', 'liq_factura.ANULARENVIO_SAP')
                                                 ->join('cat_proveedor', 'cat_proveedor.ID', '=', 'liq_factura.PROVEEDOR_ID')
                                                 ->join('cat_tipogasto', 'cat_tipogasto.ID', '=', 'liq_factura.TIPOGASTO_ID')
                                                 ->join('liq_liquidacion', 'liq_liquidacion.ID', '=', 'liq_factura.LIQUIDACION_ID')
@@ -111,20 +112,43 @@ class ContabilidadController extends Controller
         $fechaInicio = $liquidacion->FECHA_INICIO;//->format('Y-m-d');
        // dd($fechaInicio);
  
-         $presupuestoAsignado = Presupuesto::select('pre_detpresupuesto.PRESUPUESTO_ID', 'cat_tipogasto.DESCRIPCION AS TIPOGASTO', 'pre_detpresupuesto.MONTO', 'cat_asignacionpresupuesto.DESCRIPCION')
+         $presupuestoAsignado = Presupuesto::select('pre_detpresupuesto.PRESUPUESTO_ID', 'cat_tipogasto.DESCRIPCION AS TIPOGASTO', 
+                                                    'pre_detpresupuesto.MONTO', 'cat_asignacionpresupuesto.DESCRIPCION', 'cat_frecuenciatiempo.DESCRIPCION AS FRECUENCIA')
                                              ->join('pre_detpresupuesto', 'pre_detpresupuesto.PRESUPUESTO_ID', '=', 'pre_presupuesto.ID')
                                              ->join('cat_tipogasto', 'cat_tipogasto.ID', '=', 'pre_detpresupuesto.TIPOGASTO_ID')
                                              ->join('cat_asignacionpresupuesto', 'cat_asigNacionpresupuesto.ID', '=', 'pre_detpresupuesto.TIPOASIGNACION_ID')
+                                             ->join('cat_frecuenciatiempo', 'cat_frecuenciatiempo.ID', '=', 'pre_detpresupuesto.FRECUENCIATIEMPO_ID')
                                              ->where('pre_presupuesto.VIGENCIA_INICIO', '<=', $fechaFinal)
                                              ->where('pre_presupuesto.VIGENCIA_FINAL', '>=', $fechaInicio)
                                              ->where('pre_presupuesto.USUARIORUTA_ID', '=', $liquidacion->USUARIORUTA_ID)
                                              ->get();
+
+        $asignacionMensual = Presupuesto::where('VIGENCIA_INICIO', '<=', $fechaFinal)
+                                            ->where('VIGENCIA_FINAL', '>=', $fechaInicio)
+                                            ->where('USUARIORUTA_ID', '=', $liquidacion->USUARIORUTA_ID)
+                                            ->pluck('ASIGNACION_MENSUAL');
+                                            
+         if($asignacionMensual > 0) {
+             $presupuestoDepreciacion = collect(['TIPOGASTO' => 'Depreciación', 'MONTO' => $asignacionMensual, 'DESCRIPCION' => 'Efectivo', 'FRECUENCIA' => 'Mensual']);
+             $presupuestoDepreciacion = $presupuestoDepreciacion->toArray();              
+         }
+
+         $unidadMedida = SubcategoriaTipoGasto::join('cat_unidadmedida', 'cat_unidadmedida.ID', '=', 'cat_subcategoria_tipogasto.UNIDAD_MEDIDA_ID')
+                                                ->where('cat_subcategoria_tipogasto.TIPOGASTO_ID', '=', 3)                                                
+                                                ->select('cat_unidadmedida.DESCRIPCION')
+                                                ->first();
+
+        foreach ($presupuestoAsignado as $presupuesto) {
+            if (strtolower($presupuesto->DESCRIPCION) != 'dinero') {
+                $presupuesto->DESCRIPCION = $unidadMedida->DESCRIPCION;# code...            
+            }
+        }
  
          $noAplicaPago = Factura::where('LIQUIDACION_ID', '=', $liquidacion->ID)->where('ANULADO', '=', 0)->sum('MONTO_REMANENTE');
                                              
          $total = Factura::where('LIQUIDACION_ID', '=', $liquidacion->ID)->where('ANULADO', '=', 0)->sum('TOTAL'); 
 //dd($factura);
-        return view('contabilidad.edit', compact('liquidacion', 'facturas', 'corregirFactura', 'tipoProveedor', 'presupuestoAsignado', 'noAplicaPago', 'total'));
+        return view('contabilidad.edit', compact('liquidacion', 'facturas', 'corregirFactura', 'tipoProveedor', 'presupuestoAsignado', 'noAplicaPago', 'total', 'presupuestoDepreciacion'));
     }
 
     /**

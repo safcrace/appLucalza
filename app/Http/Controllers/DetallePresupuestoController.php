@@ -66,15 +66,17 @@ class DetallePresupuestoController extends Controller
              $rutaPresupuesto = 'presupuestos.edit';
          }
          $detallePresupuesto = new DetallePresupuesto();
-         $detallePresupuesto->CENTROCOSTO1 = '00';
+         $detallePresupuesto->PROYECTO = NULL;
+         $detallePresupuesto->DESCPROYECTO = 'Presione el Icono de Carga';
+         $detallePresupuesto->CENTROCOSTO1 = NULL;
          $detallePresupuesto->DESCCENTRO1 = 'Presione el Icono de Carga';
-         $detallePresupuesto->CENTROCOSTO2 = '00';
+         $detallePresupuesto->CENTROCOSTO2 = NULL;
          $detallePresupuesto->DESCCENTRO2 = 'Presione el Icono de Carga';
-         $detallePresupuesto->CENTROCOSTO3 = '00';
+         $detallePresupuesto->CENTROCOSTO3 = NULL;
          $detallePresupuesto->DESCCENTRO3 = 'Presione el Icono de Carga';
-         $detallePresupuesto->CENTROCOSTO4 = '00';
+         $detallePresupuesto->CENTROCOSTO4 = NULL;
          $detallePresupuesto->DESCCENTRO4 = 'Presione el Icono de Carga';
-         $detallePresupuesto->CENTROCOSTO5 = '00';
+         $detallePresupuesto->CENTROCOSTO5 = NULL;
          $detallePresupuesto->DESCCENTRO5 = 'Presione el Icono de Carga';
          
          return view('detallePresupuestos.create', compact('presupuesto_id', 'tipoGasto', 'frecuencia', 'tipoAsignacion', 'subTipoGasto', 'tipo', 'rutaPresupuesto', 'detallePresupuesto'));
@@ -94,6 +96,8 @@ class DetallePresupuestoController extends Controller
         $detallePresupuesto->TIPOASIGNACION_ID = $request->TIPOASIGNACION_ID;
         $detallePresupuesto->MONTO = $request->MONTO;
         $detallePresupuesto->FRECUENCIATIEMPO_ID = $request->FRECUENCIATIEMPO_ID;
+        $detallePresupuesto->PROYECTO = $request->PROYECTO;
+        $detallePresupuesto->DESCPROYECTO = $request->DESCPROYECTO;
         $detallePresupuesto->CENTROCOSTO1 = $request->CENTROCOSTO1;
         $detallePresupuesto->CENTROCOSTO2 = $request->CENTROCOSTO2;
         $detallePresupuesto->CENTROCOSTO3 = $request->CENTROCOSTO3;
@@ -184,7 +188,7 @@ class DetallePresupuestoController extends Controller
                           'MONTO' => $request->MONTO, 'CENTROCOSTO1' => $request->CENTROCOSTO1, 'CENTROCOSTO2' => $request->CESTROCOSTO2, 'CENTROCOSTO3' => $request->CENTROCOSTO3,
                           'CENTROCOSTO4' => $request->CENTROCOSTO4, 'CENTROCOSTO5' => $request->CESTROCOSTO5, 'TIPOASIGNACION_ID' => $request->TIPOASIGNACION_ID, 'ANULADO' => $request->ANULADO,
                           'DESCCENTRO1' => $request->DESCCENTRO1, 'DESCCENTRO2' => $request->DESCCENTRO2, 'DESCCENTRO3' => $request->DESCCENTRO3, 'DESCCENTRO4' => $request->DESCCENTRO4,
-                          'DESCCENTRO5' => $request->DESCCENTRO5]);
+                          'DESCCENTRO5' => $request->DESCCENTRO5, 'PROYECTO' => $request->PROYECTO, 'DESCPROYECTO' => $request->DESCPROYECTO]);
 
         return Redirect::to('presupuestos/' . $request->PRESUPUESTO_ID . '-' . $request->TIPO_GASTO . '/edit' );
     }

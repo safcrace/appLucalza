@@ -44,6 +44,7 @@
                           <th class="text-center">Corregir</th>
                           <th class="text-center">Comentario Supervisor</th>
                           <th class="text-center">Comentario Contabilidad</th>
+                          <th class="text-center">Anular</th>
                           {{--<th class="text-center">Corregir</th>--}}
                         </thead>
                         <tbody>
@@ -83,6 +84,13 @@
                                             {{ substr($factura->COMENTARIO_CONTABILIDAD, 1, 10) }}
                                         </button>
                                     </td>
+                                    <td class="text-center">
+                                        @if($factura->ANULARENVIO_SAP == 1)
+                                            <a href="{{ route('anularFacturaSAP', $factura->ID) }}" class="btn-delete"><span class="glyphicon glyphicon-ok" aria-hidden="true" style="font-size:20px; color: black"></span></a>
+                                        @else    
+                                            <a href="{{ route('anularFacturaSAP', $factura->ID) }}" class="btn-delete"><span class="glyphicon glyphicon-ban-circle" aria-hidden="true" style="font-size:20px; color: black"></span></a>
+                                        @endif
+                                      </td>
                                     {{--<td class="text-center">{!! Form::checkbox('Corregir', true, false, ['class' => 'btn_corregir']); !!}</td>--}}
                                 </tr>
                             @endforeach
@@ -179,6 +187,32 @@
 @push('scripts')
   <script type="text/javascript">
       //var corregirFactura = [];
+      $('.btn-delete').click(function (e) {            
+            e.preventDefault();
+            var row = $(this).parents('tr');
+            var id = row.data('id');
+            vurl = '{{ route('anularFacturaSAP') }}';
+            vurl = vurl.replace('%7Bid%7D', id);
+            /*row.fadeOut();
+            $('#myModal').modal('show');
+            $('#revertir').click(function () {
+                row.show();
+            });
+            $('#anular').click(function () {
+                $('#myModal').modal('hide');*/
+                $.ajax({
+                    type: 'get',
+                    url: vurl,
+                    success: function (data) {
+                        location.reload();
+                    }
+                }).fail(function () {
+                    alert ('La Liquidación no pudo ser Eliminada!!!');
+                    row.show();
+                });
+            //})
+        });
+    
       $(".btn_corregir").click(function(e){
         var row = $(this).parents('tr');
         {{--row.find('.btn_aprobar').prop( "checked", false );--}}

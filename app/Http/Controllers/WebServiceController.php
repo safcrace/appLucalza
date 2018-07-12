@@ -288,6 +288,51 @@ class WebServiceController extends Controller
 
     }
 
+    public function getCodigoProject($id)
+    {
+        $param = explode('-', $id);        
+        $empresaId = $param[0];
+        $listId = $param[1];
+        
+
+        $client = new Client([
+            'headers' => ['content-type' => 'application-json', 'Accept' => 'application-jsoon'],
+        ]);
+
+
+        $response = $client->request('POST', 'http://pcidmsserver.cloudapp.net:8080/lucalza/ws/', [
+            'json' => [
+                'key' => 1502934063,
+                'token' => '0a2fd04f2aebaf869aea5e4a3482e427',
+                'companyId' => $empresaId,
+                'requestType' => 1,
+                'listId' => $listId,
+                'filter' => '',
+                
+                
+            ]
+        ]);
+
+        $data = json_decode($response->getBody(), true);
+
+
+        $filas = $data['nrows'];
+        if($filas == 0) {                             
+            $combo[] = ['ID' => 'SR', 'DESCRIPCION' =>  'SIN RESULTADOS'];
+            array_unshift($combo, ['ID' => '', 'DESCRIPCION' => 'Seleccione una Opción']);       
+            return $combo;
+        }    
+        
+        foreach ($data['data'] as $a => $b) {
+            $combo[] = ['ID' => $b['code'], 'DESCRIPCION' =>  $b['name']];
+        }
+
+        array_unshift($combo, ['ID' => '', 'DESCRIPCION' => 'Seleccione una Opción']);
+
+       return $combo;
+
+    }
+
     public function getCodigoCentroCostoUno($id)
     {
         $param = explode('-', $id);
@@ -319,7 +364,7 @@ class WebServiceController extends Controller
 
         $filas = $data['nrows'];
         if($filas == 0) {                             
-            $combo[] = ['ID' => 'SR', 'DESCRIPCION' =>  'SIN RESULTADOS'];
+            $combo[] = ['ID' => NULL, 'DESCRIPCION' =>  'SIN RESULTADOS'];
             array_unshift($combo, ['ID' => '', 'DESCRIPCION' => 'Seleccione una Opción']);       
             return $combo;
         }    
@@ -328,7 +373,7 @@ class WebServiceController extends Controller
             $combo[] = ['ID' => $b['code'], 'DESCRIPCION' =>  $b['name']];
         }
         /*$combo .= '</select>';*/
-        array_unshift($combo, ['ID' => '', 'DESCRIPCION' => 'Seleccione una Opción']);
+        array_unshift($combo, ['ID' => NULL, 'DESCRIPCION' => 'Seleccione una Opción']);
 
        return $combo;
 
@@ -417,8 +462,8 @@ class WebServiceController extends Controller
 
         $filas = $data['nrows'];
         if($filas == 0) {            
-            $combo[] = ['ID' => '00', 'DESCRIPCION' =>  'SIN RESULTADOS'];       
-            array_unshift($combo, ['ID' => '', 'DESCRIPCION' => 'Seleccione una Opción']);
+            $combo[] = ['ID' => NULL, 'DESCRIPCION' =>  'SIN RESULTADOS'];       
+            array_unshift($combo, ['ID' => NULL, 'DESCRIPCION' => 'Seleccione una Opción']);
             return $combo;
         }        
        
@@ -426,7 +471,7 @@ class WebServiceController extends Controller
         $combo[] = ['ID' => $b['code'], 'DESCRIPCION' =>  $b['name']];
        } 
        
-       array_unshift($combo, ['ID' => '', 'DESCRIPCION' => 'Seleccione una Opción']);
+       array_unshift($combo, ['ID' => NULL, 'DESCRIPCION' => 'Seleccione una Opción']);
 
         return $combo;
 
@@ -462,8 +507,8 @@ class WebServiceController extends Controller
 
         $filas = $data['nrows'];
         if($filas == 0) {            
-            $combo[] = ['ID' => '00', 'DESCRIPCION' =>  'SIN RESULTADOS'];  
-            array_unshift($combo, ['ID' => '', 'DESCRIPCION' => 'Seleccione una Opción']);     
+            $combo[] = ['ID' => NULL, 'DESCRIPCION' =>  'SIN RESULTADOS'];  
+            array_unshift($combo, ['ID' => NULL, 'DESCRIPCION' => 'Seleccione una Opción']);     
             return $combo;
         }        
    
@@ -471,7 +516,7 @@ class WebServiceController extends Controller
             $combo[] = ['ID' => $b['code'], 'DESCRIPCION' =>  $b['name']];
         }    
 
-        array_unshift($combo, ['ID' => '', 'DESCRIPCION' => 'Seleccione una Opción']);
+        array_unshift($combo, ['ID' => NULL, 'DESCRIPCION' => 'Seleccione una Opción']);
 
         return $combo;
 
@@ -507,8 +552,8 @@ class WebServiceController extends Controller
 
         $filas = $data['nrows'];
         if($filas == 0) {            
-            $combo[] = ['ID' => '00', 'DESCRIPCION' =>  'SIN RESULTADOS'];  
-            array_unshift($combo, ['ID' => '', 'DESCRIPCION' => 'Seleccione una Opción']);     
+            $combo[] = ['ID' => NULL, 'DESCRIPCION' =>  'SIN RESULTADOS'];  
+            array_unshift($combo, ['ID' => NULL, 'DESCRIPCION' => 'Seleccione una Opción']);     
             return $combo;
         }        
     
@@ -516,7 +561,7 @@ class WebServiceController extends Controller
             $combo[] = ['ID' => $b['code'], 'DESCRIPCION' =>  $b['name']];
         }    
 
-        array_unshift($combo, ['ID' => '', 'DESCRIPCION' => 'Seleccione una Opción']);
+        array_unshift($combo, ['ID' => NULL, 'DESCRIPCION' => 'Seleccione una Opción']);
 
         return $combo;
 
@@ -553,8 +598,8 @@ class WebServiceController extends Controller
         $filas = $data['nrows'];
 
         if($filas == 0) {            
-            $combo[] = ['ID' => '00', 'DESCRIPCION' =>  'SIN RESULTADOS']; 
-            array_unshift($combo, ['ID' => '', 'DESCRIPCION' => 'Seleccione una Opción']);      
+            $combo[] = ['ID' => NULL, 'DESCRIPCION' =>  'SIN RESULTADOS']; 
+            array_unshift($combo, ['ID' => NULL, 'DESCRIPCION' => 'Seleccione una Opción']);      
             return $combo;
         }        
    
@@ -562,7 +607,7 @@ class WebServiceController extends Controller
             $combo[] = ['ID' => $b['code'], 'DESCRIPCION' =>  $b['name']];
         }    
 
-        array_unshift($combo, ['ID' => '', 'DESCRIPCION' => 'Seleccione una Opción']);
+        array_unshift($combo, ['ID' => NULL, 'DESCRIPCION' => 'Seleccione una Opción']);
 
         return $combo;
 
@@ -711,538 +756,274 @@ class WebServiceController extends Controller
     {
         //dd('Liquidacion: ' . $id);
         $empresa_id = Session::get('empresa');
+      
+
+        $encabezado = collect(DB::select("
+                                select                                 
+                                DocNum		=	a.ID + 25000, 
+                                DocType		=	'dDocumentService',
+                                DocDate		=	a.FECHA_FACTURA, 
+                                DocDueDate		=	a.FECHA_FACTURA, 
+                                DocTaxDate		=	a.FECHA_FACTURA, 
+                                CardCode    =	g.CODIGO_PROVEEDOR_SAP,
+                                NumAtCard	=	COALESCE(a.Serie,'') + ' - ' +  a.NUMERO,
+                                DocCurrency = a.MONEDA_ID,
+                                SalesPersonCode = g.USERSAP_ID,
+                                U_FacFecha  = a.FECHA_FACTURA,
+                                U_FacSerie = coalesce(a.SERIE, '') ,
+                                U_FacNum = a.NUMERO,
+                                U_facNit = j.IDENTIFICADOR_TRIBUTARIO ,
+                                U_facNom = j.NOMBRE,
+                                U_Clase_Libro = c.GRUPOTIPOGASTO_ID,
+                                U_tipo_documento = i.descripcion,
+                                businessObject = 'oPurchaseInvoices'                                
+                                
+                            from 
+                                liq_factura a inner join
+                                cat_tipogasto c on a.TIPOGASTO_ID = c.ID 
+                                                    and empresa_id = {$empresa_id}  inner join
+                                cat_subcategoria_tipogasto b on a.SUBCATEGORIA_TIPOGASTO_ID = b.ID inner join
+                                liq_liquidacion d on a.liquidacion_id = d.id inner join                               
+                                cat_usuarioruta e on d.USUARIORUTA_ID = e.ID inner join
+                                users f on e.USER_ID = f.id inner join
+                                cat_usuarioempresa g on f.id = g.USER_ID
+                                                    and g.EMPRESA_ID = c.EMPRESA_ID inner join
+                                cat_tipodocumento i on a.TIPODOCUMENTO_ID = i.ID inner join
+                                cat_proveedor j on a.PROVEEDOR_ID = j.id
+                            where 
+                                a.LIQUIDACION_ID = {$id} 
+                                and coalesce(MONTO_afecto,0) > 0
+        "));
         
-        $usuario_id = Auth::user()->id;  
-        $notaCredito = Empresa::where('ID', '=', $empresa_id)->pluck('FILAS_NOTA_CREDITO');
+        foreach ($encabezado as $key => $item) {
+            $item = (array) $item ;            
+            //var_dump ($item);
+            //echo('<br>');
+        }        
 
-        $codigoUsuarioSap = UsuarioEmpresa::select('USERSAP_ID')->where('USER_ID', '=', $usuario_id)->where('EMPRESA_ID', '=', $empresa_id)->first();
-        $codigoUsuarioSap = $codigoUsuarioSap->USERSAP_ID;
-
-        $liquidacion = Liquidacion::select('liq_liquidacion.ID', 'liq_liquidacion.FECHA_INICIO', 'users.nombre as USUARIO', 
-                                           'cat_usuarioempresa.CODIGO_PROVEEDOR_SAP', 'cat_ruta.DESCRIPCION as RUTA', 'liq_liquidacion.FECHA_FINAL')
-                                        ->join('cat_usuarioruta', 'cat_usuarioruta.ID', '=', 'liq_liquidacion.USUARIORUTA_ID')
-                                        ->join('users', 'users.id', '=', 'cat_usuarioruta.USER_ID')
-                                        ->join('cat_usuarioempresa', 'cat_usuarioempresa.USER_ID', '=', 'users.ID')
-                                        ->join('cat_ruta', 'cat_ruta.ID', '=', 'cat_usuarioruta.RUTA_ID')
-                                        ->where('liq_liquidacion.id', '=', $id)
-                                        ->where('cat_usuarioempresa.EMPRESA_ID', '=', $empresa_id)
-                                        ->first();
-
-        $facturas = Factura::select('liq_factura.ID', 'cat_proveedor.ID as PROVEEDORID', 'cat_proveedor.NOMBRE', 'cat_proveedor.IDENTIFICADOR_TRIBUTARIO', 'liq_factura.SERIE as SERIE',
-                                    'liq_factura.NUMERO as NUMERO', 'liq_factura.TOTAL as TOTAL', 'liq_factura.FECHA_FACTURA', 'liq_factura.MONTO_IVA',
-                                    'cat_tipogasto.DESCRIPCION as TIPOGASTO', 'cat_tipogasto.GRUPOTIPOGASTO_ID', 'liq_factura.APROBACION_PAGO', 'cat_tipodocumento.DESCRIPCION as DOCUMENTO',
-                                    'users.email as EMAIL', 'liq_factura.FOTO as FOTO', 'cat_proveedor.TIPOPROVEEDOR_ID', 'liq_factura.MONTO_AFECTO',
-                                    'MONTO_EXENTO', 'liq_factura.MONTO_REMANENTE', 'pre_detpresupuesto.CENTROCOSTO1', 'pre_detpresupuesto.CENTROCOSTO2',
-                                    'pre_detpresupuesto.CENTROCOSTO3', 'pre_detpresupuesto.CENTROCOSTO4', 'pre_detpresupuesto.CENTROCOSTO5', 'cat_tipogasto.CUENTA_CONTABLE_EXENTO', 'cat_tipogasto.CODIGO_IMPUESTO_EXENTO',
-                                    'cat_tipogasto.CUENTA_CONTABLE_AFECTO', 'cat_tipogasto.CODIGO_IMPUESTO_AFECTO', 'cat_tipogasto.CUENTA_CONTABLE_REMANENTE', 'cat_tipogasto.CODIGO_IMPUESTO_REMANENTE')
-                                        ->join('cat_proveedor', 'cat_proveedor.ID', '=', 'liq_factura.PROVEEDOR_ID')
-                                        ->join('cat_tipogasto', 'cat_tipogasto.ID', '=', 'liq_factura.TIPOGASTO_ID')
-                                        ->join('liq_liquidacion', 'liq_liquidacion.ID', '=', 'liq_factura.LIQUIDACION_ID')
-                                        ->join('cat_usuarioruta', 'cat_usuarioruta.ID', '=', 'liq_liquidacion.USUARIORUTA_ID')
-                                        ->join('cat_tipodocumento', 'cat_tipodocumento.ID', '=', 'liq_factura.TIPODOCUMENTO_ID')
-                                        ->join('pre_detpresupuesto', 'pre_detpresupuesto.ID', '=', 'liq_factura.DETPRESUPUESTO_ID')
-                                        ->join('users', 'users.id', '=', 'cat_usuarioruta.USER_ID')
-                                        //->join('cat_frecuenciatiempo', 'cat_frecuenciatiempo.ID', '=', 'pre_detpresupuesto.FRECUENCIATIEMPO_ID')
-                                        ->where('liq_factura.LIQUIDACION_ID', '=', $id)
-                                        ->where('liq_factura.ANULADO', '=', 0) 
-                                        ->get();  
+        $detalle = DB::select("
+                            select	
+                            ParentKey = a.id + 25000,
+                            lineNum = 0,
+                            ItemDescription =  c.DESCRIPCION + ' - ' + i.DESCRIPCION + ' '+ COALESCE(a.Serie,'') + ' - ' +  a.NUMERO,
+                            PriceAfVAT = a.TOTAL - A.MONTO_EXENTO, 
+                            AccountCode = c.CUENTA_CONTABLE_AFECTO,
+                            TaxCode = c.CODIGO_IMPUESTO_AFECTO,
+                            ProjectCode = h.PROYECTO,
+                            CostingCode = h.CENTROCOSTO1,
+                            CostingCode2 = h.CENTROCOSTO2,
+                            CostingCode3 = h.CENTROCOSTO3,
+                            CostingCode4 = h.CENTROCOSTO4,
+                            CostingCode5 = h.CENTROCOSTO5
+                            from 
+                                liq_factura a inner join
+                                cat_tipogasto c on a.TIPOGASTO_ID = c.ID 
+                                                    and empresa_id = {$empresa_id}  inner join                                
+                                liq_liquidacion d on a.liquidacion_id = d.id inner join
+                                pre_detpresupuesto h on a.DETPRESUPUESTO_ID = h.ID inner join
+                                cat_usuarioruta e on d.USUARIORUTA_ID = e.ID inner join                                
+                                cat_tipodocumento i on a.TIPODOCUMENTO_ID = i.ID inner join
+                                cat_proveedor j on a.PROVEEDOR_ID = j.id
+                            where 
+                                a.LIQUIDACION_ID = {$id} 
+                                and coalesce(MONTO_afecto,0) > 0
+                            union all	
+                            select 	
+                                ParentKey = a.id + 25000,
+                                lineNum = 1,
+                                Dscription =  c.DESCRIPCION + ' - ' + i.DESCRIPCION + ' '+ COALESCE(a.Serie,'') + ' - ' +  a.NUMERO,
+                                PriceAfVAT = A.MONTO_EXENTO, 
+                                c.CUENTA_CONTABLE_EXENTO,
+                                c.CODIGO_IMPUESTO_EXENTO,
+                                h.PROYECTO,
+                                h.CENTROCOSTO1,
+                                h.CENTROCOSTO2,
+                                h.CENTROCOSTO3,
+                                h.CENTROCOSTO4,
+                                h.CENTROCOSTO5
+                            from 
+                                liq_factura a inner join
+                                cat_tipogasto c on a.TIPOGASTO_ID = c.ID 
+                                                    and empresa_id = {$empresa_id} inner join                                
+                                liq_liquidacion d on a.liquidacion_id = d.id inner join
+                                pre_detpresupuesto h on a.DETPRESUPUESTO_ID = h.ID inner join
+                                cat_usuarioruta e on d.USUARIORUTA_ID = e.ID inner join                                
+                                cat_tipodocumento i on a.TIPODOCUMENTO_ID = i.ID 
+                            where 
+                                LIQUIDACION_ID = {$id} 
+                                and coalesce(MONTO_EXENTO,0) > 0
+                            order by
+                                1
             
-            // Construcción de Arreglo de Documentos Enviados a SAP
-
-            $DocNum = 0;    
-
-            //dd($facturas);
-            $noteCredit = array();
-            $remanenteGlobal = 0;
-            foreach ($facturas as $factura) {                      
-                $DocNum += 1;     
-                $factura->DocNum = $DocNum ;
-                $factura->DocType = 'dDocument_Service';
-                $factura->DocDate = $factura->FECHA_FACTURA->format('Y-m-d');
-                $factura->DocDueDate = $factura->FECHA_FACTURA->format('Y-m-d');
-                $factura->DocTaxDate = $factura->FECHA_FACTURA->format('Y-m-d');
-                $factura->CardCode = $liquidacion->CODIGO_PROVEEDOR_SAP;
-                $factura->NumAtCard = $factura->SERIE . ' - ' . $factura->NUMERO;
-                $factura->DocCurrency = 'QTZ';
-                $factura->SalesPersonCode = $codigoUsuarioSap;
-                $factura->U_FacFecha = $factura->FECHA_FACTURA->format('Y-m-d');
-                $factura->U_FacSerie = $factura->SERIE;
-                $factura->U_FacNum = $factura->NUMERO;
-                $factura->U_FacNum = $factura->NUMERO;
-                $factura->U_FacNit = $factura->IDENTIFICADOR_TRIBUTARIO;
-                $factura->U_FacNom = $factura->NOMBRE;
-                $factura->U_Clase_Libro = $factura->GRUPOTIPOGASTO_ID;
-                $factura->U_Tipo_Documento = $factura->DOCUMENTO; 
-                $factura->businessObject = 'oPurchaseInvoices';
-                if ($factura->TIPOGASTO == 'Alimentación') {
-                    if ($notaCredito == 0) {
-                        if ($factura->MONTO_REMANENTE == null) {
-                            $factura->detail = array(
-                                array(
-                                    'ParentKey' => $factura->$DocNum,
-                                    'LineNum' => 0,
-                                    'AccountCode' => $factura->CUENTA_CONTABLE_AFECTO,
-                                    'ItemDescription' => $factura->TIPOGASTO . ' ' . $factura->DOCUMENTO . ' ' . $factura->SERIE . '-' . $factura->NUMERO,
-                                    'PriceAfterVAT' => $factura->TOTAL,
-                                    'TaxCode' => $factura->CODIGO_IMPUESTO_AFECTO,
-                                    'ProjectCode' => 'OOFISCAL',
-                                    'CostingCode' => $factura->CENTROCOSTO1,
-                                    'CostingCode2' => $factura->CENTROCOSTO2,
-                                    'CostingCode3' => $factura->CENTROCOSTO3,
-                                    'CostingCode4' => $factura->CENTROCOSTO4,
-                                    'CostingCode5' => $factura->CENTROCOSTO5
-                                )
-                            );                
-                        } 
-                    } else { 
-                        if ($factura->MONTO_REMANENTE == null) {
-                            $factura->detail = array(
-                                array(
-                                    'ParentKey' => $factura->$DocNum,
-                                    'LineNum' => 0,
-                                    'AccountCode' => $factura->CUENTA_CONTABLE_AFECTO,
-                                    'ItemDescription' => $factura->TIPOGASTO . ' ' . $factura->DOCUMENTO . ' ' . $factura->SERIE . '-' . $factura->NUMERO,
-                                    'PriceAfterVAT' => $factura->TOTAL,
-                                    'TaxCode' => $factura->CODIGO_IMPUESTO_AFECTO,
-                                    'ProjectCode' => 'OOFISCAL',
-                                    'CostingCode' => $factura->CENTROCOSTO1,
-                                    'CostingCode2' => $factura->CENTROCOSTO2,
-                                    'CostingCode3' => $factura->CENTROCOSTO3,
-                                    'CostingCode4' => $factura->CENTROCOSTO4,
-                                    'CostingCode5' => $factura->CENTROCOSTO5
-                                )
-                            );
-                        } else {
-                            $linea = 0;
-                            $factura->detail = array(
-                                array(
-                                    'ParentKey' => $factura->$DocNum,
-                                    'LineNum' => $linea + 1,
-                                    'AccountCode' => $factura->CUENTA_CONTABLE_AFECTO,
-                                    'ItemDescription' => $factura->TIPOGASTO . ' ' . $factura->DOCUMENTO . ' ' . $factura->SERIE . '-' . $factura->NUMERO,
-                                    'PriceAfterVAT' => (double)$factura->MONTO_AFECTO + (double)$factura->MONTO_IVA,
-                                    'TaxCode' => $factura->CODIGO_IMPUESTO_AFECTO,
-                                    'ProjectCode' => 'OOFISCAL',
-                                    'CostingCode' => $factura->CENTROCOSTO1,
-                                    'CostingCode2' => $factura->CENTROCOSTO2,
-                                    'CostingCode3' => $factura->CENTROCOSTO3,
-                                    'CostingCode4' => $factura->CENTROCOSTO4,
-                                    'CostingCode5' => $factura->CENTROCOSTO5,
-                                ),
-                                /*array(
-                                    'ParentKey_2' => $factura->$DocNum,
-                                    'LineNum_2' => $linea + 2,
-                                    'AccountCode_2' => $factura->CUENTA_CONTABLE_REMANENTE,
-                                    'ItemDescription_2' => $factura->TIPOGASTO . ' ' . $factura->DOCUMENTO . ' ' . $factura->SERIE . '-' . $factura->NUMERO,
-                                    'PriceAfterVAT_2' => $factura->MONTO_REMANENTE,
-                                    'TaxCode_2' => $factura->CODIGO_IMPUESTO_REMANENTE,
-                                    'ProjectCode_2' => 'OOFISCAL',
-                                    'CostingCode_2' => $factura->CENTROCOSTO1,
-                                    'CostingCode2_2' => $factura->CENTROCOSTO2,
-                                    'CostingCode3_2' => $factura->CENTROCOSTO3,
-                                    'CostingCode4_2' => $factura->CENTROCOSTO4,
-                                    'CostingCode5_2' => $factura->CENTROCOSTO5
-                                )*/
-                            );
-                            $remanenteGlobal += $factura->MONTO_REMANENTE;
-                                
-                        }                   
-                    }
-                }          
-                
-                if ($factura->TIPOGASTO == 'Combustible') {
-                    if ($notaCredito == 0) {
-                        if ($factura->MONTO_REMANENTE == null) {
-                            $linea = 0;
-                            $factura->detail = array(
-                                array(
-                                    'ParentKey' => $factura->$DocNum,
-                                    'LineNum' => $linea + 1,
-                                    'AccountCode' => $factura->CUENTA_CONTABLE_AFECTO,
-                                    'ItemDescription' => $factura->TIPOGASTO . ' ' . $factura->DOCUMENTO . ' ' . $factura->SERIE . '-' . $factura->NUMERO,
-                                    'PriceAfterVAT' => (double)$factura->MONTO_AFECTO + (double)$factura->MONTO_IVA,
-                                    'TaxCode' => $factura->CODIGO_IMPUESTO_AFECTO,
-                                    'ProjectCode' => 'OOFISCAL',
-                                    'CostingCode' => $factura->CENTROCOSTO1,
-                                    'CostingCode2' => $factura->CENTROCOSTO2,
-                                    'CostingCode3' => $factura->CENTROCOSTO3,
-                                    'CostingCode4' => $factura->CENTROCOSTO4,
-                                    'CostingCode5' => $factura->CENTROCOSTO5,
-                                ),
-                                array(
-                                    'ParentKey_2' => $factura->$DocNum,
-                                    'LineNum_2' => $linea + 2,
-                                    'AccountCode_2' => $factura->CUENTA_CONTABLE_EXENTO,
-                                    'ItemDescription_2' => $factura->TIPOGASTO . ' ' . $factura->DOCUMENTO . ' ' . $factura->SERIE . '-' . $factura->NUMERO,
-                                    'PriceAfterVAT_2' => $factura->MONTO_EXENTO,
-                                    'TaxCode_2' => $factura->CODIGO_IMPUESTO_EXENTO,
-                                    'ProjectCode_2' => 'OOFISCAL',
-                                    'CostingCode_2' => $factura->CENTROCOSTO1,
-                                    'CostingCode2_2' => $factura->CENTROCOSTO2,
-                                    'CostingCode3_2' => $factura->CENTROCOSTO3,
-                                    'CostingCode4_2' => $factura->CENTROCOSTO4,
-                                    'CostingCode5_2' => $factura->CENTROCOSTO5
-                                )
-                            );
-                        }
-                    } else {
-                        if ($factura->MONTO_REMANENTE == null) {                        
-                            $linea = 0;
-                            $factura->detail = array(
-                                array(
-                                    'ParentKey' => $factura->$DocNum,
-                                    'LineNum' => $linea + 1,
-                                    'AccountCode' => $factura->CUENTA_CONTABLE_AFECTO,
-                                    'ItemDescription' => $factura->TIPOGASTO . ' ' . $factura->DOCUMENTO . ' ' . $factura->SERIE . '-' . $factura->NUMERO,
-                                    'PriceAfterVAT' => (double)$factura->MONTO_AFECTO + (double)$factura->MONTO_IVA,
-                                    'TaxCode' => $factura->CODIGO_IMPUESTO_AFECTO,
-                                    'ProjectCode' => 'OOFISCAL',
-                                    'CostingCode' => $factura->CENTROCOSTO1,
-                                    'CostingCode2' => $factura->CENTROCOSTO2,
-                                    'CostingCode3' => $factura->CENTROCOSTO3,
-                                    'CostingCode4' => $factura->CENTROCOSTO4,
-                                    'CostingCode5' => $factura->CENTROCOSTO5,
-                                ),
-                                array(
-                                    'ParentKey_2' => $factura->$DocNum,
-                                    'LineNum_2' => $linea + 2,
-                                    'AccountCode_2' => $factura->CUENTA_CONTABLE_EXENTO,
-                                    'ItemDescription_2' => $factura->TIPOGASTO . ' ' . $factura->DOCUMENTO . ' ' . $factura->SERIE . '-' . $factura->NUMERO,
-                                    'PriceAfterVAT_2' => $factura->MONTO_EXENTO,
-                                    'TaxCode_2' => $factura->CODIGO_IMPUESTO_EXENTO,
-                                    'ProjectCode_2' => 'OOFISCAL',
-                                    'CostingCode_2' => $factura->CENTROCOSTO1,
-                                    'CostingCode2_2' => $factura->CENTROCOSTO2,
-                                    'CostingCode3_2' => $factura->CENTROCOSTO3,
-                                    'CostingCode4_2' => $factura->CENTROCOSTO4,
-                                    'CostingCode5_2' => $factura->CENTROCOSTO5
-                                )
-                            );                        
-                        } else {
-                            $linea = 0;
-                            $factura->detail = array(
-                                array(   
-                                    'ParentKey' => $factura->$DocNum,
-                                    'LineNum' => $linea + 1,
-                                    'AccountCode' => $factura->CUENTA_CONTABLE_AFECTO,
-                                    'ItemDescription' => $factura->TIPOGASTO . ' ' . $factura->DOCUMENTO . ' ' . $factura->SERIE . '-' . $factura->NUMERO,
-                                    'PriceAfterVAT' => (double)$factura->MONTO_AFECTO + (double)$factura->MONTO_IVA,
-                                    'TaxCode' => $factura->CODIGO_IMPUESTO_AFECTO,
-                                    'ProjectCode' => 'OOFISCAL',
-                                    'CostingCode' => $factura->CENTROCOSTO1,
-                                    'CostingCode2' => $factura->CENTROCOSTO2,
-                                    'CostingCode3' => $factura->CENTROCOSTO3,
-                                    'CostingCode4' => $factura->CENTROCOSTO4,
-                                    'CostingCode5' => $factura->CENTROCOSTO5
-                                ),
-                                array(
-                                    'ParentKey_2' => $factura->$DocNum,
-                                    'LineNum_2' => $linea + 2,
-                                    'AccountCode_2' => $factura->CUENTA_CONTABLE_EXENTO,
-                                    'ItemDescription_2' => $factura->TIPOGASTO . ' ' . $factura->DOCUMENTO . ' ' . $factura->SERIE . '-' . $factura->NUMERO,
-                                    'PriceAfterVAT_2' => $factura->MONTO_EXENTO,
-                                    'TaxCode_2' => $factura->CODIGO_IMPUESTO_EXENTO,
-                                    'ProjectCode_2' => 'OOFISCAL',
-                                    'CostingCode_2' => $factura->CENTROCOSTO1,
-                                    'CostingCode2_2' => $factura->CENTROCOSTO2,
-                                    'CostingCode3_2' => $factura->CENTROCOSTO3,
-                                    'CostingCode4_2' => $factura->CENTROCOSTO4,
-                                    'CostingCode5_2' => $factura->CENTROCOSTO5
-                                ),
-                                /*array(
-                                    'ParentKey_3' => $factura->$DocNum,
-                                    'LineNum_3' => $linea + 3,
-                                    'AccountCode_3' => $factura->CUENTA_CONTABLE_REMANENTE,
-                                    'ItemDescription_3' => $factura->TIPOGASTO . ' ' . $factura->DOCUMENTO . ' ' . $factura->SERIE . '-' . $factura->NUMERO,
-                                    'PriceAfterVAT_3' => $factura->MONTO_REMANENTE,
-                                    'TaxCode_3' => $factura->CODIGO_IMPUESTO_REMANENTE,
-                                    'ProjectCode_3' => 'OOFISCAL',
-                                    'CostingCode_3' => $factura->CENTROCOSTO1,
-                                    'CostingCode2_3' => $factura->CENTROCOSTO2,
-                                    'CostingCode3_3' => $factura->CENTROCOSTO3,
-                                    'CostingCode4_3' => $factura->CENTROCOSTO4,
-                                    'CostingCode5_3' => $factura->CENTROCOSTO5
-                                )*/
-                            );
-                            $remanenteGlobal += $factura->MONTO_REMANENTE; 
-                              
-                        }
-                    }
+        ");
+       //dd($encabezado);
+       //dd($detalle);
+        foreach ($encabezado as $item) {
+            $documentoAnterior = 0;
+            $nuevoDocumento = true;
+            foreach ($detalle as $detail => $itemDetail) {                
+                if (($item->DocNum == $itemDetail->ParentKey) && ($nuevoDocumento == true)) {                    
+                    $lineaCero = array(                        
+                        'ParentKey' => $itemDetail->ParentKey,
+                        'LineNum' => $itemDetail->lineNum,
+                        'AccountCode' => $itemDetail->AccountCode,
+                        'ItemDescription' => $itemDetail->ItemDescription,
+                        'PriceAfterVAT' => $itemDetail->PriceAfVAT,
+                        'TaxCode' => $itemDetail->TaxCode,
+                        'ProjectCode' => $itemDetail->ProjectCode,
+                        'CostingCode' => $itemDetail->CostingCode,
+                        'CostingCode2' => $itemDetail->CostingCode2,
+                        'CostingCode3' => $itemDetail->CostingCode3,
+                        'CostingCode4' => $itemDetail->CostingCode4,
+                        'CostingCode5' => $itemDetail->CostingCode5,
+                        );
+                    $item->detail = array($lineaCero);
+                    $nuevoDocumento = false;
                 }
-                //Hospedaje
-                if ($factura->TIPOGASTO == 'Hospedaje') {
-                    if ($notaCredito == 0) {
-                        if ($factura->MONTO_EXENTO == null) {
-                            if ($factura->MONTO_REMANENTE == null) {
-                                $factura->detail = array(
-                                    array(
-                                        'ParentKey' => $factura->$DocNum,
-                                        'LineNum' => 0,
-                                        'AccountCode' => $factura->CUENTA_CONTABLE_AFECTO,
-                                        'ItemDescription' => $factura->TIPOGASTO . ' ' . $factura->DOCUMENTO . ' ' . $factura->SERIE . '-' . $factura->NUMERO,
-                                        'PriceAfterVAT' => $factura->TOTAL,
-                                        'TaxCode' => $factura->CODIGO_IMPUESTO_AFECTO,
-                                        'ProjectCode' => 'OOFISCAL',
-                                        'CostingCode' => $factura->CENTROCOSTO1,
-                                        'CostingCode2' => $factura->CENTROCOSTO2,
-                                        'CostingCode3' => $factura->CENTROCOSTO3,
-                                        'CostingCode4' => $factura->CENTROCOSTO4,
-                                        'CostingCode5' => $factura->CENTROCOSTO5
-                                    )
-                                );    
-                            }                     
-                        
-                        } else {                        
-                            $linea = 0;
-                            $factura->detail = array(
-                                array(
-                                    'ParentKey' => $factura->$DocNum,
-                                    'LineNum' => $linea + 1,
-                                    'AccountCode' => $factura->CUENTA_CONTABLE_AFECTO,
-                                    'ItemDescription' => $factura->TIPOGASTO . ' ' . $factura->DOCUMENTO . ' ' . $factura->SERIE . '-' . $factura->NUMERO,
-                                    'PriceAfterVAT' => (double)$factura->MONTO_AFECTO + (double)$factura->MONTO_IVA,
-                                    'TaxCode' => $factura->CODIGO_IMPUESTO_AFECTO,
-                                    'ProjectCode' => 'OOFISCAL',
-                                    'CostingCode' => $factura->CENTROCOSTO1,
-                                    'CostingCode2' => $factura->CENTROCOSTO2,
-                                    'CostingCode3' => $factura->CENTROCOSTO3,
-                                    'CostingCode4' => $factura->CENTROCOSTO4,
-                                    'CostingCode5' => $factura->CENTROCOSTO5,
-                                ),
-                                /*array(
-                                    'ParentKey_2' => $factura->$DocNum,
-                                    'LineNum_2' => $linea + 2,
-                                    'AccountCode_2' => $factura->CUENTA_CONTABLE_REMANENTE,
-                                    'ItemDescription_2' => $factura->TIPOGASTO . ' ' . $factura->DOCUMENTO . ' ' . $factura->SERIE . '-' . $factura->NUMERO,
-                                    'PriceAfterVAT_2' => $factura->MONTO_EXENTO,
-                                    'TaxCode_2' => $factura->CODIGO_IMPUESTO_EXENTO,
-                                    'ProjectCode_2' => 'OOFISCAL',
-                                    'CostingCode_2' => $factura->CENTROCOSTO1,
-                                    'CostingCode2_2' => $factura->CENTROCOSTO2,
-                                    'CostingCode3_2' => $factura->CENTROCOSTO3,
-                                    'CostingCode4_2' => $factura->CENTROCOSTO4,
-                                    'CostingCode5_2' => $factura->CENTROCOSTO5
-                                )*/                                
-                            );
-                            $remanenteGlobal += $factura->MONTO_REMANENTE;                      
-                             
-
-                        }
-                    } else {
-                        if ($factura->MONTO_EXENTO == null) {
-                            if ($factura->MONTO_REMANENTE == null) {
-                                $factura->detail = array(
-                                    array(
-                                        'ParentKey' => $factura->$DocNum,
-                                        'LineNum' => 0,
-                                        'AccountCode' => $factura->CUENTA_CONTABLE_AFECTO,
-                                        'ItemDescription' => $factura->TIPOGASTO . ' ' . $factura->DOCUMENTO . ' ' . $factura->SERIE . '-' . $factura->NUMERO,
-                                        'PriceAfterVAT' => $factura->TOTAL,
-                                        'TaxCode' => $factura->CODIGO_IMPUESTO_AFECTO,
-                                        'ProjectCode' => 'OOFISCAL',
-                                        'CostingCode' => $factura->CENTROCOSTO1,
-                                        'CostingCode2' => $factura->CENTROCOSTO2,
-                                        'CostingCode3' => $factura->CENTROCOSTO3,
-                                        'CostingCode4' => $factura->CENTROCOSTO4,
-                                        'CostingCode5' => $factura->CENTROCOSTO5
-                                    )
-                                );    
-                            } else {
-                                $linea = 0;
-                                $factura->detail = array(
-                                    array(
-                                        'ParentKey' => $factura->$DocNum,
-                                        'LineNum' => $linea + 1,
-                                        'AccountCode' => $factura->CUENTA_CONTABLE_AFECTO,
-                                        'ItemDescription' => $factura->TIPOGASTO . ' ' . $factura->DOCUMENTO . ' ' . $factura->SERIE . '-' . $factura->NUMERO,
-                                        'PriceAfterVAT' => (double)$factura->MONTO_AFECTO + (double)$factura->MONTO_IVA,
-                                        'TaxCode' => $factura->CODIGO_IMPUESTO_AFECTO,
-                                        'ProjectCode' => 'OOFISCAL',
-                                        'CostingCode' => $factura->CENTROCOSTO1,
-                                        'CostingCode2' => $factura->CENTROCOSTO2,
-                                        'CostingCode3' => $factura->CENTROCOSTO3,
-                                        'CostingCode4' => $factura->CENTROCOSTO4,
-                                        'CostingCode5' => $factura->CENTROCOSTO5,
-                                    ),
-                                    /*array(
-                                        'ParentKey_2' => $factura->$DocNum,
-                                        'LineNum_2' => $linea + 2,
-                                        'AccountCode_2' => $factura->CUENTA_CONTABLE_REMANENTE,
-                                        'ItemDescription_2' => $factura->TIPOGASTO . ' ' . $factura->DOCUMENTO . ' ' . $factura->SERIE . '-' . $factura->NUMERO,
-                                        'PriceAfterVAT_2' => $factura->MONTO_REMANENTE,
-                                        'TaxCode_2' => $factura->CODIGO_IMPUESTO_REMANENTE,
-                                        'ProjectCode_2' => 'OOFISCAL',
-                                        'CostingCode_2' => $factura->CENTROCOSTO1,
-                                        'CostingCode2_2' => $factura->CENTROCOSTO2,
-                                        'CostingCode3_2' => $factura->CENTROCOSTO3,
-                                        'CostingCode4_2' => $factura->CENTROCOSTO4,
-                                        'CostingCode5_2' => $factura->CENTROCOSTO5
-                                    )*/                                
-                                );
-                                
-                            }  
-                        } else {
-                            if ($factura->MONTO_REMANENTE == null) {                        
-                                $linea = 0;
-                                $factura->detail = array(
-                                    array(
-                                        'ParentKey' => $factura->$DocNum,
-                                        'LineNum' => $linea + 1,
-                                        'AccountCode' => $factura->CUENTA_CONTABLE_AFECTO,
-                                        'ItemDescription' => $factura->TIPOGASTO . ' ' . $factura->DOCUMENTO . ' ' . $factura->SERIE . '-' . $factura->NUMERO,
-                                        'PriceAfterVAT' => (double)$factura->MONTO_AFECTO + (double)$factura->MONTO_IVA,
-                                        'TaxCode' => $factura->CODIGO_IMPUESTO_AFECTO,
-                                        'ProjectCode' => 'OOFISCAL',
-                                        'CostingCode' => $factura->CENTROCOSTO1,
-                                        'CostingCode2' => $factura->CENTROCOSTO2,
-                                        'CostingCode3' => $factura->CENTROCOSTO3,
-                                        'CostingCode4' => $factura->CENTROCOSTO4,
-                                        'CostingCode5' => $factura->CENTROCOSTO5,
-                                    ),
-                                    array(
-                                        'ParentKey_2' => $factura->$DocNum,
-                                        'LineNum_2' => $linea + 2,
-                                        'AccountCode_2' => $factura->CUENTA_CONTABLE_EXENTO,
-                                        'ItemDescription_2' => $factura->TIPOGASTO . ' ' . $factura->DOCUMENTO . ' ' . $factura->SERIE . '-' . $factura->NUMERO,
-                                        'PriceAfterVAT_2' => $factura->MONTO_EXENTO,
-                                        'TaxCode_2' => $factura->CODIGO_IMPUESTO_EXENTO,
-                                        'ProjectCode_2' => 'OOFISCAL',
-                                        'CostingCode_2' => $factura->CENTROCOSTO1,
-                                        'CostingCode2_2' => $factura->CENTROCOSTO2,
-                                        'CostingCode3_2' => $factura->CENTROCOSTO3,
-                                        'CostingCode4_2' => $factura->CENTROCOSTO4,
-                                        'CostingCode5_2' => $factura->CENTROCOSTO5
-                                    )
-                                );                        
-                            } else {
-                                $linea = 0;
-                                $factura->detail = array(
-                                    array(   
-                                        'ParentKey' => $factura->$DocNum,
-                                        'LineNum' => $linea + 1,
-                                        'AccountCode' => $factura->CUENTA_CONTABLE_AFECTO,
-                                        'ItemDescription' => $factura->TIPOGASTO . ' ' . $factura->DOCUMENTO . ' ' . $factura->SERIE . '-' . $factura->NUMERO,
-                                        'PriceAfterVAT' => (double)$factura->MONTO_AFECTO + (double)$factura->MONTO_IVA,
-                                        'TaxCode' => $factura->CODIGO_IMPUESTO_AFECTO,
-                                        'ProjectCode' => 'OOFISCAL',
-                                        'CostingCode' => $factura->CENTROCOSTO1,
-                                        'CostingCode2' => $factura->CENTROCOSTO2,
-                                        'CostingCode3' => $factura->CENTROCOSTO3,
-                                        'CostingCode4' => $factura->CENTROCOSTO4,
-                                        'CostingCode5' => $factura->CENTROCOSTO5
-                                    ),
-                                    array(
-                                        'ParentKey_2' => $factura->$DocNum,
-                                        'LineNum_2' => $linea + 2,
-                                        'AccountCode_2' => $factura->CUENTA_CONTABLE_EXENTO,
-                                        'ItemDescription_2' => $factura->TIPOGASTO . ' ' . $factura->DOCUMENTO . ' ' . $factura->SERIE . '-' . $factura->NUMERO,
-                                        'PriceAfterVAT_2' => $factura->MONTO_EXENTO,
-                                        'TaxCode_2' => $factura->CODIGO_IMPUESTO_EXENTO,
-                                        'ProjectCode_2' => 'OOFISCAL',
-                                        'CostingCode_2' => $factura->CENTROCOSTO1,
-                                        'CostingCode2_2' => $factura->CENTROCOSTO2,
-                                        'CostingCode3_2' => $factura->CENTROCOSTO3,
-                                        'CostingCode4_2' => $factura->CENTROCOSTO4,
-                                        'CostingCode5_2' => $factura->CENTROCOSTO5
-                                    ),
-                                    /*array(
-                                        'ParentKey_3' => $factura->$DocNum,
-                                        'LineNum_3' => $linea + 3,
-                                        'AccountCode_3' => $factura->CUENTA_CONTABLE_REMANENTE,
-                                        'ItemDescription_3' => $factura->TIPOGASTO . ' ' . $factura->DOCUMENTO . ' ' . $factura->SERIE . '-' . $factura->NUMERO,
-                                        'PriceAfterVAT_3' => $factura->MONTO_REMANENTE,
-                                        'TaxCode_3' => $factura->CODIGO_IMPUESTO_REMANENTE,
-                                        'ProjectCode_3' => 'OOFISCAL',
-                                        'CostingCode_3' => $factura->CENTROCOSTO1,
-                                        'CostingCode2_3' => $factura->CENTROCOSTO2,
-                                        'CostingCode3_3' => $factura->CENTROCOSTO3,
-                                        'CostingCode4_3' => $factura->CENTROCOSTO4,
-                                        'CostingCode5_3' => $factura->CENTROCOSTO5
-                                    )*/
-                                );
-                                $remanenteGlobal += $factura->MONTO_REMANENTE; 
-                                
-                            }
-
-                        }                 
-
-                    }
+                if (($item->DocNum == $itemDetail->ParentKey) && ($documentoAnterior == $item->DocNum)) {
+                    $lineaUno = array(                        
+                        'ParentKey' => $itemDetail->ParentKey,
+                        'LineNum' => $itemDetail->lineNum,
+                        'AccountCode' => $itemDetail->AccountCode,
+                        'ItemDescription' => $itemDetail->ItemDescription,
+                        'PriceAfterVAT' => $itemDetail->PriceAfVAT,
+                        'TaxCode' => $itemDetail->TaxCode,
+                        'ProjectCode' => $itemDetail->ProjectCode,
+                        'CostingCode' => $itemDetail->CostingCode,
+                        'CostingCode2' => $itemDetail->CostingCode2,
+                        'CostingCode3' => $itemDetail->CostingCode3,
+                        'CostingCode4' => $itemDetail->CostingCode4,
+                        'CostingCode5' => $itemDetail->CostingCode5,
+                        );
+                    $item->detail = array($lineaCero, $lineaUno);                    
                 }
-
-                // Se crea nuevo documento correspondiente a la nota de credito por remanente
-
-                $noteCredit['DocNum'] = $DocNum + 1;
-                $noteCredit['DocType'] = 'dDocument_Service';
-                $noteCredit['DocDate'] = $factura->FECHA_FACTURA->format('Y-m-d');
-                $noteCredit['DocDueDate'] = $factura->FECHA_FACTURA->format('Y-m-d');
-                $noteCredit['DocTaxDate'] = $factura->FECHA_FACTURA->format('Y-m-d');
-                $noteCredit['CardCode'] = $liquidacion->CODIGO_PROVEEDOR_SAP;
-                $noteCredit['NumAtCard'] = $factura->SERIE . ' - ' . $factura->NUMERO;
-                $noteCredit['DocCurrency'] = 'QTZ';
-                $noteCredit['SalesPersonCode'] = $codigoUsuarioSap;
-                $noteCredit['U_FacFecha'] = $factura->FECHA_FACTURA->format('Y-m-d');
-                $noteCredit['U_FacSerie'] = $factura->SERIE;
-                $noteCredit['U_FacNum'] = $factura->NUMERO;
-                $noteCredit['U_FacNum'] = $factura->NUMERO;
-                $noteCredit['U_FacNit'] = $factura->IDENTIFICADOR_TRIBUTARIO;
-                $noteCredit['U_FacNom'] = $factura->NOMBRE;
-                $noteCredit['U_Clase_Libro'] = $factura->GRUPOTIPOGASTO_ID;
-                $noteCredit['U_Tipo_Documento'] = $factura->DOCUMENTO;
-                $noteCredit['businessObject'] = 'oPurchaseCreditNotes';
+                $documentoAnterior = $itemDetail->ParentKey;                                  
             }
-
-            /**
-             * select tg.DESCRIPCION, SUM(MONTO_REMANENTE) AS REMANENTE
-                from liq_factura as lf inner join cat_tipogasto as tg on tg.ID = lf.TIPOGASTO_ID
-                where lf.LIQUIDACION_ID = 22
-                GROUP BY tg.DESCRIPCION
-             */
-            $cuentas = DB::select("select tg.DESCRIPCION, SUM(MONTO_REMANENTE) AS REMANENTE, tg.CUENTA_CONTABLE_REMANENTE
-                                    from liq_factura as lf inner join cat_tipogasto as tg on tg.ID = lf.TIPOGASTO_ID
-                                    where lf.LIQUIDACION_ID = {$id}
-                                    GROUP BY tg.DESCRIPCION, tg.CUENTA_CONTABLE_REMANENTE"
-                                );
-                                $linea = 0;
-            $details = null;                   
-            foreach ($cuentas as $cuenta) {
-                $details[] = [
-                    'ParentKey' => $noteCredit['DocNum'],
-                    'LineNum' => $linea++,
-                    'AccountCode' => $cuenta->CUENTA_CONTABLE_REMANENTE,
-                    'ItemDescription' => $cuenta->DESCRIPCION,
-                    'PriceAfterVAT' => $cuenta->REMANENTE,
-                    'TaxCode' => 'Pendiente',
-                    'ProjectCode' => 'OOFISCAL',
-                    'CostingCode' => 'Pendiente',
-                    'CostingCode2' => 'Pendiente',
-                    'CostingCode3' => 'Pendiente',
-                    'CostingCode4' => 'Pendiente',
-                    'CostingCode5' => 'Pendiente'
-                ];                
-            }
-                               
-            //dd($details);
-            //dd(count($cuentas));
-
-            
-            $noteCredit['detail'] = $details;
-            $facturas->push($noteCredit);
-            $facturas = $facturas->toArray();
-            
-            
-            $facturas = array_map(function($fac) {
-                return array_except($fac, ['ID', 'PROVEEDORID', 'NOMBRE', 'IDENTIFICADOR_TRIBUTARIO', 'SERIE', 'NUMERO',
-                'TOTAL', 'FECHA_FACTURA', 'MONTO_IVA', 'TIPOGASTO', 'GRUPOTIPOGASTO_ID',
-                'APROBACION_PAGO', 'DOCUMENTO', 'EMAIL', 'FOTO', 'TIPOPROVEEDOR_ID', 'MONTO_AFECTO',
-                'MONTO_EXENTO', 'MONTO_REMANENTE', 'CENTROCOSTO1', 'CENTROCOSTO2', 'CENTROCOSTO3',
-                'CENTROCOSTO4', 'CENTROCOSTO5', 'CUENTA_CONTABLE_EXENTO', 'CODIGO_IMPUESTO_EXENTO',
-                'CUENTA_CONTABLE_AFECTO', 'CODIGO_IMPUESTO_AFECTO','CUENTA_CONTABLE_REMANENTE',
-                'CODIGO_IMPUESTO_REMANENTE']);
-            }, $facturas);
-            
-            //dd($facturas);
-            //dd($id);
+            $fechaUltimaFactura = $item->DocDate;
+        }
         
+        $notaCredito = collect(DB::select("
+                                        Select Distinct
+                                            DocNum		=	1 + 25500, 
+                                            DocType		=	'dDocumentService',
+                                            DocDate		=		d.FECHA_FINAL, 
+                                            DocDueDate		=	d.FECHA_FINAL, 
+                                            DocTaxDate		=	d.FECHA_FINAL, 
+                                            CardCode    =	g.CODIGO_PROVEEDOR_SAP,
+                                            NumAtCard	=	'REMANENTE',
+                                            DocCurrency =	k.MONEDA_LOCAL,
+                                            SalesPersonCode = g.USERSAP_ID,
+                                            U_FacFecha  = d.FECHA_FINAL,
+                                            U_FacSerie = '' ,
+                                            U_FacNum =  'REMANENTE',
+                                            U_facNit = '12345678-9' ,
+                                            U_facNom = 'Usuario',
+                                            U_Clase_Libro = 'Varios',
+                                            U_tipo_documento = 'Nota Credito',
+                                            businessObject = 'oPurchaseCreditNotes'
+                                        from 
+                                            liq_factura a inner join                                           
+                                            cat_subcategoria_tipogasto b on a.SUBCATEGORIA_TIPOGASTO_ID = b.ID inner join
+                                            liq_liquidacion d on a.liquidacion_id = d.id inner join
+                                            pre_detpresupuesto h on a.DETPRESUPUESTO_ID = h.ID inner join
+                                            cat_usuarioruta e on d.USUARIORUTA_ID = e.ID inner join
+                                            users f on e.USER_ID = f.id  inner join
+                                            cat_usuarioempresa g on f.id = g.USER_ID
+                                                                and g.EMPRESA_ID = $empresa_id inner join
+                                            cat_empresa k on g.EMPRESA_ID = k.ID 
+                                                        
+                                        where 
+                                            a.LIQUIDACION_ID = $id 
+                                            and coalesce(a.MONTO_remanente,0) > 0
+                                        
+                                "));
+
+        foreach ($notaCredito as $key => $item) {
+            $item = (array) $item ;                        
+        }
+
+        $detalleNotaCredito = DB::select("
+                                            select
+                                                ParentKey = 1,
+                                                lineNum = 0,
+                                                ItemDescription =  c.DESCRIPCION,
+                                                PriceAfVAT = sum(a.MONTO_REMANENTE), 
+                                                AccountCode =	c.CUENTA_CONTABLE_REMANENTE,
+                                                TaxCode =		c.CODIGO_IMPUESTO_REMANENTE,
+                                                ProjectCode =	h.PROYECTO,
+                                                CostingCode =	h.CENTROCOSTO1,
+                                                CostingCode2 =	h.CENTROCOSTO2,
+                                                CostingCode3 =	h.CENTROCOSTO3,
+                                                CostingCode4 =	h.CENTROCOSTO4,
+                                                CostingCode5 =	h.CENTROCOSTO5
+                                            from 
+                                                liq_factura a inner join
+                                                cat_tipogasto c on a.TIPOGASTO_ID = c.ID 
+                                                                    and empresa_id = {$empresa_id} inner join                                                
+                                                liq_liquidacion d on a.liquidacion_id = d.id inner join
+                                                pre_detpresupuesto h on a.DETPRESUPUESTO_ID = h.ID inner join
+                                                cat_usuarioruta e on d.USUARIORUTA_ID = e.ID                                               
+                                                            
+                                            where 
+                                                a.LIQUIDACION_ID = {$id }
+                                                and coalesce(a.MONTO_remanente,0) > 0
+                                            group by                                                
+                                                c.GRUPOTIPOGASTO_ID,                                            
+                                                --Detalle 
+                                                c.DESCRIPCION,
+                                                c.CUENTA_CONTABLE_REMANENTE,
+                                                c.CODIGO_IMPUESTO_REMANENTE,
+                                                h.PROYECTO,
+                                                h.CENTROCOSTO1,
+                                                h.CENTROCOSTO2,
+                                                h.CENTROCOSTO3,
+                                                h.CENTROCOSTO4,
+                                                h.CENTROCOSTO5
+        ");
+        //dd($detalleNotaCredito);
+
+        $details = null;  
+        $linea = 0;      
+        //dd($detalleNotaCredito);
+        foreach ($detalleNotaCredito as $nota => $value) {            
+            $details[] = [
+                'ParentKey' => 1,
+                'LineNum' => $linea++,
+                'AccountCode' => $value->AccountCode,
+                'ItemDescription' => $value->ItemDescription,
+                'PriceAfterVAT' => $value->PriceAfVAT,
+                'TaxCode' => $value->TaxCode,
+                'ProjectCode' => $value->ProjectCode,
+                'CostingCode' => $value->CostingCode,
+                'CostingCode2' => $value->CostingCode2,
+                'CostingCode3' => $value->CostingCode3,
+                'CostingCode4' => $value->CostingCode4,
+                'CostingCode5' => $value->CostingCode5
+            ];      
+        }
+//        dd($notaCredito);
+
+        
+        foreach ($notaCredito as $nota => $value) {
+            $value->detail = $details;
+        }
+        //$notaCredito->detail = $details;
+        //dd($notaCredito);
+        $notaCredito = $notaCredito->toArray();
+        $encabezado->push($notaCredito);
+
+        $encabezado = $encabezado->toArray();
+        
+            $json = [
+                'key' => 1502934063,
+                'token' => '0a2fd04f2aebaf869aea5e4a3482e427',
+                'companyId' => $empresa_id,
+                'requestType' => 3,
+                'liquidacionId' => $id,
+                'items' => $encabezado               
+            ];
+
+            return $json;
 
         /* $client = new Client([
             'headers' => ['content-type' => 'application-json', 'Accept' => 'application-jsoon'],
@@ -1286,7 +1067,7 @@ class WebServiceController extends Controller
                 'companyId' => $empresa_id,
                 'requestType' => 3,
                 'liquidacionId' => $id,
-                'items' => $facturas
+                'items' => $encabezado
             ]
         ]);
 

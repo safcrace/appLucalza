@@ -8,6 +8,7 @@ use App\Liquidacion;
 use App\Presupuesto;
 use App\Http\Requests;
 use Illuminate\Http\Request;
+use App\SubcategoriaTipoGasto;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
@@ -114,20 +115,43 @@ class SupervisorController extends Controller
         $fechaInicio = $liquidacion->FECHA_INICIO;//->format('Y-m-d');
        // dd($fechaInicio);
  
-         $presupuestoAsignado = Presupuesto::select('pre_detpresupuesto.PRESUPUESTO_ID', 'cat_tipogasto.DESCRIPCION AS TIPOGASTO', 'pre_detpresupuesto.MONTO', 'cat_asignacionpresupuesto.DESCRIPCION')
+         $presupuestoAsignado = Presupuesto::select('pre_detpresupuesto.PRESUPUESTO_ID', 'cat_tipogasto.DESCRIPCION AS TIPOGASTO', 
+                                                    'pre_detpresupuesto.MONTO', 'cat_asignacionpresupuesto.DESCRIPCION', 'cat_frecuenciatiempo.DESCRIPCION AS FRECUENCIA')
                                              ->join('pre_detpresupuesto', 'pre_detpresupuesto.PRESUPUESTO_ID', '=', 'pre_presupuesto.ID')
                                              ->join('cat_tipogasto', 'cat_tipogasto.ID', '=', 'pre_detpresupuesto.TIPOGASTO_ID')
-                                             ->join('cat_asignacionpresupuesto', 'cat_asigNacionpresupuesto.ID', '=', 'pre_detpresupuesto.TIPOASIGNACION_ID')
+                                             ->join('cat_asignacionpresupuesto', 'cat_asignacionpresupuesto.ID', '=', 'pre_detpresupuesto.TIPOASIGNACION_ID')
+                                             ->join('cat_frecuenciatiempo', 'cat_frecuenciatiempo.ID', '=', 'pre_detpresupuesto.FRECUENCIATIEMPO_ID')
                                              ->where('pre_presupuesto.VIGENCIA_INICIO', '<=', $fechaFinal)
                                              ->where('pre_presupuesto.VIGENCIA_FINAL', '>=', $fechaInicio)
                                              ->where('pre_presupuesto.USUARIORUTA_ID', '=', $liquidacion->USUARIORUTA_ID)
                                              ->get();
- 
+
+        $asignacionMensual = Presupuesto::where('VIGENCIA_INICIO', '<=', $fechaFinal)
+                                            ->where('VIGENCIA_FINAL', '>=', $fechaInicio)
+                                            ->where('USUARIORUTA_ID', '=', $liquidacion->USUARIORUTA_ID)
+                                            ->pluck('ASIGNACION_MENSUAL');
+                                           
+        if($asignacionMensual > 0) {
+            $presupuestoDepreciacion = collect(['TIPOGASTO' => 'Depreciación', 'MONTO' => $asignacionMensual, 'DESCRIPCION' => 'Efectivo', 'FRECUENCIA' => 'Mensual']);
+            $presupuestoDepreciacion = $presupuestoDepreciacion->toArray();              
+        }
+
+        $unidadMedida = SubcategoriaTipoGasto::join('cat_unidadmedida', 'cat_unidadmedida.ID', '=', 'cat_subcategoria_tipogasto.UNIDAD_MEDIDA_ID')
+                                                ->where('cat_subcategoria_tipogasto.TIPOGASTO_ID', '=', 3)                                                
+                                                ->select('cat_unidadmedida.DESCRIPCION')
+                                                ->first();
+
+        foreach ($presupuestoAsignado as $presupuesto) {
+            if (strtolower($presupuesto->DESCRIPCION) != 'dinero') {
+                $presupuesto->DESCRIPCION = $unidadMedida->DESCRIPCION;# code...            
+            }
+        }
+
          $noAplicaPago = Factura::where('LIQUIDACION_ID', '=', $liquidacion->ID)->where('ANULADO', '=', 0)->sum('MONTO_REMANENTE');
                                              
          $total = Factura::where('LIQUIDACION_ID', '=', $liquidacion->ID)->where('ANULADO', '=', 0)->sum('TOTAL');  
 
-        return view('supervisor.edit', compact('liquidacion', 'facturas', 'corregirFactura', 'presupuestoAsignado', 'noAplicaPago', 'total'));
+        return view('supervisor.edit', compact('liquidacion', 'facturas', 'corregirFactura', 'presupuestoAsignado', 'noAplicaPago', 'total', 'presupuestoDepreciacion'));
     }
 
     /**

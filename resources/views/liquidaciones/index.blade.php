@@ -71,7 +71,7 @@
 @push('scripts')
 <script type="text/javascript">
     $(document).ready(function () {
-        $('.btn-delete').click(function (e) {
+        $('.btn-delete').click(function (e) {            
             e.preventDefault();
             var row = $(this).parents('tr');
             var id = row.data('id');

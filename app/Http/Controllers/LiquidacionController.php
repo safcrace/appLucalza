@@ -12,6 +12,7 @@ use App\UsuarioRuta;
 use App\Http\Requests;
 use App\DetallePresupuesto;
 use Illuminate\Http\Request;
+use App\SubcategoriaTipoGasto;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
@@ -145,7 +146,7 @@ class LiquidacionController extends Controller
         } 
 
         /** Validación de Frecuencia de Periodos */
-        $frecuenciaPresupuesto = DetallePresupuesto::where('PRESUPUESTO_ID', '=', $presupuestoRuta->ID)->pluck('FRECUENCIATIEMPO_ID');
+        /*$frecuenciaPresupuesto = DetallePresupuesto::where('PRESUPUESTO_ID', '=', $presupuestoRuta->ID)->pluck('FRECUENCIATIEMPO_ID');
         $fechaInicio = new Carbon($fechaInicio);
         $fechaFinal = new Carbon($fechaFinal);
         $diferenciaFechas = $fechaFinal->diffInDays($fechaInicio);
@@ -160,7 +161,7 @@ class LiquidacionController extends Controller
         $mesFin = $fechaInicio->endOfYear();
          */
         
-        if($frecuenciaPresupuesto == 2) {  //Presupuesto Semanal
+        /*if($frecuenciaPresupuesto == 2) {  //Presupuesto Semanal
             if ($diferenciaFechas != 6) {
                 return back()->withInput()->with('info', 'Verifique el período de la Liquidación, ya que el Presupuesto es Semanal!');     
             } 
@@ -173,7 +174,7 @@ class LiquidacionController extends Controller
             $mesFin = $fechaFinal->endOfMonth();
             /* dd($fechaFinal);
             echo $fechaInicio->format('d-m-Y') . " ::: " . $mesInicia->format('d-m-Y') . ' :: ' . $fechaFinal . ' :: ' . $mesFin;  */
-            if ($fechaInicio != $mesInicia || $fechaFinal != $mesFin) {                
+          /*  if ($fechaInicio != $mesInicia || $fechaFinal != $mesFin) {                
                 return back()->withInput()->with('info', 'Verifique el período de la Liquidación, ya que el Presupuesto es Mensual!');
             }
         } else {
@@ -285,37 +286,37 @@ class LiquidacionController extends Controller
 
        //if($tipoLiquidacion == 'Rutas') {
             $presupuestoAsignado = Presupuesto::select('pre_detpresupuesto.PRESUPUESTO_ID', 'cat_tipogasto.DESCRIPCION AS TIPOGASTO', 
-            'pre_detpresupuesto.MONTO', 'cat_asignacionpresupuesto.DESCRIPCION')
+            'pre_detpresupuesto.MONTO', 'cat_asignacionpresupuesto.DESCRIPCION', 'cat_frecuenciatiempo.DESCRIPCION AS FRECUENCIA')
             ->join('pre_detpresupuesto', 'pre_detpresupuesto.PRESUPUESTO_ID', '=', 'pre_presupuesto.ID')
             ->join('cat_tipogasto', 'cat_tipogasto.ID', '=', 'pre_detpresupuesto.TIPOGASTO_ID')
             ->join('cat_asignacionpresupuesto', 'cat_asigNacionpresupuesto.ID', '=', 'pre_detpresupuesto.TIPOASIGNACION_ID')
+            ->join('cat_frecuenciatiempo', 'cat_frecuenciatiempo.ID', '=', 'pre_detpresupuesto.FRECUENCIATIEMPO_ID')
             ->where('pre_presupuesto.VIGENCIA_INICIO', '<=', $fechaFinal)
             ->where('pre_presupuesto.VIGENCIA_FINAL', '>=', $fechaInicio)
             ->where('pre_presupuesto.USUARIORUTA_ID', '=', $liquidacion->USUARIORUTA_ID)
             ->get();
+            //dd($presupuestoAsignado);
        //} else {
             $asignacionMensual = Presupuesto::where('VIGENCIA_INICIO', '<=', $fechaFinal)
                                                 ->where('VIGENCIA_FINAL', '>=', $fechaInicio)
                                                 ->where('USUARIORUTA_ID', '=', $liquidacion->USUARIORUTA_ID)
                                                 ->pluck('ASIGNACION_MENSUAL');
             if($asignacionMensual > 0) {
-                $presupuestoDepreciacion = collect(['TIPOGASTO' => 'Depreciación', 'MONTO' => $asignacionMensual, 'DESCRIPCION' => 'Efectivo']);
+                $presupuestoDepreciacion = collect(['TIPOGASTO' => 'Depreciación', 'MONTO' => $asignacionMensual, 'DESCRIPCION' => 'Efectivo', 'FRECUENCIA' => 'Mensual']);
                 $presupuestoDepreciacion = $presupuestoDepreciacion->toArray();              
-            } /*else {
-                $presupuestoAsignado = Presupuesto::select('pre_detpresupuesto.PRESUPUESTO_ID', 'cat_tipogasto.DESCRIPCION AS TIPOGASTO', 
-                                                    'pre_detpresupuesto.MONTO', 'cat_asignacionpresupuesto.DESCRIPCION')
-                                                    ->join('pre_detpresupuesto', 'pre_detpresupuesto.PRESUPUESTO_ID', '=', 'pre_presupuesto.ID')
-                                                    ->join('cat_tipogasto', 'cat_tipogasto.ID', '=', 'pre_detpresupuesto.TIPOGASTO_ID')
-                                                    ->join('cat_asignacionpresupuesto', 'cat_asigNacionpresupuesto.ID', '=', 'pre_detpresupuesto.TIPOASIGNACION_ID')
-                                                    ->where('pre_presupuesto.VIGENCIA_INICIO', '<=', $fechaFinal)
-                                                    ->where('pre_presupuesto.VIGENCIA_FINAL', '>=', $fechaInicio)
-                                                    ->where('pre_presupuesto.USUARIORUTA_ID', '=', $liquidacion->USUARIORUTA_ID)
-                                                    ->get();
-            }*/
-       //}
+            } 
              //  dd('para');
-        
+        $unidadMedida = SubcategoriaTipoGasto::join('cat_unidadmedida', 'cat_unidadmedida.ID', '=', 'cat_subcategoria_tipogasto.UNIDAD_MEDIDA_ID')
+                                                ->where('cat_subcategoria_tipogasto.TIPOGASTO_ID', '=', 3)                                                
+                                                ->select('cat_unidadmedida.DESCRIPCION')
+                                                ->first();
 
+        foreach ($presupuestoAsignado as $presupuesto) {
+            if (strtolower($presupuesto->DESCRIPCION) != 'dinero') {
+                $presupuesto->DESCRIPCION = $unidadMedida->DESCRIPCION;# code...            
+            }
+        }
+        
        
 
         $noAplicaPago = Factura::where('LIQUIDACION_ID', '=', $liquidacion_id)->where('ANULADO', '=', 0)->sum('MONTO_REMANENTE');

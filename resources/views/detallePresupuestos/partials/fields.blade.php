@@ -65,7 +65,18 @@
       <div class="col-md-3 col-md-offset-1" >
               {!! Form::select('FRECUENCIATIEMPO_ID', $frecuencia, null, ['class' => 'form-control', 'placeholder' => 'Seleccione una Frecuencia']); !!}
       </div>
-    </DIV>
+      {!! Form::hidden('DESCPROYECTO', null, ['id' => 'DESCPROYECTO'] ); !!}
+      <div class="col-md-1">
+        {!! Form::label('PROYECTO', 'Proyecto') !!}
+      </div>
+      <div class="col-md-3" id="proj">
+          {!! Form::select('PROYECTO', [$detallePresupuesto->PROYECTO => $detallePresupuesto->DESCPROYECTO], null, ['class' => 'form-control']); !!}
+      </div>
+                
+      <div class="col-md-1">
+          <span class="glyphicon glyphicon-import" aria-hidden="true" id="project" style="cursor: pointer"></span>
+      </div>
+    </div>
     <hr>
     
     {!! Form::hidden('DESCCENTRO1', null, ['id' => 'DESCCENTRO1'] ); !!}    
@@ -217,6 +228,21 @@
         })
         $('#dinero').click(function() {
             $('#unidades').hide()            
+        })
+
+        $('#project').click(function() {           
+            var criterio = $('#EMPRESA_ID').val() + '-' + 8 
+            vurl = '{{ route('codigoProyecto')}}'            
+            vurl = vurl.replace('%7Bid%7D', criterio);            
+
+            $.getJSON(vurl, null, function (values) {                
+                $('#PROYECTO').populateSelect(values)
+            })            
+           
+        })
+
+        $('#PROYECTO').change(function() {            
+            $('#DESCPROYECTO').val($('#PROYECTO option:selected').text())
         })
 
         $('#centro_1').click(function() {           

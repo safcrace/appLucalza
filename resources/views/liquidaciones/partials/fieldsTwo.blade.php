@@ -65,14 +65,14 @@
         {!! Form::label('REMANENTE', 'No Aplica Pago') !!}
     </div>
     <div class="col-md-2">
-        {!! Form::text('REMANENTE', $noAplicaPago, ['class' => 'form-control text-right', 'disabled' => 'true']); !!}
+        {!! Form::text('REMANENTE', number_format($noAplicaPago, 2), ['class' => 'form-control text-right', 'disabled' => 'true']); !!}
     </div> 
 
     <div class="col-md-1">
         {!! Form::label('REEMBOLSO', 'Reembolso') !!}
     </div>
     <div class="col-md-2">
-        {!! Form::text('REEMBOLSO', $total - $noAplicaPago, ['class' => 'form-control text-right', 'disabled' => 'true']); !!}
+        {!! Form::text('REEMBOLSO', number_format($total - $noAplicaPago, 2), ['class' => 'form-control text-right', 'disabled' => 'true']); !!}
     </div> 
 </div>
 
@@ -145,20 +145,22 @@
                 <thead>
                   <th class="text-center">Categoría Gasto</th>
                   <th class="text-center">Monto</th>
-                  <th class="text-center">Tipo de Asignación</th>                  
+                  <th class="text-center">Tipo</th>                  
+                  <th class="text-center">Frecuencia</th>                  
                 </thead>
                 <tbody>                    
                     @if(isset($presupuestoDepreciacion))                    
                         <td>{{ $presupuestoDepreciacion['TIPOGASTO'] }}</td>
                         <td class="text-right">{{ $presupuestoDepreciacion['MONTO'] }}</td>
                         <td>{{ $presupuestoDepreciacion['DESCRIPCION'] }}</td>
-                    @else
-                    <h1>Entro aca</h1>
+                        <td>{{ $presupuestoDepreciacion['FRECUENCIA'] }}</td>
+                    @else                    
                         @foreach ($presupuestoAsignado as $presupuesto)
                             <tr>
                                 <td>{{ $presupuesto->TIPOGASTO }}</td>
                                 <td class="text-right">{{ $presupuesto->MONTO }}</td>
                                 <td>{{ $presupuesto->DESCRIPCION }}</td>                            
+                                <td>{{ $presupuesto->FRECUENCIA }}</td>                            
                             </tr>
                         @endforeach
                     @endif
