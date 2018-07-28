@@ -136,7 +136,7 @@ class ContabilidadController extends Controller
          $unidadMedida = SubcategoriaTipoGasto::join('cat_unidadmedida', 'cat_unidadmedida.ID', '=', 'cat_subcategoria_tipogasto.UNIDAD_MEDIDA_ID')
                                                 ->where('cat_subcategoria_tipogasto.TIPOGASTO_ID', '=', 3)                                                
                                                 ->select('cat_unidadmedida.DESCRIPCION')
-                                                ->first();
+                                                ->firstOrFail();
 
         foreach ($presupuestoAsignado as $presupuesto) {
             if (strtolower($presupuesto->DESCRIPCION) != 'dinero') {
@@ -158,7 +158,8 @@ class ContabilidadController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function report($id) 
-    {
+    {    
+        
         $proveedorNoClasificado = Factura::select('cat_proveedor.TIPOPROVEEDOR_ID')
                                         ->join('cat_proveedor', 'cat_proveedor.ID', '=', 'liq_factura.PROVEEDOR_ID')
                                         ->where('liq_factura.LIQUIDACION_ID', '=', $id)
@@ -172,7 +173,7 @@ class ContabilidadController extends Controller
         
         $empresa_id = Session::get('empresa');
         $usuario_id = Auth::user()->id;
-        $codigoUsuarioSap = UsuarioEmpresa::select('USERSAP_ID')->where('USER_ID', '=', $usuario_id)->where('EMPRESA_ID', '=', $empresa_id)->first();
+        $codigoUsuarioSap = UsuarioEmpresa::select('USERSAP_ID')->where('USER_ID', '=', $usuario_id)->where('EMPRESA_ID', '=', $empresa_id)->firstOrFail();
         //dd('codigo usuario: ' .  $codigoUsuarioSap->USERSAP_ID);
         $codigoUsuarioSap = $codigoUsuarioSap->USERSAP_ID;
         //dd($codigoUsuarioSap);
@@ -185,7 +186,7 @@ class ContabilidadController extends Controller
                                         ->join('cat_ruta', 'cat_ruta.ID', '=', 'cat_usuarioruta.RUTA_ID')
                                         ->where('liq_liquidacion.id', '=', $id)
                                         ->where('cat_usuarioempresa.EMPRESA_ID', '=', $empresa_id)
-                                        ->first();
+                                        ->firstOrFail();
 
                                         //dd($liquidacion);
 
@@ -209,6 +210,8 @@ class ContabilidadController extends Controller
                                         ->get();  
                                         
                                         $empresa_id = Session::get('empresa');
+
+        
 /*
         $notaCredito = Empresa::where('ID', '=', $empresa_id)->pluck('FILAS_NOTA_CREDITO');
 

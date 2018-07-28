@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Moneda;
 use App\Empresa;
 use App\Factura;
 use DateTimeZone;
@@ -134,11 +133,7 @@ dd($resultado);
          $tipoProveedor = TipoProveedor::lists('DESCRIPCION', 'ID')->toArray();
 
          $empresa_id = Session::get('empresa');
-
-         $moneda = Empresa::select('cat_moneda.ID', 'cat_moneda.DESCRIPCION')
-             ->join('cat_moneda', 'cat_moneda.ID', '=', 'cat_empresa.MONEDA_ID')
-             ->where('cat_empresa.ID', '=',  $empresa_id)
-             ->first();
+         
 
         $monedaEmpresa = Empresa::select('MONEDA_LOCAL','MONEDA_SYS')->where('ID', '=', $empresa_id)->first();
 
@@ -214,6 +209,19 @@ dd($resultado);
         } else {
             $montoConversion = $request->TOTAL * 1;
         }
+
+        /** Se valida que factura sea ingresada una sola vez */
+        $datosFactura = Factura::select('PROVEEDOR_ID', 'SERIE', 'NUMERO')->get();
+        //dd($request->all());
+        foreach ($datosFactura as $datos) {
+           /*  echo $datos->PROVEEDOR_ID . '<br>';
+            echo $datos->SERIE . '<br>';
+            echo $datos->NUMERO . '<br>'; */
+            if(($datos->PROVEEDOR_ID == $request->PROVEEDOR_ID) && ($datos->SERIE == $request->SERIE) && ($datos->NUMERO == $request->NUMERO) ) {
+                return back()->withInput()->with('info', 'La Factura Ya existe en la Base de Datos!!');
+            }
+        }
+        
 
         /** Se obtiene valor de impuesto */
         $empresa_id = Session::get('empresa');
@@ -559,8 +567,7 @@ dd($resultado);
         $factura->SUBCATEGORIA_TIPOGASTO_ID = $request->subcategoriaTipoGasto;
         $factura->DETPRESUPUESTO_ID = $detallePresupuesto->ID;
         $factura->MONEDA_ID = $request->FMONEDA_ID;
-        $factura->PROVEEDOR_ID = $request->PROVEEDOR_ID;
-        $factura->CAUSAEXENCION_ID = 1;
+        $factura->PROVEEDOR_ID = $request->PROVEEDOR_ID;        
         $factura->SERIE = $request->SERIE;
         $factura->NUMERO = $request->NUMERO;
         $factura->FECHA_FACTURA = $request->FECHA_FACTURA;
@@ -640,11 +647,7 @@ dd($resultado);
         $tipoProveedor = TipoProveedor::lists('DESCRIPCION', 'ID')->toArray();
 
         $empresa_id = Session::get('empresa');
-
-        $moneda = Empresa::select('cat_moneda.ID', 'cat_moneda.DESCRIPCION')
-            ->join('cat_moneda', 'cat_moneda.ID', '=', 'cat_empresa.MONEDA_ID')
-            ->where('cat_empresa.ID', '=',  $empresa_id)
-            ->first();
+       
 
         $monedaEmpresa = Empresa::select('MONEDA_LOCAL','MONEDA_SYS')->where('ID', '=', $empresa_id)->first();
 
@@ -732,7 +735,21 @@ dd($resultado);
             //dd($montoConversion);
         } else {
             $montoConversion = $request->TOTAL * 1;
-        }       
+        } 
+        
+        /** Se valida que factura sea ingresada una sola vez */
+        //dd($request->all());
+        if(($factura->PROVEEDOR_ID != $request->PROVEEDOR_ID) || ($factura->SERIE != $request->SERIE) || ($factura->NUMERO != $request->NUMERO)) {
+            $datosFactura = Factura::select('PROVEEDOR_ID', 'SERIE', 'NUMERO')->get();
+            foreach ($datosFactura as $datos) {
+               /*  echo $datos->PROVEEDOR_ID . '<br>';
+                echo $datos->SERIE . '<br>';
+                echo $datos->NUMERO . '<br>'; */
+                if(($datos->PROVEEDOR_ID == $request->PROVEEDOR_ID) && ($datos->SERIE == $request->SERIE) && ($datos->NUMERO == $request->NUMERO) ) {
+                    return back()->withInput()->with('info', 'La Factura Ya existe en la Base de Datos!!');
+                }
+            }
+        } 
 
         /** Se obtiene valor de impuesto */
         $empresa_id = Session::get('empresa');
@@ -751,39 +768,107 @@ dd($resultado);
         
         if(($request->TIPO_LIQUIDACION == 'Otros Gastos') && ((strtoupper($nombreRuta->DESCRIPCION) == 'DEPRECIACIóN') || strtoupper($nombreRuta->DESCRIPCION) == 'DEPRECIACION') ) {            
             $detallePresupuesto = Presupuesto::select('ID', 'ASIGNACION_MENSUAL as MONTO')->where('ID', '=', $request->PRESUPUESTO_ID)->first();
+            $frecuenciaPresupuesto = 4;
             //dd('ahi vamos...' . $detallePresupuesto->MONTO);
         } else {            
             $detallePresupuesto = DetallePresupuesto::select('ID', 'MONTO')
                                                         ->where('PRESUPUESTO_ID', '=', $request->PRESUPUESTO_ID)
                                                         ->where('TIPOGASTO_ID', '=', $request->TIPOGASTO_ID)
                                                         ->first();
-        }    
+            $frecuenciaPresupuesto = DetallePresupuesto::where('ID', '=', $detallePresupuesto->ID)->pluck('FRECUENCIATIEMPO_ID');
+        }
                        
                
         
-                /** Se obtiene monto gastado hasta el momento por tipo de gasto **/
-                if ($request->CATEGORIA_GASTO == 'combustible' && $request->TIPO_LIQUIDACION != 'Otros Gastos' ) {                      ;
-                    $montoAcumulado = Factura::where('LIQUIDACION_ID', '=', $request->LIQUIDACION_ID)
-                    ->where('TIPOGASTO_ID', '=', $request->TIPOGASTO_ID)
-                    ->where('ANULADO', '=', 0)
-                    ->whereBetween('FECHA_FACTURA', [(new Carbon($request->FECHA_FACTURA))->startOfWeek(), (new Carbon($request->FECHA_FACTURA))])
-                    ->sum('CANTIDAD_PORCENTAJE_CUSTOM');
-                    
-                } elseif (strtoupper($nombreRuta->DESCRIPCION) == 'DEPRECIACIóN' || strtoupper($nombreRuta->DESCRIPCION) == 'DEPRECIACION') {            
-                    $montoAcumulado = Factura::where('LIQUIDACION_ID', '=', $request->LIQUIDACION_ID)            
-                    ->whereBetween('FECHA_FACTURA', [(new Carbon($request->FECHA_FACTURA))->startOfWeek(), (new Carbon($request->FECHA_FACTURA))])
-                                                ->where('ANULADO', '=', 0)
-                                                ->sum('TOTAL');
-                } else {             
-                    $montoAcumulado = Factura::where('TIPOGASTO_ID', '=', $request->TIPOGASTO_ID)
-                    ->whereBetween('FECHA_FACTURA', [(new Carbon($request->FECHA_FACTURA))->startOfWeek(), (new Carbon($request->FECHA_FACTURA))])
-                    ->where('ANULADO', '=', 0)
-                    ->sum('TOTAL');                        
-                }
+         /** Validación de Frecuencia de Periodos */       
+         if($frecuenciaPresupuesto == 1) { 
+            /** Se obtiene monto gastado hasta el momento por tipo de gasto **/
+            if ($request->CATEGORIA_GASTO == 'combustible' && $request->TIPO_LIQUIDACION != 'Otros Gastos' ) {                      ;
+                $montoAcumulado = Factura:://where('LIQUIDACION_ID', '=', $request->LIQUIDACION_ID)
+                where('TIPOGASTO_ID', '=', $request->TIPOGASTO_ID)
+                ->where('ANULADO', '=', 0)
+                ->whereBetween('FECHA_FACTURA', [(new Carbon($request->FECHA_FACTURA))->startOfWeek(), (new Carbon($request->FECHA_FACTURA))->endOfWeek()])
+                ->sum('CANTIDAD_PORCENTAJE_CUSTOM');
+                
+            } elseif (strtoupper($nombreRuta->DESCRIPCION) == 'DEPRECIACIóN' || strtoupper($nombreRuta->DESCRIPCION) == 'DEPRECIACION') {            
+                $montoAcumulado = Factura:://where('LIQUIDACION_ID', '=', $request->LIQUIDACION_ID)            
+                whereBetween('FECHA_FACTURA', [(new Carbon($request->FECHA_FACTURA))->startOfWeek(), (new Carbon($request->FECHA_FACTURA))->endOfWeek()])
+                                            ->where('ANULADO', '=', 0)
+                                            ->sum('TOTAL');
+            } else {             
+                $montoAcumulado = Factura::where('TIPOGASTO_ID', '=', $request->TIPOGASTO_ID)
+                ->whereBetween('FECHA_FACTURA', [(new Carbon($request->FECHA_FACTURA))->startOfWeek(), (new Carbon($request->FECHA_FACTURA))->endOfWeek()])
+                ->where('ANULADO', '=', 0)
+                ->sum('TOTAL');                        
+            }
+        } elseif ($frecuenciaPresupuesto == 2) { 
+            /** Se obtiene monto gastado hasta el momento por tipo de gasto **/
+            if ($request->CATEGORIA_GASTO == 'combustible' && $request->TIPO_LIQUIDACION != 'Otros Gastos' ) {       
+                $montoAcumulado = Factura:://where('LIQUIDACION_ID', '=', $request->LIQUIDACION_ID)
+                where('TIPOGASTO_ID', '=', $request->TIPOGASTO_ID)
+                ->where('ANULADO', '=', 0)
+                ->whereBetween('FECHA_FACTURA', [(new Carbon($request->FECHA_FACTURA))->startOfWeek(), (new Carbon($request->FECHA_FACTURA))->endOfWeek()])
+                ->sum('CANTIDAD_PORCENTAJE_CUSTOM');
+                
+            } elseif (strtoupper($nombreRuta->DESCRIPCION) == 'DEPRECIACIóN' || strtoupper($nombreRuta->DESCRIPCION) == 'DEPRECIACION') {            
+                $montoAcumulado = Factura:://where('LIQUIDACION_ID', '=', $request->LIQUIDACION_ID)            
+                whereBetween('FECHA_FACTURA', [(new Carbon($request->FECHA_FACTURA))->startOfWeek(), (new Carbon($request->FECHA_FACTURA))->endOfWeek()])
+                                            ->where('ANULADO', '=', 0)
+                                            ->sum('TOTAL');
+            } else {                            
+                $montoAcumulado = Factura::where('TIPOGASTO_ID', '=', $request->TIPOGASTO_ID)
+                ->whereBetween('FECHA_FACTURA', [(new Carbon($request->FECHA_FACTURA))->startOfWeek(), (new Carbon($request->FECHA_FACTURA))->endOfWeek()])
+                ->where('ANULADO', '=', 0)
+                ->sum('TOTAL');                        
+            }
+        } elseif ($frecuenciaPresupuesto == 4) {
+            /** Se obtiene monto gastado hasta el momento por tipo de gasto **/
+            if ($request->CATEGORIA_GASTO == 'combustible' && $request->TIPO_LIQUIDACION != 'Otros Gastos' ) {                      ;
+                $montoAcumulado = Factura:://where('LIQUIDACION_ID', '=', $request->LIQUIDACION_ID)
+                where('TIPOGASTO_ID', '=', $request->TIPOGASTO_ID)
+                ->where('ANULADO', '=', 0)
+                ->whereBetween('FECHA_FACTURA', [(new Carbon($request->FECHA_FACTURA))->startOfMonth(), (new Carbon($request->FECHA_FACTURA))->endOfMonth()])
+                ->sum('CANTIDAD_PORCENTAJE_CUSTOM');
+                
+            } elseif (strtoupper($nombreRuta->DESCRIPCION) == 'DEPRECIACIóN' || strtoupper($nombreRuta->DESCRIPCION) == 'DEPRECIACION') {            
+                $montoAcumulado = Factura:://where('LIQUIDACION_ID', '=', $request->LIQUIDACION_ID)            
+                whereBetween('FECHA_FACTURA', [(new Carbon($request->FECHA_FACTURA))->startOfMonth(), (new Carbon($request->FECHA_FACTURA))->endOfMonth()])
+                                            ->where('ANULADO', '=', 0)
+                                            ->sum('TOTAL');
+            } else {             
+                $montoAcumulado = Factura::where('TIPOGASTO_ID', '=', $request->TIPOGASTO_ID)
+                ->whereBetween('FECHA_FACTURA', [(new Carbon($request->FECHA_FACTURA))->startOfMonth(), (new Carbon($request->FECHA_FACTURA))->endOfMonth()])
+                ->where('ANULADO', '=', 0)
+                ->sum('TOTAL');                        
+            }
+        } elseif ($frecuenciaPresupuesto == 5) {
+            /** Se obtiene monto gastado hasta el momento por tipo de gasto **/
+            if ($request->CATEGORIA_GASTO == 'combustible' && $request->TIPO_LIQUIDACION != 'Otros Gastos' ) {                      ;
+                $montoAcumulado = Factura:://where('LIQUIDACION_ID', '=', $request->LIQUIDACION_ID)
+                where('TIPOGASTO_ID', '=', $request->TIPOGASTO_ID)
+                ->where('ANULADO', '=', 0)
+                ->whereBetween('FECHA_FACTURA', [(new Carbon($request->FECHA_FACTURA))->startOfYear(), (new Carbon($request->FECHA_FACTURA))->endOfYear()])
+                ->sum('CANTIDAD_PORCENTAJE_CUSTOM');
+                
+            } elseif (strtoupper($nombreRuta->DESCRIPCION) == 'DEPRECIACIóN' || strtoupper($nombreRuta->DESCRIPCION) == 'DEPRECIACION') {            
+                $montoAcumulado = Factura:://where('LIQUIDACION_ID', '=', $request->LIQUIDACION_ID)            
+                whereBetween('FECHA_FACTURA', [(new Carbon($request->FECHA_FACTURA))->startOfYear(), (new Carbon($request->FECHA_FACTURA))->endOfYear()])
+                                            ->where('ANULADO', '=', 0)
+                                            ->sum('TOTAL');
+            } else {             
+                $montoAcumulado = Factura::where('TIPOGASTO_ID', '=', $request->TIPOGASTO_ID)
+                ->whereBetween('FECHA_FACTURA', [(new Carbon($request->FECHA_FACTURA))->startOfYear(), (new Carbon($request->FECHA_FACTURA))->endOfYear()])
+                ->where('ANULADO', '=', 0)
+                ->sum('TOTAL');                        
+            }
+        }
                 //dd($factura->APROBACION_PAGO);
                 //dd('Presupuesto: ' . $detallePresupuesto->MONTO . ' Y el monto acumulado es :' . $montoAcumulado . ' y factura: ' . $factura->TOTAL);
                 //$montoAcumulado -= $factura->TOTAL;
-               
+                //dd($detallePresupuesto->MONTO);
+                $montoAcumulado -= $factura->TOTAL; // Se resta valor actual de la factura
+                //dd($montoAcumulado);
+                
                 $saldo = $detallePresupuesto->MONTO - $montoAcumulado;        
                 //dd($saldo);
 

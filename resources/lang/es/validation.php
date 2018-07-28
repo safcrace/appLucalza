@@ -195,7 +195,9 @@ return [
         'CODIGO_IMPUESTO_REMANENTE' => 'Código Impuesto Remanente',
         'KM_INICIO' => 'Kilometraje Inicial',
         'KM_FINAL'  => 'Kilometraje Final',
-        'CANTIDAD_PORCENTAJE_CUSTOM' => 'Cantidad Galones'
+        'CANTIDAD_PORCENTAJE_CUSTOM' => 'Cantidad Galones',
+        'MONEDA_LOCAL' => 'Moneda Local',
+        'MONEDA_SYS' => 'Moneda Extranjera'
     ],
 
 ];

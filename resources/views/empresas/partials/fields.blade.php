@@ -1,4 +1,95 @@
 <div class="panel panel-primary">
+  <div class="panel-heading">Datos SAP</div>
+
+  <div class="panel-body">
+
+    <div class="row form-group">
+      <div class="col-md-2 col-md-offset-1">
+            {!! Form::label('LICENSESERVER', 'Servidor de Licencias') !!}
+      </div>
+      <div class="col-md-2">
+          {!! Form::text('LICENSESERVER', null, ['class' => 'form-control', 'placeholder' => 'Licencia de Servidor SAP']); !!}
+      </div>
+      <div class="col-md-2 col-md-offset-1">
+            {!! Form::label('DBSAP', 'Base de Datos SAP') !!}
+      </div>
+      <div class="col-md-3">
+          {!! Form::text('DBSAP', null, ['class' => 'form-control', 'placeholder' => 'Base Datos SAP']); !!}
+      </div>
+    </div>
+
+    <div class="row form-group">
+      <div class="col-md-2 col-md-offset-1">
+            {!! Form::label('USERSAP', 'Usuario SAP') !!}
+      </div>
+      <div class="col-md-3">
+          {!! Form::text('USERSAP', null, ['class' => 'form-control', 'placeholder' => 'Usuario SAP']); !!}
+      </div>      
+    </div>
+
+    <div class="row form-group">
+      <div class="col-md-2 col-md-offset-1">
+            {!! Form::label('PASSSAP', 'Contraseña SAP') !!}
+      </div>
+      <div class="col-md-3">
+          {!! Form::password('PASSSAP', ['class' => 'form-control awesome', 'placeholder' => 'Contraseña SAP']); !!}
+      </div>
+      <div class="col-md-1">
+        <span class="glyphicon glyphicon-eye-open" aria-hidden="true" style="color: black; cursor: pointer; font-size: 22px" data-toggle="tooltip" data-placement="top" title="Cambiar Vista" id="verPasswordSap"></span>
+    </div>
+      
+    </div>
+
+
+  </div>
+</div>
+
+<div class="panel panel-primary">
+  <div class="panel-heading">Datos SQL</div>
+
+  <div class="panel-body">
+
+    <div class="row form-group">
+      <div class="col-md-2 col-md-offset-1">
+            {!! Form::label('USERSQL', 'Usuario SQL') !!}
+      </div>
+      <div class="col-md-2">
+          {!! Form::text('USERSQL', null, ['class' => 'form-control', 'placeholder' => 'Usuario SQL']); !!}
+      </div>
+      <div class="col-md-2 col-md-offset-1">
+        {!! Form::label('ID_DATASERVERTYPE', 'SAP DB Type') !!}
+      </div>
+      <div class="col-md-3">
+        {!! Form::select('ID_DATASERVERTYPE', $sapDbType, 6, ['class' => 'form-control', 'placeholder' => 'Seleccione SAP DB Type']); !!}
+      </div>
+    </div>
+
+    <div class="row form-group">
+      <div class="col-md-2 col-md-offset-1">
+            {!! Form::label('PASSSQL', 'Contraseña SQL') !!}
+      </div>
+      <div class="col-md-3">
+          {!! Form::password('PASSSQL', ['class' => 'form-control awesome', 'placeholder' => 'Contraseña SQL']); !!}
+      </div>
+      <div class="col-md-1">
+        <span class="glyphicon glyphicon-eye-open" aria-hidden="true" style="color: black; cursor: pointer; font-size: 22px" data-toggle="tooltip" data-placement="top" title="Cambiar Vista" id="verPasswordSql"></span>
+      </div>
+    </div>
+
+    <div class="row form-group">
+      <div class="col-md-2 col-md-offset-1">
+            {!! Form::label('SERVIDORSQL', 'Servidor SQL') !!}
+      </div>
+      <div class="col-md-3">
+          {!! Form::text('SERVIDORSQL', null, ['class' => 'form-control', 'placeholder' => 'Servidor SQL']); !!}
+      </div>
+    </div>
+
+
+  </div>
+</div>
+
+<div class="panel panel-primary">
   <div class="panel-heading">Datos Empresa</div>
 
   <div class="panel-body">
@@ -143,95 +234,8 @@
   </div>
 </div>
 
-<div class="panel panel-primary">
-  <div class="panel-heading">Datos SAP</div>
-
-  <div class="panel-body">
-
-    <div class="row form-group">
-      <div class="col-md-2 col-md-offset-1">
-            {!! Form::label('LICENSESERVER', 'Servidor de Licencias') !!}
-      </div>
-      <div class="col-md-2">
-          {!! Form::text('LICENSESERVER', null, ['class' => 'form-control', 'placeholder' => 'Licencia de Servidor SAP']); !!}
-      </div>
-      <div class="col-md-2 col-md-offset-1">
-            {!! Form::label('DBSAP', 'Base de Datos SAP') !!}
-      </div>
-      <div class="col-md-3">
-          {!! Form::text('DBSAP', null, ['class' => 'form-control', 'placeholder' => 'Base Datos SAP']); !!}
-      </div>
-    </div>
-
-    <div class="row form-group">
-      <div class="col-md-2 col-md-offset-1">
-            {!! Form::label('USERSAP', 'Usuario SAP') !!}
-      </div>
-      <div class="col-md-3">
-          {!! Form::text('USERSAP', null, ['class' => 'form-control', 'placeholder' => 'Usuario SAP']); !!}
-      </div>      
-    </div>
-
-    <div class="row form-group">
-      <div class="col-md-2 col-md-offset-1">
-            {!! Form::label('PASSSAP', 'Contraseña SAP') !!}
-      </div>
-      <div class="col-md-3">
-          {!! Form::password('PASSSAP', ['class' => 'form-control awesome', 'placeholder' => 'Contraseña SAP']); !!}
-      </div>
-      <div class="col-md-1">
-        <span class="glyphicon glyphicon-eye-open" aria-hidden="true" style="color: black; cursor: pointer; font-size: 22px" data-toggle="tooltip" data-placement="top" title="Cambiar Vista" id="verPasswordSap"></span>
-    </div>
-      
-    </div>
-
-
-  </div>
-</div>
-
-<div class="panel panel-primary">
-  <div class="panel-heading">Datos SQL</div>
-
-  <div class="panel-body">
-
-    <div class="row form-group">
-      <div class="col-md-2 col-md-offset-1">
-            {!! Form::label('USERSQL', 'Usuario SQL') !!}
-      </div>
-      <div class="col-md-2">
-          {!! Form::text('USERSQL', null, ['class' => 'form-control', 'placeholder' => 'Usuario SQL']); !!}
-      </div>
-      <div class="col-md-2 col-md-offset-1">
-        {!! Form::label('ID_DATASERVERTYPE', 'SAP DB Type') !!}
-      </div>
-      <div class="col-md-3">
-        {!! Form::select('ID_DATASERVERTYPE', $sapDbType, 6, ['class' => 'form-control', 'placeholder' => 'Seleccione SAP DB Type']); !!}
-      </div>
-    </div>
-
-    <div class="row form-group">
-      <div class="col-md-2 col-md-offset-1">
-            {!! Form::label('PASSSQL', 'Contraseña SQL') !!}
-      </div>
-      <div class="col-md-3">
-          {!! Form::password('PASSSQL', ['class' => 'form-control awesome', 'placeholder' => 'Contraseña SQL']); !!}
-      </div>
-      <div class="col-md-1">
-        <span class="glyphicon glyphicon-eye-open" aria-hidden="true" style="color: black; cursor: pointer; font-size: 22px" data-toggle="tooltip" data-placement="top" title="Cambiar Vista" id="verPasswordSql"></span>
-      </div>
-    </div>
-
-    <div class="row form-group">
-      <div class="col-md-2 col-md-offset-1">
-            {!! Form::label('SERVIDORSQL', 'Servidor SQL') !!}
-      </div>
-      <div class="col-md-3">
-          {!! Form::text('SERVIDORSQL', null, ['class' => 'form-control', 'placeholder' => 'Servidor SQL']); !!}
-      </div>
-    </div>
-
-
-  </div>
+<div class="loader-modal-container" id="loader">
+  <img src="{{ asset('images/loader.gif') }}" alt="Loader Container" class="loader-info">  
 </div>
 
 @push('scripts')
@@ -253,15 +257,61 @@
               $('#PASSSQL').attr("type", 'password')
             }            
         })
+
+        $('#SERVIDORSQL').blur(function() {
+          $('#loader').show()
+          var criterio = $('#USERSQL').val() + '-' + $('#PASSSQL').val() + '-' + $('#DBSAP').val() + '-' + $('#SERVIDORSQL').val()
+          vurl = '{{ route('monedasEmpresa')}}'            
+          vurl = vurl.replace('%7Bid%7D', criterio);
+
+          $.ajax({
+                  type: 'get',
+                  url: vurl,
+                  success: function (data) {                                     
+                      if (data.length > 10) {
+                        alert(data)
+                        $('#DBSAP').focus()                        
+                      } else {
+                        $('#DESCRIPCION').val(data[0])
+                        $('#MONEDA_LOCAL').val(data[1])
+                        $('#MONEDA_SYS').val(data[2])                          
+                      }                          
+                      $('#loader').hide()
+                  }
+              }); 
+          
+        })
         
+        $('#DESCRIPCION').focus(function() {
+          alert('Este campo es únicamente Administrado por el Sistema')
+          $('#DBSAP').focus()
+          var criterio = $('#USERSQL').val() + '-' + $('#PASSSQL').val() + '-' + $('#DBSAP').val() + '-' + $('#SERVIDORSQL').val()
+          vurl = '{{ route('monedasEmpresa')}}'            
+          vurl = vurl.replace('%7Bid%7D', criterio);
+
+          $.ajax({
+                  type: 'get',
+                  url: vurl,
+                  success: function (data) {                    
+                      if (data.length > 10) {
+                        alert(data)                        
+                      } else {
+                        $('#DESCRIPCION').val(data[0])
+                        $('#MONEDA_LOCAL').val(data[1])
+                        $('#MONEDA_SYS').val(data[2])
+                      }                          
+                  }
+              }); 
+        })
+
         $('#MONEDA_LOCAL').focus(function() {
           alert('Este campo es únicamente Administrado por el Sistema')
-          $('#CLAVE').focus()
+          $('#SERVIDORSQL').focus()
         })
 
         $('#MONEDA_SYS').focus(function() {
           alert('Este campo es únicamente Administrado por el Sistema')
-          $('#CLAVE').focus()
+          $('#SERVIDORSQL').focus()
         })
     });
 </script>

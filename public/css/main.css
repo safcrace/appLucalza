@@ -1,8 +1,28 @@
 
-.main-title {
-  font-size: 24px;
+.loader-modal-container {
+  position: fixed;
+  width: 100vw;
+  height: 100vh;
+  top: 0;
+  left: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  display: none;
 }
 
-.aling-currency {
-  text-align: right;
+.loader-info {  
+  margin: 50vh 50vw;  
+  z-index: -10;  
+}
+
+.loader-modal-container::after {
+  content: '';
+  position: fixed;
+  width: 100vw;
+  height: 100vh;
+  top: 0;
+  left: 0;
+  background-color: rgba(0, 0, 0, .50);
+  z-index: 10;  
 }

@@ -26,6 +26,8 @@ class CreateEmpresaRequest extends Request
         return [
             'CLAVE'    => 'required|max:3',
             'DESCRIPCION'    => 'required',
+            'MONEDA_LOCAL' => 'required',
+            'MONEDA_SYS' => 'required',
             'LICENSESERVER'    => 'required',
             'USERSAP'    => 'required',
             'FILAS_NOTA_CREDITO' => 'required',

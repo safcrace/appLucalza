@@ -3,10 +3,12 @@
 namespace App\Exceptions;
 
 use Exception;
+use Illuminate\Session\TokenMismatchException;
+use Illuminate\Contracts\Validation\ValidationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class Handler extends ExceptionHandler
 {
@@ -15,9 +17,13 @@ class Handler extends ExceptionHandler
      *
      * @var array
      */
-    protected $dontReport = [
+    protected $dontReport = [        
         HttpException::class,
-        ModelNotFoundException::class,
+        ModelNotFoundException::class,        
+        //TokenMismatchException::class,
+        //UnauthorizedException::class,
+        //ValidationException::class,
+
     ];
 
     /**
@@ -42,8 +48,8 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Exception $e)
     {
-        if ($e instanceof ModelNotFoundException) {
-            $e = new NotFoundHttpException($e->getMessage(), $e);
+        if (!$e instanceof /*ModelNotFoundException*/ HttpException && !config('app.debug')) {
+            $e = new /*NotFoundHttpException*/ HttpException(500, $e->getMessage(), $e);
         }
 
         return parent::render($request, $e);

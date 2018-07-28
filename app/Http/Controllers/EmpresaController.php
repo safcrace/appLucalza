@@ -11,7 +11,6 @@ use App\Http\Requests\UpdateEmpresaRequest;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Redirect;
 use App\Empresa;
-use App\Moneda;
 use Illuminate\Support\Facades\Session;
 
 class EmpresaController extends Controller
@@ -57,10 +56,7 @@ class EmpresaController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function create()
-    {
-        $moneda = Moneda::where('ANULADO', '=', 0)
-                                        ->lists('DESCRIPCION', 'ID')
-                                        ->toArray();
+    {      
 
         $sapDbType = SapDbType::lists('DESCRIPCION', 'ID_DATASERVERTYPE')->toArray();
        
@@ -83,11 +79,11 @@ class EmpresaController extends Controller
             return back()->withInput()->with('info', 'El Código ya existe en la Base de Datos.');
         }
 
-
         $empresa = new Empresa();
         $empresa->CLAVE = $request->CLAVE;
         $empresa->DESCRIPCION = $request->DESCRIPCION;
-        $empresa->MONEDA_ID = 1;
+        $empresa->MONEDA_LOCAL = $request->MONEDA_LOCAL;
+        $empresa->MONEDA_SYS = $request->MONEDA_SYS;        
         $empresa->IMPUESTO = $request->IMPUESTO;
         $empresa->ANULADO = $request->ANULADO;
         $empresa->LICENSESERVER = $request->LICENSESERVER;
@@ -105,7 +101,7 @@ class EmpresaController extends Controller
 
         $empresa->save();
 
-        return redirect::to('webservice/monedasEmpresa/' . $empresa->id);
+        return redirect::to('empresas');
 
     }
 
@@ -128,15 +124,11 @@ class EmpresaController extends Controller
      */
     public function edit($id)
     {
-      $empresa = Empresa::findOrFail($id);
-      
-      $moneda = Moneda::where('ANULADO', '=', 0)
-                             ->lists('DESCRIPCION', 'ID')
-                             ->toArray();
+      $empresa = Empresa::findOrFail($id);           
 
         $sapDbType = SapDbType::lists('DESCRIPCION', 'ID_DATASERVERTYPE')->toArray();
 
-      return view('empresas.edit', compact('empresa', 'moneda', 'sapDbType'));
+      return view('empresas.edit', compact('empresa', 'sapDbType'));
     }
 
     /**
@@ -170,7 +162,7 @@ class EmpresaController extends Controller
           ->update(['CLAVE' => $request->CLAVE, 'DESCRIPCION' => $request->DESCRIPCION, 'ANULADO' => $request->ANULADO, 'LICENSESERVER' => $request->LICENSESERVER,
                     'TIEMPOATRASO_RUTAS' => $request->TIEMPOATRASO_RUTAS, 'TIEMPOATRASO_OTROSGASTOS' => $request->TIEMPOATRASO_OTROSGASTOS, 'USERSAP' => $request->USERSAP,
                     'PASSSAP' => $passwordSap, 'DBSAP' => $request->DBSAP, 'USERSQL' => $request->USERSQL, 'PASSSQL' => $passwordSql,
-                    'SERVIDORSQL' => $request->SERVIDORSQL, 'ID_DATASERVERTYPE' => $request->ID_DATASERVERTYPE, 'MONEDA_ID' => 1,
+                    'SERVIDORSQL' => $request->SERVIDORSQL, 'ID_DATASERVERTYPE' => $request->ID_DATASERVERTYPE, 
                     'IMPUESTO' => $request->IMPUESTO, 'FILAS_NOTA_CREDITO' => $request->FILAS_NOTA_CREDITO]);
 
         return Redirect::to('empresas');

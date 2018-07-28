@@ -38,11 +38,14 @@ class WebServiceController extends Controller
             'headers' => ['content-type' => 'application-json', 'Accept' => 'application-jsoon'],
         ]);
 
+        $key = time();
+        $token = md5('tarara' . $key);
+
 
         $response = $client->request('POST', 'http://pcidmsserver.cloudapp.net:8080/lucalza/ws/', [
             'json' => [
-                'key' => 1502934063,
-                'token' => '0a2fd04f2aebaf869aea5e4a3482e427',
+                'key' => $key,
+                'token' => $token,
                 'companyId' => $empresaId,
                 'requestType' => 1,
                 'listId' => $listId,
@@ -76,11 +79,13 @@ class WebServiceController extends Controller
             'headers' => ['content-type' => 'application-json', 'Accept' => 'application-jsoon'],
         ]);
 
+        $key = time();
+        $token = md5('tarara' . $key);
 
         $response = $client->request('POST', 'http://pcidmsserver.cloudapp.net:8080/lucalza/ws/', [
             'json' => [
-                'key' => 1502934063,
-                'token' => '0a2fd04f2aebaf869aea5e4a3482e427',
+                'key' => $key,
+                'token' => $token,
                 'companyId' => $empresaId,
                 'requestType' => 1,
                 'listId' => $listId,
@@ -116,11 +121,13 @@ class WebServiceController extends Controller
             'headers' => ['content-type' => 'application-json', 'Accept' => 'application-jsoon'],
         ]);
 
+        $key = time();
+        $token = md5('tarara' . $key);
 
         $response = $client->request('POST', 'http://pcidmsserver.cloudapp.net:8080/lucalza/ws/', [
             'json' => [
-                'key' => 1502934063,
-                'token' => '0a2fd04f2aebaf869aea5e4a3482e427',
+                'key' => $key,
+                'token' => $token,
                 'companyId' => $empresaId,
                 'requestType' => 1,
                 'listId' => $listId,
@@ -152,12 +159,14 @@ class WebServiceController extends Controller
         $client = new Client([
             'headers' => ['content-type' => 'application-json', 'Accept' => 'application-jsoon'],
         ]);
-
+        
+        $key = time();
+        $token = md5('tarara' . $key);
 
         $response = $client->request('POST', 'http://pcidmsserver.cloudapp.net:8080/lucalza/ws/', [
             'json' => [
-                'key' => 1502934063,
-                'token' => '0a2fd04f2aebaf869aea5e4a3482e427',
+                'key' => $key,
+                'token' => $token,
                 'companyId' => $empresaId,
                 'requestType' => 1,
                 'listId' => $listId,
@@ -190,11 +199,13 @@ class WebServiceController extends Controller
             'headers' => ['content-type' => 'application-json', 'Accept' => 'application-jsoon'],
         ]);
 
+        $key = time();
+        $token = md5('tarara' . $key);
 
         $response = $client->request('POST', 'http://pcidmsserver.cloudapp.net:8080/lucalza/ws/', [
             'json' => [
-                'key' => 1502934063,
-                'token' => '0a2fd04f2aebaf869aea5e4a3482e427',
+                'key' => $key,
+                'token' => $token,
                 'companyId' => $empresaId,
                 'requestType' => 1,
                 'listId' => $listId,
@@ -226,11 +237,13 @@ class WebServiceController extends Controller
             'headers' => ['content-type' => 'application-json', 'Accept' => 'application-jsoon'],
         ]);
 
+        $key = time();
+        $token = md5('tarara' . $key);
 
         $response = $client->request('POST', 'http://pcidmsserver.cloudapp.net:8080/lucalza/ws/', [
             'json' => [
-                'key' => 1502934063,
-                'token' => '0a2fd04f2aebaf869aea5e4a3482e427',
+                'key' => $key,
+                'token' => $token,
                 'companyId' => $empresaId,
                 'requestType' => 1,
                 'listId' => $listId,
@@ -262,11 +275,13 @@ class WebServiceController extends Controller
             'headers' => ['content-type' => 'application-json', 'Accept' => 'application-jsoon'],
         ]);
 
+        $key = time();
+        $token = md5('tarara' . $key);
 
         $response = $client->request('POST', 'http://pcidmsserver.cloudapp.net:8080/lucalza/ws/', [
             'json' => [
-                'key' => 1502934063,
-                'token' => '0a2fd04f2aebaf869aea5e4a3482e427',
+                'key' => $key,
+                'token' => $token,
                 'companyId' => $empresaId,
                 'requestType' => 1,
                 'listId' => $listId,
@@ -299,11 +314,13 @@ class WebServiceController extends Controller
             'headers' => ['content-type' => 'application-json', 'Accept' => 'application-jsoon'],
         ]);
 
+        $key = time();
+        $token = md5('tarara' . $key);
 
         $response = $client->request('POST', 'http://pcidmsserver.cloudapp.net:8080/lucalza/ws/', [
             'json' => [
-                'key' => 1502934063,
-                'token' => '0a2fd04f2aebaf869aea5e4a3482e427',
+                'key' => $key,
+                'token' => $token,
                 'companyId' => $empresaId,
                 'requestType' => 1,
                 'listId' => $listId,
@@ -345,11 +362,13 @@ class WebServiceController extends Controller
             'headers' => ['content-type' => 'application-json', 'Accept' => 'application-jsoon'],
         ]);
 
+        $key = time();
+        $token = md5('tarara' . $key);
 
         $response = $client->request('POST', 'http://pcidmsserver.cloudapp.net:8080/lucalza/ws/', [
             'json' => [
-                'key' => 1502934063,
-                'token' => '0a2fd04f2aebaf869aea5e4a3482e427',
+                'key' => $key,
+                'token' => $token,
                 'companyId' => $empresaId,
                 'requestType' => 1,
                 'listId' => $listId,
@@ -364,7 +383,7 @@ class WebServiceController extends Controller
 
         $filas = $data['nrows'];
         if($filas == 0) {                             
-            $combo[] = ['ID' => NULL, 'DESCRIPCION' =>  'SIN RESULTADOS'];
+            $combo[] = ['ID' => '', 'DESCRIPCION' =>  'SIN RESULTADOS'];
             array_unshift($combo, ['ID' => '', 'DESCRIPCION' => 'Seleccione una Opción']);       
             return $combo;
         }    
@@ -373,7 +392,7 @@ class WebServiceController extends Controller
             $combo[] = ['ID' => $b['code'], 'DESCRIPCION' =>  $b['name']];
         }
         /*$combo .= '</select>';*/
-        array_unshift($combo, ['ID' => NULL, 'DESCRIPCION' => 'Seleccione una Opción']);
+        array_unshift($combo, ['ID' => '', 'DESCRIPCION' => 'Seleccione una Opción']);
 
        return $combo;
 
@@ -443,11 +462,13 @@ class WebServiceController extends Controller
             'headers' => ['content-type' => 'application-json', 'Accept' => 'application-jsoon'],
         ]);
 
+        $key = time();
+        $token = md5('tarara' . $key);
 
         $response = $client->request('POST', 'http://pcidmsserver.cloudapp.net:8080/lucalza/ws/', [
             'json' => [
-                'key' => 1502934063,
-                'token' => '0a2fd04f2aebaf869aea5e4a3482e427',
+                'key' => $key,
+                'token' => $token,
                 'companyId' => $empresaId,
                 'requestType' => 1,
                 'listId' => $listId,
@@ -462,8 +483,8 @@ class WebServiceController extends Controller
 
         $filas = $data['nrows'];
         if($filas == 0) {            
-            $combo[] = ['ID' => NULL, 'DESCRIPCION' =>  'SIN RESULTADOS'];       
-            array_unshift($combo, ['ID' => NULL, 'DESCRIPCION' => 'Seleccione una Opción']);
+            $combo[] = ['ID' => '', 'DESCRIPCION' =>  'SIN RESULTADOS'];       
+            array_unshift($combo, ['ID' => '', 'DESCRIPCION' => 'Seleccione una Opción']);
             return $combo;
         }        
        
@@ -471,7 +492,7 @@ class WebServiceController extends Controller
         $combo[] = ['ID' => $b['code'], 'DESCRIPCION' =>  $b['name']];
        } 
        
-       array_unshift($combo, ['ID' => NULL, 'DESCRIPCION' => 'Seleccione una Opción']);
+       array_unshift($combo, ['ID' => '', 'DESCRIPCION' => 'Seleccione una Opción']);
 
         return $combo;
 
@@ -488,11 +509,13 @@ class WebServiceController extends Controller
             'headers' => ['content-type' => 'application-json', 'Accept' => 'application-jsoon'],
         ]);
 
+        $key = time();
+        $token = md5('tarara' . $key);
 
         $response = $client->request('POST', 'http://pcidmsserver.cloudapp.net:8080/lucalza/ws/', [
             'json' => [
-                'key' => 1502934063,
-                'token' => '0a2fd04f2aebaf869aea5e4a3482e427',
+                'key' => $key,
+                'token' => $token,
                 'companyId' => $empresaId,
                 'requestType' => 1,
                 'listId' => $listId,
@@ -507,8 +530,8 @@ class WebServiceController extends Controller
 
         $filas = $data['nrows'];
         if($filas == 0) {            
-            $combo[] = ['ID' => NULL, 'DESCRIPCION' =>  'SIN RESULTADOS'];  
-            array_unshift($combo, ['ID' => NULL, 'DESCRIPCION' => 'Seleccione una Opción']);     
+            $combo[] = ['ID' => '', 'DESCRIPCION' =>  'SIN RESULTADOS'];  
+            array_unshift($combo, ['ID' => '', 'DESCRIPCION' => 'Seleccione una Opción']);     
             return $combo;
         }        
    
@@ -516,7 +539,7 @@ class WebServiceController extends Controller
             $combo[] = ['ID' => $b['code'], 'DESCRIPCION' =>  $b['name']];
         }    
 
-        array_unshift($combo, ['ID' => NULL, 'DESCRIPCION' => 'Seleccione una Opción']);
+        array_unshift($combo, ['ID' => '', 'DESCRIPCION' => 'Seleccione una Opción']);
 
         return $combo;
 
@@ -533,11 +556,13 @@ class WebServiceController extends Controller
             'headers' => ['content-type' => 'application-json', 'Accept' => 'application-jsoon'],
         ]);
 
+        $key = time();
+        $token = md5('tarara' . $key);
 
         $response = $client->request('POST', 'http://pcidmsserver.cloudapp.net:8080/lucalza/ws/', [
             'json' => [
-                'key' => 1502934063,
-                'token' => '0a2fd04f2aebaf869aea5e4a3482e427',
+                'key' => $key,
+                'token' => $token,
                 'companyId' => $empresaId,
                 'requestType' => 1,
                 'listId' => $listId,
@@ -552,8 +577,8 @@ class WebServiceController extends Controller
 
         $filas = $data['nrows'];
         if($filas == 0) {            
-            $combo[] = ['ID' => NULL, 'DESCRIPCION' =>  'SIN RESULTADOS'];  
-            array_unshift($combo, ['ID' => NULL, 'DESCRIPCION' => 'Seleccione una Opción']);     
+            $combo[] = ['ID' => '', 'DESCRIPCION' =>  'SIN RESULTADOS'];  
+            array_unshift($combo, ['ID' => '', 'DESCRIPCION' => 'Seleccione una Opción']);     
             return $combo;
         }        
     
@@ -561,7 +586,7 @@ class WebServiceController extends Controller
             $combo[] = ['ID' => $b['code'], 'DESCRIPCION' =>  $b['name']];
         }    
 
-        array_unshift($combo, ['ID' => NULL, 'DESCRIPCION' => 'Seleccione una Opción']);
+        array_unshift($combo, ['ID' => '', 'DESCRIPCION' => 'Seleccione una Opción']);
 
         return $combo;
 
@@ -578,11 +603,13 @@ class WebServiceController extends Controller
             'headers' => ['content-type' => 'application-json', 'Accept' => 'application-jsoon'],
         ]);
 
+        $key = time();
+        $token = md5('tarara' . $key);
 
         $response = $client->request('POST', 'http://pcidmsserver.cloudapp.net:8080/lucalza/ws/', [
             'json' => [
-                'key' => 1502934063,
-                'token' => '0a2fd04f2aebaf869aea5e4a3482e427',
+                'key' => $key,
+                'token' => $token,
                 'companyId' => $empresaId,
                 'requestType' => 1,
                 'listId' => $listId,
@@ -598,8 +625,8 @@ class WebServiceController extends Controller
         $filas = $data['nrows'];
 
         if($filas == 0) {            
-            $combo[] = ['ID' => NULL, 'DESCRIPCION' =>  'SIN RESULTADOS']; 
-            array_unshift($combo, ['ID' => NULL, 'DESCRIPCION' => 'Seleccione una Opción']);      
+            $combo[] = ['ID' => '', 'DESCRIPCION' =>  'SIN RESULTADOS']; 
+            array_unshift($combo, ['ID' => '', 'DESCRIPCION' => 'Seleccione una Opción']);      
             return $combo;
         }        
    
@@ -607,7 +634,7 @@ class WebServiceController extends Controller
             $combo[] = ['ID' => $b['code'], 'DESCRIPCION' =>  $b['name']];
         }    
 
-        array_unshift($combo, ['ID' => NULL, 'DESCRIPCION' => 'Seleccione una Opción']);
+        array_unshift($combo, ['ID' => '', 'DESCRIPCION' => 'Seleccione una Opción']);
 
         return $combo;
 
@@ -620,11 +647,13 @@ class WebServiceController extends Controller
             'headers' => ['content-type' => 'application-json', 'Accept' => 'application-jsoon'],
         ]);
 
+        $key = time();
+        $token = md5('tarara' . $key);
 
         $response = $client->request('POST', 'http://pcidmsserver.cloudapp.net:8080/lucalza/ws/', [
             'json' => [
-                'key' => 1502934063,
-                'token' => '0a2fd04f2aebaf869aea5e4a3482e427',
+                'key' => $key,
+                'token' => $token,
                 'companyId' => 1,
                 'requestType' => 2,
                 'rateDate' => $id,
@@ -647,44 +676,51 @@ class WebServiceController extends Controller
     }
 
     public function getMonedasEmpresa($id)
-    {
+    {   
+        $param = explode('-', $id);
+        $SQL_USER = $param[0];
+        $SQL_PASSWORD = $param[1];
+        $SQL_DB = $param[2];
+        $SQL_SERVER = $param[3];
+
+        
+        
+        
         $client = new Client([
             'headers' => ['content-type' => 'application-json', 'Accept' => 'application-jsoon'],
         ]);
 
+        $key = time();
+        $token = md5('tarara' . $key);        
 
         $response = $client->request('POST', 'http://pcidmsserver.cloudapp.net:8080/lucalza/ws/', [
             'json' => [
-                'key' => 1502934063,
-                'token' => '0a2fd04f2aebaf869aea5e4a3482e427',
-                'companyId' => $id,
-                'requestType' => 1,
-                'listId' => 7,
-                'filter' => ''                
+                'key' => $key,
+                'token' => $token,
+                'companyId' => 0,
+                'requestType' => 4,
+                'SQL_USER' => $SQL_USER,
+                'SQL_PASSWORD' => $SQL_PASSWORD,
+                'SQL_DB' => $SQL_DB,
+                'SQL_SERVER' => $SQL_SERVER
+                //'filter' => ''                
             ]
         ]);
-
         
         $data = json_decode($response->getBody(), true);
+        //dd($data['result']);
+        if ($data['result'] != 0) {
+            return 'No se pudo realizar la Conexión, por favor verifique las Credenciales';
+        }                
         
-       /*  if ($data['message'] == "Invalid SAP database reference") {
-            dd('Bien Safi');
-        } */
+        $datos = [];        
         
-        $filas = $data['nrows'];
-
-        $codigos = [];
+        $datos[] = $data['company_name'];
+        $datos[] = $data['main_currency'];
+        $datos[] = $data['sys_currency'];
         
-        foreach ($data['data'] as $a => $b) {
-            $codigos[] = $b['local_currency'];
-            $codigos[] = $b['sys_currency'];
-        }        
-
-        Empresa::where('ID', $id)
-          ->update(['MONEDA_LOCAL' => $codigos[0], 'MONEDA_SYS' => $codigos[1]]);      
         
-
-        return redirect::to('empresas');
+        return $datos;        
 
     }
 
@@ -717,11 +753,13 @@ class WebServiceController extends Controller
             'headers' => ['content-type' => 'application-json', 'Accept' => 'application-jsoon'],
         ]);
 
+        $key = time();
+        $token = md5('tarara' . $key);
 
         $response = $client->request('POST', 'http://pcidmsserver.cloudapp.net:8080/lucalza/ws/', [
             'json' => [
-                'key' => 1502934063,
-                'token' => '0a2fd04f2aebaf869aea5e4a3482e427',
+                'key' => $key,
+                'token' => $token,
                 'companyId' => $empresaId,
                 'requestType' => 1,
                 'listId' => 6,
@@ -761,13 +799,13 @@ class WebServiceController extends Controller
         $encabezado = collect(DB::select("
                                 select                                 
                                 DocNum		=	a.ID + 25000, 
-                                DocType		=	'dDocumentService',
+                                DocType		=	'dDocument_Service',
                                 DocDate		=	a.FECHA_FACTURA, 
                                 DocDueDate		=	a.FECHA_FACTURA, 
                                 DocTaxDate		=	a.FECHA_FACTURA, 
                                 CardCode    =	g.CODIGO_PROVEEDOR_SAP,
                                 NumAtCard	=	COALESCE(a.Serie,'') + ' - ' +  a.NUMERO,
-                                DocCurrency = a.MONEDA_ID,
+                                DocCurrency = RTRIM(a.MONEDA_ID),
                                 SalesPersonCode = g.USERSAP_ID,
                                 U_FacFecha  = a.FECHA_FACTURA,
                                 U_FacSerie = coalesce(a.SERIE, '') ,
@@ -792,9 +830,10 @@ class WebServiceController extends Controller
                                 cat_proveedor j on a.PROVEEDOR_ID = j.id
                             where 
                                 a.LIQUIDACION_ID = {$id} 
+                                and a.ANULARENVIO_SAP <> 1
                                 and coalesce(MONTO_afecto,0) > 0
         "));
-        
+      
         foreach ($encabezado as $key => $item) {
             $item = (array) $item ;            
             //var_dump ($item);
@@ -808,7 +847,7 @@ class WebServiceController extends Controller
                             ItemDescription =  c.DESCRIPCION + ' - ' + i.DESCRIPCION + ' '+ COALESCE(a.Serie,'') + ' - ' +  a.NUMERO,
                             PriceAfVAT = a.TOTAL - A.MONTO_EXENTO, 
                             AccountCode = c.CUENTA_CONTABLE_AFECTO,
-                            TaxCode = c.CODIGO_IMPUESTO_AFECTO,
+                            TaxCode = RTRIM(c.CODIGO_IMPUESTO_AFECTO),
                             ProjectCode = h.PROYECTO,
                             CostingCode = h.CENTROCOSTO1,
                             CostingCode2 = h.CENTROCOSTO2,
@@ -851,6 +890,7 @@ class WebServiceController extends Controller
                                 cat_tipodocumento i on a.TIPODOCUMENTO_ID = i.ID 
                             where 
                                 LIQUIDACION_ID = {$id} 
+                                and a.ANULARENVIO_SAP <> 1
                                 and coalesce(MONTO_EXENTO,0) > 0
                             order by
                                 1
@@ -905,22 +945,22 @@ class WebServiceController extends Controller
         $notaCredito = collect(DB::select("
                                         Select Distinct
                                             DocNum		=	1 + 25500, 
-                                            DocType		=	'dDocumentService',
+                                            DocType		=	'dDocument_Service',
                                             DocDate		=		d.FECHA_FINAL, 
                                             DocDueDate		=	d.FECHA_FINAL, 
                                             DocTaxDate		=	d.FECHA_FINAL, 
                                             CardCode    =	g.CODIGO_PROVEEDOR_SAP,
                                             NumAtCard	=	'REMANENTE',
-                                            DocCurrency =	k.MONEDA_LOCAL,
+                                            DocCurrency =	RTRIM(k.MONEDA_LOCAL),
                                             SalesPersonCode = g.USERSAP_ID,
                                             U_FacFecha  = d.FECHA_FINAL,
                                             U_FacSerie = '' ,
                                             U_FacNum =  'REMANENTE',
-                                            U_facNit = '12345678-9' ,
-                                            U_facNom = 'Usuario',
+                                            U_FacNit = '12345678-9' ,
+                                            U_FacNom = 'Usuario',
                                             U_Clase_Libro = 'Varios',
-                                            U_tipo_documento = 'Nota Credito',
-                                            businessObject = 'oPurchaseCreditNotes'
+                                            U_Tipo_Documento = 'Nota Credito',
+                                            BusinessObject = 'oPurchaseCreditNotes'
                                         from 
                                             liq_factura a inner join                                           
                                             cat_subcategoria_tipogasto b on a.SUBCATEGORIA_TIPOGASTO_ID = b.ID inner join
@@ -939,8 +979,29 @@ class WebServiceController extends Controller
                                 "));
 
         foreach ($notaCredito as $key => $item) {
-            $item = (array) $item ;                        
-        }
+           /*  echo $item->DocNum . '<br>';
+            echo $item->DocType . '<br>';
+            echo $item->DocDate . '<br>';
+            $item = (array) $item ;   */
+                             
+            $noteCredit['DocNum'] = $item->DocNum;
+            $noteCredit['DocType'] = $item->DocType;
+            $noteCredit['DocDate'] = $item->DocDate;
+            $noteCredit['DocDueDate'] = $item->DocDueDate;
+            $noteCredit['DocTaxDate'] = $item->DocTaxDate;
+            $noteCredit['CardCode'] = $item->CardCode;
+            $noteCredit['NumAtCard'] = $item->NumAtCard;
+            $noteCredit['DocCurrency'] = $item->DocCurrency;
+            $noteCredit['SalesPersonCode'] = $item->SalesPersonCode;
+            $noteCredit['U_FacFecha'] = $item->U_FacFecha;
+            $noteCredit['U_FacSerie'] = $item->U_FacSerie;
+            $noteCredit['U_FacNum'] = $item->U_FacNum;            
+            $noteCredit['U_FacNit'] = $item->U_FacNit;
+            $noteCredit['U_FacNom'] = $item->U_FacNom;
+            $noteCredit['U_Clase_Libro'] = $item->U_Clase_Libro;
+            $noteCredit['U_Tipo_Documento'] = $item->U_Tipo_Documento;
+            $noteCredit['businessObject'] = $item->BusinessObject;
+        }       
 
         $detalleNotaCredito = DB::select("
                                             select
@@ -949,7 +1010,7 @@ class WebServiceController extends Controller
                                                 ItemDescription =  c.DESCRIPCION,
                                                 PriceAfVAT = sum(a.MONTO_REMANENTE), 
                                                 AccountCode =	c.CUENTA_CONTABLE_REMANENTE,
-                                                TaxCode =		c.CODIGO_IMPUESTO_REMANENTE,
+                                                TaxCode =		RTRIM(c.CODIGO_IMPUESTO_REMANENTE),
                                                 ProjectCode =	h.PROYECTO,
                                                 CostingCode =	h.CENTROCOSTO1,
                                                 CostingCode2 =	h.CENTROCOSTO2,
@@ -972,7 +1033,7 @@ class WebServiceController extends Controller
                                                 --Detalle 
                                                 c.DESCRIPCION,
                                                 c.CUENTA_CONTABLE_REMANENTE,
-                                                c.CODIGO_IMPUESTO_REMANENTE,
+                                                RTRIM(c.CODIGO_IMPUESTO_REMANENTE),
                                                 h.PROYECTO,
                                                 h.CENTROCOSTO1,
                                                 h.CENTROCOSTO2,
@@ -1001,17 +1062,10 @@ class WebServiceController extends Controller
                 'CostingCode5' => $value->CostingCode5
             ];      
         }
-//        dd($notaCredito);
 
-        
-        foreach ($notaCredito as $nota => $value) {
-            $value->detail = $details;
-        }
-        //$notaCredito->detail = $details;
-        //dd($notaCredito);
-        $notaCredito = $notaCredito->toArray();
-        $encabezado->push($notaCredito);
-
+        $noteCredit['detail'] = $details;
+        $encabezado->push($noteCredit);
+        //dd($encabezado) ;
         $encabezado = $encabezado->toArray();
         
             $json = [
@@ -1023,7 +1077,7 @@ class WebServiceController extends Controller
                 'items' => $encabezado               
             ];
 
-            return $json;
+          //return $json;
 
         /* $client = new Client([
             'headers' => ['content-type' => 'application-json', 'Accept' => 'application-jsoon'],
@@ -1059,11 +1113,13 @@ class WebServiceController extends Controller
             'headers' => ['content-type' => 'application-json', 'Accept' => 'application-jsoon'],
         ]);
 
+        $key = time();
+        $token = md5('tarara' . $key);
 
         $response = $client->request('POST', 'http://pcidmsserver.cloudapp.net:8080/lucalza/ws/', [
             'json' => [
-                'key' => 1502934063,
-                'token' => '0a2fd04f2aebaf869aea5e4a3482e427',
+                'key' => $key,
+                'token' => $token,
                 'companyId' => $empresa_id,
                 'requestType' => 3,
                 'liquidacionId' => $id,
