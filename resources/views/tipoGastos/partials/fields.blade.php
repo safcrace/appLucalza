@@ -354,6 +354,10 @@
   </div>
 </div>
 
+<div class="loader-modal-container" id="loader">
+  <img src="{{ asset('images/loader.gif') }}" alt="Loader Container" class="loader-info">  
+</div>
+
 @push('scripts')
   <script type="text/javascript">
       $(document).ready(function () {
@@ -403,7 +407,8 @@
           $('.ph_cantidad').hide();
         })
 
-        $('#cc_exento').click(function() {              
+        $('#cc_exento').click(function() {  
+              $('#loader').show()            
               var criterio = $('#EMPRESA_ID').val() + '-' + 1              
               vurl = '{{ route('cuentaContableExenta')}}'
               vurl = vurl.replace('%7Bid%7D', criterio);
@@ -413,6 +418,7 @@
                   url: vurl,
                   success: function (data) {                    
                       $('#cuenta_exenta').html(data);
+                      $('#loader').hide()
                       $('#myModalCe').modal('show')
                   }
               });
@@ -448,6 +454,7 @@
           })
 
           $('#cc_afecta').click(function() {
+              $('#loader').show()
               var criterio = $('#EMPRESA_ID').val() + '-' + 1
               vurl = '{{ route('cuentaContableAfecta')}}'
               vurl = vurl.replace('%7Bid%7D', criterio);
@@ -457,6 +464,7 @@
                   url: vurl,
                   success: function (data) {                    
                       $('#cuenta_afecta').html(data);
+                      $('#loader').hide()
                       $('#myModalCa').modal('show')
                   }
               });
@@ -476,6 +484,7 @@
           })
 
           $('#cc_remanente').click(function() {
+              $('#loader').show()
               var criterio = $('#EMPRESA_ID').val() + '-' + 1
               vurl = '{{ route('cuentaContableRemanente')}}'
               vurl = vurl.replace('%7Bid%7D', criterio);
@@ -485,6 +494,7 @@
                   url: vurl,
                   success: function (data) {
                       $('#cuenta_remanente').html(data);
+                      $('#loader').hide()
                       $('#myModalCr').modal('show')
                   }
               });
@@ -507,6 +517,7 @@
 
           $('#ci_exento').click(function() {
               //alert('que pasa')
+              $('#loader').show()
               var criterio = $('#EMPRESA_ID').val() + '-' + 5
               vurl = '{{ route('codigoImpuestoExento')}}'
               vurl = vurl.replace('%7Bid%7D', criterio);
@@ -516,6 +527,7 @@
                   url: vurl,
                   success: function (data) {
                       $('#impuesto_exento').html(data);
+                      $('#loader').hide()
                       $('#myModalIe').modal('show')
                   }
               });
@@ -531,6 +543,7 @@
 
           $('#ci_afecto').click(function() {
               //alert('que pasa')
+              $('#loader').show()
               var criterio = $('#EMPRESA_ID').val() + '-' + 5
               vurl = '{{ route('codigoImpuestoAfecto')}}'
               vurl = vurl.replace('%7Bid%7D', criterio);
@@ -540,6 +553,7 @@
                   url: vurl,
                   success: function (data) {
                       $('#impuesto_afecto').html(data);
+                      $('#loader').hide()
                       $('#myModalIa').modal('show')
                   }
               });
@@ -556,6 +570,7 @@
 
           $('#ci_remanente').click(function() {
               //alert('que pasa')
+              $('#loader').show()
               var criterio = $('#EMPRESA_ID').val() + '-' + 5
               vurl = '{{ route('codigoImpuestoRemanente')}}'
               vurl = vurl.replace('%7Bid%7D', criterio);
@@ -565,6 +580,7 @@
                   url: vurl,
                   success: function (data) {
                       $('#impuesto_remanente').html(data);
+                      $('#loader').hide()
                       $('#myModalIr').modal('show')
                   }
               });

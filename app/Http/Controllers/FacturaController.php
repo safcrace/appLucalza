@@ -1179,17 +1179,143 @@ dd($resultado);
      */
     public function anular($id)
     {
+        //dd('por aca voy!');
         $anulado = Factura::where('id', '=', $id)->pluck('anulado');
        
             if ($anulado == 1) {
                 Factura::where('id', $id)
                             ->update(['ANULADO' => 0]);
                 $anular = 'No';
+
+                //Actualiza Monto Remanente
+                
+                $facturaActual = Factura::where('id', '=',  $id)->select('LIQUIDACION_ID', 'DETPRESUPUESTO_ID', 'TOTAL', 'FECHA_FACTURA')->first();
+
+                $periodoPresupuesto = DetallePresupuesto::select('MONTO', 'FRECUENCIATIEMPO_ID')
+                ->where('ID', '=', $facturaActual->DETPRESUPUESTO_ID)
+                ->first();
+
+                if ($periodoPresupuesto->FRECUENCIATIEMPO_ID == 2) {
+                    $fechaInicio = (new Carbon($facturaActual->FECHA_FACTURA))->startOfWeek();
+                    $fechaFinal = (new Carbon($facturaActual->FECHA_FACTURA))->endOfWeek();
+                } 
+                if ($periodoPresupuesto->FRECUENCIATIEMPO_ID == 4) {
+                    $fechaInicio = (new Carbon($facturaActual->FECHA_FACTURA))->startOfMonth();
+                    $fechaFinal = (new Carbon($facturaActual->FECHA_FACTURA))->endOfMonth();
+                } 
+                if ($periodoPresupuesto->FRECUENCIATIEMPO_ID == 5) {
+                    $fechaInicio = (new Carbon($facturaActual->FECHA_FACTURA))->startOfYear();
+                    $fechaFinal = (new Carbon($facturaActual->FECHA_FACTURA))->endOfYear();
+                } 
+
+                $compartenPresupuesto = Factura::select('ID', 'MONTO_REMANENTE', 'TOTAL', 'APROBACION_PAGO')
+                                                    ->where('LIQUIDACION_ID', '=', $facturaActual->LIQUIDACION_ID)
+                                                    ->where('DETPRESUPUESTO_ID', '=', $facturaActual->DETPRESUPUESTO_ID)
+                                                    ->where('ANULADO', '=', 0)
+                                                    ->whereBetween('FECHA_FACTURA', [$fechaInicio, $fechaFinal])
+                                                    //->where('ID', '!=', $id)
+                                                    ->get();
+                
+                $montoPresupuesto = $periodoPresupuesto->MONTO;
+                $montoAcumulado = 0;
+                
+                foreach ($compartenPresupuesto as $item) {
+                        
+                        echo 'Monto Acumulado: ' . $montoAcumulado . '<br>';
+                        echo 'Monto Presupuesto: ' . $montoPresupuesto . '<br>';
+                        $saldo = $montoPresupuesto - $montoAcumulado;
+                        echo 'Saldo: ' . $saldo . '<br>';
+                        if ($saldo > 0) {
+                            $saldoFactura = $saldo - $item->TOTAL;
+                            echo 'Saldo Factura: ' . $saldoFactura . '<br>';
+                            if ($saldoFactura > 0) {
+                                $item->APROBACION_PAGO = 1;
+                                $item->MONTO_REMANENTE = 0;                        
+                            } else {
+                                $saldoParcial = $saldo;
+                                $item->MONTO_REMANENTE = $item->TOTAL - $saldoParcial; 
+                                $item->APROBACION_PAGO = 1;
+                            }
+                        } else {
+                            $item->MONTO_REMANENTE = $item->TOTAL;
+                            $item->APROBACION_PAGO = 0;                            
+                        }
+                        echo 'Monto Remanente: ' . $item->MONTO_REMANENTE . '<br>';
+                        echo 'Aprobación Factura: ' . $item->APROBACION_PAGO . '<br>';
+                        echo 'ID : ' . $item->ID . '<br>';
+                        $montoAcumulado += $item->TOTAL;
+                        Factura::where('ID', '=', $item->ID)
+                        ->update(['MONTO_REMANENTE' => $item->MONTO_REMANENTE, 'APROBACION_PAGO' => $item->APROBACION_PAGO ]);
+                    }
             } else {
                 Factura::where('id', $id)
                 ->update(['ANULADO' => 1]);            
                 $anular = 'Si';
-            }  
+
+                //Actualiza Monto Remanente
+                
+                $facturaActual = Factura::where('id', '=',  $id)->select('LIQUIDACION_ID', 'DETPRESUPUESTO_ID', 'TOTAL', 'FECHA_FACTURA')->first();
+
+                $periodoPresupuesto = DetallePresupuesto::select('MONTO', 'FRECUENCIATIEMPO_ID')
+                ->where('ID', '=', $facturaActual->DETPRESUPUESTO_ID)
+                ->first();
+
+                if ($periodoPresupuesto->FRECUENCIATIEMPO_ID == 2) {
+                    $fechaInicio = (new Carbon($facturaActual->FECHA_FACTURA))->startOfWeek();
+                    $fechaFinal = (new Carbon($facturaActual->FECHA_FACTURA))->endOfWeek();
+                } 
+                if ($periodoPresupuesto->FRECUENCIATIEMPO_ID == 4) {
+                    $fechaInicio = (new Carbon($facturaActual->FECHA_FACTURA))->startOfMonth();
+                    $fechaFinal = (new Carbon($facturaActual->FECHA_FACTURA))->endOfMonth();
+                } 
+                if ($periodoPresupuesto->FRECUENCIATIEMPO_ID == 5) {
+                    $fechaInicio = (new Carbon($facturaActual->FECHA_FACTURA))->startOfYear();
+                    $fechaFinal = (new Carbon($facturaActual->FECHA_FACTURA))->endOfYear();
+                } 
+
+                $compartenPresupuesto = Factura::select('ID', 'MONTO_REMANENTE', 'TOTAL', 'APROBACION_PAGO')
+                                                    ->where('LIQUIDACION_ID', '=', $facturaActual->LIQUIDACION_ID)
+                                                    ->where('DETPRESUPUESTO_ID', '=', $facturaActual->DETPRESUPUESTO_ID)
+                                                    ->where('ANULADO', '=', 0)
+                                                    ->whereBetween('FECHA_FACTURA', [$fechaInicio, $fechaFinal])
+                                                    ->where('ID', '!=', $id)
+                                                    ->get();
+                
+                $montoPresupuesto = $periodoPresupuesto->MONTO;
+                $montoAcumulado = 0;
+                
+                foreach ($compartenPresupuesto as $item) {
+                        
+                        echo 'Monto Acumulado: ' . $montoAcumulado . '<br>';
+                        echo 'Monto Presupuesto: ' . $montoPresupuesto . '<br>';
+                        $saldo = $montoPresupuesto - $montoAcumulado;
+                        echo 'Saldo: ' . $saldo . '<br>';
+                        if ($saldo > 0) {
+                            $saldoFactura = $saldo - $item->TOTAL;
+                            echo 'Saldo Factura: ' . $saldoFactura . '<br>';
+                            if ($saldoFactura > 0) {
+                                $item->APROBACION_PAGO = 1;
+                                $item->MONTO_REMANENTE = 0;                        
+                            } else {
+                                $saldoParcial = $saldo;
+                                $item->MONTO_REMANENTE = $item->TOTAL - $saldoParcial; 
+                                $item->APROBACION_PAGO = 1;
+                            }
+                        } else {
+                            $item->MONTO_REMANENTE = $item->TOTAL;
+                            $item->APROBACION_PAGO = 0;                            
+                        }
+                        echo 'Monto Remanente: ' . $item->MONTO_REMANENTE . '<br>';
+                        echo 'Aprobación Factura: ' . $item->APROBACION_PAGO . '<br>';
+                        echo 'ID : ' . $item->ID . '<br>';
+                        $montoAcumulado += $item->TOTAL;
+                        Factura::where('ID', '=', $item->ID)
+                        ->update(['MONTO_REMANENTE' => $item->MONTO_REMANENTE, 'APROBACION_PAGO' => $item->APROBACION_PAGO ]);
+                } 
+
+            }
+            
+            //dd($compartenPresupuesto);
             return $anular;  
         
     }

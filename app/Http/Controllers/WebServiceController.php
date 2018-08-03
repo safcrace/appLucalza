@@ -29,7 +29,7 @@ class WebServiceController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function getCodeProveedorSap($id)
-    {
+    { 
         $param = explode('-', $id);
         $empresaId = $param[0];
         $listId = $param[1];
@@ -41,7 +41,6 @@ class WebServiceController extends Controller
         $key = time();
         $token = md5('tarara' . $key);
 
-
         $response = $client->request('POST', 'http://pcidmsserver.cloudapp.net:8080/lucalza/ws/', [
             'json' => [
                 'key' => $key,
@@ -52,9 +51,9 @@ class WebServiceController extends Controller
                 'filter' => ''
             ]
         ]);
-
+        
         $data = json_decode($response->getBody(), true);
-            
+              
 
         $filas = $data['nrows'];
         $combo = '<select class="form-control" id="codigoProveedorSap" name="codigoProveedorSap", disable=false>';
@@ -959,7 +958,7 @@ class WebServiceController extends Controller
                                             U_FacNit = '12345678-9' ,
                                             U_FacNom = 'Usuario',
                                             U_Clase_Libro = 'Varios',
-                                            U_Tipo_Documento = 'Nota Credito',
+                                            U_Tipo_Documento = 'NC',
                                             BusinessObject = 'oPurchaseCreditNotes'
                                         from 
                                             liq_factura a inner join                                           

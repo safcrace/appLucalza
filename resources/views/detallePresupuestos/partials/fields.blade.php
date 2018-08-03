@@ -160,6 +160,9 @@
   </div>
 </div>
 
+<div class="loader-modal-container" id="loader">
+    <img src="{{ asset('images/loader.gif') }}" alt="Loader Container" class="loader-info">  
+</div>
 
 
 @push('scripts')
@@ -174,9 +177,10 @@
             $(this).html(options)
         }
 
-        var tipo = $('#tipo option:selected').text()
+        //var tipo = $('#tipo option:selected').text()
+        var tipo = $('#tipo').val()
         if(tipo != null) { 
-            if ((tipo == 'Combustible')) {
+            if ((tipo == 1)) {
                 $('.asignacion').show()
                 
                 var tipo_id = $('#tipo').val()
@@ -202,9 +206,9 @@
             }
         }
        $('#tipo').change(function () {
-            var tipo = $('#tipo option:selected').text()
+            var tipo = $('#tipo').val()
 
-            if ((tipo == 'Combustible')) {
+            if ((tipo == 1)) {
                 $('.asignacion').show()
                 var tipo_id = $('#tipo').val()
                 vurl = '{{ route('detallePresupuestos.show')}}'
@@ -230,13 +234,15 @@
             $('#unidades').hide()            
         })
 
-        $('#project').click(function() {           
+        $('#project').click(function() {
+            $('#loader').show()            
             var criterio = $('#EMPRESA_ID').val() + '-' + 8 
             vurl = '{{ route('codigoProyecto')}}'            
             vurl = vurl.replace('%7Bid%7D', criterio);            
 
             $.getJSON(vurl, null, function (values) {                
                 $('#PROYECTO').populateSelect(values)
+                $('#loader').hide() 
             })            
            
         })
@@ -245,13 +251,15 @@
             $('#DESCPROYECTO').val($('#PROYECTO option:selected').text())
         })
 
-        $('#centro_1').click(function() {           
+        $('#centro_1').click(function() {    
+            $('#loader').show()        
             var criterio = $('#EMPRESA_ID').val() + '-' + 4 + '-' + 1            
             vurl = '{{ route('codigoCentroCostoUno')}}'            
             vurl = vurl.replace('%7Bid%7D', criterio);            
 
             $.getJSON(vurl, null, function (values) {                
                 $('#CENTROCOSTO1').populateSelect(values)
+                $('#loader').hide() 
             })            
            
         })
@@ -262,12 +270,14 @@
         })
 
         $('#centro_2').click(function() {
+            $('#loader').show() 
             var criterio = $('#EMPRESA_ID').val() + '-' + 4 + '-' + 2
             vurl = '{{ route('codigoCentroCostoDos')}}'
             vurl = vurl.replace('%7Bid%7D',criterio);
 
             $.getJSON(vurl, null, function (values) {                
                 $('#CENTROCOSTO2').populateSelect(values)
+                $('#loader').hide() 
             })   
         })
 
@@ -276,12 +286,14 @@
         })
 
         $('#centro_3').click(function() {
+            $('#loader').show() 
             var criterio = $('#EMPRESA_ID').val() + '-' + 4 + '-' + 3
             vurl = '{{ route('codigoCentroCostoTres')}}'
             vurl = vurl.replace('%7Bid%7D', criterio);
 
             $.getJSON(vurl, null, function (values) {                
                 $('#CENTROCOSTO3').populateSelect(values)
+                $('#loader').hide() 
             })   
         })
 
@@ -290,12 +302,14 @@
         })
 
         $('#centro_4').click(function() {
+            $('#loader').show() 
             var criterio = $('#EMPRESA_ID').val() + '-' + 4 + '-' + 4
             vurl = '{{ route('codigoCentroCostoCuatro')}}'
             vurl = vurl.replace('%7Bid%7D', criterio);
 
            $.getJSON(vurl, null, function (values) {                
                 $('#CENTROCOSTO4').populateSelect(values)
+                $('#loader').hide() 
             })   
         })
 
@@ -304,12 +318,14 @@
         })
 
         $('#centro_5').click(function() {
+            $('#loader').show() 
             var criterio = $('#EMPRESA_ID').val() + '-' + 4 + '-' + 5
             vurl = '{{ route('codigoCentroCostoCinco')}}'
             vurl = vurl.replace('%7Bid%7D', criterio);
 
             $.getJSON(vurl, null, function (values) {                
                 $('#CENTROCOSTO5').populateSelect(values)
+                $('#loader').hide() 
             })   
         })
 

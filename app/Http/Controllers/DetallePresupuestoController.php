@@ -54,8 +54,11 @@ class DetallePresupuestoController extends Controller
                                         ->lists('DESCRIPCION', 'ID')                                        
                                         ->toArray();
 
-         $subTipoGasto = SubcategoriaTipoGasto::lists('DESCRIPCION', 'ID')
-             ->toArray();
+         /* $subTipoGasto = SubcategoriaTipoGasto::join('cat_tipogasto', 'cat_tipogasto.ID', '=', 'cat_subcategoria_tipogasto.TIPOGASTO_ID')
+                ->where('cat_tipogasto.EMPRESA_ID', '=', $empresa_id)
+                ->lists('cat_subcategoria_tipogasto.DESCRIPCION', 'cat_subcategoria_tipogasto.TIPOGASTO_ID')
+                ->toArray(); */
+            
 
          $tipoAsignacion = TipoAsignacion::lists('DESCRIPCION', 'ID')
              ->toArray();
@@ -79,7 +82,7 @@ class DetallePresupuestoController extends Controller
          $detallePresupuesto->CENTROCOSTO5 = NULL;
          $detallePresupuesto->DESCCENTRO5 = 'Presione el Icono de Carga';
          
-         return view('detallePresupuestos.create', compact('presupuesto_id', 'tipoGasto', 'frecuencia', 'tipoAsignacion', 'subTipoGasto', 'tipo', 'rutaPresupuesto', 'detallePresupuesto'));
+         return view('detallePresupuestos.create', compact('presupuesto_id', 'tipoGasto', 'frecuencia', 'tipoAsignacion', 'tipo', 'rutaPresupuesto', 'detallePresupuesto'));
      }
 
     /**
@@ -149,12 +152,16 @@ class DetallePresupuestoController extends Controller
         $presupuesto_id = $param[0];
         $tipo = $param[1];
 
-        $detallePresupuesto = DetallePresupuesto::findOrFail($presupuesto_id);
+        $empresa_id = Session::get('empresa');
 
+        $detallePresupuesto = DetallePresupuesto::findOrFail($presupuesto_id);
+        
         $frecuencia = FrecuenciaTiempo::lists('DESCRIPCION', 'ID')
                                         ->toArray();
 
-        $tipoGasto = TipoGasto::lists('DESCRIPCION', 'ID')
+         $tipoGasto = TipoGasto::where('EMPRESA_ID', '=', $empresa_id)
+                                        ->where('ANULADO', '=', 0)
+                                        ->lists('DESCRIPCION', 'ID')                                        
                                         ->toArray();
 
         $tipoAsignacion = TipoAsignacion::lists('DESCRIPCION', 'ID')

@@ -98,6 +98,7 @@
                     type: 'get',
                     url: vurl,
                     success: function (data) {
+                        alert(data)
                         location.reload();
                     }
                 }).fail(function () {

@@ -41,6 +41,9 @@
         </div>
     </div>
 
+    <div class="loader-modal-container" id="loader">
+        <img src="{{ asset('images/loader.gif') }}" alt="Loader Container" class="loader-info">  
+    </div>
 @endsection
 
 @push('scripts')
@@ -98,6 +101,7 @@
 
 
         $('#empresa').change(function() {
+            $('#loader').show()
             var criterio = $('#empresa').val() + '-' + 2            
             vurl = '{{ route('codigoProveedorSap')}}'
             vurl = vurl.replace('%7Bid%7D', criterio);
@@ -136,6 +140,7 @@
                     $('#usersap_id').select2({
                         placeholder: 'Seleccione un Usuario'
                     });
+                    $('#loader').hide()
                 }
             });
 

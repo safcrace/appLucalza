@@ -88,12 +88,7 @@ class PresupuestoController extends Controller
         $tipoGasto = $id;
         
         $empresa_id = Session::get('empresa');
-
-        $moneda = Empresa::select('cat_moneda.ID', 'cat_moneda.DESCRIPCION')
-            ->join('cat_moneda', 'cat_moneda.ID', '=', 'cat_empresa.MONEDA_ID')
-            ->where('cat_empresa.ID', '=',  $empresa_id)
-            ->first();
-
+        
         $usuarios = User::join('cat_usuarioempresa', 'cat_usuarioempresa.USER_ID', '=', 'users.id')
             ->join('cat_empresa', 'cat_empresa.ID', '=', 'cat_usuarioempresa.EMPRESA_ID')
             ->join('cat_usuarioruta', 'cat_usuarioruta.USER_ID', '=', 'users.id')
@@ -140,11 +135,7 @@ class PresupuestoController extends Controller
     public function create()
     {   
         $empresa_id = Session::get('empresa');
-
-        $moneda = Empresa::select('cat_moneda.ID', 'cat_moneda.DESCRIPCION')
-            ->join('cat_moneda', 'cat_moneda.ID', '=', 'cat_empresa.MONEDA_ID')
-            ->where('cat_empresa.ID', '=',  $empresa_id)
-            ->first();
+        
 
         $usuarios = User::join('cat_usuarioempresa', 'cat_usuarioempresa.USER_ID', '=', 'users.id')
             ->join('cat_empresa', 'cat_empresa.ID', '=', 'cat_usuarioempresa.EMPRESA_ID')
@@ -161,7 +152,7 @@ class PresupuestoController extends Controller
         $vigenciaInicio = null;
         $vigenciaFinal = null;
 
-        return view('presupuestos.create', compact('usuarios', 'rutas', 'moneda', 'vigenciaInicio', 'vigenciaFinal'));
+        return view('presupuestos.create', compact('usuarios', 'rutas',  'vigenciaInicio', 'vigenciaFinal'));
     }
 
     /**
@@ -265,13 +256,8 @@ class PresupuestoController extends Controller
             ->where('cat_usuarioruta.USER_ID', '=', $usuario_id)
             ->where('cat_ruta.TIPO_GASTO', '=', $tipoGasto)
             ->lists('cat_ruta.DESCRIPCION', 'cat_ruta.ID')
-            ->toArray();
-           
-
-        $moneda = Empresa::select('cat_moneda.ID', 'cat_moneda.DESCRIPCION')
-            ->join('cat_moneda', 'cat_moneda.ID', '=', 'cat_empresa.MONEDA_ID')
-            ->where('cat_empresa.ID', '=',  $empresa_id)
-            ->first();
+            ->toArray();        
+        
 
         $monedaEmpresa = Empresa::select('MONEDA_LOCAL','MONEDA_SYS')->where('ID', '=', $empresa_id)->first();
 
@@ -304,12 +290,7 @@ class PresupuestoController extends Controller
         //$usuario_id = Auth::user()->id;        
 
         $empresa_id = Session::get('empresa');
-
-        $moneda = Empresa::select('cat_moneda.ID', 'cat_moneda.DESCRIPCION')
-            ->join('cat_moneda', 'cat_moneda.ID', '=', 'cat_empresa.MONEDA_ID')
-            ->where('cat_empresa.ID', '=',  $empresa_id)
-            ->first();
-
+        
         $monedaEmpresa = Empresa::select('MONEDA_LOCAL','MONEDA_SYS')->where('ID', '=', $empresa_id)->first();
 
 

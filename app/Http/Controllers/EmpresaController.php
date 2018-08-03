@@ -89,6 +89,9 @@ class EmpresaController extends Controller
         $empresa->LICENSESERVER = $request->LICENSESERVER;
         $empresa->USERSAP = $request->USERSAP;
         $empresa->PASSSAP = bcrypt($request->PASSSAP);
+        //$empresa->PASSSAP = encrypt('$request->PASSSAP');
+        //echo ('Vamo a Ver... ' . $empresa->PASSSAP . '<br>');
+        //dd(decrypt('pJ1mxhsxHYdqIdaYtrGjlw=='));
         $empresa->DBSAP = $request->DBSAP;
         $empresa->FILAS_NOTA_CREDITO = $request->FILAS_NOTA_CREDITO;
         $empresa->USERSQL = $request->USERSQL;
