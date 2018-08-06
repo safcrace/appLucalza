@@ -35,7 +35,7 @@ class PresupuestoController extends Controller
     public function index()
     {       
         $empresa_id = Session::get('empresa');
-        $tipoGasto = 'Rutas';
+        $tipoGasto = 1;
 
         $presupuestos = Presupuesto::select('pre_presupuesto.ID as ID', 'users.nombre as USUARIO', 'cat_ruta.DESCRIPCION as RUTA', 'pre_presupuesto.VIGENCIA_INICIO', 'pre_presupuesto.VIGENCIA_FINAL', 'pre_presupuesto.ANULADO')
             ->orderBy('pre_presupuesto.ID')
@@ -61,7 +61,7 @@ class PresupuestoController extends Controller
         //$usuario_id = Auth::user()->id;
         //dd($usuario_id);
         $empresa_id = Session::get('empresa');
-        $tipoGasto = 'Otros Gastos';
+        $tipoGasto = 2;
         $presupuestos = Presupuesto::select('pre_presupuesto.ID as ID', 'users.nombre as USUARIO', 'cat_ruta.DESCRIPCION as RUTA', 'pre_presupuesto.VIGENCIA_INICIO', 'pre_presupuesto.VIGENCIA_FINAL', 'pre_presupuesto.ANULADO')
             ->orderBy('pre_presupuesto.ID')
             ->join('cat_usuarioruta', 'cat_usuarioruta.ID', '=', 'pre_presupuesto.USUARIORUTA_ID')
@@ -105,17 +105,16 @@ class PresupuestoController extends Controller
             ->join('users', 'users.id', '=', 'cat_usuarioruta.USER_ID')
             ->where('cat_usuarioruta.ANULADO', '=', 0)            
             ->where('cat_ruta.TIPO_GASTO', '=', $tipoGasto)
-            //->where('cat_ruta.ANULADO', '=', 0)
+            ->where('cat_ruta.ANULADO', '=', 0)
             ->lists('cat_ruta.DESCRIPCION', 'cat_ruta.ID')
             ->toArray();
-            
-        $monedaEmpresa = Empresa::select('MONEDA_LOCAL','MONEDA_SYS')->where('ID', '=', $empresa_id)->first();
-
+           
+        $monedaEmpresa = Empresa::select('MONEDA_LOCAL','MONEDA_SYS')->where('ID', '=', $empresa_id)->first();    
     
         $vigenciaInicio = null;
         $vigenciaFinal = null;
 
-        if ($tipoGasto == 'Rutas') {
+        if ($tipoGasto == 1) {
             $rutaPresupuesto = 'presupuestos.index';
         } else {
             $rutaPresupuesto = 'indexPresupuestoOtrosGastos';
@@ -169,7 +168,7 @@ class PresupuestoController extends Controller
                                     ->where('cat_usuarioruta.RUTA_ID', '=', $request->RUTA_ID)
                                     ->select('cat_ruta.DESCRIPCION')->first();
 
-        if ($request->TIPO_GASTO == 'Rutas') {
+        if ($request->TIPO_GASTO == 1) {
             $texto = ' de esta Ruta';
         } else {
             $texto = ' de este Gasto';

@@ -21,7 +21,7 @@
                          <th class="text-center">No.</th>
                          <th class="text-center">Fecha Inicio</th>
                          <th class="text-center">Fecha Final</th>
-                         <th class="text-center">{{ $tipoLiquidacion }}</th>
+                         <th class="text-center">{{ ($tipoLiquidacion == 1) ? 'Rutas' : 'Gastos' }}</th>
                          <th class="text-center">Monto</th>
                          <th class="text-center">Estatus</th>
                          <th class="text-center">Anulado</th>

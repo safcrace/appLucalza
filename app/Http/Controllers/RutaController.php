@@ -34,6 +34,7 @@ class RutaController extends Controller
          $param = explode('-', $id);
          $empresa_id = $param[0];
          $descripcion = $param[1];
+         
 
          $rutas = Ruta::select('*')
                              ->where('cat_ruta.EMPRESA_ID', '=', $empresa_id)
@@ -153,12 +154,14 @@ class RutaController extends Controller
             return back()->withInput()->with('info', 'El Código ya existe en la Base de Datos.');
         }
 
+        //dd($request->DEPRECIACION);
         $ruta = new Ruta();
 
         $ruta->EMPRESA_ID = $empresa_id;
         $ruta->CLAVE = $request->CLAVE;
         $ruta->TIPO_GASTO = $request->TIPO_GASTO;
         $ruta->DESCRIPCION = $request->DESCRIPCION;
+        $ruta->DEPRECIACION = ($request->DEPRECIACION == null) ? 0 : $request->DEPRECIACION;
         $ruta->ANULADO = $request->ANULADO;
 
         if ($ruta->ANULADO === null) {
@@ -216,9 +219,10 @@ class RutaController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function showDepreciacion($id)
     {
-        //
+        $depreciacion = Ruta::where('ID', '=', $id)->pluck('DEPRECIACION');
+        return $depreciacion;
     }
 
     /**
@@ -316,7 +320,7 @@ class RutaController extends Controller
         }
 
         Ruta::where('ID', $ruta->ID)
-                ->update(['CLAVE' => $request->CLAVE, 'DESCRIPCION' => $request->DESCRIPCION, 'ANULADO' => $request->ANULADO]);
+                ->update(['CLAVE' => $request->CLAVE, 'DESCRIPCION' => $request->DESCRIPCION, 'DEPRECIACION' => $request->DEPRECIACION, 'ANULADO' => $request->ANULADO]);
 
         return redirect::to('empresa/ruta/' . $empresa_id . '-' . $ruta->TIPO_GASTO);
     }

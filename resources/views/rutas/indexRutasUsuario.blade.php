@@ -6,7 +6,7 @@
       <div class="row">
           <div class="col-md-12 ">
               <div class="panel panel-primary">
-                  <div class="panel-heading panel-title" style="height: 65px">{{ $descripcion }} de: <span style="font-weight: 700"> {{ $user->nombre }} </span>
+                  <div class="panel-heading panel-title" style="height: 65px">{{ ($descripcion == 1) ? 'Rutas' : 'Gastos' }} de: <span style="font-weight: 700"> {{ $user->nombre }} </span>
                       <button type="button" class="btn btn-default" style="border-color: white; float: right"><a href="{{ route('indexEmpresas', $empresa_id) }}" title="Cerrar"><span class="glyphicon glyphicon-remove-sign" aria-hidden="true" style="font-size:32px; color: black"></span></a></button>
                       <button type="button" class="btn btn-default" style="border-color: white; float: right"><a href="{{ route('createRutaUsuario', $empresa_id. '-'  . $usuario_id . '-' . $descripcion) }}" title="Agregar"><span class="glyphicon glyphicon-plus-sign" aria-hidden="true" style="font-size:32px; color: black"></span></a></button>
                   </div>
@@ -16,7 +16,7 @@
                      <table class="table table-bordered table-striped table-hover">
                        <thead>
                          <th class="text-center">Código</th>
-                         <th class="text-center">{{ $descripcion  }}</th>
+                         <th class="text-center">{{ ($descripcion == 1) ? 'Rutas' : 'Gastos'  }}</th>
                          <th class="text-center">Estado</th>
                          <th class="text-center">Anular</th>
                        </thead>

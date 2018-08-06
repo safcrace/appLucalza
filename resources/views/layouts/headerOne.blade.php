@@ -77,8 +77,8 @@
                             <li class="dropdown">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" data-toggle="tooltip" data-placement="top" title="Liquidaciones"><span class="glyphicon glyphicon-list-alt" aria-hidden="true" style="font-size:32px; color: #ffffff;"></span> <span class="caret" style="color: #ffffff;"></span></a>
                                 <ul class="dropdown-menu">
-                                    <li><a href="{{ route('indexGeneral', 'Rutas') }}">Liquidaciones Rutas</a></li>
-                                    <li><a href="{{ route('indexGeneral', 'Otros Gastos')}}">Liquidaciones Otros Gastos</a></li>
+                                    <li><a href="{{ route('indexGeneral', 1) }}">Liquidaciones Rutas</a></li>
+                                    <li><a href="{{ route('indexGeneral', 2)}}">Liquidaciones Otros Gastos</a></li>
                                 </ul>
                             </li>
                         @endcan

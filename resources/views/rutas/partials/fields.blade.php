@@ -13,7 +13,7 @@
         {!! Form::label('CLAVE', 'Código') !!}
   </div>
   <div class="col-md-2">
-      {!! Form::text('CLAVE', null, ['class' => 'form-control', 'placeholder' => 'Código de ' . substr($descripcion, 0, -1)]); !!}
+      {!! Form::text('CLAVE', null, ['class' => 'form-control', 'placeholder' => ($descripcion == 1) ? 'Código de Ruta' : 'Código de Gasto']); !!}
   </div>
 </div>
 
@@ -22,28 +22,28 @@
         {!! Form::label('DESCRIPCION', 'Nombre') !!}
   </div>
   <div class="col-md-4">
-      {!! Form::text('DESCRIPCION', null, ['class' => 'form-control', 'placeholder' => 'Nombre de ' . substr($descripcion, 0, -1) ]); !!}
+      {!! Form::text('DESCRIPCION', null, ['class' => 'form-control', 'placeholder' => ($descripcion == 1) ? 'Nombre de Ruta' : 'Nombre de Gasto' ]); !!}
   </div>
 </div>
 
-@IF($descripcion != 'Rutas')
+@IF($descripcion != 1)
   <div class="row form-group" >
     <div class="col-md-1 col-md-offset-1">
-      {!! Form::label('ASIGNACIONPRESUPUESTO_ID', 'Tipo Gasto') !!}
+      {!! Form::label('DEPRECIACION', 'Tipo Gasto') !!}
     </div>
     @if(isset($ruta))
       <div class="col-md-3">
-        {!! Form::radio('ASIGNACIONPRESUPUESTO_ID', 1, ['id' => 'dinero']); !!}  ADMINISTRATIVO
+        {!! Form::radio('DEPRECIACION', 0, ['id' => 'dinero']); !!}  ADMINISTRATIVO
       </div>
       <div class="col-md-2">
-          {!! Form::radio('ASIGNACIONPRESUPUESTO_ID', 2, ['id' => 'unidad']); !!}  DEPRECIACION
+          {!! Form::radio('DEPRECIACION', 1, ['id' => 'unidad']); !!}  DEPRECIACION
       </div>
     @else
         <div class="col-md-3">
-          {!! Form::radio('ASIGNACIONPRESUPUESTO_ID', 1, true, ['id' => 'dinero']); !!}  ADMINISTRATIVO
+          {!! Form::radio('DEPRECIACION', 0, true, ['id' => 'dinero']); !!}  ADMINISTRATIVO
         </div>
         <div class="col-md-2">
-          {!! Form::radio('ASIGNACIONPRESUPUESTO_ID', 2, false, ['id' => 'unidad']); !!}  DEPRECIACION
+          {!! Form::radio('DEPRECIACION', 1, false, ['id' => 'unidad']); !!}  DEPRECIACION
         </div>
     @endif
   </div>

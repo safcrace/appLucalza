@@ -37,7 +37,7 @@
   </div>
 
   <div class="col-md-1 ">
-    {!! Form::label('RUTA_ID', $tipoLiquidacion) !!}
+    {!! Form::label('RUTA_ID', ($tipoLiquidacion == 1) ? 'Rutas' : 'Gastos' ) !!}
   </div>
   <div class="col-md-3">
     {!! Form::select('RUTA_ID', $rutas, null, ['class' => 'form-control', 'placeholder' => 'Seleccione una Opción', 'id' => 'newRutas']); !!}

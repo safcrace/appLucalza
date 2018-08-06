@@ -85,6 +85,7 @@ Route::post('empresa/usuario/ruta/{id}', ['uses' => 'RutaController@storeUsuario
 Route::get('edit/usuario/ruta/{id}', ['uses' => 'RutaController@UsuarioRutaEdit', 'as' => 'editUsuarioRuta']);
 Route::patch('update/usuario/ruta/{id}', ['uses' => 'RutaController@updateUsuarioRuta', 'as' => 'updateUsuarioRuta']);
 Route::get('rutas/presupuesto/{id}', ['uses' => 'RutaController@rutasPresupuestadas', 'as' => 'rutasPresupuestadas']);
+Route::get('rutas/depreciacion/{id}', ['uses' => 'RutaController@showDepreciacion', 'as' => 'showDepreciacion']);
 Route::resource('rutas', 'RutaController');
 
 // Proveedores routes

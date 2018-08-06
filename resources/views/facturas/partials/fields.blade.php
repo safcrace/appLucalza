@@ -302,12 +302,7 @@
         if (tipo != null) {
             //alert($factura->SUBCATEGORIA_TIPOGASTO_ID)
             var categoria = $('#tipoGasto option:selected').text()
-            /*vurl = '{{ route('getSubcategoriaTipoGasto') }}'
-            vurl = vurl.replace('%7Bid%7D', tipo);
             
-            $.getJSON(vurl, null, function (values) {
-                $('#subcategoriaTipoGasto').populateSelect(values)
-            })*/
             vurl = '{{ route('getSubcategoriaTipoGasto') }}'
                 vurl = vurl.replace('%7Bid%7D', tipo);
                 
@@ -335,22 +330,8 @@
         $('#tipoGasto').change(function () {
             var tipo = $('#tipoGasto').val();
             var categoria = $('#tipoGasto option:selected').text()
-            /*vurl = '{{ route('tipoGasto') }}'
-            vurl = vurl.replace('%7Bid%7D', tipo);
-
-            $.ajax({
-                type:'get',
-                url:vurl,
-                success: function(data){
-                    if(data == 'Galones') {
-                        $('#etiqueta').html(data);
-                        $('#cantidadPorcentaje').show();
-                    }
-                }
-            });*/
-
-            if (tipo == '') {
-
+           
+            if (tipo == '') {                
                 $('#subcategoriaTipoGasto').empty()
             } else {
                 vurl = '{{ route('getSubcategoriaTipoGasto') }}'
@@ -370,13 +351,7 @@
             } else {
                 $('#categoriaGasto').val('otros')
                 $('.combus').hide()                
-            }
-
-            /*$('#pro_sap').on('change', '#codigoProveedorSap', function() {   
-                             
-                var descripcion_proveedorSap = $('#codigoProveedorSap option:selected').text()
-                $('#descripcion_proveedorsap').val(descripcion_proveedorSap)
-            })*/ 
+            }            
 
         });
         

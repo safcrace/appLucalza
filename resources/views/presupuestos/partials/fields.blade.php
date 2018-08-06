@@ -33,7 +33,7 @@
 
 <div class="row form-group">
   <div class="col-md-1 col-md-offset-1">
-        {!! Form::label('RUTA_ID', $tipoGasto) !!}
+        {!! Form::label('RUTA_ID', ($tipoGasto == 1) ? 'Ruta' : 'Gasto') !!}
   </div>
   <div class="col-md-3">
       @if (isset($ruta_id))      
@@ -127,14 +127,28 @@
         });
 
         $('#ruta').change(function () {
-            var tipo = $('#ruta option:selected').text()
-            tipo = tipo.toLowerCase(tipo)
+            //var ruta_id = $('#ruta option:selected').text()
+            var ruta_id = $('#ruta').val()
+            vurl = '{{ route('showDepreciacion') }}'           
+            vurl = vurl.replace('%7Bid%7D', ruta_id);           
+            $.ajax({
+                type: 'get',
+                url: vurl,
+                success: function (data) {
+                    if (data == 1) {
+                        $('#asignacion').show()                                                
+                    }  else {
+                        $('#asignacion').hide()
+                    }                   
+                }
+            })    
+            /* tipo = tipo.toLowerCase(tipo)
 
             if (tipo.indexOf('depre') != -1) {
                 $('#asignacion').show()
             }else{
 
-            }
+            } */
 
 
         });

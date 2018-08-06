@@ -17,7 +17,7 @@
                        <thead>
                          <th class="text-center">Código</th>
                          <th class="text-center">Usuario</th>
-                         <th class="text-center">{{ $tipoGasto }}</th>
+                         <th class="text-center">{{ ($tipoGasto == 1) ? 'Rutas' : 'Gastos' }}</th>
                          <th class="text-center">Del</th>
                          <th class="text-center">Al</th>
                          <th class="text-center">Estado</th>

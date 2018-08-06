@@ -54,8 +54,8 @@
                                    @if(isset($id_empresa))
                                         @can('ver rutas')
                                             <td class="text-center">
-                                            <a href="{{ route('indexRutasUsuario', $user->id . '-Rutas' . '-' . $id_empresa) }}"><button type="button" class="btn btn-primary btn-sm">Rutas</button></a>
-                                            <a href="{{ route('indexRutasUsuario', $user->id . '-Otros Gastos' . '-' . $id_empresa) }}"><button type="button" class="btn btn-primary btn-sm">Otros Gastos</button></a>
+                                            <a href="{{ route('indexRutasUsuario', $user->id . '-1' . '-' . $id_empresa) }}"><button type="button" class="btn btn-primary btn-sm">Rutas</button></a>
+                                            <a href="{{ route('indexRutasUsuario', $user->id . '-2' . '-' . $id_empresa) }}"><button type="button" class="btn btn-primary btn-sm">Otros Gastos</button></a>
                                             </td>
                                         @endcan
                                    @endif

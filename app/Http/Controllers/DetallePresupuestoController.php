@@ -136,8 +136,12 @@ class DetallePresupuestoController extends Controller
                              ->where('cat_tipogasto.ID', '=', $id)
                              ->where('cat_unidadmedida.ANULADO', '=', 0)
                              ->first();
-        //dd($unidad->DESCRIPCION);
-        return $unidad->DESCRIPCION;
+        
+        if ($unidad) {
+            return $unidad->DESCRIPCION;            
+        } else {
+            return 'NoAplica';
+        }
     }
 
     /**

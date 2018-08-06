@@ -35,7 +35,7 @@ class LiquidacionController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function indexGeneral($id)
-    {
+    {   
         $usuario_id = Auth::user()->id;
         $empresa_id = Session::get('loginEmpresa');
         $tipoLiquidacion = $id;

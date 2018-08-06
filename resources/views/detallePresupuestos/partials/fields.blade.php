@@ -176,55 +176,54 @@
             })
             $(this).html(options)
         }
-
-        //var tipo = $('#tipo option:selected').text()
+        
         var tipo = $('#tipo').val()
         if(tipo != null) { 
-            if ((tipo == 1)) {
-                $('.asignacion').show()
-                
-                var tipo_id = $('#tipo').val()
-                vurl = '{{ route('detallePresupuestos.show')}}'
-                vurl = vurl.replace('%7BdetallePresupuestos%7D', tipo_id);                
-                $.ajax({
-                    type: 'get',
-                    url: vurl,                    
-                    success: function (data) {
-                        $('#tipoAsignacion').html(data);
+                            
+            var tipo_id = $('#tipo').val()
+            vurl = '{{ route('detallePresupuestos.show') }}'
+            vurl = vurl.replace('%7BdetallePresupuestos%7D', tipo_id);                
+            $.ajax({
+                type: 'get',
+                url: vurl,                    
+                success: function (data) {
+                    if (data != 'NoAplica') {
+                        $('#tipoAsignacion').html(data);                        
+                        $('.asignacion').show()
                         var tipoAsignacion = $('#dinero').is(':checked')                        
                         if(tipoAsignacion == false) {                               
                             $('#unidades').show()
                         } else {
                             $('#unidades').hide()
                         }
-                    }
-                })
-                
-            } else {
-                $('.asignacion').hide()
-                $('#unidades').hide()
-            }
+                    } else {
+                        $('.asignacion').hide()
+                        $('#unidades').hide()
+                    }                        
+                }
+            })                
+            
         }
-       $('#tipo').change(function () {
-            var tipo = $('#tipo').val()
 
-            if ((tipo == 1)) {
-                $('.asignacion').show()
-                var tipo_id = $('#tipo').val()
-                vurl = '{{ route('detallePresupuestos.show')}}'
-                vurl = vurl.replace('%7BdetallePresupuestos%7D', tipo_id);
-                $.ajax({
-                    type: 'get',
-                    url: vurl,
-                    success: function (data) {                        
+       $('#tipo').change(function () {                            
+            var tipo_id = $('#tipo').val()
+            vurl = '{{ route('detallePresupuestos.show')}}'
+            vurl = vurl.replace('%7BdetallePresupuestos%7D', tipo_id);
+            
+            $.ajax({
+                type: 'get',
+                url: vurl,
+                success: function (data) {
+                    if (data != 'NoAplica') {
                         $('#tipoAsignacion').html(data);                        
+                        $('.asignacion').show()            
+                    } else {
+                        $('.asignacion').hide()
+                        $('#unidades').hide()
+                    }                       
 
-                    }
-                })
-            } else {
-                $('.asignacion').hide()
-                $('#unidades').hide()
-            }
+                }
+            })            
         });
 
         $('#unidad').click(function() {
