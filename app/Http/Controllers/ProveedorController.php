@@ -52,11 +52,11 @@ class ProveedorController extends Controller
 
          //$empresa_id = Session::get('empresa');
 
-         $moneda = Empresa::select('cat_moneda.ID', 'cat_moneda.DESCRIPCION')
+        /*  $moneda = Empresa::select('cat_moneda.ID', 'cat_moneda.DESCRIPCION')
              ->join('cat_moneda', 'cat_moneda.ID', '=', 'cat_empresa.MONEDA_ID')
              ->where('cat_empresa.ID', '=',  $empresa_id)
              ->first();
-
+ */
         $monedaEmpresa = Empresa::select('MONEDA_LOCAL','MONEDA_SYS')->where('ID', '=', $empresa_id)->first();
 
         //dd($monedaEmpresa);
@@ -151,10 +151,10 @@ class ProveedorController extends Controller
     {
         $proveedor = Proveedor::findOrFail($id);
         //dd($proveedor);
-        $moneda = Empresa::select('cat_moneda.ID', 'cat_moneda.DESCRIPCION')
+        /* $moneda = Empresa::select('cat_moneda.ID', 'cat_moneda.DESCRIPCION')
             ->join('cat_moneda', 'cat_moneda.ID', '=', 'cat_empresa.MONEDA_ID')
             ->where('cat_empresa.ID', '=',  $proveedor->EMPRESA_ID)
-            ->first();           
+            ->first();  */          
 
         $monedaEmpresa = Empresa::select('MONEDA_LOCAL','MONEDA_SYS')->where('ID', '=', $proveedor->EMPRESA_ID)->first();
 

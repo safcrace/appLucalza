@@ -24,8 +24,7 @@ class CreateDetallePresupuestoRequest extends Request
     public function rules()
     {
         return [
-            'TIPOGASTO_ID'    => 'required',
-            'MONTO'    => 'required',
+            'TIPOGASTO_ID'    => 'required',            
             'FRECUENCIATIEMPO_ID' => 'required',
         ];
     }

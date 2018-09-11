@@ -27,7 +27,7 @@ class CreateFacturaRequest extends Request
             'TIPOGASTO_ID' => 'required',
             'subcategoriaTipoGasto' => 'required',
             'PROVEEDOR_ID' => 'required',
-            'FOTO'    => 'required | mimes:jpeg,bmp,png,pdf',
+            'FOTO'    => 'required | mimes:jpeg,bmp,png',
             'TIPODOCUMENTO_ID' => 'required',
             'FECHA_FACTURA' => 'required',            
             'NUMERO' => 'required',

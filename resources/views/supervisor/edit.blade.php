@@ -64,7 +64,7 @@
                                     @if($factura->CORRECCION == 1)
                                       <td class="text-center" style="background-color: red;"><span class="glyphicon glyphicon-pencil btn_corregir" aria-hidden="true" style="font-size:20px; color: black" data-toggle="modal" data-target="#myModal"></td>
                                     @else
-                                      <td class="text-center"><span class="glyphicon glyphicon-pencil btn_corregir" aria-hidden="true" style="font-size:20px; color: black" data-toggle="modal" data-target="#myModal"></td>
+                                      <td class="text-center"><span id="correcion" class="glyphicon glyphicon-pencil btn_corregir" aria-hidden="true" style="font-size:20px; color: black" data-toggle="modal" data-target="#myModal"></td>
                                     @endif
                                     <td style="max-widht: 200px">{{ $factura->COMENTARIO_SUPERVISOR}}</td>
                                     <td style="max-widht: 200px">{{ $factura->COMENTARIO_CONTABILIDAD}}</td>
@@ -94,7 +94,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title" id="myModalLabel"></h4>
+      <h4 class="modal-title" id="titulo"></h4>
       </div>
       {!! Form::model($facturas, ['route' => ['comentarioSupervisor', ':FACTURA_ID'], 'method' => 'PATCH', 'id' => 'form-update']) !!}
       <div class="modal-body">          
@@ -117,7 +117,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title" id="myModalLabelTwo">Comentario Liquidación No. {{ $liquidacion->ID }} y {{$liquidacion->TIPO_GASTO}}</h4>
+        <h4 class="modal-title" id="myModalLabelTwo">Comentario Liquidación No. {{ $liquidacion->ID }} </h4>
       </div>
       {!! Form::model($liquidacion, ['route' => ['correccionLiquidacion', $liquidacion->ID], 'method' => 'PATCH']) !!}
       <div class="modal-body">
@@ -143,10 +143,16 @@
         var row = $(this).parents('tr');
         {{--row.find('.btn_aprobar').prop( "checked", false );--}}
         var factura = row.data('factura');
-        var id = row.data('id');
+        var id = row.data('id');        
         $("#facturaId").html(id);
         $("#myModalLabel").html('Factura No. ' + factura);
       });
+
+      $("#correcion").click(function(){
+        var row = $(this).parents('tr');
+        var factura = row.data('factura');
+        $('#titulo').html('Motivo Correción Factura No. ' + factura);       
+      })
 
       $(".btn_enviar").click(function(e){
           e.preventDefault();

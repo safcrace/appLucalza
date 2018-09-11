@@ -163,32 +163,33 @@ class PresupuestoController extends Controller
     public function store(CreatePresupuestoRequest $request)
     {
         /** Se determina el nombre de la ruta */
-        $nombreRuta = UsuarioRuta::join('cat_ruta', 'cat_ruta.ID', '=', 'cat_usuarioruta.RUTA_ID')
+        $esDepreciacion = UsuarioRuta::join('cat_ruta', 'cat_ruta.ID', '=', 'cat_usuarioruta.RUTA_ID')
                                     ->where('cat_usuarioruta.USER_ID', '=', $request->USUARIO_ID)
                                     ->where('cat_usuarioruta.RUTA_ID', '=', $request->RUTA_ID)
-                                    ->select('cat_ruta.DESCRIPCION')->first();
+                                    ->where('cat_ruta.DEPRECIACION', '=', 1)
+                                    ->select('cat_ruta.DEPRECIACION')->first();
 
         if ($request->TIPO_GASTO == 1) {
             $texto = ' de esta Ruta';
         } else {
             $texto = ' de este Gasto';
-            if ($nombreRuta == (strtoupper($nombreRuta->DESCRIPCION) == 'DEPRECIACIóN') || strtoupper($nombreRuta->DESCRIPCION) == 'DEPRECIACION') {
+            if ($esDepreciacion) {
                 if ( $request->ASIGNACION_MENSUAL <= 0) {
                     return back()->withInput()->with('info', 'Debe ingresar una Asignación Valida');
                 }            
             }
         }
 
-        $usuarioRuta_id = UsuarioRuta::select('ID')
-                        ->where('USER_ID', '=', $request->USUARIO_ID)
-                        ->where('RUTA_ID', '=', $request->RUTA_ID)
-                        ->first();
+        $usuarioRuta_id = UsuarioRuta::where('USER_ID', '=', $request->USUARIO_ID)
+                                            ->where('RUTA_ID', '=', $request->RUTA_ID)
+                                            ->pluck('ID');
+
 
         $presupuestosRuta = Presupuesto::select('ID', 'VIGENCIA_INICIO', 'VIGENCIA_FINAL')
-                                                ->where('USUARIORUTA_ID', '=', $usuarioRuta_id->ID)
-                                                ->where('ANULADO', '=', 0)
-                                                ->get();
-
+                                            ->where('USUARIORUTA_ID', '=', $usuarioRuta_id)
+                                            ->where('ANULADO', '=', 0)
+                                            ->get();
+                                                
         //dd($request->all());
 
         if ($request->VIGENCIA_INICIO >= $request->VIGENCIA_FINAL) {
@@ -205,7 +206,7 @@ class PresupuestoController extends Controller
 
         $presupuesto = new Presupuesto();
 
-        $presupuesto->USUARIORUTA_ID = $usuarioRuta_id->ID;
+        $presupuesto->USUARIORUTA_ID = $usuarioRuta_id;
         $presupuesto->MONEDA_ID = $request->MONEDA_ID;
 
         $presupuesto->VIGENCIA_INICIO = $request->VIGENCIA_INICIO;
@@ -215,12 +216,12 @@ class PresupuestoController extends Controller
 
         $presupuesto->save();
 
-        if ($presupuesto->ASIGNACION_MENSUAL > 0 ) {
+        /* if ($presupuesto->ASIGNACION_MENSUAL > 0 ) {
             
             return redirect::to('presupuesto/otrosgastos');
-        } else {
+        } else { */
             return redirect::to('presupuestos/' . $presupuesto->id . '-' . $request->TIPO_GASTO . '/edit')->withInput();
-        }      
+        //}      
         
     }
 
@@ -286,8 +287,8 @@ class PresupuestoController extends Controller
 
         $presupuesto = Presupuesto::findOrFail($presupuesto_id);
 
-        //$usuario_id = Auth::user()->id;        
-
+        //$usuario_id = Auth::user()->id;
+                
         $empresa_id = Session::get('empresa');
         
         $monedaEmpresa = Empresa::select('MONEDA_LOCAL','MONEDA_SYS')->where('ID', '=', $empresa_id)->first();

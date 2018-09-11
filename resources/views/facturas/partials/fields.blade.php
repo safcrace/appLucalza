@@ -30,7 +30,7 @@
         </div>
         @if(isset($factura->SUBCATEGORIA_TIPOGASTO_ID))
             <div class="col-md-3">                
-                {!! Form::select('subcategoriaTipoGasto', $subcategoria, null, ['class' => 'form-control', 'placeholder' => 'Seleccione Tipo de Gasto', 'id' => 'subcategoriaTipoGasto']); !!}
+                {!! Form::select('subcategoriaTipoGasto', $subcategoria, $factura->SUBCATEGORIA_TIPOGASTO_ID, ['class' => 'form-control', 'placeholder' => 'Seleccione Tipo de Gasto', 'id' => 'subcategoriaTipoGasto']); !!}
             </div>
         @else
             <div class="col-md-3">
@@ -302,34 +302,40 @@
         if (tipo != null) {
             //alert($factura->SUBCATEGORIA_TIPOGASTO_ID)
             var categoria = $('#tipoGasto option:selected').text()
+            var $existeFactura = $('#idFactura').val()
             
             vurl = '{{ route('getSubcategoriaTipoGasto') }}'
-                vurl = vurl.replace('%7Bid%7D', tipo);
+            vurl = vurl.replace('%7Bid%7D', tipo);
                 
-                $.getJSON(vurl, null, function (values) {
-                    $('#subcategoriaTipoGasto').populateSelect(values)
-                })
-            var subcatego = $('#subCategoriaGasto').val()
-            //alert('Esto trae al cargar:  ' +     subcatego)
-            $('#subcategoriaTipoGasto').val(subcatego)
+                if ($existeFactura == null) {
+                    $.getJSON(vurl, null, function (values) {
+                        $('#subcategoriaTipoGasto').populateSelect(values)
+                    })                    
+                }     
+
+            vurl = '{{ route('getTipoGrupo') }}'
+            vurl = vurl.replace('%7Bid%7D', tipo); 
+
+            $.ajax({
+                type: 'get',
+                url: vurl,                    
+                success: function (data) {
+                    if (data == 'BC') {
+                        $('.combus').show()
+                    } else {
+                        $('.combus').hide() 
+                    }                        
+                }
+            })
+
             
-            if (categoria == 'Combustible') {
-                $('#categoriaGasto').val('combustible')
-                $('.combus').show()
-            } else if (categoria == 'Depreciación') {
-                $('#categoriaGasto').val('depreciación')
-                $('.combus').show()
-            } else {
-                $('.combus').hide()
-                $('#categoriaGasto').val('otros')
-            }
         }
         
         
 
         $('#tipoGasto').change(function () {
             var tipo = $('#tipoGasto').val();
-            var categoria = $('#tipoGasto option:selected').text()
+            //var categoria = $('#tipoGasto option:selected').text()
            
             if (tipo == '') {                
                 $('#subcategoriaTipoGasto').empty()
@@ -342,7 +348,23 @@
                 })
             }
 
-            if (categoria == 'Combustible') {
+
+            vurl = '{{ route('getTipoGrupo') }}'
+            vurl = vurl.replace('%7Bid%7D', tipo); 
+
+            $.ajax({
+                type: 'get',
+                url: vurl,                    
+                success: function (data) {
+                    if (data == 'BC') {
+                        $('.combus').show()
+                    } else {
+                        $('.combus').hide() 
+                    }                        
+                }
+            })
+
+            /* if (categoria == 'Combustible') {
                 $('#categoriaGasto').val('combustible')
                 $('.combus').show()
             } else if (categoria == 'Depreciación') {
@@ -351,7 +373,7 @@
             } else {
                 $('#categoriaGasto').val('otros')
                 $('.combus').hide()                
-            }            
+            }             */
 
         });
         
@@ -486,13 +508,22 @@
         });
 
         $('#grabarProveedor').click(function () {
+            var nombre = $('#nombre').val()
+            var identificadorTributario = $('#identificador_tributario').val()
+            var domicilio = $('#domicilio').val()
+            if (nombre && identificadorTributario && domicilio) {
+                alert(nombre)
+            } else {
+                alert('Los Campos Identificardor Tributario, Nombre y Dirección, son Obligatorios!  ')
+            } 
+            
             var form = $('#form-save')
             var url = '{{ route('proveedores.store') }}'
             var data = form.serialize()
             
 
             $.post(url, data, function (data) {
-                //alert(data[2])
+                alert(data)
                 $('#nit').html("<option value='" + data[2] + "'>" + data[0] + "</option>")
                 //$('#nit').html(data[0])
                 $('#proveedorNuevo').val(data[2])
@@ -515,6 +546,11 @@
                 //$('#myModalA').modal('hide')
             })
         });
+
+        $('#validaTiempo').click(function() {
+            $('#realizaConversion').hide()
+            $('#realizaConversionMovil').hide()
+        })
 
         $('#validaTiempo').change(function () {
             $('#realizaConversion').show()

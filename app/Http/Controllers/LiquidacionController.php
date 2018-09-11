@@ -139,6 +139,7 @@ class LiquidacionController extends Controller
                                     ->where('USUARIORUTA_ID', '=', $usuarioRuta->ID)
                                     ->where('FECHA_INICIO', '=', $fechaInicio)
                                     ->where('FECHA_FINAL', '=', $fechaFinal)
+                                    ->where('ANULADO', '!=', 1)
                                     ->first();
 
         if ($yaExiste) {
@@ -227,6 +228,7 @@ class LiquidacionController extends Controller
         $param = explode('-', $id);
         $liquidacion_id = $param[0];
         $tipoLiquidacion = $param[1];
+        $empresa_id = Session::get('empresa');
 
         $liquidacion = Liquidacion::findOrFail($liquidacion_id);
 
@@ -277,12 +279,7 @@ class LiquidacionController extends Controller
                                                   ->where('liq_factura.LIQUIDACION_ID', '=', $liquidacion_id)
                                                   //->where('liq_factura.ANULADO', '=', 0)
                                                   ->paginate(10);
-
-        //$ejemplo = new Carbon($fechaInicio);
-        //$numeroSemana = ($liquidacion->FECHA_INICIO->weekOfYear);
-       // dd($numeroSemana);
-
-       
+           
 
        //if($tipoLiquidacion == 'Rutas') {
             $presupuestoAsignado = Presupuesto::select('pre_detpresupuesto.PRESUPUESTO_ID', 'cat_tipogasto.DESCRIPCION AS TIPOGASTO', 
@@ -295,7 +292,7 @@ class LiquidacionController extends Controller
             ->where('pre_presupuesto.VIGENCIA_FINAL', '>=', $fechaInicio)
             ->where('pre_presupuesto.USUARIORUTA_ID', '=', $liquidacion->USUARIORUTA_ID)
             ->get();
-            //dd($presupuestoAsignado);
+           
        //} else {
             $asignacionMensual = Presupuesto::where('VIGENCIA_INICIO', '<=', $fechaFinal)
                                                 ->where('VIGENCIA_FINAL', '>=', $fechaInicio)
@@ -305,9 +302,11 @@ class LiquidacionController extends Controller
                 $presupuestoDepreciacion = collect(['TIPOGASTO' => 'Depreciación', 'MONTO' => $asignacionMensual, 'DESCRIPCION' => 'Efectivo', 'FRECUENCIA' => 'Mensual']);
                 $presupuestoDepreciacion = $presupuestoDepreciacion->toArray();              
             } 
-             //  dd('para');
+               
         $unidadMedida = SubcategoriaTipoGasto::join('cat_unidadmedida', 'cat_unidadmedida.ID', '=', 'cat_subcategoria_tipogasto.UNIDAD_MEDIDA_ID')
-                                                ->where('cat_subcategoria_tipogasto.TIPOGASTO_ID', '=', 3)                                                
+                                                ->join('cat_tipogasto', 'cat_tipogasto.ID', '=', 'cat_subcategoria_tipogasto.TIPOGASTO_ID')
+                                                ->where('cat_tipogasto.GRUPOTIPOGASTO_ID', '=', 'BC')                                                
+                                                ->where('cat_tipogasto.EMPRESA_ID', '=', $empresa_id)
                                                 ->select('cat_unidadmedida.DESCRIPCION')
                                                 ->first();
 

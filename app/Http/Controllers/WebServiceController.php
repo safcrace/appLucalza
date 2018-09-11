@@ -797,7 +797,7 @@ class WebServiceController extends Controller
 
         $encabezado = collect(DB::select("
                                 select                                 
-                                DocNum		=	a.ID + 25000, 
+                                DocNum		=	a.ID, 
                                 DocType		=	'dDocument_Service',
                                 DocDate		=	a.FECHA_FACTURA, 
                                 DocDueDate		=	a.FECHA_FACTURA, 
@@ -841,7 +841,7 @@ class WebServiceController extends Controller
 
         $detalle = DB::select("
                             select	
-                            ParentKey = a.id + 25000,
+                            ParentKey = a.id,
                             lineNum = 0,
                             ItemDescription =  c.DESCRIPCION + ' - ' + i.DESCRIPCION + ' '+ COALESCE(a.Serie,'') + ' - ' +  a.NUMERO,
                             PriceAfVAT = a.TOTAL - A.MONTO_EXENTO, 
@@ -943,7 +943,7 @@ class WebServiceController extends Controller
         
         $notaCredito = collect(DB::select("
                                         Select Distinct
-                                            DocNum		=	1 + 25500, 
+                                            DocNum		=	1 + 2675, 
                                             DocType		=	'dDocument_Service',
                                             DocDate		=		d.FECHA_FINAL, 
                                             DocDueDate		=	d.FECHA_FINAL, 
@@ -1127,9 +1127,34 @@ class WebServiceController extends Controller
         ]);
 
         $data = json_decode($response->getBody(), true);
-        
-        dd($data);
 
+        $insertados = 0;
+        $noInsertados = 0;
+        foreach ($data['detail'] as $item) {
+            if ( $item['result'] == 0 ) {
+                $insertados += 1;
+                if ($item['numAtCard'] != 'REMANENTE') {
+                    Factura::where('ID', '=', $item['docNum'])
+                            ->update(['DOCENTRY_SAP_FACTURA' => $item['answerId']]);
+                }/*  else {
+                    Factura::where('ID', '=', $item['docNum'])
+                            ->update(['DOCENTRY_SAP_NC' => $item['answerId']]);
+                } */
+                
+                
+            } else {
+                $noInsertados += 1;
+            }
+        }
+
+        $respuesta = $data['detail']; 
+        
+       /*  foreach ($data['detail'] as $item):
+            echo 'Mensaje de Error: ' . $item['message'];
+        endforeach;
+ */
+
+        return view('liquidaciones.reporteSAP', compact('respuesta', 'insertados', 'noInsertados', 'id'));
     }
 
 }

@@ -39,7 +39,7 @@
     {!! Form::label('TOTAL', 'Detalle Presupuesto') !!}
   </div>
   <div class="col-md-1">
-    <button type="button" class="btn btn-default" data-toggle="modal" data-target="#myModal"><span class="glyphicon glyphicon-list-alt" aria-hidden="true" style="font-size:32px; color: black"></button>
+    <button type="button" class="btn btn-default" data-toggle="modal" data-target="#myModalPre"><span class="glyphicon glyphicon-list-alt" aria-hidden="true" style="font-size:32px; color: black"></button>
   </div>
 </div>
 
@@ -104,7 +104,7 @@
   @endif
 </div>
 
-<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+<div class="modal fade" id="myModalPre" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">

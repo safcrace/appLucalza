@@ -9,6 +9,7 @@
 
 
 {!! Form::hidden('TIPO_GASTO', $tipo) !!}
+{!! Form::hidden('ES_DEPRECIACION', $esDepreciacion) !!}
 
 <div class="panel panel-primary">
   <div class="panel-heading">Detalle Presupuesto </div>
@@ -33,7 +34,7 @@
           </div>
       </div>
       --}}
-
+    @if($esDepreciacion == 0)
       <div class="row form-group asignacion" style="display: none">
           <div class="col-md-2 col-md-offset-1">
               {!! Form::label('TIPOASIGNACION_ID', 'Tipo Asignación') !!}
@@ -44,19 +45,20 @@
           <div class="col-md-2">
               {!! Form::radio('TIPOASIGNACION_ID', 2, false, ['id' => 'unidad']); !!}  UNIDAD
           </div>
-      </div>
-
-    <div class="row form-group">
-      <div class="col-md-2 col-md-offset-1">
-            {!! Form::label('MONTO', 'Asignación', ['id' => 'monto']) !!}
-      </div>
-      <div class="col-md-3">
-          {!! Form::text('MONTO', null, ['class' => 'form-control', 'placeholder' => 'Ingrese Asignación']); !!}
-      </div>
-        <div class="col-md-3" style="display: none" id="unidades">
-            <div class="form-control" id="tipoAsignacion"></div>
+      </div>     
+     
+        <div class="row form-group">
+        <div class="col-md-2 col-md-offset-1">
+                {!! Form::label('MONTO', 'Asignación', ['id' => 'monto']) !!}
         </div>
-    </div>
+        <div class="col-md-3">
+            {!! Form::text('MONTO', null, ['class' => 'form-control', 'placeholder' => 'Ingrese Asignación']); !!}
+        </div>
+            <div class="col-md-3" style="display: none" id="unidades">
+                <div class="form-control" id="tipoAsignacion"></div>
+            </div>
+        </div>
+    @endif
 
     <div class="row form-group">
       <div class="col-md-1 col-md-offset-1">

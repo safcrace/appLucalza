@@ -185,6 +185,12 @@ class TipoGastoController extends Controller
       return redirect::to('empresa/tipoGasto/' . $tipoGasto->EMPRESA_ID);
     }
 
+
+    public function getTipoGrupo($id)
+    {
+        return TipoGasto::where('ID', '=', $id)->pluck('GRUPOTIPOGASTO_ID');        
+    }
+
     public function getTipoGasto($id)
     {
         return TipoGasto::select('ID', 'DESCRIPCION')

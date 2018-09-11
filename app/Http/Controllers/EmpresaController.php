@@ -18,8 +18,11 @@ class EmpresaController extends Controller
 
     public function __construct()
     {
+        echo('paso1');
         $this->middleware('auth');
+        echo('paso2');
         $this->middleware('roles:superAdmin,master,administrador');
+        
     }
 
     /**
@@ -32,8 +35,8 @@ class EmpresaController extends Controller
         //$user = $request->user();
         //dd($user->can('ver usuarios'));
             
-
-
+        //dd('llego');
+        
         if (auth()->user()->hasRole('administrador')) {
             $empresa_id = Session::get('empresa');
             $empresas = Empresa::select('*')                
@@ -95,7 +98,7 @@ class EmpresaController extends Controller
         $empresa->DBSAP = $request->DBSAP;
         $empresa->FILAS_NOTA_CREDITO = $request->FILAS_NOTA_CREDITO;
         $empresa->USERSQL = $request->USERSQL;
-        $empresa->PASSSQL = bcrypt($request->PASSSQL);
+        $empresa->PASSSQL = $request->PASSSQL; //bcrypt($request->PASSSQL);
         $empresa->SERVIDORSQL = $request->SERVIDORSQL;
         $empresa->ID_DATASERVERTYPE = $request->ID_DATASERVERTYPE;
         $empresa->TIEMPOATRASO_RUTAS = $request->TIEMPOATRASO_RUTAS;
@@ -157,7 +160,7 @@ class EmpresaController extends Controller
             $passwordSql = Empresa::where('id', '=', $id)->pluck('PASSSQL');
             
         } else {
-            $passwordSql = bcrypt($request->PASSSQL);
+            $passwordSql = $request->PASSSQL; //bcrypt($request->PASSSQL);
         }
         
 

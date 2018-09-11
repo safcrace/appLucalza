@@ -70,7 +70,7 @@
                                     </td>
                                     @if($factura->CORRECCION == 1)
                                     hola
-                                        <td class="text-center" style="background-color: red;"><span class="glyphicon glyphicon-pencil btn_corregir" aria-hidden="true" style="font-size:20px; color: black" data-toggle="modal" data-target="#myModal"></td>
+                                        <td class="text-center" style="background-color: red;"><span id="corregir" class="glyphicon glyphicon-pencil btn_corregir" aria-hidden="true" style="font-size:20px; color: black" data-toggle="modal" data-target="#myModal"></td>
                                     @else
                                         <td class="text-center"><span class="glyphicon glyphicon-pencil btn_corregir" aria-hidden="true" style="font-size:20px; color: black" data-toggle="modal" data-target="#myModal"></td>
                                     @endif
@@ -118,7 +118,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title" id="myModalLabel"></h4>
+        <h4 class="modal-title" id="titulo"></h4>
       </div>
       {!! Form::model($factura, ['route' => ['comentarioContabilidad', ':FACTURA_ID'], 'method' => 'PATCH', 'id' => 'form-update']) !!}
       <div class="modal-body">
@@ -221,6 +221,12 @@
         $("#facturaId").html(id);
         $("#myModalLabel").html('Factura No. ' + factura);
       });
+
+      $("#correcion").click(function(){
+        var row = $(this).parents('tr');
+        var factura = row.data('factura');
+        $('#titulo').html('Motivo Correción Factura No. ' + factura);       
+      })
 
       $(".btn_enviar").click(function(e){
           e.preventDefault();

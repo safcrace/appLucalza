@@ -27,7 +27,7 @@ class EditFacturaRequest extends Request
             'TIPOGASTO_ID' => 'required',
             'subcategoriaTipoGasto' => 'required',
             'PROVEEDOR_ID' => 'required',
-            'FOTO'    => 'mimes:jpeg,bmp,png,pdf',           
+            'FOTO'    => 'mimes:jpeg,bmp,png',           
             'TIPODOCUMENTO_ID' => 'required',
             'FECHA_FACTURA' => 'required',            
             'NUMERO' => 'required',

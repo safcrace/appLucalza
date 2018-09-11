@@ -2,18 +2,20 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\CreateDetallePresupuestoRequest;
-use App\SubcategoriaTipoGasto;
-use App\TipoAsignacion;
-use Illuminate\Http\Request;
-
-use App\Http\Requests;
-use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Redirect;
-use App\FrecuenciaTiempo;
 use App\TipoGasto;
+use App\Presupuesto;
+use App\UsuarioRuta;
+use App\Http\Requests;
+
+use App\TipoAsignacion;
+use App\FrecuenciaTiempo;
 use App\DetallePresupuesto;
+use Illuminate\Http\Request;
+use App\SubcategoriaTipoGasto;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Redirect;
+use App\Http\Requests\CreateDetallePresupuestoRequest;
 
 class DetallePresupuestoController extends Controller
 {
@@ -44,16 +46,32 @@ class DetallePresupuestoController extends Controller
          $tipo = $param[1];
 
 
-         $empresa_id = Session::get('empresa');
+         $empresa_id = Session::get('empresa');       
 
-         $frecuencia = FrecuenciaTiempo::where('ANULADO', 0)->lists('DESCRIPCION', 'ID')
-                                         ->toArray();
+         $esDepreciacion = UsuarioRuta::join('cat_ruta', 'cat_ruta.ID', '=', 'cat_usuarioruta.RUTA_ID')
+                                         ->join('pre_presupuesto', 'pre_presupuesto.USUARIORUTA_ID', '=', 'cat_usuarioruta.ID')
+                                         ->where('pre_presupuesto.ID', '=', $presupuesto_id)                                         
+                                         ->where('cat_ruta.DEPRECIACION', '=', 1)
+                                         ->select('cat_ruta.DEPRECIACION')->first();
 
-         $tipoGasto = TipoGasto::where('EMPRESA_ID', '=', $empresa_id)
+         if ($esDepreciacion) {
+            $tipoGasto = TipoGasto::where('EMPRESA_ID', '=', $empresa_id)
                                         ->where('ANULADO', '=', 0)
+                                        ->where('CONTROL_DEPRECIACION', '=', 1)
                                         ->lists('DESCRIPCION', 'ID')                                        
-                                        ->toArray();
+                                        ->toArray();      
 
+            $frecuencia = FrecuenciaTiempo::where('ID', '=', 4)->lists('DESCRIPCION', 'ID')->toArray();   
+         } else {
+             $tipoGasto = TipoGasto::where('EMPRESA_ID', '=', $empresa_id)
+                                            ->where('ANULADO', '=', 0)
+                                            ->lists('DESCRIPCION', 'ID')                                        
+                                            ->toArray();     
+                                            
+            $frecuencia = FrecuenciaTiempo::where('ANULADO', 0)->lists('DESCRIPCION', 'ID')->toArray();   
+         }
+
+         $esDepreciacion = ($esDepreciacion) ? 1 : 0;
          /* $subTipoGasto = SubcategoriaTipoGasto::join('cat_tipogasto', 'cat_tipogasto.ID', '=', 'cat_subcategoria_tipogasto.TIPOGASTO_ID')
                 ->where('cat_tipogasto.EMPRESA_ID', '=', $empresa_id)
                 ->lists('cat_subcategoria_tipogasto.DESCRIPCION', 'cat_subcategoria_tipogasto.TIPOGASTO_ID')
@@ -63,7 +81,7 @@ class DetallePresupuestoController extends Controller
          $tipoAsignacion = TipoAsignacion::lists('DESCRIPCION', 'ID')
              ->toArray();
 
-         if ($tipo == 'Rutas') {
+         if ($tipo == '1') {
              $rutaPresupuesto = 'presupuestos.edit';
          } else {
              $rutaPresupuesto = 'presupuestos.edit';
@@ -82,7 +100,7 @@ class DetallePresupuestoController extends Controller
          $detallePresupuesto->CENTROCOSTO5 = NULL;
          $detallePresupuesto->DESCCENTRO5 = 'Presione el Icono de Carga';
          
-         return view('detallePresupuestos.create', compact('presupuesto_id', 'tipoGasto', 'frecuencia', 'tipoAsignacion', 'tipo', 'rutaPresupuesto', 'detallePresupuesto'));
+         return view('detallePresupuestos.create', compact('presupuesto_id', 'tipoGasto', 'frecuencia', 'tipoAsignacion', 'tipo', 'rutaPresupuesto', 'detallePresupuesto', 'esDepreciacion'));
      }
 
     /**
@@ -92,7 +110,16 @@ class DetallePresupuestoController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(CreateDetallePresupuestoRequest $request)
-    {       
+    {   
+        if ($request->ES_DEPRECIACION == 0) {
+            if ( $request->MONTO == null) {
+                return back()->withInput()->with('info', 'Debe ingresar una Asignación Valida');
+            } 
+        } else {
+            $request->MONTO = 0;
+            $request->TIPOASIGNACION_ID = 1;
+        }
+       
         $detallePresupuesto = new DetallePresupuesto();
         $detallePresupuesto->PRESUPUESTO_ID = $request->PRESUPUESTO_ID;
         $detallePresupuesto->TIPOGASTO_ID = $request->TIPOGASTO_ID;
@@ -114,7 +141,7 @@ class DetallePresupuestoController extends Controller
         $detallePresupuesto->ANULADO = $request->ANULADODP;
         if ($detallePresupuesto->ANULADO === null) {
             $detallePresupuesto->ANULADO = 0;
-        }
+        }       
 
         $detallePresupuesto->save();
 
@@ -158,28 +185,43 @@ class DetallePresupuestoController extends Controller
 
         $empresa_id = Session::get('empresa');
 
-        $detallePresupuesto = DetallePresupuesto::findOrFail($presupuesto_id);
-        
-        $frecuencia = FrecuenciaTiempo::lists('DESCRIPCION', 'ID')
-                                        ->toArray();
+        $detallePresupuesto = DetallePresupuesto::findOrFail($presupuesto_id);        
 
-         $tipoGasto = TipoGasto::where('EMPRESA_ID', '=', $empresa_id)
+        $esDepreciacion = Presupuesto::join('cat_usuarioruta', 'cat_usuarioruta.ID', '=', 'pre_presupuesto.USUARIORUTA_ID')
+                                    ->join('cat_ruta', 'cat_ruta.ID', '=', 'cat_usuarioruta.RUTA_ID')
+                                    ->where('pre_presupuesto.ID', '=', $detallePresupuesto->PRESUPUESTO_ID)                                    
+                                    ->where('cat_ruta.DEPRECIACION', '=', 1)
+                                    ->select('cat_ruta.DEPRECIACION')->first();                                    
+        
+        if ($esDepreciacion) {
+            $tipoGasto = TipoGasto::where('EMPRESA_ID', '=', $empresa_id)
                                         ->where('ANULADO', '=', 0)
+                                        ->where('CONTROL_DEPRECIACION', '=', 1)
                                         ->lists('DESCRIPCION', 'ID')                                        
-                                        ->toArray();
+                                        ->toArray();      
+
+            $frecuencia = FrecuenciaTiempo::where('ID', '=', 4)->lists('DESCRIPCION', 'ID')->toArray();   
+            } else {
+                $tipoGasto = TipoGasto::where('EMPRESA_ID', '=', $empresa_id)
+                                            ->where('ANULADO', '=', 0)
+                                            ->lists('DESCRIPCION', 'ID')                                        
+                                            ->toArray();     
+                                            
+            $frecuencia = FrecuenciaTiempo::where('ANULADO', 0)->lists('DESCRIPCION', 'ID')->toArray();   
+            }
 
         $tipoAsignacion = TipoAsignacion::lists('DESCRIPCION', 'ID')
             ->toArray();
 
-        if ($tipo == 'Rutas') {
+        if ($tipo == 1) {
             $rutaPresupuesto = 'presupuestos.edit';
         } else {
             $rutaPresupuesto = 'presupuestos.edit';
         }
         //dd($detallePresupuesto->TIPOASIGNACION_ID);
+        $esDepreciacion = ($esDepreciacion) ? 1 : 0;
 
-
-        return view('detallePresupuestos.edit', compact('detallePresupuesto', 'frecuencia', 'tipoGasto', 'tipoAsignacion', 'rutaPresupuesto', 'tipo'));
+        return view('detallePresupuestos.edit', compact('detallePresupuesto', 'frecuencia', 'tipoGasto', 'tipoAsignacion', 'rutaPresupuesto', 'tipo', 'esDepreciacion'));
     }
 
     /**

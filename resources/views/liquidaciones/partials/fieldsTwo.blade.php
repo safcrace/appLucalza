@@ -159,7 +159,7 @@
                             <tr>
                                 <td>{{ $presupuesto->TIPOGASTO }}</td>
                                 <td class="text-right">{{ $presupuesto->MONTO }}</td>
-                                <td>{{ $presupuesto->DESCRIPCION }}</td>                            
+                                <td>{{ $presupuesto->DESCRIPCION }} </td>                            
                                 <td>{{ $presupuesto->FRECUENCIA }}</td>                            
                             </tr>
                         @endforeach

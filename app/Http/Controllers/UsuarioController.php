@@ -347,7 +347,7 @@ class UsuarioController extends Controller
 
 
 
-        return redirect::back()->withInput();
+        return redirect::back();//->withInput();
 
     }
 

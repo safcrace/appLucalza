@@ -133,10 +133,14 @@ class ContabilidadController extends Controller
              $presupuestoDepreciacion = $presupuestoDepreciacion->toArray();              
          }
 
-         $unidadMedida = SubcategoriaTipoGasto::join('cat_unidadmedida', 'cat_unidadmedida.ID', '=', 'cat_subcategoria_tipogasto.UNIDAD_MEDIDA_ID')
-                                                ->where('cat_subcategoria_tipogasto.TIPOGASTO_ID', '=', 3)                                                
+         $empresa_id = Session::get('empresa');
+
+        $unidadMedida = SubcategoriaTipoGasto::join('cat_unidadmedida', 'cat_unidadmedida.ID', '=', 'cat_subcategoria_tipogasto.UNIDAD_MEDIDA_ID')
+                                                ->join('cat_tipogasto', 'cat_tipogasto.ID', '=', 'cat_subcategoria_tipogasto.TIPOGASTO_ID')
+                                                ->where('cat_tipogasto.GRUPOTIPOGASTO_ID', '=', 'BC')                                                
+                                                ->where('cat_tipogasto.EMPRESA_ID', '=', $empresa_id)
                                                 ->select('cat_unidadmedida.DESCRIPCION')
-                                                ->firstOrFail();
+                                                ->first();
 
         foreach ($presupuestoAsignado as $presupuesto) {
             if (strtolower($presupuesto->DESCRIPCION) != 'dinero') {

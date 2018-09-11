@@ -101,6 +101,7 @@ Route::get('empresa/{id}/create/tipoGasto',  ['uses' => 'tipoGastoController@emp
 Route::get('empresa/tipoGasto/{id}', ['uses' => 'TipoGastoController@indexTipoGasto', 'as' => 'indexTipoGasto']);
 Route::get('tipoGasto/{id}', ['uses' => 'TipoGastoController@getTipoGasto', 'as' => 'getTipoGasto']);
 Route::get('tipoGasto/subcategoria/{id}', ['uses' => 'TipoGastoController@getSubcategoriaTipoGasto', 'as' => 'getSubcategoriaTipoGasto']);
+Route::get('tipoGasto/grupo/{id}', ['uses' => 'TipoGastoController@getTipoGrupo', 'as' => 'getTipoGrupo']);
 Route::resource('tipoGastos', 'TipoGastoController');
 
 // Subcategoria Tipo Gasto routes...
